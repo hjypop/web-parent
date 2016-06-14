@@ -1,0 +1,15 @@
+/target/
+/.settings/
+/*.project
+/web-core/target/
+/web-core/.settings/
+/web-core/.project
+/web-core/.classpath
+/web-cache/target/
+/web-cache/.settings/
+/web-cache/.project
+/web-cache/.classpath
+/web-sample/target/
+/web-sample/.settings/
+/web-sample/.project
+/web-sample/.classpath
