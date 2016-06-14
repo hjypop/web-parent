@@ -13,3 +13,7 @@
 /web-sample/.settings/
 /web-sample/.project
 /web-sample/.classpath
+/web-sample-ui/target/
+/web-sample-ui/.settings/
+/web-sample-ui/.project
+/web-sample-ui/.classpath

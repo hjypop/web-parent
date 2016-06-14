@@ -8,6 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>web-cache</artifactId>
-  <name>web-core</name>
+  <name>web-cache</name>
+  <packaging>jar</packaging>
   <url>http://maven.apache.org</url>
 </project>

@@ -9,5 +9,6 @@
   </parent>
   <artifactId>web-core</artifactId>
   <name>web-core</name>
+  <packaging>jar</packaging>
   <url>http://maven.apache.org</url>
 </project>

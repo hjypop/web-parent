@@ -11,6 +11,7 @@
 		<module>web-core</module>
 		<module>web-cache</module>
 		<module>web-sample</module>
+		<module>web-sample-ui</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,7 +37,6 @@
 		<httpclient.version>4.5.1</httpclient.version>
 	</properties>
 	<dependencies>
-		<!-- ==============spring=========== -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
