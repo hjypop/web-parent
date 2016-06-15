@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjy.sample.dao.IUserInfoDao">
+	<!-- com.hjy.sacore.entity. -->
+	<resultMap id="UserResult" type="com.hjy.sample.entity.UserInfo">
+		<result property="id" column="id"/>
+		<result property="userName" column="user_name"/>
+		<result property="password" column="password"/>
+		<result property="idNumber" column="id_number"/>
+		<result property="sex" column="sex"/>
+		<result property="birthday" column="birthday"/>
+		<result property="mobile" column="mobile"/>
+		<result property="email" column="email"/>
+		<result property="createTime" column="create_time" />
+	</resultMap>
+
+	<select id="login" parameterType="com.hjy.sample.entity.UserInfo" resultMap="UserResult">
+		select * from user_info where user_name=#{userName} and password=#{password}
+	</select>
+
+
+	<!-- select * from user_info where sex=#{sex}  -->
+	<select id="queryPage" parameterType="com.hjy.sample.entity.UserInfo" resultMap="UserResult">
+		select * from user_info 
+	</select>
+
+	<select id="find" parameterType="java.lang.Integer" resultMap="UserResult">
+		select * from user_info where id = #{id,jdbcType=INTEGER}
+	</select>
+
+ 	<delete id="deleteById" parameterType="java.lang.Integer" >
+	    delete from user_info where id = #{id,jdbcType=INTEGER}
+  	</delete>
+
+
+	<insert id="insertSelective" parameterType="com.hjy.sample.entity.UserInfo" >
+	    insert into user_info
+	    <trim prefix="(" suffix=")" suffixOverrides="," >
+	      <if test="id != null" >
+	        id,
+	      </if>
+	      <if test="companyId != null" >
+	        company_id,
+	      </if>
+	      <if test="userName != null" >
+	        user_name,
+	      </if>
+	      <if test="password != null" >
+	        password,
+	      </if>
+	      <if test="idNumber != null" >
+	        id_number,
+	      </if>
+	      <if test="sex != null" >
+	        sex,
+	      </if>
+	      <if test="birthday != null" >
+	        birthday,
+	      </if>
+	      <if test="mobile != null" >
+	        mobile,
+	      </if>
+	      <if test="email != null" >
+	        email,
+	      </if>
+	      <if test="createTime != null" >
+	        create_time,
+	      </if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      <if test="id != null" >
+	        #{id,jdbcType=INTEGER},
+	      </if>
+	      <if test="companyId != null" >
+	        #{companyId,jdbcType=INTEGER},
+	      </if>
+	      <if test="userName != null" >
+	        #{userName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="password != null" >
+	        #{password,jdbcType=VARCHAR},
+	      </if>
+	      <if test="idNumber != null" >
+	        #{idNumber,jdbcType=VARCHAR},
+	      </if>
+	      <if test="sex != null" >
+	        #{sex,jdbcType=INTEGER},
+	      </if>
+	      <if test="birthday != null" >
+	        #{birthday,jdbcType=DATE},
+	      </if>
+	      <if test="mobile != null" >
+	        #{mobile,jdbcType=VARCHAR},
+	      </if>
+	      <if test="email != null" >
+	        #{email,jdbcType=INTEGER},
+	      </if>
+	      <if test="createTime != null" >
+	        #{createTime,jdbcType=TIMESTAMP},
+	      </if>
+	    </trim>
+	 </insert>
+  
+	  <update id="updateSelective" parameterType="com.hjy.sample.entity.UserInfo" >
+	    update user_info
+	    <set >
+	      <if test="companyId != null" >
+	        company_id = #{companyId,jdbcType=INTEGER},
+	      </if>
+	      <if test="userName != null" >
+	        user_name = #{userName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="password != null" >
+	        password = #{password,jdbcType=VARCHAR},
+	      </if>
+	      <if test="idNumber != null" >
+	        id_number = #{idNumber,jdbcType=VARCHAR},
+	      </if>
+	      <if test="sex != null" >
+	        sex = #{sex,jdbcType=INTEGER},
+	      </if>
+	      <if test="birthday != null" >
+	        birthday = #{birthday,jdbcType=DATE},
+	      </if>
+	      <if test="mobile != null" >
+	        mobile = #{mobile,jdbcType=VARCHAR},
+	      </if>
+	      <if test="email != null" >
+	        email = #{email,jdbcType=INTEGER},
+	      </if>
+	      <if test="createTime != null" >
+	        create_time = #{createTime,jdbcType=TIMESTAMP},
+	      </if>
+	    </set>
+	    where id = #{id,jdbcType=INTEGER}
+	  </update>
+
+
+</mapper> 

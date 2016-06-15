@@ -1,15 +1,15 @@
-package com.hjy.sample.service.impl;
+package com.hjy.service.login.impl;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.hjy.sample.dao.IUserInfoDao;
-import com.hjy.sample.entity.UserInfo;
-import com.hjy.sample.service.IUserInfoService;
+import com.hjy.dao.login.IUserInfoDao;
+import com.hjy.entity.login.UserInfo;
 import com.hjy.service.BaseServiceImpl;
+import com.hjy.service.login.IUserInfoService;
 
-//@Service("userInfoService")
+@Service("userInfoService")
 public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> implements IUserInfoService {
 
 	@Resource
@@ -20,5 +20,4 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> impl
 
 		return userInfoDao.login(entity);
 	}
-
 }

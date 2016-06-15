@@ -50,7 +50,7 @@ xmlns:mvc="http://www.springframework.org/schema/mvc"
 		</property>
 	</bean>
 	<!-- Spring mvc 返回json格式 此处需要重写该类 -->
-    <bean id="noCachemappingJacksonHttpMessageConverter" class="com.hjy.sacom.filter.NoCacheMappingJacksonHttpMessageConverter"/>
+    <bean id="noCachemappingJacksonHttpMessageConverter" class="com.hjy.filter.NoCacheMappingJacksonHttpMessageConverter"/>
     <!-- Spring mvc 返回json格式 -->
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="messageConverters">

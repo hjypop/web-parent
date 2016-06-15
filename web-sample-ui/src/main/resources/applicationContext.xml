@@ -11,22 +11,20 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd  
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd  
         http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd  
-        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd"
-        >    
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">    
         
 	<!-- 自动扫描 使用注解的包，包括子集 -->
-	<!-- <context:component-scan base-package="com.hjy.sacore.base" /> -->
-	<!-- <context:component-scan base-package="com.hjy.sacore.dao" /> -->
-	<context:component-scan base-package="com.hjy.sacore.service" />
-	<context:component-scan base-package="com.hjy.sacore.serviceImpl" />
+	<context:component-scan base-package="com.hjy.dao" />
+	<context:component-scan base-package="com.hjy.service" />
+	<!-- context:component-scan base-package="com.hjy.sample.service" / -->
 	
 	
 	<!-- 配置数据源 -->
 	<context:property-placeholder location="classpath:properties/jdbc.properties" />   
 	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-		<property name="url" value="${url}" />
-		<property name="username" value="${username}" />
-		<property name="password" value="${password}" />
+		<property name="url" value="${jdbc_url}" />
+		<property name="username" value="${jdbc_username}" />
+		<property name="password" value="${jdbc_password}" />
 		<property name="initialSize" value="0" />
 		<property name="maxActive" value="20" />
 		<property name="maxIdle" value="20" />
@@ -48,29 +46,30 @@
 		<!-- <property name="filters" value="stat" /> -->
 		<property name="filters" value="mergeStat" />
 	</bean>
-	<!-- 配置mybatis的sqlSessionFactory -->
+	
+	
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<!-- 自动扫描mappers.xml文件 -->
-		<property name="mapperLocations" value="classpath:com/hjy/sacore/mappers/*.xml"></property>
-		<!-- mybatis 配置文件 -->
+		<property name="mapperLocations" value="classpath:com.hjy.mapper/*.xml"></property>
 		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
 	</bean>
-	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+	
+	
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.hjy.sacore.dao" />
+		<property name="basePackage" value="com.hjy.sample.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 	</bean>
-	<!-- TODO 感觉没多大用啊 -->
+	
 	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sqlSessionFactory" />
 	</bean>
 	
 	
-	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+	
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
+	
 	<!-- 配置事务通知属性 -->  
     <tx:advice id="txAdvice" transaction-manager="transactionManager">  
         <!-- 定义事务传播属性 -->  
@@ -96,9 +95,9 @@
 			<tx:method name="datagrid*" propagation="SUPPORTS" />
         </tx:attributes>  
     </tx:advice>  
-    <!-- 配置事务切面  TODO 这里会不会有问题？？？？？-->  
+    
     <aop:config>  
-        <aop:pointcut id="serviceOperation"  expression="execution(* com.hjy.sacore.serviceImpl.*.*(..))" />  
+        <aop:pointcut id="serviceOperation"  expression="execution(* com.hjy.sample.serviceImpl.*.*(..))" />  
         <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation" />  
     </aop:config>  
     
@@ -111,19 +110,14 @@
 	<bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut" scope="prototype">
 		<property name="patterns">
 			<list>
-				<value>com.hjy.sacore.serviceImpl.*</value>
+				<value>com.hjy.sample.serviceImpl.*</value>
 			</list>
 		</property>
 	</bean>
 	<aop:config>
 		<aop:advisor advice-ref="druid-stat-interceptor" pointcut-ref="druid-stat-pointcut" />
 	</aop:config>
-	
-	
-	
-	<!-- 自定义缓存基础数据服务 暂时不用 -->
-	<!-- <bean id="cacheService" class="com.hjy.sacore.cache.CacheServiceImpl" init-method="init"/> -->
-	
+
 </beans>
 
 

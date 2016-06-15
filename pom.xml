@@ -35,6 +35,7 @@
 		<phprpc.version>3.0.2</phprpc.version>
 		<activemq.version>5.7.0</activemq.version>
 		<httpclient.version>4.5.1</httpclient.version>
+		<pagerhelper.version>4.0.3</pagerhelper.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -62,7 +63,6 @@
 			<artifactId>spring-jdbc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<!--新添加的spring依赖 -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aop</artifactId>
@@ -98,24 +98,21 @@
 			<artifactId>spring-orm</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<!-- ==============mybatis=========== -->
-		<!-- 从3.2.7进行升级 -->
+		<!-- mybatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
 			<version>${mybatis.version}</version>
 		</dependency>
-		<!--从1.2.2升级到1.3.0 -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis-spring</artifactId>
 			<version>${mybatis-spring.version}</version>
 		</dependency>
-		<!-- Mybatis 分页插件 4.0.2 -->
 		<dependency>
 			<groupId>com.github.pagehelper</groupId>
 			<artifactId>pagehelper</artifactId>
-			<version>4.0.3</version>
+			<version>${pagerhelper.version}</version>
 		</dependency>
 
 		<!-- Mybatis 分页插件 4.0.2所依赖jar包 -->
@@ -131,7 +128,7 @@
 			<artifactId>mybatis-paginator</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-		<!-- ==============mysql=========== -->
+
 		<!-- druid是一个JDBC组件 DruidDriver 代理Driver，能够提供基于Filter－Chain模式的插件体系。 DruidDataSource 
 			高效可管理的数据库连接池。 see: http://www.oschina.net/p/druid/ -->
 		<dependency>
@@ -152,13 +149,12 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!--从1.7.1升级到1.8.9 -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
 			<version>${aspectjweaver.version}</version>
 		</dependency>
-		<!-- ============commons============== -->
+
 		<dependency>
 			<groupId>commons-httpclient</groupId>
 			<artifactId>commons-httpclient</artifactId>
@@ -262,8 +258,6 @@
 			<artifactId>phprpc</artifactId>
 			<version>${phprpc.version}</version>
 		</dependency>
-		<!-- Java消息服务（Java Message Service，JMS）应用程序接口是一个 Java平台中关于面向消息中间件（MOM）的API，用于在两个应用程序 
-			之间，或分布式系统中发送消息，进行异步通信。 -->
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-core</artifactId>
@@ -281,8 +275,7 @@
 			<artifactId>ganymed-ssh2</artifactId>
 			<version>build210</version>
 		</dependency>
-
-		<!-- Java获取汉字的拼音，pinyin4j这个库可以很好的解决这个问题。 -->
+		<!-- Java获取汉字的拼音 -->
 		<dependency>
 			<groupId>com.belerweb</groupId>
 			<artifactId>pinyin4j</artifactId>
@@ -312,4 +305,21 @@
 			<version>1.5.4</version>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<finalName>sample</finalName>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<defaultLibBundleDir>lib</defaultLibBundleDir>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
