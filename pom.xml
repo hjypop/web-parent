@@ -202,6 +202,11 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>${javax.servlet-api.version}</version>
 		</dependency>
+		<dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
 		<!-- ============json============ -->
 		<!--从1.2.6升级到1.2.10 -->
 		<dependency>

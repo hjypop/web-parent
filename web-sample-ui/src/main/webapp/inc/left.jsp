@@ -19,30 +19,6 @@
                     <a href="" class="gallery">File Manager</a>
                 </li>
 
-                <li class="current">
-                    <a href="#error" class="error">一级菜单栏B</a>
-                    <span class="arrow"></span>
-                    <ul id="error">
-                        <li><a href="">二级菜单栏D</a></li>
-                        <li><a href="">二级菜单栏E</a></li>
-                        <li><a href="">二级菜单栏F</a></li>
-                        <li><a href="">二级菜单栏G</a></li>
-                    </ul>
-                </li>
-
-                <li class="current">
-                    <a href="#addons" class="addons">一级菜单栏C</a>
-                    <span class="arrow"></span>
-                    <ul id="addons">
-                        <li><a href="">二级菜单栏H</a></li>
-                        <li><a href="">二级菜单栏I</a></li>
-                        <li><a href="">二级菜单栏J</a></li>
-                        <li><a href="">二级菜单栏K</a></li>
-                        <li><a href="">二级菜单栏L</a></li>
-                        <li><a href="">二级菜单栏N</a></li>
-                    </ul>
-                </li>
-
 
                 <!-- 此处应放入到系统维护导航栏中-->
                  <li class="current">
