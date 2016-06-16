@@ -11,7 +11,7 @@
 	<artifactId>web-quartz</artifactId>
 	<name>web-quartz</name>
 	<packaging>jar</packaging>
-	<url>http://maven.apache.org</url>
+	<url>http://www.huijiayou.cn</url>
 	<dependencies>
 		<dependency>
 			<groupId>com.huijiayou</groupId>

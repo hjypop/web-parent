@@ -11,7 +11,7 @@
 	<artifactId>web-sample</artifactId>
 	<name>web-sample</name>
 	<packaging>jar</packaging>
-	<url>http://maven.apache.org</url>
+	<url>http://www.huijiayou.cn</url>
 	<dependencies>
 		<dependency>
 			<groupId>com.huijiayou</groupId>
