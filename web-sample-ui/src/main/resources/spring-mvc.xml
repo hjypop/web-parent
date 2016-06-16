@@ -49,6 +49,7 @@ xmlns:mvc="http://www.springframework.org/schema/mvc"
 			</list>
 		</property>
 	</bean>
+	
 	<!-- Spring mvc 返回json格式 此处需要重写该类 -->
     <bean id="noCachemappingJacksonHttpMessageConverter" class="com.hjy.filter.NoCacheMappingJacksonHttpMessageConverter"/>
     <!-- Spring mvc 返回json格式 -->

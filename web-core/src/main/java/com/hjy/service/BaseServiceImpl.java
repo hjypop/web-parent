@@ -23,7 +23,7 @@ public class BaseServiceImpl<T, PK extends Serializable> implements BaseService<
 	
 	public static Logger logger = Logger.getLogger(BaseServiceImpl.class);
 	
-	@Autowired
+//	@Autowired
 	public BaseDao<T,PK> baseDao;
 
 	@Override

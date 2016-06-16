@@ -16,9 +16,9 @@ import com.github.miemiedev.mybatis.paginator.domain.Order;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hjy.controller.BaseController;
-import com.hjy.sample.entity.UserInfo;
-import com.hjy.sample.service.ILoginService;
-import com.hjy.sample.service.IUserInfoService;
+import com.hjy.entity.login.UserInfo;
+import com.hjy.service.login.ILoginService;
+import com.hjy.service.login.IUserInfoService;
 
 /**
  * @descriptions 所有【示例】相关的后台方法都在这里 

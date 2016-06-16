@@ -12,12 +12,11 @@ import com.hjy.service.login.IUserInfoService;
 @Service("userInfoService")
 public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, Integer> implements IUserInfoService {
 
-	@Resource
+//	@Resource
 	private IUserInfoDao userInfoDao;
 
 	@Override
 	public UserInfo login(UserInfo entity) {
-
 		return userInfoDao.login(entity);
 	}
 }
