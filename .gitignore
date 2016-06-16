@@ -17,3 +17,7 @@
 /web-sample-ui/.settings/
 /web-sample-ui/.project
 /web-sample-ui/.classpath
+/web-quartz/target/
+/web-quartz/.settings/
+/web-quartz/.project
+/web-quartz/.classpath

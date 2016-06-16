@@ -12,6 +12,7 @@
 		<module>web-cache</module>
 		<module>web-sample</module>
 		<module>web-sample-ui</module>
+		<module>web-quartz</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -307,7 +308,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>sample</finalName>
+		<finalName>${project.name}</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
 			<plugin>
