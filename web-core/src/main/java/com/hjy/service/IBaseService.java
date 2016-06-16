@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
  * @author Yangcl
  * @version 1.0.1
  */
-public interface BaseService<T, PK extends Serializable> {
+public interface IBaseService<T, PK extends Serializable> {
 	
 	/**
 	 * @descriptions 保存单一对象，如果实体中的某个字段为null则不保存这个字段
@@ -27,7 +27,7 @@ public interface BaseService<T, PK extends Serializable> {
 	 * @author Yangcl
 	 * @version 1.0.0.1
 	 */
-    public PK insertSelective(T entity); 
+    public Integer insertSelective(T entity); 
     
     /**
      * @descriptions 保存单一对象，并返回这条记录的生成自增id 
@@ -39,7 +39,7 @@ public interface BaseService<T, PK extends Serializable> {
      * @author Yangcl
      * @version 1.0.0.1
      */
-    public PK insertGotEntityId(T entity); 
+    public Integer insertGotEntityId(T entity); 
     
     /**
      * @descriptions 保存单一对象，并返回这条记录生成的uuid 
@@ -51,7 +51,7 @@ public interface BaseService<T, PK extends Serializable> {
      * @author Yangcl
      * @version 1.0.0.1
      */
-    public PK insertGotEntityUuid(T entity); 
+    public Integer insertGotEntityUuid(T entity); 
     
     /**
      * @descriptions 批量添加操作，保存一个对象集合

@@ -1,4 +1,4 @@
-package com.hjy.service;
+package com.hjy.service.impl;
 
 import java.io.Serializable;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.dao.BaseDao;
+import com.hjy.service.IBaseService;
 
 /**
  * @descriptions 底层实现类
@@ -19,27 +20,27 @@ import com.hjy.dao.BaseDao;
  * @version 1.0.1
  */
 //@Service("baseService")  abstract
-public class BaseServiceImpl<T, PK extends Serializable> implements BaseService<T, PK> {
+public class BaseServiceImpl<T, PK extends Serializable> implements IBaseService<T, PK> {
 	
 	public static Logger logger = Logger.getLogger(BaseServiceImpl.class);
 	
-//	@Autowired
+	@Autowired
 	public BaseDao<T,PK> baseDao;
 
 	@Override
-	public PK insertSelective(T entity) {
+	public Integer insertSelective(T entity) {
 		// TODO Auto-generated method stub
 		return baseDao.insertSelective(entity);
 	}
 
 	@Override
-	public PK insertGotEntityId(T entity) {
+	public Integer insertGotEntityId(T entity) {
 		// TODO Auto-generated method stub
 		return baseDao.insertGotEntityId(entity);
 	}
 
 	@Override
-	public PK insertGotEntityUuid(T entity) {
+	public Integer insertGotEntityUuid(T entity) {
 		// TODO Auto-generated method stub
 		return baseDao.insertGotEntityUuid(entity);
 	}

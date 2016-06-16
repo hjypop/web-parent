@@ -17,8 +17,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hjy.controller.BaseController;
 import com.hjy.entity.login.UserInfo;
-import com.hjy.service.login.ILoginService;
-import com.hjy.service.login.IUserInfoService;
+import com.hjy.service.ILoginService;
+import com.hjy.service.IUserInfoService;
 
 /**
  * @descriptions 所有【示例】相关的后台方法都在这里 

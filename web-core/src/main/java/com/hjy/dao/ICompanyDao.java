@@ -1,6 +1,5 @@
-package com.hjy.dao.login;
+package com.hjy.dao;
 
-import com.hjy.dao.BaseDao;
 import com.hjy.entity.login.Company;
 
 public interface ICompanyDao extends BaseDao<Company, Integer> {	

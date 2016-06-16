@@ -1,4 +1,4 @@
-package com.hjy.service.login.impl;
+package com.hjy.service.impl;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -7,10 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hjy.dao.login.IUserInfoDao;
+import com.hjy.dao.IUserInfoDao;
 import com.hjy.entity.login.UserInfo;
-import com.hjy.service.BaseServiceImpl;
-import com.hjy.service.login.ILoginService;
+import com.hjy.service.ILoginService;
 
 @Service("loginService")
 public class LoginServiceImpl extends BaseServiceImpl<UserInfo, Integer> implements ILoginService {

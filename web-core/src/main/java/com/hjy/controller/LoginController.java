@@ -1,4 +1,4 @@
-package com.hjy.controller.login;
+package com.hjy.controller;
 
 import javax.servlet.http.HttpSession;
 
@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hjy.controller.BaseController;
 import com.hjy.entity.login.UserInfo;
-import com.hjy.service.login.ILoginService;
+import com.hjy.service.ILoginService;
 
 /**
  * @descriptions 登录与退出相关控制类

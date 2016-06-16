@@ -56,7 +56,7 @@
 	
 	
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.hjy.sample.dao" />
+		<property name="basePackage" value="com.hjy.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 	</bean>
 	
@@ -97,7 +97,7 @@
     </tx:advice>  
     
     <aop:config>  
-        <aop:pointcut id="serviceOperation"  expression="execution(* com.hjy.sample.serviceImpl.*.*(..))" />  
+        <aop:pointcut id="serviceOperation"  expression="execution(* com.hjy.service.impl.*.*(..))" />  
         <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation" />  
     </aop:config>  
     
@@ -110,7 +110,7 @@
 	<bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut" scope="prototype">
 		<property name="patterns">
 			<list>
-				<value>com.hjy.sample.serviceImpl.*</value>
+				<value>com.hjy.service.impl.*</value>
 			</list>
 		</property>
 	</bean>
