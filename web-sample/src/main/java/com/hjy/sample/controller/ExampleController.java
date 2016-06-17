@@ -1,4 +1,4 @@
-package com.sample.controller;
+package com.hjy.sample.controller;
 
 import java.util.List;
 
