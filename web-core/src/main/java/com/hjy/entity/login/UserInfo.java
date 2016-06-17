@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class UserInfo {
 	private Integer id ; 
+	private Integer companyId;
 	private String userName;
 	private String password;
 	private String idNumber;
@@ -19,6 +20,13 @@ public class UserInfo {
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	
+	public Integer getCompanyId() {
+		return companyId;
+	}
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
 	}
 	public String getUserName() {
 		return userName;

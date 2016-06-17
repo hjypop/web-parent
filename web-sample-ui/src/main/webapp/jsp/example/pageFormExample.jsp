@@ -4,6 +4,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <%@ include file="/inc/head.jsp" %>
+    <script type="text/javascript">
+
+
+        function deleteOne(id_){
+            if(confirm('您确定要删除这条记录吗？')){
+                var type_ = 'post';
+                var url_ = '${basePath}example/deleteOne.do';
+                var data_ = {id:id_};
+                var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+                if(obj.status == 'success'){
+                    alert(obj.msg);
+                    $("#tr-" + id_).remove();
+                }else{
+                    alert(obj.msg);
+                }
+            }
+
+        }
+
+    </script>
 </head>
 
 <body class="withvernav">
@@ -66,6 +86,7 @@
                                 <th class="head0 sorting">手机(s)</th>
                                 <th class="head1 sorting">身份证号</th>
                                 <th class="head0 sorting">E-mail</th>
+                                <th class="head1 " width="100px">操作</th>
                             </tr>
                         </thead>
 
@@ -81,13 +102,14 @@
                                 <th class="head0">Platform(s)</th>
                                 <th class="head1">Engine version</th>
                                 <th class="head0">CSS grade</th>
+                                <th class="head1">To do it</th>
                             </tr>
                         </tfoot>
 
                         <tbody>
                             <c:if test="${status == true}">
                                 <c:forEach items="${pageList.list}" var="c">
-                                    <tr class="gradeX">
+                                    <tr id="tr-${c.id }" class="gradeX">
                                         <td align="center">
                                             <span class="center">
                                                 <input type="checkbox"/>
@@ -98,6 +120,10 @@
                                         <td>${c.mobile }</td>
                                         <td class="center">${c.idNumber }</td>
                                         <td class="center">${c.email }</td>
+                                        <td width="100px" align="center">
+                                            <a onclick="deleteOne('${c.id }')" title="删除" class="btn btn3 btn_trash" style="cursor: pointer;"></a>
+                                            <a href="${basePath}example/editInfoPage.do?id=${c.id }" title="修改" class="btn btn3 btn_book" style="cursor: pointer;"></a>
+                                        </td>
                                     </tr>
 
                                 </c:forEach>
