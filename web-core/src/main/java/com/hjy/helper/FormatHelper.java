@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * 转换帮助类
  * 
- * @author srnpr
+ * @author HJY
  * 
  */
 public class FormatHelper {

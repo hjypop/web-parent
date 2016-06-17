@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 /**
  * JSON帮助类
  * 
- * @author srnpr
+ * @author HJY
  * 
  * @param <T>
  */

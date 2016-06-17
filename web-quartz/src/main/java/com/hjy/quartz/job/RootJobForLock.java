@@ -5,19 +5,11 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import com.srnpr.zapcom.baseclass.BaseClass;
-import com.srnpr.zapcom.baseface.IBaseJob;
-import com.srnpr.zapcom.baseface.IBaseResult;
-import com.srnpr.zapcom.basehelper.DateHelper;
-import com.srnpr.zapcom.basehelper.FormatHelper;
-import com.srnpr.zapcom.basehelper.LogHelper;
-import com.srnpr.zapcom.basemodel.MDataMap;
-import com.srnpr.zapcom.basemodel.MJobInfo;
-import com.srnpr.zapcom.basemodel.MLogJob;
-import com.srnpr.zapcom.topdo.TopConst;
-import com.srnpr.zapdata.dbdo.DbUp;
-import com.srnpr.zapweb.helper.WebHelper;
-import com.srnpr.zapweb.webfactory.WebLogFactory;
+import com.hjy.base.BaseClass;
+import com.hjy.helper.DateHelper;
+import com.hjy.helper.FormatHelper;
+import com.hjy.helper.WebHelper;
+import com.hjy.iface.IBaseJob;
 
 public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob {
 
@@ -72,9 +64,7 @@ public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob 
 
 			if (bFlagExec) {
 				doExecute(context);
-
 				sEndTime = FormatHelper.upDateTime();
-
 			}
 		} catch (Exception e) {
 

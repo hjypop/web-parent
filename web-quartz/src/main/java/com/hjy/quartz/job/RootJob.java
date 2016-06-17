@@ -10,7 +10,7 @@ import com.hjy.iface.IBaseJob;
 /**
  * 根任务 所有任务接口需要调用该基类
  * 
- * @author srnpr
+ * @author HJY
  * 
  */
 public abstract class RootJob extends RootJobForLock implements Job, IBaseJob {
