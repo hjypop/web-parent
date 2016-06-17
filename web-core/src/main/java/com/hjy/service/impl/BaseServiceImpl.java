@@ -94,9 +94,18 @@ public class BaseServiceImpl<T, PK extends Serializable> implements IBaseService
 	}
 
 	@Override
-	public JSONObject jsonList(T entity) {
-		// TODO Auto-generated method stub
-		return null;
+	public JSONObject jsonList(T entity) { 
+		JSONObject result = new JSONObject();
+		List<T> list = baseDao.findList(entity);
+		if(list != null && list.size() > 0){
+			result.put("status" , "success");
+			result.put("list" , list);
+			return result;
+		}else{
+			result.put("status", "error");
+			result.put("msg", "结果集为空");
+			return result;
+		}
 	}
 
 	@Override

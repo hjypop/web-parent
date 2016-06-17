@@ -1,4 +1,4 @@
-package com.hjy.entity.login;
+package com.hjy.entity.project;
 
 import java.util.Date;
 
