@@ -1,6 +1,9 @@
 package com.hjy.helper;
 
+import java.util.Map;
 import java.util.UUID;
+
+import com.hjy.model.MDataMap;
 
 public class WebHelper {
 
@@ -18,6 +21,7 @@ public class WebHelper {
 //	}
 
 	/**
+	 * alias upUuid
 	 * 获取uuid
 	 * 
 	 * @return
@@ -35,27 +39,9 @@ public class WebHelper {
 	 *            过期秒数。
 	 * @return
 	 */
-//	public static String addLock(String keys, int timeOutSeconds) {
-//		// CALL proc_lock_or_unlock_somekey
-//		// (@somekey,@keysplit,@timeoutsecond,@lockflag,REPLACE(UUID(),'-',''));
-//		/*
-//		 * try { UUID uuid = UUID.randomUUID(); String uid =
-//		 * uuid.toString().replace("-", ""); MDataMap mdataMap = new MDataMap();
-//		 * mdataMap.put("somekey", keys); mdataMap.put("timeoutsecond",
-//		 * String.valueOf(timeOutSeconds)); mdataMap.put("uuid", uid);
-//		 * 
-//		 * Map<String, Object> mResultMap = DbUp .upTable("zw_webcode")
-//		 * .dataSqlOne(
-//		 * "call proc_lock_or_unlock_somekey(:somekey,',',:timeoutsecond,1,:uuid);"
-//		 * , mdataMap);
-//		 * 
-//		 * if (mResultMap.get("outFlag").toString().equals("1")) return uid;
-//		 * else return ""; } catch (Exception ex) { ex.printStackTrace(); return
-//		 * ""; }
-//		 */
-//		return addLock(timeOutSeconds, keys);
-//
-//	}
+	public static String addLock(String keys, int timeOutSeconds) {
+		return addLock(timeOutSeconds, keys);
+	}
 
 	/**
 	 * 锁定某些编号 防止并发处理 <br/>
@@ -66,47 +52,40 @@ public class WebHelper {
 	 * @param keys
 	 * @return 返回非空表示锁定成功 否则表示锁定失败
 	 */
-//	public static String addLock(int timeOutSeconds, String... keys) {
-//		String sReturn = "";
-//
-//		String sUid = upUuid();
-//
-//		boolean bFlagLocked = true;
-//
-//		for (String sKey : keys) {
-//
-//			if (bFlagLocked) {
-//				MDataMap mDataMap = new MDataMap();
-//				mDataMap.inAllValues("somekey", sKey, "timeoutsecond",
-//						String.valueOf(timeOutSeconds), "uuid", sUid);
-//
-//				try {
-//
-//					Map<String, Object> mResultMap = DbUp
-//							.upTable("zw_webcode")
-//							.dataSqlOne(
-//									"call proc_lock_or_unlock_somekey(:somekey,',',:timeoutsecond,1,:uuid);",
-//									mDataMap);
-//
-//					if (!mResultMap.get("outFlag").toString().equals("1")) {
-//						bFlagLocked = false;
-//					}
-//
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//					bFlagLocked = false;
-//				}
-//			}
-//
-//		}
-//
-//		if (bFlagLocked) {
-//			sReturn = sUid;
-//		}
-//
-//		return sReturn;
-//
-//	}
+	public static String addLock(int timeOutSeconds, String... keys) {
+		String sReturn = "";
+		String sUid = genUuid();
+		boolean bFlagLocked = true;
+
+		for (String sKey : keys) {
+			if (bFlagLocked) {
+				MDataMap mDataMap = new MDataMap();
+				mDataMap.initKeyValues("somekey",sKey, "keysplit ",",", "timeoutsecond",
+						String.valueOf(timeOutSeconds), "lockflag","1", "uuid", sUid);
+
+				try {
+					Map<String, Object> mResultMap = DbUp
+							.upTable("zw_webcode")
+							.dataSqlOne(
+									"call proc_lock_or_unlock_somekey(:somekey,',',:timeoutsecond,1,:uuid);",
+									mDataMap);
+
+					if (!mResultMap.get("outFlag").toString().equals("1")) {
+						bFlagLocked = false;
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					bFlagLocked = false;
+				}
+			}
+		}
+
+		if (bFlagLocked) {
+			sReturn = sUid;
+		}
+		return sReturn;
+	}
 
 	/**
 	 * 解锁

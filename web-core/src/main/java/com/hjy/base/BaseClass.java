@@ -3,6 +3,7 @@ package com.hjy.base;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
+import com.hjy.global.ConfigVisitor;
 import com.hjy.helper.FormatHelper;
 
 /**
@@ -20,7 +21,7 @@ public abstract class BaseClass {
 	 */
 	public void bLogInfo(int iInfoCode, Object... sParms) {
 		LogFactory.getLog(this.getClass())
-				.info("[" + String.valueOf(iInfoCode) + "] " + TopUp.upLogInfo(iInfoCode, sParms));
+				.info("[" + String.valueOf(iInfoCode) + "] " + ConfigVisitor.getLogInfo(iInfoCode, sParms));
 	}
 
 	/**
@@ -33,7 +34,7 @@ public abstract class BaseClass {
 	 */
 	public void bLogError(int iInfoCode, Object... sParms) {
 		LogFactory.getLog(this.getClass())
-				.error("[" + String.valueOf(iInfoCode) + "] " + TopUp.upLogInfo(iInfoCode, sParms));
+				.error("[" + String.valueOf(iInfoCode) + "] " + ConfigVisitor.getLogInfo(iInfoCode, sParms));
 	}
 
 	/**
@@ -44,7 +45,7 @@ public abstract class BaseClass {
 	 */
 	public void bLogDebug(int iInfoCode, Object... sParms) {
 		LogFactory.getLog(this.getClass())
-				.debug("[" + String.valueOf(iInfoCode) + "] " + TopUp.upLogInfo(iInfoCode, sParms));
+				.debug("[" + String.valueOf(iInfoCode) + "] " + ConfigVisitor.getLogInfo(iInfoCode, sParms));
 	}
 	
 	/**
@@ -64,7 +65,7 @@ public abstract class BaseClass {
 	 * @return 配置内容字符串
 	 */
 	public String bConfig(String sKey) {
-		return TopUp.upConfig(sKey);
+		return ConfigVisitor.getConfig(sKey);
 	}
 
 	/**
@@ -76,6 +77,6 @@ public abstract class BaseClass {
 	 */
 	public String bInfo(long iInfoCode, Object... sParms) {
 
-		return FormatHelper.formatString(TopUp.upInfo(iInfoCode), sParms);
+		return FormatHelper.formatString(ConfigVisitor.getInfo(iInfoCode), sParms);
 	}
 }

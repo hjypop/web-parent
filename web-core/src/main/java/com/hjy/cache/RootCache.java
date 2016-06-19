@@ -52,16 +52,18 @@ public abstract class RootCache<K, V> extends BaseClass implements IBaseCache {
 	}
 
 	/**
+	 * alias upKeys
 	 * 获取所有缓存的Key
 	 * 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<K> upKeys() {
+	public List<K> getKeys() {
 		return cache.getKeys();
 	}
 
 	/**
+	 * alias upOne
 	 * 获取一个 默认返回null <br>
 	 * 客户端如果继承该类需要自行封装业务逻辑 该方法通用用于客户端覆盖 延迟加载判断<br>
 	 * 通常重写该方法以支撑返回缓存信息的情况
@@ -69,16 +71,17 @@ public abstract class RootCache<K, V> extends BaseClass implements IBaseCache {
 	 * @param k
 	 * @return
 	 */
-	public abstract V upOne(K k);
+	public abstract V getOne(K k);
 
 	/**
+	 * alias upValue
 	 * 获取缓存的值
 	 * 
 	 * @param k
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public V upValue(K k) {
+	public V getValue(K k) {
 
 		if (!containsKey(k)) {
 			synchronized (this) {
@@ -95,7 +98,7 @@ public abstract class RootCache<K, V> extends BaseClass implements IBaseCache {
 				if (containsKey(k)) {
 					v = (V) cache.get(k).getObjectValue();
 				} else {
-					v = upOne(k);
+					v = getOne(k);
 					bLogInfo(0, "upOne cache " + k.toString());
 					if (v != null && !containsKey(k)) {
 						inElement(k, v);

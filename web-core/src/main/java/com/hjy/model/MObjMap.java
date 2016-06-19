@@ -42,7 +42,4 @@ public class MObjMap<K, V> extends ConcurrentHashMap<K, V> {
 		}
 
 	}
-	
-	
-
 }

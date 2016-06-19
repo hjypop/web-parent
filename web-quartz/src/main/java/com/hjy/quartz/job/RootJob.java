@@ -22,7 +22,6 @@ public abstract class RootJob extends RootJobForLock implements Job, IBaseJob {
 		try {
 
 			// bLogInfo(967912002);
-			// context.getMergedJobDataMap().ge
 
 			if (context != null
 					&& context.getMergedJobDataMap() != null
@@ -54,9 +53,7 @@ public abstract class RootJob extends RootJobForLock implements Job, IBaseJob {
 
 					LogHelper.addLog("run_job", mLogJob);
 				}
-
 			}
-
 			doExecute(context);
 		} catch (Exception e) {
 			bLogError(967905003, this.getClass().getName());
