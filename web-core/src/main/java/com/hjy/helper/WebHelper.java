@@ -30,12 +30,12 @@ public class WebHelper {
 	 * @param sCodeStart
 	 * @return
 	 */
-	public static String genUniqueCode(String sCodeStart) {
-		Map<String, Object> mResultMap = DbUp.upTable("zw_webcode").dataSqlOne(
-				"call proc_get_unique_code(:code);",
-				new MDataMap("code", sCodeStart));
-		return mResultMap.get("webcode").toString();
-	}
+//	public static String genUniqueCode(String sCodeStart) {
+//		Map<String, Object> mResultMap = DbUp.upTable("zw_webcode").dataSqlOne(
+//				"call proc_get_unique_code(:code);",
+//				new MDataMap("code", sCodeStart));
+//		return mResultMap.get("webcode").toString();
+//	}
 
 	/**
 	 * alias upUuid
