@@ -1,4 +1,4 @@
-package com.hjy.entity.project;
+package com.hjy.entity.system;
 
 import java.util.Date;
 

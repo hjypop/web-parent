@@ -3,9 +3,27 @@ package com.hjy.helper;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Resource;
+
 import com.hjy.model.MDataMap;
+import com.hjy.service.ILockService;
 
 public class WebHelper {
+	private static WebHelper self;
+	
+	@Resource
+	private ILockService lockService;
+	
+	public static WebHelper getInstance() {
+		if(self == null) {
+			synchronized(WebHelper.class) {
+				if(self == null) {
+					self = new WebHelper();
+				}
+			}
+		}
+		return self;
+	}
 
 	/**
 	 * 获取唯一编号
@@ -26,7 +44,7 @@ public class WebHelper {
 	 * 
 	 * @return
 	 */
-	public static String genUuid() {
+	public String genUuid() {
 		return UUID.randomUUID().toString().replace("-", "");
 	}
 
@@ -39,7 +57,7 @@ public class WebHelper {
 	 *            过期秒数。
 	 * @return
 	 */
-	public static String addLock(String keys, int timeOutSeconds) {
+	public String addLock(String keys, int timeOutSeconds) {
 		return addLock(timeOutSeconds, keys);
 	}
 
@@ -52,28 +70,18 @@ public class WebHelper {
 	 * @param keys
 	 * @return 返回非空表示锁定成功 否则表示锁定失败
 	 */
-	public static String addLock(int timeOutSeconds, String... keys) {
+	public String addLock(int timeOutSeconds, String... keys) {
 		String sReturn = "";
 		String sUid = genUuid();
 		boolean bFlagLocked = true;
 
 		for (String sKey : keys) {
 			if (bFlagLocked) {
-				MDataMap mDataMap = new MDataMap();
-				mDataMap.initKeyValues("somekey",sKey, "keysplit ",",", "timeoutsecond",
-						String.valueOf(timeOutSeconds), "lockflag","1", "uuid", sUid);
-
 				try {
-					Map<String, Object> mResultMap = DbUp
-							.upTable("zw_webcode")
-							.dataSqlOne(
-									"call proc_lock_or_unlock_somekey(:somekey,',',:timeoutsecond,1,:uuid);",
-									mDataMap);
-
-					if (!mResultMap.get("outFlag").toString().equals("1")) {
+					String outFlag = lockService.addLock(sKey, timeOutSeconds, sUid);
+					if (!outFlag.equals("1")) {
 						bFlagLocked = false;
 					}
-
 				} catch (Exception e) {
 					e.printStackTrace();
 					bFlagLocked = false;

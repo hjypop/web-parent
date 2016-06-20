@@ -49,17 +49,19 @@ public class DateHelper {
 	}
 
 	/**
+	 * alias upDate
 	 * 获取日期的格式
 	 * 
 	 * @param dDate
 	 * @return
 	 */
-	public static String upDate(Date dDate) {
+	public static String formatDate(Date dDate) {
 
-		return upDate(dDate, CONST_PARSE_DATETIME);
+		return formatDate(dDate, CONST_PARSE_DATETIME);
 	}
 
 	/**
+	 * alias upDate
 	 * 获取日期的格式
 	 * 
 	 * @param dDate
@@ -67,7 +69,7 @@ public class DateHelper {
 	 *            规则表达式
 	 * @return
 	 */
-	public static String upDate(Date dDate, String sParse) {
+	public static String formatDate(Date dDate, String sParse) {
 		SimpleDateFormat sFormat = new SimpleDateFormat(sParse);
 		return sFormat.format(dDate);
 	}
@@ -79,7 +81,7 @@ public class DateHelper {
 	 * @return
 	 */
 	public static String upMonth(String sDateTime) {
-		return upDate(parseDate(sDateTime), CONST_PARSE_MONTH);
+		return formatDate(parseDate(sDateTime), CONST_PARSE_MONTH);
 	}
 
 	/**
@@ -88,7 +90,7 @@ public class DateHelper {
 	 * @return
 	 */
 	public static String upNow() {
-		return upDate(new Date());
+		return formatDate(new Date());
 	}
 
 	/**
@@ -142,7 +144,7 @@ public class DateHelper {
 
 		cal.add(iType, iAmount);
 
-		return upDate(cal.getTime());
+		return formatDate(cal.getTime());
 
 	}
 

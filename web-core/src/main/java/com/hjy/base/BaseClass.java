@@ -79,4 +79,29 @@ public abstract class BaseClass {
 
 		return FormatHelper.formatString(ConfigVisitor.getInfo(iInfoCode), sParms);
 	}
+	
+
+	/**
+	 * 类日志记录
+	 * 
+	 * @param clazz
+	 * @param objects
+	 */
+	/**
+	 * @param clazz
+	 * @param objects
+	 */
+	public static void ClassLogInfo(Class<?> clazz, Object... objects) {
+		LogFactory.getLog(clazz).info(StringUtils.join(objects));
+	}
+
+	/**
+	 * 类日志警告
+	 * 
+	 * @param clazz
+	 * @param objects
+	 */
+	public static void classLogWarn(Class<?> clazz, Object... objects) {
+		LogFactory.getLog(clazz).warn(StringUtils.join(objects));
+	}
 }

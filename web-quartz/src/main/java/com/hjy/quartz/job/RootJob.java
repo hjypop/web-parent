@@ -4,8 +4,12 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import com.hjy.global.TopConst;
 import com.hjy.helper.DateHelper;
+import com.hjy.helper.LogHelper;
 import com.hjy.iface.IBaseJob;
+import com.hjy.quartz.model.MJobInfo;
+import com.hjy.quartz.model.MLogJob;
 
 /**
  * 根任务 所有任务接口需要调用该基类
@@ -18,11 +22,7 @@ public abstract class RootJob extends RootJobForLock implements Job, IBaseJob {
 	// 这个是备份执行 为了防止新逻辑出错时 直接修改代码 更新继承和这块逻辑就行
 	public void back_execute(JobExecutionContext context)
 			throws JobExecutionException {
-
 		try {
-
-			// bLogInfo(967912002);
-
 			if (context != null
 					&& context.getMergedJobDataMap() != null
 					&& context.getMergedJobDataMap().containsKey(
@@ -46,11 +46,8 @@ public abstract class RootJob extends RootJobForLock implements Job, IBaseJob {
 				// 判断如果记日志
 				if (mJobInfo.getExtendTypeLog() == 1) {
 					MLogJob mLogJob = new MLogJob();
-
-					mLogJob.setNextExecTime(DateHelper.upDate(context
-							.getNextFireTime()));
+					mLogJob.setNextExecTime(DateHelper.formatDate(context.getNextFireTime()));
 					mLogJob.setJobInfo(mJobInfo);
-
 					LogHelper.addLog("run_job", mLogJob);
 				}
 			}

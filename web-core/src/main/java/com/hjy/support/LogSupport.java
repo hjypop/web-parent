@@ -7,10 +7,14 @@ import java.util.UUID;
 import org.apache.commons.lang.StringUtils;
 
 import com.hjy.base.BaseClass;
+import com.hjy.cache.impl.LogCache;
+import com.hjy.entity.system.LogInfo;
+import com.hjy.entity.system.SendLog;
 import com.hjy.global.InitDir;
 import com.hjy.global.TopConst;
 import com.hjy.helper.FormatHelper;
 import com.hjy.helper.GsonHelper;
+import com.hjy.helper.NetHelper;
 import com.hjy.model.MDataMap;
 
 public class LogSupport extends BaseClass {
@@ -71,10 +75,10 @@ public class LogSupport extends BaseClass {
 	public List<LogInfo> upLogListAndRemove(int iNumber) {
 		List<LogInfo> logList = new ArrayList<LogInfo>();
 
-		List<String> listKeys = logCache.upKeys();
+		List<String> listKeys = logCache.getKeys();
 
 		for (int i = 0; i < Math.min(iNumber, listKeys.size()); i++) {
-			logList.add(logCache.upValueAndRemove(listKeys.get(i)));
+			logList.add(logCache.getValueAndRemove(listKeys.get(i)));
 		}
 		return logList;
 	}

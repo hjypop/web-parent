@@ -20,7 +20,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hjy.controller.BaseController;
 import com.hjy.entity.login.UserInfo;
-import com.hjy.entity.project.Company;
+import com.hjy.entity.system.Company;
 import com.hjy.service.ICompanyService;
 import com.hjy.service.ILoginService;
 import com.hjy.service.IUserInfoService;

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hjy.dao.ICompanyDao" >
 
-  <resultMap id="BaseResultMap" type="com.hjy.entity.project.Company" >
+  <resultMap id="BaseResultMap" type="com.hjy.entity.system.Company" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="company_name" property="companyName" jdbcType="VARCHAR" />
     <result column="flag" property="flag" jdbcType="INTEGER" />
@@ -31,7 +31,7 @@
   </delete>
   
   
-  <insert id="insertSelective" parameterType="com.hjy.entity.project.Company" >
+  <insert id="insertSelective" parameterType="com.hjy.entity.system.Company" >
     insert into company
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -87,7 +87,7 @@
     </trim>
   </insert>
   
-  <update id="updateByPrimaryKeySelective" parameterType="com.hjy.entity.project.Company" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hjy.entity.system.Company" >
     update company
     <set >
       <if test="companyName != null" >
@@ -115,7 +115,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
-  <update id="updateByPrimaryKey" parameterType="com.hjy.entity.project.Company" >
+  <update id="updateByPrimaryKey" parameterType="com.hjy.entity.system.Company" >
     update company
     set company_name = #{companyName,jdbcType=VARCHAR},
       flag = #{flag,jdbcType=INTEGER},
