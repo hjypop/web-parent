@@ -18,7 +18,6 @@ public class LockTest {
 	@Test
 	public void test() {
 		String aaa = lockService.addLock("keycode22", 10, "UUID23243");
-		 
 		System.out.println("hello world " + aaa);  
 	}
 }
