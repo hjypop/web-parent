@@ -24,17 +24,18 @@ public class WebHelper {
 	}
 
 	/**
+	 * alias upCode
 	 * 获取唯一编号
 	 * 
 	 * @param sCodeStart
 	 * @return
 	 */
-//	public static String upCode(String sCodeStart) {
-//		Map<String, Object> mResultMap = DbUp.upTable("zw_webcode").dataSqlOne(
-//				"call proc_zw_getcode(:code);",
-//				new MDataMap("code", sCodeStart));
-//		return mResultMap.get("webcode").toString();
-//	}
+	public static String genUniqueCode(String sCodeStart) {
+		Map<String, Object> mResultMap = DbUp.upTable("zw_webcode").dataSqlOne(
+				"call proc_get_unique_code(:code);",
+				new MDataMap("code", sCodeStart));
+		return mResultMap.get("webcode").toString();
+	}
 
 	/**
 	 * alias upUuid
