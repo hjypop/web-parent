@@ -3,19 +3,12 @@ package com.hjy.quartz.job;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
 
-import com.srnpr.zapcom.baseface.IBaseResult;
-import com.srnpr.zapcom.basehelper.FormatHelper;
-import com.srnpr.zapcom.basehelper.GsonHelper;
-import com.srnpr.zapcom.basehelper.JsonHelper;
-import com.srnpr.zapcom.basehelper.LogHelper;
-import com.srnpr.zapcom.basemodel.MDataMap;
-import com.srnpr.zapcom.basesupport.MailSupport;
-import com.srnpr.zapcom.topapi.RootResult;
-import com.srnpr.zapdata.dbdo.DbUp;
-import com.srnpr.zapweb.helper.WebHelper;
-import com.srnpr.zapweb.webdo.WebConst;
-import com.srnpr.zapweb.webmodel.ConfigJobExec;
-import com.srnpr.zapweb.webmodel.MWebResult;
+import com.hjy.helper.FormatHelper;
+import com.hjy.helper.GsonHelper;
+import com.hjy.helper.LogHelper;
+import com.hjy.helper.WebHelper;
+import com.hjy.model.MDataMap;
+import com.hjy.quartz.model.ConfigJobExec;
 
 public abstract class RootJobForExec extends RootJob {
 
@@ -42,19 +35,16 @@ public abstract class RootJobForExec extends RootJob {
 
 			String sExecCode = mDataMap.get("exec_code");
 			String sExecInfo = mDataMap.get("exec_info");
-			String sLockKey = WebHelper.addLock(configJobExec.getExecJobLock(),
+			String sLockKey = WebHelper.getInstance().addLock(configJobExec.getExecJobLock(),
 					sExecCode, sExecInfo);
 
 			if (StringUtils.isNotEmpty(sLockKey)) {
 				IBaseResult iResult = null;
 				try {
 					iResult = execByInfo(mDataMap.get("exec_info").trim());
-
 					LogHelper.addLog("job_exec", iResult);
-
 				} catch (Exception e) {
 					RootResult rootResult = new RootResult();
-
 					rootResult.setResultCode(969905039);
 					rootResult.setResultMessage(bInfo(969905039));
 					iResult = (IBaseResult) rootResult;
@@ -64,7 +54,6 @@ public abstract class RootJobForExec extends RootJob {
 				}
 
 				if (iResult.getResultCode() != 1) {
-
 					// 当已执行次数等于该数字时 发送报警邮件 一条记录只发送一次
 					if (configJobExec.getNoticeOnce() > 0
 							&& Integer.valueOf(mDataMap.get("exec_number")) == configJobExec
@@ -74,9 +63,9 @@ public abstract class RootJobForExec extends RootJob {
 								.trim();
 						if (StringUtils.isNotBlank(sErrorNotice)) {
 
-							MailSupport.INSTANCE.sendMail(sErrorNotice,
-									bInfo(969912014, sExecCode + sExecInfo),
-									iResult.getResultMessage());
+//							MailSupport.INSTANCE.sendMail(sErrorNotice,
+//									bInfo(969912014, sExecCode + sExecInfo),
+//									iResult.getResultMessage());
 						}
 					}
 				}
@@ -94,7 +83,7 @@ public abstract class RootJobForExec extends RootJob {
 						"begin_time,end_time,flag_success,remark,exec_number",
 						"exec_code");
 
-				WebHelper.unLock(sLockKey);
+				WebHelper.getInstance().unLock(sLockKey);
 			}
 
 		}

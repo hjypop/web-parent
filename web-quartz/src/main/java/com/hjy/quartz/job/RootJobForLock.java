@@ -50,14 +50,13 @@ public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob 
 
 				// 判断如果加锁 则开始加锁处理
 				if (mJobInfo.getExtendLockTimer() > 0) {
-					sLockKey = WebHelper.addLock(mJobInfo.getExtendLockTimer(),
+					sLockKey = WebHelper.getInstance().addLock(mJobInfo.getExtendLockTimer(),
 							mJobInfo.getJobName());
 
 					if (StringUtils.isBlank(sLockKey)) {
 						bFlagExec = false;
 					}
 				}
-
 			}
 
 			if (bFlagExec) {
@@ -65,7 +64,6 @@ public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob 
 				sEndTime = FormatHelper.upDateTime();
 			}
 		} catch (Exception e) {
-
 			bLogError(967905003, this.getClass().getName());
 			WebHelper.errorMessage(mJobInfo.getJobName(), "jobexecerror", 9,
 					"rootjobforlock", mJobInfo.getJobClass(), e);
@@ -74,7 +72,7 @@ public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob 
 
 		// 如果key不为空 则直接解锁
 		if (StringUtils.isNotBlank(sLockKey)) {
-			WebHelper.unLock(sLockKey);
+			WebHelper.getInstance().unLock(sLockKey);
 		}
 
 		// 开始更新执行日志

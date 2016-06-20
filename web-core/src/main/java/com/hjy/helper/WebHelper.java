@@ -1,11 +1,9 @@
 package com.hjy.helper;
 
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
 
-import com.hjy.model.MDataMap;
 import com.hjy.service.ILockService;
 
 public class WebHelper {
@@ -102,25 +100,18 @@ public class WebHelper {
 	 *            要解锁的uuid
 	 * @return
 	 */
-//	public static String unLock(String uuid) {
-//		try {
-//			MDataMap mdataMap = new MDataMap();
-//			mdataMap.put("uuid", uuid);
-//
-//			Map<String, Object> mResultMap = DbUp
-//					.upTable("zw_webcode")
-//					.dataSqlOne(
-//							"call proc_lock_or_unlock_somekey('',',',0,2,:uuid);",
-//							mdataMap);
-//
-//			if (mResultMap.get("outFlag").toString().equals("1"))
-//				return uuid;
-//			else
-//				return "";
-//		} catch (Exception ex) {
-//			return "";
-//		}
-//	}
+	public String unLock(String uuid) {
+		try {
+			String outFlag = lockService.unLock(uuid);
+
+			if (outFlag.equals("1"))
+				return uuid;
+			else
+				return "";
+		} catch (Exception ex) {
+			return "";
+		}
+	}
 
 	/**
 	 * 该操作函数为预留函数 输出性Url统一走该操作 防止以后替换
