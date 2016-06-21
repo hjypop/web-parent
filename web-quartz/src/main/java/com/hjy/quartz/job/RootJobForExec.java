@@ -10,15 +10,19 @@ import com.hjy.helper.WebHelper;
 import com.hjy.iface.IBaseResult;
 import com.hjy.model.MDataMap;
 import com.hjy.quartz.model.ConfigJobExec;
+import com.hjy.quartz.model.JobResult;
 
 public abstract class RootJobForExec extends RootJob {
 
+	
 	public void doExecute(JobExecutionContext context) {
 
 		ConfigJobExec configJobExec = getConfig();
 
 		String sNowString = FormatHelper.upDateTime();
 
+		//za_exectimer -> job_exectimer
+		//#JobService#
 		// 取出所有的待执行的内容
 		for (MDataMap mDataMap : DbUp
 				.upTable("za_exectimer")
@@ -45,38 +49,36 @@ public abstract class RootJobForExec extends RootJob {
 					iResult = execByInfo(mDataMap.get("exec_info").trim());
 					LogHelper.addLog("job_exec", iResult);
 				} catch (Exception e) {
-					RootResult rootResult = new RootResult();
-					rootResult.setResultCode(969905039);
-					rootResult.setResultMessage(bInfo(969905039));
-					iResult = (IBaseResult) rootResult;
+					JobResult rootResult = new JobResult();
 					e.printStackTrace();
-					rootResult.setResultMessage(rootResult.getResultMessage()
-							+ e.getMessage());
+					rootResult.setCode(969905039);
+					rootResult.setMessage(bInfo(969905039) + e.getMessage());
 				}
 
-				if (iResult.getResultCode() != 1) {
+				if (iResult.getCode() != 1) {
 					// 当已执行次数等于该数字时 发送报警邮件 一条记录只发送一次
 					if (configJobExec.getNoticeOnce() > 0
 							&& Integer.valueOf(mDataMap.get("exec_number")) == configJobExec
 									.getNoticeOnce()) {
-
-						String sErrorNotice = bConfig("zapweb.mail_notice")
-								.trim();
-						if (StringUtils.isNotBlank(sErrorNotice)) {
-
+//						String sErrorNotice = bConfig("zapweb.mail_notice")
+//								.trim();
+//						if (StringUtils.isNotBlank(sErrorNotice)) {
+//
 //							MailSupport.INSTANCE.sendMail(sErrorNotice,
 //									bInfo(969912014, sExecCode + sExecInfo),
 //									iResult.getResultMessage());
-						}
+//						}
 					}
 				}
 
+				// za_exectimer -> job_exectimer
+				// #JobService#
 				DbUp.upTable("za_exectimer").dataUpdate(
 						new MDataMap("begin_time", sNowString, "end_time",
 								FormatHelper.upDateTime(), "flag_success",
-								iResult.getResultCode() == 1 ? "1" : "0",
+								iResult.getCode() == 1 ? "1" : "0",
 								"remark", mDataMap.get("remark")
-										+ WebConst.CONST_SPLIT_LINE
+										+ ","
 										+ GsonHelper.toJson(iResult),
 								"exec_code", sExecCode, "exec_number",
 								String.valueOf(Integer.valueOf(mDataMap

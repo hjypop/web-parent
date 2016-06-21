@@ -82,6 +82,8 @@ public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob 
 			mUpdateMap.initKeyValues("uid", mJobInfo.getJobName(), "begin_time",
 					sBeginTime, "end_time", sEndTime, "next_time", sNextTime);
 
+			//za_job -> sys_job
+			//#jobservice#
 			DbUp.upTable("za_job").dataUpdate(mUpdateMap,
 					"begin_time,end_time,next_time", "uid");
 
