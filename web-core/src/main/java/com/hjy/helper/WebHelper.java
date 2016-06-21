@@ -1,5 +1,6 @@
 package com.hjy.helper;
 
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -7,6 +8,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.hjy.model.MDataMap;
 import com.hjy.service.ILockService;
 
 @Component  // 将工具类注解成Component
@@ -26,23 +28,23 @@ public class WebHelper {
 		return self;
 	}
 	
-	
-	
-	
 
 	/**
+	 * zw_webcode -> sys_webcode
+	 * #SystemService#
+	 * 
 	 * alias upCode
 	 * 获取唯一编号
 	 * 
 	 * @param sCodeStart
 	 * @return
 	 */
-//	public static String genUniqueCode(String sCodeStart) {
-//		Map<String, Object> mResultMap = DbUp.upTable("zw_webcode").dataSqlOne(
-//				"call proc_get_unique_code(:code);",
-//				new MDataMap("code", sCodeStart));
-//		return mResultMap.get("webcode").toString();
-//	}
+	public static String genUniqueCode(String sCodeStart) {
+		Map<String, Object> mResultMap = DbUp.upTable("zw_webcode").dataSqlOne(
+				"call proc_get_unique_code(:code);",
+				new MDataMap("code", sCodeStart));
+		return mResultMap.get("webcode").toString();
+	}
 
 	/**
 	 * alias upUuid
@@ -247,27 +249,29 @@ public class WebHelper {
 	 * @param e
 	 *            可传null 如果不为null 则printStackTrace
 	 */
-//	public static void errorMessage(String sCode, String sErrorType,
-//			int iErrorLevel, String sErrorSource, String sMessage, Exception e) {
-//
-//		try {
-//
-//			if (e != null) {
-//				sMessage = sMessage + " #########" + e.getMessage();
-//
-//				e.printStackTrace();
-//
-//			}
-//
-//			DbUp.upTable("zw_error").insert("error_code", sCode, "error_type",
-//					sErrorType, "error_level", String.valueOf(iErrorLevel),
-//					"error_source", sErrorSource, "error_info", sMessage,
-//					"create_time", FormatHelper.upDateTime());
-//		} catch (Exception e2) {
-//			e2.printStackTrace();
-//		}
-//
-//	}
+	public static void errorMessage(String sCode, String sErrorType,
+			int iErrorLevel, String sErrorSource, String sMessage, Exception e) {
+
+		try {
+
+			if (e != null) {
+				sMessage = sMessage + " #########" + e.getMessage();
+
+				e.printStackTrace();
+
+			}
+			 //* zw_error -> sys_error
+			 //* #SystemService#
+			 
+			DbUp.upTable("zw_error").insert("error_code", sCode, "error_type",
+					sErrorType, "error_level", String.valueOf(iErrorLevel),
+					"error_source", sErrorSource, "error_info", sMessage,
+					"create_time", FormatHelper.upDateTime());
+		} catch (Exception e2) {
+			e2.printStackTrace();
+		}
+
+	}
 
 	/**
 	 * 获取标量值
