@@ -5,12 +5,11 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.hjy.service.ILockService;
 
-@Component												//@Scope("prototype") 控制单例或多例
+@Component  // 将工具类注解成Component
 public class WebHelper {
 	
 	@Autowired
