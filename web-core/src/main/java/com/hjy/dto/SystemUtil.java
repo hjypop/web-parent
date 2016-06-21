@@ -1,8 +1,13 @@
-package com.hjy.entity.system;
+package com.hjy.dto;
 
-import com.hjy.entity.BaseEntity;
-
-public class SysLock extends BaseEntity {
+/**
+ * @descriptions SystemServiceImpl 的数据传输对象模型
+ * 
+ * @date 2016年6月21日下午4:37:09
+ * @author Yangcl
+ * @version 1.0.1
+ */
+public class SystemUtil {
 	private String keyid;
 	private String keycode;
 	
@@ -18,5 +23,5 @@ public class SysLock extends BaseEntity {
 	public void setKeycode(String keycode) {
 		this.keycode = keycode;
 	}
-	
+
 }

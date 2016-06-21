@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.hjy.model.MDataMap;
-import com.hjy.service.ILockService;
+import com.hjy.service.ISystemService;
 
 @Component  // 将工具类注解成Component
 public class WebHelper {
 	
 	@Autowired
-	private ILockService lockService;
+	private ISystemService systemService;
 	private static WebHelper self;
 	
 	@PostConstruct  
@@ -39,11 +39,10 @@ public class WebHelper {
 	 * @param sCodeStart
 	 * @return
 	 */
-	public static String genUniqueCode(String sCodeStart) {
-		Map<String, Object> mResultMap = DbUp.upTable("zw_webcode").dataSqlOne(
-				"call proc_get_unique_code(:code);",
-				new MDataMap("code", sCodeStart));
-		return mResultMap.get("webcode").toString();
+	public String genUniqueCode(String sCodeStart) {
+//		Map<String, Object> mResultMap = DbUp.upTable("zw_webcode").dataSqlOne("call proc_get_unique_code(:code);" , new MDataMap("code", sCodeStart));
+//		return mResultMap.get("webcode").toString();
+		return systemService.getUniqueCode(sCodeStart);
 	}
 
 	/**
@@ -86,7 +85,7 @@ public class WebHelper {
 		for (String sKey : keys) {
 			if (bFlagLocked) {
 				try {
-					String outFlag = lockService.addLock(sKey, timeOutSeconds, sUid);
+					String outFlag = systemService.addLock(sKey, timeOutSeconds, sUid);
 					if (!outFlag.equals("1")) {
 						bFlagLocked = false;
 					}
@@ -112,7 +111,7 @@ public class WebHelper {
 	 */
 	public String unLock(String uuid) {
 		try {
-			String outFlag = lockService.unLock(uuid);
+			String outFlag = systemService.unLock(uuid);
 
 			if (outFlag.equals("1"))
 				return uuid;
@@ -263,10 +262,10 @@ public class WebHelper {
 			 //* zw_error -> sys_error
 			 //* #SystemService#
 			 
-			DbUp.upTable("zw_error").insert("error_code", sCode, "error_type",
-					sErrorType, "error_level", String.valueOf(iErrorLevel),
-					"error_source", sErrorSource, "error_info", sMessage,
-					"create_time", FormatHelper.upDateTime());
+//			DbUp.upTable("zw_error").insert("error_code", sCode, "error_type",
+//					sErrorType, "error_level", String.valueOf(iErrorLevel),
+//					"error_source", sErrorSource, "error_info", sMessage,
+//					"create_time", FormatHelper.upDateTime());
 		} catch (Exception e2) {
 			e2.printStackTrace();
 		}
