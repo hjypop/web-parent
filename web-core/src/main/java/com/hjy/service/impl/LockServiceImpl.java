@@ -16,13 +16,12 @@ public class LockServiceImpl extends BaseServiceImpl<SysLock, Integer> implement
 
 	@Override
 	public String addLock(String keycode, Integer timeoutSecond, String uuid) {
-		String uid = "";
 		MObjMap<String, Object> param = new MObjMap<String, Object>();
 		param.put("somekey", keycode);
 		param.put("keysplit", ",");
 		param.put("timeoutsecond", timeoutSecond);
 		param.put("lockflag", "1");
-		param.put("uuid", uid);
+		param.put("uuid", uuid);
 		return lockDao.addLock(param);
 	}
 	

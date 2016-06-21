@@ -3,27 +3,35 @@ package com.hjy.helper;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.Resource;
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.hjy.model.MDataMap;
 import com.hjy.service.ILockService;
 
+@Component												//@Scope("prototype") 控制单例或多例
 public class WebHelper {
+	
+	@Autowired
+	private ILockService lockService;
 	private static WebHelper self;
 	
-	@Resource
-	private ILockService lockService;
+	@PostConstruct  
+	public void init() {   
+		self = this;  // spring 容器实例
+	} 
+	
 	
 	public static WebHelper getInstance() {
-		if(self == null) {
-			synchronized(WebHelper.class) {
-				if(self == null) {
-					self = new WebHelper();
-				}
-			}
-		}
 		return self;
 	}
+	
+	
+	
+	
 
 	/**
 	 * alias upCode
@@ -32,12 +40,12 @@ public class WebHelper {
 	 * @param sCodeStart
 	 * @return
 	 */
-	public static String genUniqueCode(String sCodeStart) {
-		Map<String, Object> mResultMap = DbUp.upTable("zw_webcode").dataSqlOne(
-				"call proc_get_unique_code(:code);",
-				new MDataMap("code", sCodeStart));
-		return mResultMap.get("webcode").toString();
-	}
+//	public static String genUniqueCode(String sCodeStart) {
+//		Map<String, Object> mResultMap = DbUp.upTable("zw_webcode").dataSqlOne(
+//				"call proc_get_unique_code(:code);",
+//				new MDataMap("code", sCodeStart));
+//		return mResultMap.get("webcode").toString();
+//	}
 
 	/**
 	 * alias upUuid
@@ -45,7 +53,7 @@ public class WebHelper {
 	 * 
 	 * @return
 	 */
-	public String genUuid() {
+	public static String genUuid() {
 		return UUID.randomUUID().toString().replace("-", "");
 	}
 

@@ -16,8 +16,7 @@
 	<!-- 自动扫描 使用注解的包，包括子集 -->
 	<context:component-scan base-package="com.hjy.dao" />
 	<context:component-scan base-package="com.hjy.service" />
-	<!-- context:component-scan base-package="com.hjy.sample.service" / -->
-	
+	<context:component-scan base-package="com.hjy.helper" />
 	
 	<!-- 配置数据源 -->
 	<context:property-placeholder location="classpath:properties/jdbc.properties" />   
