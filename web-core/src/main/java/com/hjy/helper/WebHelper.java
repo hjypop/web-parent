@@ -1,5 +1,6 @@
 package com.hjy.helper;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
@@ -8,6 +9,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.hjy.entity.system.SysError;
 import com.hjy.model.MDataMap;
 import com.hjy.service.ISystemService;
 
@@ -248,16 +250,11 @@ public class WebHelper {
 	 * @param e
 	 *            可传null 如果不为null 则printStackTrace
 	 */
-	public static void errorMessage(String sCode, String sErrorType,
-			int iErrorLevel, String sErrorSource, String sMessage, Exception e) {
-
+	public void errorMessage(String sCode, String sErrorType, int iErrorLevel, String sErrorSource, String sMessage, Exception e) {
 		try {
-
 			if (e != null) {
 				sMessage = sMessage + " #########" + e.getMessage();
-
 				e.printStackTrace();
-
 			}
 			 //* zw_error -> sys_error
 			 //* #SystemService#
@@ -266,6 +263,17 @@ public class WebHelper {
 //					sErrorType, "error_level", String.valueOf(iErrorLevel),
 //					"error_source", sErrorSource, "error_info", sMessage,
 //					"create_time", FormatHelper.upDateTime());
+			
+			SysError entity = new SysError();
+			entity.setUid(genUuid()); 
+			entity.setErrorCode(sCode); 
+			entity.setErrorType(sErrorType); 
+			entity.setErrorLevel(String.valueOf(iErrorLevel)); 
+			entity.setErrorSource(sErrorSource); 
+			entity.setErrorInfo(sMessage);
+			entity.setCreateTime(new Date()); 
+			systemService.addSystemError(entity);
+			
 		} catch (Exception e2) {
 			e2.printStackTrace();
 		}

@@ -22,12 +22,48 @@ public class LockTest {
 //		WebHelper.getInstance().unLock(keyid);
 //		System.out.println(keyid);  
 		
-		for(int i = 0; i < 10 ; i++) {
-			String webcode = WebHelper.getInstance().genUniqueCode("fairy-");
-			System.out.println(webcode); 
-		}
+//		for(int i = 0; i < 10 ; i++) {
+//			String webcode = WebHelper.getInstance().genUniqueCode("fairy-");
+//			System.out.println(webcode); 
+//		}
+		
+		Exception e = new RuntimeException("askdfjielznnvf asdlkffjie asdli adsfw asdfoaisdf asdflaiefd asdf  asdfeadsdf");
+		WebHelper.getInstance().errorMessage("sCode", "sErrorType", 20, "sErrorSource", "setErrorInfo", e);
+		
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

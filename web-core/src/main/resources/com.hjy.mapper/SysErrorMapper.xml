@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.ISysErrorDao">
+
+	<resultMap id="BaseResultMap" type="com.hjy.entity.system.SysError">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="uid" property="uid" jdbcType="CHAR" />
+		<result column="error_code" property="errorCode" jdbcType="VARCHAR" />
+		<result column="error_type" property="errorType" jdbcType="VARCHAR" />
+		<result column="error_level" property="errorLevel" jdbcType="VARCHAR" />
+		<result column="error_source" property="errorSource" jdbcType="VARCHAR" />
+		<result column="error_info" property="errorInfo" jdbcType="LONGVARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select * from sys_error where zid = #{zid,jdbcType=INTEGER}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sys_error where zid = #{zid,jdbcType=INTEGER}
+	</delete>
+
+
+	<insert id="insertSelective" parameterType="com.hjy.entity.system.SysError">
+		insert into sys_error
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="uid != null">
+				uid,
+			</if>
+			<if test="errorCode != null">
+				error_code,
+			</if>
+			<if test="errorType != null">
+				error_type,
+			</if>
+			<if test="errorLevel != null">
+				error_level,
+			</if>
+			<if test="errorSource != null">
+				error_source,
+			</if>
+			<if test="errorInfo != null">
+				error_info,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null">
+				#{uid,jdbcType=CHAR},
+			</if>
+			<if test="errorCode != null">
+				#{errorCode,jdbcType=VARCHAR},
+			</if>
+			<if test="errorType != null">
+				#{errorType,jdbcType=VARCHAR},
+			</if>
+			<if test="errorLevel != null">
+				#{errorLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="errorSource != null">
+				#{errorSource,jdbcType=VARCHAR},
+			</if>
+			<if test="errorInfo != null">
+				#{errorInfo,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateSelective" parameterType="com.hjy.entity.system.SysError">
+		update sys_error
+		<set>
+			<if test="uid != null">
+				uid = #{uid,jdbcType=CHAR},
+			</if>
+			<if test="errorCode != null">
+				error_code = #{errorCode,jdbcType=VARCHAR},
+			</if>
+			<if test="errorType != null">
+				error_type = #{errorType,jdbcType=VARCHAR},
+			</if>
+			<if test="errorLevel != null">
+				error_level = #{errorLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="errorSource != null">
+				error_source = #{errorSource,jdbcType=VARCHAR},
+			</if>
+			<if test="errorInfo != null">
+				error_info = #{errorInfo,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where zid = #{zid,jdbcType=INTEGER}
+	</update>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -6,8 +6,10 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.hjy.dao.ILockDao;
+import com.hjy.dao.ISysErrorDao;
 import com.hjy.dao.ISysWebcodeDao;
 import com.hjy.dto.SystemUtil;
+import com.hjy.entity.system.SysError;
 import com.hjy.model.MObjMap;
 import com.hjy.service.ISystemService;
 
@@ -18,6 +20,8 @@ public class SystemServiceImpl extends BaseServiceImpl<SystemUtil, Integer> impl
 	private ILockDao lockDao;
 	@Resource
 	private ISysWebcodeDao sysWebcodeDao; 
+	@Resource
+	private ISysErrorDao sysErrorDao;
 	
 	public String addLock(String keycode, Integer timeoutSecond, String uuid) {
 		MObjMap<String, Object> param = new MObjMap<String, Object>();
@@ -43,6 +47,10 @@ public class SystemServiceImpl extends BaseServiceImpl<SystemUtil, Integer> impl
 		MObjMap<String, Object> param = new MObjMap<String, Object>();
 		param.put("code", codeStart);
 		return sysWebcodeDao.callUniqueCode(param); 
+	}
+	
+	public Integer addSystemError(SysError entity) {
+		return sysErrorDao.insertSelective(entity); 
 	}
 
 															  
