@@ -7,6 +7,7 @@ import com.hjy.helper.FormatHelper;
 import com.hjy.helper.GsonHelper;
 import com.hjy.helper.LogHelper;
 import com.hjy.helper.WebHelper;
+import com.hjy.iface.IBaseResult;
 import com.hjy.model.MDataMap;
 import com.hjy.quartz.model.ConfigJobExec;
 
