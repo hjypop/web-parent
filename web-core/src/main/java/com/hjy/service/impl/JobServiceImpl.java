@@ -30,6 +30,10 @@ public class JobServiceImpl extends BaseServiceImpl<JobExectimer, Integer> imple
 	public Integer updateSysJobByUuid(SysJob entity) {
 		return sysJobDao.updateSelectiveByUuid(entity); 
 	}
+
+	public List<SysJob> findSysJobList(SysJob entity) {
+		return sysJobDao.findList(entity);
+	}
 	
 	
 	

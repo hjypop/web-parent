@@ -12,6 +12,8 @@ public interface IJobService  extends IBaseService<JobExectimer , Integer> {
 	public Integer updateJobExectimer(JobExectimer entity);
 	
 	public Integer updateSysJobByUuid(SysJob entity);
+	
+	public List<SysJob> findSysJobList(SysJob entity);
 }
 
 
