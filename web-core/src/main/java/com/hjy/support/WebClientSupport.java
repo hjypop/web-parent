@@ -32,8 +32,8 @@ import org.apache.http.util.EntityUtils;
 
 import com.hjy.base.BaseClass;
 import com.hjy.entity.system.WebClientRequest;
-import com.hjy.global.TopConst;
 import com.hjy.model.MDataMap;
+import com.hjy.system.config.TopConst;
 
 public class WebClientSupport extends BaseClass {
 

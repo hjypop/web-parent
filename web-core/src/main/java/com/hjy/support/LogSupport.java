@@ -10,12 +10,12 @@ import com.hjy.base.BaseClass;
 import com.hjy.cache.impl.LogCache;
 import com.hjy.entity.system.LogInfo;
 import com.hjy.entity.system.SendLog;
-import com.hjy.global.InitDir;
-import com.hjy.global.TopConst;
 import com.hjy.helper.FormatHelper;
 import com.hjy.helper.GsonHelper;
 import com.hjy.helper.NetHelper;
 import com.hjy.model.MDataMap;
+import com.hjy.system.config.InitDir;
+import com.hjy.system.config.TopConst;
 
 public class LogSupport extends BaseClass {
 

@@ -1,4 +1,4 @@
-package com.hjy.global;
+package com.hjy.system.config;
 
 import com.hjy.helper.IoHelper;
 import com.hjy.model.MStringMap;

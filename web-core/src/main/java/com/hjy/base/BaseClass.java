@@ -3,8 +3,8 @@ package com.hjy.base;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
-import com.hjy.global.ConfigVisitor;
 import com.hjy.helper.FormatHelper;
+import com.hjy.system.config.ConfigVisitor;
 
 /**
  * 基类

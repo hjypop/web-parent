@@ -1,11 +1,11 @@
-package com.hjy.global;
+package com.hjy.system.config;
 
 import com.hjy.cache.RootCache;
-import com.hjy.global.TopConst;
-import com.hjy.global.InitDir;
 import com.hjy.helper.IoHelper;
 import com.hjy.iface.IBaseCache;
 import com.hjy.model.MStringMap;
+import com.hjy.system.config.InitDir;
+import com.hjy.system.config.TopConst;
 import com.hjy.tools.LoadProperties;
 
 /**

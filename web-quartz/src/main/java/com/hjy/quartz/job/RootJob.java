@@ -4,12 +4,12 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import com.hjy.global.TopConst;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.LogHelper;
 import com.hjy.iface.IBaseJob;
 import com.hjy.quartz.model.MJobInfo;
 import com.hjy.quartz.model.MLogJob;
+import com.hjy.system.config.TopConst;
 
 /**
  * 根任务 所有任务接口需要调用该基类

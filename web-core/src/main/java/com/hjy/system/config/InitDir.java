@@ -1,4 +1,4 @@
-package com.hjy.global;
+package com.hjy.system.config;
 
 import org.apache.commons.lang.StringUtils;
 

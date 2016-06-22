@@ -1,4 +1,4 @@
-package com.hjy.global;
+package com.hjy.system.config;
 
 /**
  * alias TopConst

@@ -6,7 +6,6 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import com.hjy.base.BaseClass;
-import com.hjy.global.TopConst;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.FormatHelper;
 import com.hjy.helper.LogHelper;
@@ -15,6 +14,7 @@ import com.hjy.iface.IBaseJob;
 import com.hjy.model.MDataMap;
 import com.hjy.quartz.model.MJobInfo;
 import com.hjy.quartz.model.MLogJob;
+import com.hjy.system.config.TopConst;
 
 public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob {
 
