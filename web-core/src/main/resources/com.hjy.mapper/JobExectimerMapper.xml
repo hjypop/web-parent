@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.IJobExectimerDao">
+	
+	<resultMap id="BaseResultMap" type="com.hjy.entity.system.JobExectimer">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="uid" property="uid" jdbcType="CHAR" />
+		<result column="exec_code" property="execCode" jdbcType="VARCHAR" />
+		<result column="exec_type" property="execType" jdbcType="VARCHAR" />
+		<result column="exec_info" property="execInfo" jdbcType="VARCHAR" />
+		<result column="begin_time" property="beginTime" jdbcType="CHAR" />
+		<result column="end_time" property="endTime" jdbcType="CHAR" />
+		<result column="exec_time" property="execTime" jdbcType="CHAR" />
+		<result column="flag_success" property="flagSuccess" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="LONGVARCHAR" />
+		<result column="exec_number" property="execNumber" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<select id="find" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select * from job_exectimer where zid = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		delete from job_exectimer where zid = #{id , jdbcType=INTEGER}
+	</delete>
+	
+
+	<insert id="insertSelective" parameterType="com.hjy.entity.system.JobExectimer">
+		insert into job_exectimer
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="uid != null">
+				uid,
+			</if>
+			<if test="execCode != null">
+				exec_code,
+			</if>
+			<if test="execType != null">
+				exec_type,
+			</if>
+			<if test="execInfo != null">
+				exec_info,
+			</if>
+			<if test="beginTime != null">
+				begin_time,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+			<if test="execTime != null">
+				exec_time,
+			</if>
+			<if test="flagSuccess != null">
+				flag_success,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="execNumber != null">
+				exec_number,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null">
+				#{uid,jdbcType=CHAR},
+			</if>
+			<if test="execCode != null">
+				#{execCode,jdbcType=VARCHAR},
+			</if>
+			<if test="execType != null">
+				#{execType,jdbcType=VARCHAR},
+			</if>
+			<if test="execInfo != null">
+				#{execInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="beginTime != null">
+				#{beginTime,jdbcType=CHAR},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=CHAR},
+			</if>
+			<if test="execTime != null">
+				#{execTime,jdbcType=CHAR},
+			</if>
+			<if test="flagSuccess != null">
+				#{flagSuccess,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="execNumber != null">
+				#{execNumber,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateSelective" parameterType="com.hjy.entity.system.JobExectimer">
+		update job_exectimer
+		<set>
+			<if test="uid != null">
+				uid = #{uid,jdbcType=CHAR},
+			</if>
+			<if test="execCode != null">
+				exec_code = #{execCode,jdbcType=VARCHAR},
+			</if>
+			<if test="execType != null">
+				exec_type = #{execType,jdbcType=VARCHAR},
+			</if>
+			<if test="execInfo != null">
+				exec_info = #{execInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="beginTime != null">
+				begin_time = #{beginTime,jdbcType=CHAR},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=CHAR},
+			</if>
+			<if test="execTime != null">
+				exec_time = #{execTime,jdbcType=CHAR},
+			</if>
+			<if test="flagSuccess != null">
+				flag_success = #{flagSuccess,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="execNumber != null">
+				exec_number = #{execNumber,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where zid = #{zid,jdbcType=INTEGER}
+	</update>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
