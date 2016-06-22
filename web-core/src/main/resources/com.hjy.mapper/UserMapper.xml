@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hjy.dao.IUserInfoDao">
-	<!-- com.hjy.sacore.entity. -->
-	<resultMap id="UserResult" type="com.hjy.entity.login.UserInfo">
+	<!-- com.hjy.pojo.sacore.entity. -->
+	<resultMap id="UserResult" type="com.hjy.pojo.entity.login.UserInfo">
 		<result property="id" column="id"/>
 		<result property="userName" column="user_name"/>
 		<result property="password" column="password"/>
@@ -14,13 +14,13 @@
 		<result property="createTime" column="create_time" />
 	</resultMap>
 
-	<select id="login" parameterType="com.hjy.entity.login.UserInfo" resultMap="UserResult">
+	<select id="login" parameterType="com.hjy.pojo.entity.login.UserInfo" resultMap="UserResult">
 		select * from user_info where user_name=#{userName} and password=#{password}
 	</select>
 
 
 	<!-- select * from user_info where sex=#{sex}  -->
-	<select id="queryPage" parameterType="com.hjy.entity.login.UserInfo" resultMap="UserResult">
+	<select id="queryPage" parameterType="com.hjy.pojo.entity.login.UserInfo" resultMap="UserResult">
 		select * from user_info 
 	</select>
 
@@ -33,7 +33,7 @@
   	</delete>
 
 
-	<insert id="insertSelective" parameterType="com.hjy.entity.login.UserInfo" >
+	<insert id="insertSelective" parameterType="com.hjy.pojo.entity.login.UserInfo" >
 	    insert into user_info
 	    <trim prefix="(" suffix=")" suffixOverrides="," >
 	      <if test="id != null" >
@@ -101,7 +101,7 @@
 	    </trim>
 	 </insert>
   
-	  <update id="updateSelective" parameterType="com.hjy.entity.login.UserInfo" >
+	  <update id="updateSelective" parameterType="com.hjy.pojo.entity.login.UserInfo" >
 	    update user_info
 	    <set >
 	      <if test="companyId != null" >
