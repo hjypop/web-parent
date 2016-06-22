@@ -1,7 +1,7 @@
 package com.hjy.dao;
 
-import com.hjy.entity.system.SysWebcode;
 import com.hjy.model.MObjMap;
+import com.hjy.pojo.entity.system.SysWebcode;
 
 public interface ISysWebcodeDao extends BaseDao<SysWebcode , Integer> {
 	

@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import com.hjy.dao.ILockDao;
 import com.hjy.dao.ISysErrorDao;
 import com.hjy.dao.ISysWebcodeDao;
-import com.hjy.dto.SystemUtil;
-import com.hjy.entity.system.SysError;
 import com.hjy.model.MObjMap;
+import com.hjy.pojo.dto.SystemUtil;
+import com.hjy.pojo.entity.system.SysError;
 import com.hjy.service.ISystemService;
 
 @Service("systemService")

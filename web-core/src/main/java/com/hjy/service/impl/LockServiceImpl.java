@@ -5,8 +5,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.hjy.dao.ILockDao;
-import com.hjy.entity.system.SysLock;
 import com.hjy.model.MObjMap;
+import com.hjy.pojo.entity.system.SysLock;
 import com.hjy.service.ILockService;
 
 @Service("lockService")

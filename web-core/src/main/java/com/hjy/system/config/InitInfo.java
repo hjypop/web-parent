@@ -2,7 +2,6 @@ package com.hjy.system.config;
 
 import com.hjy.helper.IoHelper;
 import com.hjy.model.MStringMap;
-import com.hjy.tools.LoadProperties;
 import com.hjy.cache.RootCache;
 
 /**

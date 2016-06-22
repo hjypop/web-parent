@@ -1,4 +1,4 @@
-package com.hjy.dto;
+package com.hjy.pojo.dto;
 
 /**
  * @descriptions SystemServiceImpl 的数据传输对象模型

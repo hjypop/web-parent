@@ -6,7 +6,6 @@ import com.hjy.iface.IBaseCache;
 import com.hjy.model.MStringMap;
 import com.hjy.system.config.InitDir;
 import com.hjy.system.config.TopConst;
-import com.hjy.tools.LoadProperties;
 
 /**
  * alias TopConfig

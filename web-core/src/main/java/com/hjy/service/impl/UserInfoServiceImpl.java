@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.dao.IUserInfoDao;
-import com.hjy.entity.login.UserInfo;
+import com.hjy.pojo.entity.login.UserInfo;
 import com.hjy.service.IUserInfoService;
 
 @Service("userInfoService")

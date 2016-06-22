@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.hjy.dao.ICompanyDao;
-import com.hjy.entity.system.Company;
+import com.hjy.pojo.entity.system.Company;
 import com.hjy.service.ICompanyService;
 
 

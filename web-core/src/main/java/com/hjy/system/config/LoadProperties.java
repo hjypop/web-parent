@@ -1,4 +1,4 @@
-package com.hjy.tools;
+package com.hjy.system.config;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,7 +11,6 @@ import org.apache.commons.lang.StringUtils;
 
 import com.hjy.base.BaseClass;
 import com.hjy.model.MStringMap;
-import com.hjy.system.config.TopConst;
 
 /**
  * 读取classpath*:META-INF/hjy/config/*.properties 配置文件

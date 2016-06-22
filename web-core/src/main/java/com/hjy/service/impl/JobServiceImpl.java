@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.hjy.dao.IJobExectimerDao;
-import com.hjy.entity.system.JobExectimer;
+import com.hjy.pojo.entity.system.JobExectimer;
 import com.hjy.service.IJobService;
 
 @Service("systemService")

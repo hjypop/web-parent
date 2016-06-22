@@ -1,6 +1,6 @@
-package com.hjy.entity.system;
+package com.hjy.pojo.entity.system;
 
-import com.hjy.entity.BaseEntity;
+import com.hjy.pojo.entity.BaseEntity;
 
 public class SysLock extends BaseEntity {
 	private String keyid;

@@ -1,7 +1,7 @@
 package com.hjy.service;
 
-import com.hjy.dto.SystemUtil;
-import com.hjy.entity.system.SysError;
+import com.hjy.pojo.dto.SystemUtil;
+import com.hjy.pojo.entity.system.SysError;
 
 public interface ISystemService extends IBaseService<SystemUtil , Integer>{
 

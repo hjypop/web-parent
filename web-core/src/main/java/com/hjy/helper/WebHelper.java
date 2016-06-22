@@ -9,8 +9,8 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hjy.entity.system.SysError;
 import com.hjy.model.MDataMap;
+import com.hjy.pojo.entity.system.SysError;
 import com.hjy.service.ISystemService;
 
 @Component  // 将工具类注解成Component

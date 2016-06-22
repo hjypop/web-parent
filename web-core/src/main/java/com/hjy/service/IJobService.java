@@ -1,6 +1,6 @@
 package com.hjy.service;
 
-import com.hjy.entity.system.JobExectimer;
+import com.hjy.pojo.entity.system.JobExectimer;
 
 public interface IJobService  extends IBaseService<JobExectimer , Integer> {
 

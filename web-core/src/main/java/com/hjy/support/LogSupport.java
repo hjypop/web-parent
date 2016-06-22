@@ -8,12 +8,12 @@ import org.apache.commons.lang.StringUtils;
 
 import com.hjy.base.BaseClass;
 import com.hjy.cache.impl.LogCache;
-import com.hjy.entity.system.LogInfo;
-import com.hjy.entity.system.SendLog;
 import com.hjy.helper.FormatHelper;
 import com.hjy.helper.GsonHelper;
 import com.hjy.helper.NetHelper;
 import com.hjy.model.MDataMap;
+import com.hjy.pojo.entity.system.LogInfo;
+import com.hjy.pojo.entity.system.SendLog;
 import com.hjy.system.config.InitDir;
 import com.hjy.system.config.TopConst;
 

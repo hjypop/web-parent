@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hjy.entity.login.UserInfo;
+import com.hjy.pojo.entity.login.UserInfo;
 import com.hjy.service.ILoginService;
 
 /**

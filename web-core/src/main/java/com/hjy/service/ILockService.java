@@ -1,6 +1,6 @@
 package com.hjy.service;
 
-import com.hjy.entity.system.SysLock;
+import com.hjy.pojo.entity.system.SysLock;
 
 public interface ILockService extends IBaseService<SysLock, Integer> {
 	

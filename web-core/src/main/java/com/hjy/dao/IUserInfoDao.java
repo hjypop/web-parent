@@ -1,6 +1,6 @@
 package com.hjy.dao;
 
-import com.hjy.entity.login.UserInfo;
+import com.hjy.pojo.entity.login.UserInfo;
 
 public interface IUserInfoDao extends BaseDao<UserInfo, Integer> {
 

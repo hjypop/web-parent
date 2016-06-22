@@ -1,4 +1,4 @@
-package com.hjy.entity;
+package com.hjy.pojo.entity;
 
 import java.util.Date;
 

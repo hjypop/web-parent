@@ -1,7 +1,7 @@
 package com.hjy.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hjy.entity.login.UserInfo;
+import com.hjy.pojo.entity.login.UserInfo;
 
 public interface IUserInfoService extends IBaseService<UserInfo, Integer> {
 

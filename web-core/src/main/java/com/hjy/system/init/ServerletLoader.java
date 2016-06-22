@@ -57,7 +57,7 @@ public class ServerletLoader implements WebApplicationInitializer {
 
 				// servletContext.getContextPath();
 
-				bFlagSuccess= new TopInit().init();
+				// @@ bFlagSuccess= new TopInit().init();
 
 				// InitProcess(servletContext);
 
@@ -82,7 +82,8 @@ public class ServerletLoader implements WebApplicationInitializer {
 	public synchronized boolean destory(ServletContext servletContext) {
 		
 		
-		return new TopInit().destory();
+		//@@ return new TopInit().destory();
+		return false;
 	}
 	
 	
