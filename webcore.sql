@@ -67,6 +67,28 @@ CREATE TABLE `sys_exectimer` (
 
 /*Data for the table `sys_exectimer` */
 
+/*Table structure for table `sys_job` */
+
+CREATE TABLE `sys_job` (
+  `zid` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` char(32) DEFAULT '',
+  `job_title` varchar(450) DEFAULT '' COMMENT '任务名称',
+  `job_class` varchar(450) DEFAULT '' COMMENT '任务类名称',
+  `job_triger` varchar(450) DEFAULT '' COMMENT '定时周期',
+  `run_group_did` varchar(45) DEFAULT '' COMMENT '运行组',
+  `flag_enable` int(11) DEFAULT '1' COMMENT '是否可用',
+  `job_remark` varchar(450) DEFAULT '' COMMENT '备注',
+  `begin_time` datetime DEFAULT NULL COMMENT '开始执行时间',
+  `flag_parallel` int(11) DEFAULT '1' COMMENT '是否允许并行启动',
+  `max_exec_time` int(11) DEFAULT '0' COMMENT '最长执行秒数',
+  `end_time` datetime DEFAULT NULL COMMENT '结束执行时间',
+  `set_extend` varchar(450) DEFAULT '' COMMENT '扩展设置',
+  `next_time` datetime DEFAULT NULL COMMENT '下一次执行时间',
+  PRIMARY KEY (`zid`)
+) ENGINE=InnoDB AUTO_INCREMENT=260 DEFAULT CHARSET=utf8 COMMENT='定时任务列表';
+
+/*Data for the table `sys_job` */
+
 /*Table structure for table `sys_lock` */
 
 CREATE TABLE `sys_lock` (

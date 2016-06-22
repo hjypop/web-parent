@@ -20,7 +20,7 @@ public class JobServiceImpl extends BaseServiceImpl<JobExectimer, Integer> imple
 	}
 
 	public Integer updateJobExectimer(JobExectimer entity) {
-		return jobExectimerDao.updateSelective(entity); 
+		return jobExectimerDao.updateSelectiveByExecCode(entity); 
 	}
 	
 	
