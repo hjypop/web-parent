@@ -20,7 +20,7 @@ import com.hjy.pojo.entity.system.SysJob;
 import com.hjy.quartz.model.MJobInfo;
 import com.hjy.quartz.model.MLogJob;
 import com.hjy.service.IJobService;
-import com.hjy.system.config.TopConst;
+import com.hjy.system.TopConst;
 
 @Component
 public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob {
@@ -66,7 +66,7 @@ public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob 
 				sEndTime = new Date();
 			}
 		} catch (Exception e) {
-			bLogError(967905003, this.getClass().getName());      // 967905003=定时任务{0}执行失败  info.zapcom.9679.properties line5
+			getLogger().logError(967905003, this.getClass().getName());      // 967905003=定时任务{0}执行失败  info.zapcom.9679.properties line5
 			WebHelper.getInstance().errorMessage(mJobInfo.getJobName(), "jobexecerror", 9, "rootjobforlock", mJobInfo.getJobClass(), e);
 			e.printStackTrace();
 		}
@@ -138,7 +138,7 @@ public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob 
 				sEndTime = FormatHelper.upDateTime();
 			}
 		} catch (Exception e) {
-			bLogError(967905003, this.getClass().getName());   
+			getLogger().logError(967905003, this.getClass().getName());   
 			WebHelper.getInstance().errorMessage(mJobInfo.getJobName(), "jobexecerror", 9, "rootjobforlock", mJobInfo.getJobClass(), e);
 			e.printStackTrace();
 		}

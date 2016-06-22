@@ -53,7 +53,7 @@ public abstract class RootJob extends RootJobForLock implements Job, IBaseJob {
 			}
 			doExecute(context);
 		} catch (Exception e) {
-			bLogError(967905003, this.getClass().getName());
+			getLogger().logError(967905003, this.getClass().getName());
 			e.printStackTrace();
 		}
 

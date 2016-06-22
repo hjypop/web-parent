@@ -45,7 +45,7 @@ public abstract class RootJobForExec extends RootJob {
 				}catch(Exception e){
 					JobResult rootResult = new JobResult();
 					rootResult.setCode(969905039);           // 执行任务失败：info.zapweb.9699.properties line51
-					rootResult.setMessage(bInfo(969905039) + e.getMessage());
+					rootResult.setMessage(getInfo(969905039) + e.getMessage());
 					e.printStackTrace();
 				}
 				if (iResult.getCode() != 1) {
@@ -116,7 +116,7 @@ public abstract class RootJobForExec extends RootJob {
 					JobResult rootResult = new JobResult();
 					e.printStackTrace();
 					rootResult.setCode(969905039);
-					rootResult.setMessage(bInfo(969905039) + e.getMessage());
+					rootResult.setMessage(getInfo(969905039) + e.getMessage());
 				}
 				if (iResult.getCode() != 1) {
 					// 当已执行次数等于该数字时 发送报警邮件 一条记录只发送一次

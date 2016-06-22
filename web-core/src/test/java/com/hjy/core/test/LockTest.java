@@ -27,7 +27,7 @@ public class LockTest {
 //			System.out.println(webcode); 
 //		}
 		
-		Exception e = new RuntimeException("askdfjielznnvf asdlkffjie asdli adsfw asdfoaisdf asdflaiefd asdf  asdfeadsdf");
+		Exception e = new RuntimeException("TestException");
 		WebHelper.getInstance().errorMessage("sCode", "sErrorType", 20, "sErrorSource", "setErrorInfo", e);
 		
 	}

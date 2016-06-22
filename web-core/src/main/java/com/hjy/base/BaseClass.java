@@ -1,5 +1,6 @@
 package com.hjy.base;
 
+import com.hjy.helper.FormatHelper;
 import com.hjy.system.config.PropVisitor;
 
 /**
@@ -22,5 +23,18 @@ public abstract class BaseClass {
 	 */
 	public String getConfig(String sKey) {
 		return PropVisitor.getConfig(sKey);
+	}
+	
+	/**
+	 * alias bInfo
+	 * @param lInfoId
+	 *            文本编号
+	 * @param sParms
+	 *            拼接字符串
+	 * @return
+	 */
+	public String getInfo(long iInfoCode, Object... sParms) {
+
+		return FormatHelper.formatString(PropVisitor.getInfo(iInfoCode), sParms);
 	}
 }

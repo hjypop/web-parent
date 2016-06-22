@@ -44,6 +44,16 @@ public class BaseLog extends BaseClass {
 	 * @param sParms
 	 *            替换参数
 	 */
+	public void logInfo(int iInfoCode) {
+		LogFactory.getLog(this.getClass()).info(PropVisitor.getLogInfo(iInfoCode));
+	}
+	
+	/**
+	 * @param lInfoId
+	 *            默认请写0 否则读取配置文件
+	 * @param sParms
+	 *            替换参数
+	 */
 	public void logInfo(String content) {
 		LogFactory.getLog(this.getClass()).info(content);
 	}
@@ -79,6 +89,16 @@ public class BaseLog extends BaseClass {
 	 */
 	public void logError(int iInfoCode, Object... sParms) {
 		LogFactory.getLog(this.getClass()).error(formatLog(iInfoCode, sParms));
+	}
+	
+	/**
+	 * @param lInfoId
+	 *            默认请写0 否则读取配置文件
+	 * @param sParms
+	 *            替换参数
+	 */
+	public void logError(int iInfoCode) {
+		LogFactory.getLog(this.getClass()).error(PropVisitor.getLogInfo(iInfoCode));
 	}
 	
 	/**
@@ -129,6 +149,16 @@ public class BaseLog extends BaseClass {
 	 * @param sParms
 	 *            替换参数
 	 */
+	public void logDebug(int iInfoCode) {
+		LogFactory.getLog(this.getClass()).debug(PropVisitor.getLogInfo(iInfoCode));
+	}
+	
+	/**
+	 * @param lInfoId
+	 *            默认请写0 否则读取配置文件
+	 * @param sParms
+	 *            替换参数
+	 */
 	public void logDebug(String content) {
 		LogFactory.getLog(this.getClass()).debug(content);
 	}
@@ -163,6 +193,16 @@ public class BaseLog extends BaseClass {
 	 */
 	public void logWarn(int iInfoCode, Object... sParms) {
 		LogFactory.getLog(this.getClass()).warn(formatLog(iInfoCode, sParms));
+	}
+	
+	/**
+	 * @param lInfoId
+	 *            默认请写0 否则读取配置文件
+	 * @param sParms
+	 *            替换参数
+	 */
+	public void logWarn(int iInfoCode) {
+		LogFactory.getLog(this.getClass()).warn(PropVisitor.getLogInfo(iInfoCode));
 	}
 	
 	/**
