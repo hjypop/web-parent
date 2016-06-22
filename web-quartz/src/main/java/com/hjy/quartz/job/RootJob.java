@@ -9,7 +9,7 @@ import com.hjy.helper.LogHelper;
 import com.hjy.iface.IBaseJob;
 import com.hjy.quartz.model.MJobInfo;
 import com.hjy.quartz.model.MLogJob;
-import com.hjy.system.config.TopConst;
+import com.hjy.system.TopConst;
 
 /**
  * 根任务 所有任务接口需要调用该基类

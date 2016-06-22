@@ -2,6 +2,7 @@ package com.hjy.system.config;
 
 import com.hjy.helper.IoHelper;
 import com.hjy.model.MStringMap;
+import com.hjy.system.SysWorkDir;
 import com.hjy.cache.RootCache;
 
 /**
@@ -11,15 +12,12 @@ import com.hjy.cache.RootCache;
  * @author HJY
  * 
  */
-class InitInfo extends RootCache<Long, String> {
+public class PropInfo extends RootCache<Long, String> {
 
-	/* (non-Javadoc)
-	 * @see com.srnpr.zapcom.baseface.IBaseCache#refresh()
-	 */
 	public synchronized void refresh() {
-		InitDir GlobalDir = new InitDir();
-		String sTempConfigString = GlobalDir.upTempDir("info/");
-		bLogDebug(0, "refresh " + sTempConfigString);
+		SysWorkDir GlobalDir = new SysWorkDir();
+		String sTempConfigString = GlobalDir.getTempDir("info/");
+		getLogger().logDebug(0, "refresh " + sTempConfigString);
 		IoHelper ioHelper = new IoHelper();
 		ioHelper.copyResources(
 				"classpath*:META-INF/hjy/info/*.properties",
@@ -32,7 +30,7 @@ class InitInfo extends RootCache<Long, String> {
 			
 			if(containsKey(lKey))
 			{
-				bLogError(0, "key ["+lKey.toString()+"] exist more then one");
+				getLogger().logError(0, "key ["+lKey.toString()+"] exist more then one");
 			}
 			
 			this.inElement(Long.parseLong(s), mStringMap.get(s));

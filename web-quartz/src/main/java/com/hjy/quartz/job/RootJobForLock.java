@@ -14,7 +14,7 @@ import com.hjy.iface.IBaseJob;
 import com.hjy.model.MDataMap;
 import com.hjy.quartz.model.MJobInfo;
 import com.hjy.quartz.model.MLogJob;
-import com.hjy.system.config.TopConst;
+import com.hjy.system.TopConst;
 
 public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob {
 

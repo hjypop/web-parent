@@ -116,7 +116,7 @@ public class CacheDefine extends BaseClass {
 			if (StringUtils.startsWith(sKey, CACHE_TYPE_NO_ETERNAL)) {
 				Cache cache = upCache(sKey);
 
-				bLogInfo(0, "remove cache:" + cache.getName());
+				getLogger().logInfo(0, "remove cache:" + cache.getName());
 				cache.removeAll();
 			}
 

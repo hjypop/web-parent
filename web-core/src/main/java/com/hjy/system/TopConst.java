@@ -1,4 +1,4 @@
-package com.hjy.system.config;
+package com.hjy.system;
 
 /**
  * alias TopConst
@@ -23,11 +23,7 @@ public class TopConst {
 	/**
 	 * 
 	 * 程序目录 该目录在tomcat运行模式下返回的是当前应用的路径（ServletLoader初始化）
-	 * <p>
 	 * 如果该参数为空 则表明不为servlet启动 可能是由juit启动
-	 * 
-	 * @see com.srnpr.zapcom.topdo.ServerletLoader#init(javax.servlet.ServletContext)
-	 *      <p>
 	 *      serverlet加载时的调用
 	 */
 	public static String CONST_TOP_DIR_SERVLET = null;
@@ -53,22 +49,22 @@ public class TopConst {
 	public final static String CONST_JOB_START = "job_";
 
 	/*
-	 * 定义当前整个后台系统的版本 由config.zapcom初始化
+	 * 定义当前整个后台系统的版本 由config.webcore初始化
 	 */
 	public static String CONST_CURRENT_VERSION = "";
 
 	/**
-	 * 定义当前的运行模型 由config.zapcom初始化
+	 * 定义当前的运行模型 由config.webcore初始化
 	 */
 	public static String CONST_CURRENT_MODEL = "";
 
 	/**
-	 * 定义日志类型 由config.zapcom初始化
+	 * 定义日志类型 由config.webcore初始化
 	 */
 	public static String CONST_LOG_TYPE = "";
 
 	/**
-	 * 定义日志存储目标 由config.zapcom初始化
+	 * 定义日志存储目标 由config.webcore初始化
 	 */
 	public static String CONST_LOG_ADDRESS = "";
 

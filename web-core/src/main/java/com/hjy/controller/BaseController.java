@@ -1,7 +1,6 @@
 package com.hjy.controller;
 
-import org.apache.log4j.Logger;
+import com.hjy.base.BaseClass;
 
-public class BaseController {
-	protected Logger logger = Logger.getLogger(BaseController.class);
+public class BaseController extends BaseClass {
 }

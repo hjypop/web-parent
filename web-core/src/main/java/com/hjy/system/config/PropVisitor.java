@@ -3,6 +3,7 @@ package com.hjy.system.config;
 import org.apache.commons.lang.StringUtils;
 
 import com.hjy.helper.FormatHelper;
+import com.hjy.model.MStringMap;
 
 /**
  * alias TopUp
@@ -10,7 +11,7 @@ import com.hjy.helper.FormatHelper;
  * @author srnpr
  *
  */
-public class ConfigVisitor {
+public class PropVisitor {
 
 	/**
 	 * alias upConfig
@@ -20,10 +21,10 @@ public class ConfigVisitor {
 	 */
 	public static String getConfig(String sKey) {
 		
-		return InitConfig.Instance.getValue(sKey);
+		return PropConfig.Instance.getValue(sKey);
 	}
 
-	private final static InitInfo topInfo = new InitInfo();
+	private final static PropInfo topInfo = new PropInfo();
 
 	/**
 	 * alias upInfo
@@ -47,16 +48,16 @@ public class ConfigVisitor {
 		return (iInfoCode<1?StringUtils.join(sParms):FormatHelper.formatString(getInfo(iInfoCode), sParms));
 	}
 	
-	//有对info/*.properties的访问支持了,下面不知何用
-//	/**
-//	 * 配置
-//	 */
-//	private final static ConfigMap configMap=new ConfigMap();
-//	/**
-//	 * @param sKey
-//	 * @return
-//	 */
-//	public static MStringMap upConfigMap(String sKey) {
-//		return configMap.upValue(sKey);
-//	}
+	
+	/**
+	 * 配置
+	 */
+	private final static ConfigMap configMap=new ConfigMap();
+	/**
+	 * @param sKey
+	 * @return
+	 */
+	public static MStringMap getConfigMap(String sKey) {
+		return configMap.getValue(sKey);
+	}
 }

@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.hjy.base.BaseClass;
 import com.hjy.model.MStringMap;
+import com.hjy.system.TopConst;
 
 /**
  * 读取classpath*:META-INF/hjy/config/*.properties 配置文件

@@ -4,24 +4,24 @@ import com.hjy.cache.RootCache;
 import com.hjy.helper.IoHelper;
 import com.hjy.iface.IBaseCache;
 import com.hjy.model.MStringMap;
-import com.hjy.system.config.InitDir;
-import com.hjy.system.config.TopConst;
+import com.hjy.system.SysWorkDir;
+import com.hjy.system.TopConst;
 
 /**
  * alias TopConfig
  * 初始化加载配置
  * @author HJY 
  */
-public class InitConfig extends RootCache<String, String> implements IBaseCache {
+public class PropConfig extends RootCache<String, String> {
 
-	public final static InitConfig Instance = new InitConfig();
+	public final static PropConfig Instance = new PropConfig();
 
 	public synchronized void refresh() {
-		InitDir topDir = new InitDir();
+		SysWorkDir topDir = new SysWorkDir();
 		String sTempConfigString = topDir
-				.upTempDir(TopConst.CONST_TOP_CUSTOM_CONFIG_PATH);
+				.getTempDir(TopConst.CONST_TOP_CUSTOM_CONFIG_PATH);
 		// topDir.upZapDir();
-		bLogInfo(0, "refresh " + sTempConfigString);
+		getLogger().logInfo(0, "refresh " + sTempConfigString);
 		IoHelper ioHelper = new IoHelper();
 		ioHelper.copyResources(
 				"classpath*:META-INF/hjy/config/*.properties",
@@ -40,13 +40,13 @@ public class InitConfig extends RootCache<String, String> implements IBaseCache 
 		// 开始扫描扩展自定义的设置
 		{
 			String sCustom = topDir
-					.upCustomPath(TopConst.CONST_TOP_CUSTOM_CONFIG_PATH);
-			bLogInfo(0, "scan custom config " + sCustom + "");
+					.getCustomPath(TopConst.CONST_TOP_CUSTOM_CONFIG_PATH);
+			getLogger().logInfo(0, "scan custom config " + sCustom + "");
 
 			MStringMap mCustomMap = loadProperties.loadMap(sCustom);
 
 			if (mCustomMap.size() == 0) {
-				bLogWarn(0, "scan custom config  not exist");
+				getLogger().logWarn(0, "scan custom config  not exist");
 			} else {
 				for (String s : mCustomMap.getKeys()) {
 					this.inElement(s, mCustomMap.get(s));
@@ -56,8 +56,8 @@ public class InitConfig extends RootCache<String, String> implements IBaseCache 
 
 		// 开始加载最后本地配置项
 		{
-			String sLocal = topDir.upLocalConfigPath();
-			bLogInfo(0, "scan local config " + sLocal + "");
+			String sLocal = topDir.getLocalConfigPath();
+			getLogger().logInfo(0, "scan local config " + sLocal + "");
 			MStringMap mCustomMap = loadProperties.loadMap(sLocal);
 			for (String s : mCustomMap.getKeys()) {
 				this.inElement(s, mCustomMap.get(s));

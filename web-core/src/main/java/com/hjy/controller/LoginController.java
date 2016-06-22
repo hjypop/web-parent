@@ -22,7 +22,7 @@ import com.hjy.service.ILoginService;
 @Controller
 @RequestMapping("login")
 public class LoginController extends BaseController {
-	private static Logger logger = Logger.getLogger(LoginController.class);
+//	private static Logger logger = Logger.getLogger(LoginController.class);
 
 	@Autowired
 	private ILoginService loginService;
@@ -40,7 +40,7 @@ public class LoginController extends BaseController {
 	@RequestMapping(value = "login", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject login(UserInfo info, HttpSession session) {
-		logger.info(info.getUserName() + " login ... ");
+		getLogger().logInfo(info.getUserName() + " login ... ");
 
 		return loginService.login(info, session);
 	}
@@ -57,7 +57,7 @@ public class LoginController extends BaseController {
 	@RequestMapping("index")
 	public String loginPageIndex() {
 
-		logger.info(" to index.jsp  ... ");
+		getLogger().logInfo(" to index.jsp  ... ");
 
 		return "redirect:/index.jsp";
 	}

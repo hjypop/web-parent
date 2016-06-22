@@ -14,8 +14,8 @@ import com.hjy.helper.NetHelper;
 import com.hjy.model.MDataMap;
 import com.hjy.pojo.entity.system.LogInfo;
 import com.hjy.pojo.entity.system.SendLog;
-import com.hjy.system.config.InitDir;
-import com.hjy.system.config.TopConst;
+import com.hjy.system.SysWorkDir;
+import com.hjy.system.TopConst;
 
 public class LogSupport extends BaseClass {
 
@@ -31,7 +31,7 @@ public class LogSupport extends BaseClass {
 					serverCode = NetHelper.getLocalIP()
 							+ ":"
 							+ StringUtils.substringAfterLast(
-									new InitDir().upServerletPath(""), "/");
+									new SysWorkDir().getServerletPath(""), "/");
 				}
 			}
 		}
@@ -61,7 +61,7 @@ public class LogSupport extends BaseClass {
 			logInfo.setServer(serverCode);
 			logCache.inElement(sUuid, logInfo);
 		} else {
-			bLogDebug(967912030);
+			getLogger().logDebug(967912030);
 			bReturn = false;
 		}
 		return bReturn;
@@ -95,7 +95,7 @@ public class LogSupport extends BaseClass {
 				WebClientSupport.upPost(TopConst.CONST_LOG_ADDRESS,
 						new MDataMap("api_input", GsonHelper.toJson(sendLog)));
 			} catch (Exception e) {
-				bLogError(967912031, e.getMessage());
+				getLogger().logError(967912031, e.getMessage());
 				e.printStackTrace();
 			}
 		}

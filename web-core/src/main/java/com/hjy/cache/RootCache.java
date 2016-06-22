@@ -85,7 +85,7 @@ public abstract class RootCache<K, V> extends BaseClass implements IBaseCache {
 
 		if (!containsKey(k)) {
 			synchronized (this) {
-				bLogInfo(0, "reload cache " + k.toString());
+				getLogger().logInfo(0, "reload cache " + k.toString());
 				refresh();
 			}
 		}
@@ -99,13 +99,13 @@ public abstract class RootCache<K, V> extends BaseClass implements IBaseCache {
 					v = (V) cache.get(k).getObjectValue();
 				} else {
 					v = getOne(k);
-					bLogInfo(0, "upOne cache " + k.toString());
+					getLogger().logInfo(0, "upOne cache " + k.toString());
 					if (v != null && !containsKey(k)) {
 						inElement(k, v);
 					}
 					else if(v==null)
 					{
-						bLogWarn(0, "error load cache name "+k.toString());
+						getLogger().logWarn(0, "error load cache name "+k.toString());
 					}
 				}
 

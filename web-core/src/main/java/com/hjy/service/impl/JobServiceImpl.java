@@ -8,7 +8,7 @@ import com.hjy.dao.IJobExectimerDao;
 import com.hjy.pojo.entity.system.JobExectimer;
 import com.hjy.service.IJobService;
 
-@Service("systemService")
+@Service("jobService")
 public class JobServiceImpl extends BaseServiceImpl<JobExectimer, Integer> implements IJobService {
 	@Resource
 	private IJobExectimerDao jobExectimerDao;

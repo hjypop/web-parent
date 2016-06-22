@@ -1,4 +1,4 @@
-package com.hjy.system.config;
+package com.hjy.system;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -9,22 +9,23 @@ import com.hjy.helper.IoHelper;
  * alias TopDir
  * 主路径
  * 
- * @author srnpr 路径获取类
+ * @author HJY
  */
-public class InitDir extends BaseClass {
+public class SysWorkDir extends BaseClass {
 
 	/**
+	 * alias upTempDir
 	 * 获取临时文件夹路径
 	 * 
 	 * @param sTempDir
 	 *            临时目录的子文件夹
 	 * @return
 	 */
-	public String upTempDir(String sTempDir) {
+	public String getTempDir(String sTempDir) {
 
 		if (StringUtils.isEmpty(TopConst.CONST_TOP_DIR_TEMP)) {
-			TopConst.CONST_TOP_DIR_TEMP = upServerletPath("hjyzoos/hjydir/temp/");
-			bLogDebug(0, "init GlobalConst.CONST_TOP_DIR_TEMP="
+			TopConst.CONST_TOP_DIR_TEMP = getServerletPath("hjyzoos/hjydir/temp/");
+			getLogger().logDebug(0, "init GlobalConst.CONST_TOP_DIR_TEMP="
 					+ TopConst.CONST_TOP_DIR_TEMP);
 		}
 		String sReturnString = TopConst.CONST_TOP_DIR_TEMP + sTempDir;
@@ -33,12 +34,13 @@ public class InitDir extends BaseClass {
 	}
 
 	/**
+	 * alias upServerletPath
 	 * 获取程序路径
 	 * 
 	 * @param sSubDir
 	 * @return
 	 */
-	public String upServerletPath(String sSubDir) {
+	public String getServerletPath(String sSubDir) {
 
 		String sReturnString = "";
 
@@ -57,18 +59,19 @@ public class InitDir extends BaseClass {
 	}
 
 	/**
+	 * alias upCustomPath
 	 * 获取加载扩展配置目录
 	 * 
 	 * @param sPath
 	 *            目录名称 如果传入的参数以/结尾则自动创建文件夹
 	 * @return
 	 */
-	public String upCustomPath(String sPath) {
+	public String getCustomPath(String sPath) {
 		String sReturn = "";
 
 		if (StringUtils.isBlank(TopConst.CONST_TOP_DIR_CUSTOM)) {
 
-			String sServerPath = upServerletPath("");
+			String sServerPath = getServerletPath("");
 
 			String sStart = "/etc/hjy/";
 
@@ -97,14 +100,15 @@ public class InitDir extends BaseClass {
 	}
 
 	/**
+	 * alias upLocalConfigPath
 	 * 获取本地配置目录 该目录为最后加载的配置 会覆盖所有已加载配置
 	 * 
 	 * @return
 	 */
-	public String upLocalConfigPath() {
+	public String getLocalConfigPath() {
 		String sReturn = "";
 
-		String sServerPath = upServerletPath("");
+		String sServerPath = getServerletPath("");
 
 		String sStart = "/etc/hjy/local/";
 

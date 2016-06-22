@@ -5,7 +5,7 @@ import javax.servlet.ServletException;
 
 import org.springframework.web.WebApplicationInitializer;
 
-import com.hjy.system.config.TopConst;
+import com.hjy.system.TopConst;
 
 /**
  * Serverlet加载时调用
@@ -44,7 +44,7 @@ public class ServerletLoader implements WebApplicationInitializer {
 
 			try {
 
-				servletContext.log("Initializing zapsrnpr.zapcom");
+				servletContext.log("Initializing HJY web core");
 
 				// String sTopConfigString=
 				// servletContext.getInitParameter("zapcomtopconfig");
@@ -57,15 +57,15 @@ public class ServerletLoader implements WebApplicationInitializer {
 
 				// servletContext.getContextPath();
 
-				// @@ bFlagSuccess= new TopInit().init();
+				bFlagSuccess= new SysInit().init();
 
 				// InitProcess(servletContext);
 
-				servletContext.log("Initializing zapsrnpr.zapcom finished");
+				servletContext.log("Initializing HJY web core finished");
 
 			} catch (RuntimeException ex) {
 				bFlagSuccess=false;
-				servletContext.log("Error zapsrnpr.zapcom" + ex.getMessage());
+				servletContext.log("Error occurs in initializing HJY web core" + ex.getMessage());
 			}
 		}
 
@@ -80,10 +80,7 @@ public class ServerletLoader implements WebApplicationInitializer {
 	 * @return
 	 */
 	public synchronized boolean destory(ServletContext servletContext) {
-		
-		
-		//@@ return new TopInit().destory();
-		return false;
+		return new SysInit().destory();
 	}
 	
 	
@@ -102,7 +99,6 @@ public class ServerletLoader implements WebApplicationInitializer {
 			if(!init(servletContext))
 			{
 				servletContext.log(this.getClass().getName()+  "       Error onStartup");
-				
 				throw new ServletException("init error");
 			}
 		}

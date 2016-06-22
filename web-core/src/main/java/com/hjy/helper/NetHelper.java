@@ -10,9 +10,9 @@ import java.util.Enumeration;
 import org.apache.commons.lang.StringUtils;
 
 import com.hjy.base.BaseClass;
+import com.hjy.base.BaseLog;
 
 public class NetHelper extends BaseClass {
-
 	/**
 	 * 获取本机IP
 	 * 
@@ -101,8 +101,7 @@ public class NetHelper extends BaseClass {
 
 					bFlag = true;
 				} else {
-					classLogWarn(NetHelper.class, "connect to "
-							+ urlStr + " return status " + state);
+					logger.logWarn(NetHelper.class, "connect to " + urlStr + " return status " + state);
 
 				}
 				break;
