@@ -4,7 +4,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.hjy.system.SpringCtxUtil;
 import com.hjy.system.TopConst;
 
 /**
@@ -51,6 +54,9 @@ public class ServerletLoader implements WebApplicationInitializer {
 
 				// servletContext.log(sTopConfigString);
 
+				WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(servletContext, "context");
+				SpringCtxUtil.setApplicationContext(wac);
+				
 				TopConst.CONST_TOP_DIR_SERVLET = servletContext.getRealPath("");
 
 				servletContext.log(TopConst.CONST_TOP_DIR_SERVLET);
@@ -98,7 +104,7 @@ public class ServerletLoader implements WebApplicationInitializer {
 		if (!bFlagLoad) {
 			if(!init(servletContext))
 			{
-				servletContext.log(this.getClass().getName()+  "       Error onStartup");
+				servletContext.log(this.getClass().getName()+  " Error onStartup");
 				throw new ServletException("init error");
 			}
 		}

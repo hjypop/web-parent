@@ -7,7 +7,7 @@
 		<groupId>com.huijiayou</groupId>
 		<artifactId>web-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+	</parent> 
 	<artifactId>web-sample-ui</artifactId>
 	<packaging>war</packaging>
 	<name>web-sample-ui</name>

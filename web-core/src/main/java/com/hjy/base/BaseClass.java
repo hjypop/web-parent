@@ -1,6 +1,9 @@
 package com.hjy.base;
 
+import org.springframework.beans.BeansException;
+
 import com.hjy.helper.FormatHelper;
+import com.hjy.system.SpringCtxUtil;
 import com.hjy.system.config.PropVisitor;
 
 /**
@@ -34,7 +37,16 @@ public abstract class BaseClass {
 	 * @return
 	 */
 	public String getInfo(long iInfoCode, Object... sParms) {
-
 		return FormatHelper.formatString(PropVisitor.getInfo(iInfoCode), sParms);
+	}
+	
+
+	public <T> T getBean(Class<T> clazz) throws BeansException {
+		return (T) SpringCtxUtil.getBean(clazz);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T getBean(String beanName) throws BeansException {
+		return (T) SpringCtxUtil.getBean(beanName);
 	}
 }

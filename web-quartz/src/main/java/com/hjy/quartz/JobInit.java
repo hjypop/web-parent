@@ -19,7 +19,8 @@ public class JobInit extends RootInit {
 	@Autowired
 	private IJobService jobService;
 
-	public boolean onInit(){
+	public boolean onInit() {
+		IJobService jobService = this.getBean(IJobService.class);
 		boolean flag = true;
 		SysJob entity = new SysJob();
 		entity.setFlagEnable(1);

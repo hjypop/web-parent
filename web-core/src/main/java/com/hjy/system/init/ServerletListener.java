@@ -3,6 +3,8 @@ package com.hjy.system.init;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 /**
  * 初始化 加载各种配置和初始化类
  * 
@@ -31,6 +33,7 @@ public class ServerletListener extends ServerletLoader implements
 		if (this.contextLoader == null) {
 			this.contextLoader = this;
 		}
+		
 		this.contextLoader.init(event.getServletContext());
 
 	}
