@@ -8,9 +8,9 @@ public class JobExectimer {
     private String execCode;
     private String execType;
     private String execInfo;
-    private String beginTime;
-    private String endTime;
-    private String execTime;
+    private Date beginTime;
+    private Date endTime;
+    private Date execTime;
     private Integer flagSuccess;
     private Integer execNumber;
     private String remark;
@@ -47,22 +47,22 @@ public class JobExectimer {
 	public void setExecInfo(String execInfo) {
 		this.execInfo = execInfo;
 	}
-	public String getBeginTime() {
+	public Date getBeginTime() {
 		return beginTime;
 	}
-	public void setBeginTime(String beginTime) {
+	public void setBeginTime(Date beginTime) {
 		this.beginTime = beginTime;
 	}
-	public String getEndTime() {
+	public Date getEndTime() {
 		return endTime;
 	}
-	public void setEndTime(String endTime) {
+	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
-	public String getExecTime() {
+	public Date getExecTime() {
 		return execTime;
 	}
-	public void setExecTime(String execTime) {
+	public void setExecTime(Date execTime) {
 		this.execTime = execTime;
 	}
 	public Integer getFlagSuccess() {
