@@ -18,7 +18,6 @@ public class JobInit extends RootInit {
 	
 	@Autowired
 	private IJobService jobService;
-	
 
 	public boolean onInit(){
 		boolean flag = true;
@@ -61,12 +60,11 @@ public class JobInit extends RootInit {
 				getLogger().logInfo(970212016 , sj.getJobTitle() , sj.getJobTriger() ); // TODO 970212016 $$$$$$$$$$$$$$$$$$$$$$$$$$
 			}
 		}
-		return true;      // TODO 这里是否应该返回 flag ??????????
+		return flag;     
 	}
 	
 	public boolean onInit2() {
 		boolean bFlag = true;
-
 //		MDataMap mJoQuerybMap = new MDataMap();
 //		for (MDataMap mJob : DbUp.upTable("za_job") .queryIn("", "", "flag_enable=1", mJoQuerybMap, -1, -1, "run_group_did", sGroups)) {
 //
@@ -123,6 +121,7 @@ public class JobInit extends RootInit {
 //		}
 		return true;
 	}
+	
 
 	@Override
 	public boolean onDestory() {
