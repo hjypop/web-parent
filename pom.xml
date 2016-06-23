@@ -9,7 +9,7 @@
 	<description>the parent of web project</description>
 	<modules>
 		<module>web-core</module>
-		<module>web-cache</module>
+		<module>web-redis</module>
 		<module>web-sample</module>
 		<module>web-sample-ui</module>
 		<module>web-quartz</module>

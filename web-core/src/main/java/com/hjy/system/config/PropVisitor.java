@@ -20,7 +20,6 @@ public class PropVisitor {
 	 * @return
 	 */
 	public static String getConfig(String sKey) {
-		
 		return PropConfig.Instance.getValue(sKey);
 	}
 
