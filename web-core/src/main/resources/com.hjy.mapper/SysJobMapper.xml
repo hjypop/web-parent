@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.ISysJobDao">
+
+	<resultMap id="BaseResultMap" type="com.hjy.pojo.entity.system.SysJob">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="uid" property="uid" jdbcType="CHAR" />
+		<result column="job_title" property="jobTitle" jdbcType="VARCHAR" />
+		<result column="job_class" property="jobClass" jdbcType="VARCHAR" />
+		<result column="job_triger" property="jobTriger" jdbcType="VARCHAR" />
+		<result column="run_group_did" property="runGroupDid" jdbcType="VARCHAR" />
+		<result column="flag_enable" property="flagEnable" jdbcType="INTEGER" />
+		<result column="job_remark" property="jobRemark" jdbcType="VARCHAR" />
+		<result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+		<result column="flag_parallel" property="flagParallel" jdbcType="INTEGER" />
+		<result column="max_exec_time" property="maxExecTime" jdbcType="INTEGER" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="set_extend" property="setExtend" jdbcType="VARCHAR" />
+		<result column="next_time" property="nextTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select * from sys_job where zid = #{zid,jdbcType=INTEGER}
+	</select>
+	
+	<select id="findList" resultMap="BaseResultMap" parameterType="com.hjy.pojo.entity.system.SysJob">
+		select 
+			* 
+		from 
+			sys_job  
+		where 1=1 
+			<if test="runGroupDid != null and runGroupDid != '' " >
+				and run_group_did = #{runGroupDid , jdbcType=VARCHAR}
+			</if>
+			<if test="flagEnable != null and test = flagEnable != '' ">
+				and flag_enable = #{flagEnable , jdbcType=INTEGER}
+			</if>
+	</select>
+	
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sys_job where zid = #{zid,jdbcType=INTEGER}
+	</delete>
+	
+	
+	<insert id="insertSelective" parameterType="com.hjy.pojo.entity.system.SysJob">
+		insert into sys_job
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="uid != null">
+				uid,
+			</if>
+			<if test="jobTitle != null">
+				job_title,
+			</if>
+			<if test="jobClass != null">
+				job_class,
+			</if>
+			<if test="jobTriger != null">
+				job_triger,
+			</if>
+			<if test="runGroupDid != null">
+				run_group_did,
+			</if>
+			<if test="flagEnable != null">
+				flag_enable,
+			</if>
+			<if test="jobRemark != null">
+				job_remark,
+			</if>
+			<if test="beginTime != null">
+				begin_time,
+			</if>
+			<if test="flagParallel != null">
+				flag_parallel,
+			</if>
+			<if test="maxExecTime != null">
+				max_exec_time,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+			<if test="setExtend != null">
+				set_extend,
+			</if>
+			<if test="nextTime != null">
+				next_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null">
+				#{uid,jdbcType=CHAR},
+			</if>
+			<if test="jobTitle != null">
+				#{jobTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="jobClass != null">
+				#{jobClass,jdbcType=VARCHAR},
+			</if>
+			<if test="jobTriger != null">
+				#{jobTriger,jdbcType=VARCHAR},
+			</if>
+			<if test="runGroupDid != null">
+				#{runGroupDid,jdbcType=VARCHAR},
+			</if>
+			<if test="flagEnable != null">
+				#{flagEnable,jdbcType=INTEGER},
+			</if>
+			<if test="jobRemark != null">
+				#{jobRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="beginTime != null">
+				#{beginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="flagParallel != null">
+				#{flagParallel,jdbcType=INTEGER},
+			</if>
+			<if test="maxExecTime != null">
+				#{maxExecTime,jdbcType=INTEGER},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="setExtend != null">
+				#{setExtend,jdbcType=VARCHAR},
+			</if>
+			<if test="nextTime != null">
+				#{nextTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateSelective" parameterType="com.hjy.pojo.entity.system.SysJob">
+		update sys_job
+		<set>
+			<if test="uid != null">
+				uid = #{uid,jdbcType=CHAR},
+			</if>
+			<if test="jobTitle != null">
+				job_title = #{jobTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="jobClass != null">
+				job_class = #{jobClass,jdbcType=VARCHAR},
+			</if>
+			<if test="jobTriger != null">
+				job_triger = #{jobTriger,jdbcType=VARCHAR},
+			</if>
+			<if test="runGroupDid != null">
+				run_group_did = #{runGroupDid,jdbcType=VARCHAR},
+			</if>
+			<if test="flagEnable != null">
+				flag_enable = #{flagEnable,jdbcType=INTEGER},
+			</if>
+			<if test="jobRemark != null">
+				job_remark = #{jobRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="beginTime != null">
+				begin_time = #{beginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="flagParallel != null">
+				flag_parallel = #{flagParallel,jdbcType=INTEGER},
+			</if>
+			<if test="maxExecTime != null">
+				max_exec_time = #{maxExecTime,jdbcType=INTEGER},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="setExtend != null">
+				set_extend = #{setExtend,jdbcType=VARCHAR},
+			</if>
+			<if test="nextTime != null">
+				next_time = #{nextTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where zid = #{zid,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateSelectiveByUuid" parameterType="com.hjy.pojo.entity.system.SysJob">
+		update sys_job
+		<set>
+			<if test="uid != null">
+				uid = #{uid,jdbcType=CHAR},
+			</if>
+			<if test="jobTitle != null">
+				job_title = #{jobTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="jobClass != null">
+				job_class = #{jobClass,jdbcType=VARCHAR},
+			</if>
+			<if test="jobTriger != null">
+				job_triger = #{jobTriger,jdbcType=VARCHAR},
+			</if>
+			<if test="runGroupDid != null">
+				run_group_did = #{runGroupDid,jdbcType=VARCHAR},
+			</if>
+			<if test="flagEnable != null">
+				flag_enable = #{flagEnable,jdbcType=INTEGER},
+			</if>
+			<if test="jobRemark != null">
+				job_remark = #{jobRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="beginTime != null">
+				begin_time = #{beginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="flagParallel != null">
+				flag_parallel = #{flagParallel,jdbcType=INTEGER},
+			</if>
+			<if test="maxExecTime != null">
+				max_exec_time = #{maxExecTime,jdbcType=INTEGER},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="setExtend != null">
+				set_extend = #{setExtend,jdbcType=VARCHAR},
+			</if>
+			<if test="nextTime != null">
+				next_time = #{nextTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where uid = #{uid,jdbcType=CHAR} 
+	</update>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
