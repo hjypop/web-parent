@@ -5,10 +5,10 @@
 /web-core/.settings/
 /web-core/.project
 /web-core/.classpath
-/web-cache/target/
-/web-cache/.settings/
-/web-cache/.project
-/web-cache/.classpath
+/web-redis/target/
+/web-redis/.settings/
+/web-redis/.project
+/web-redis/.classpath
 /web-sample/target/
 /web-sample/.settings/
 /web-sample/.project
