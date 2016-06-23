@@ -27,8 +27,8 @@ public class LockTest {
 //			System.out.println(webcode); 
 //		}
 		
-		Exception e = new RuntimeException("TestException");
-		WebHelper.getInstance().errorMessage("sCode", "sErrorType", 20, "sErrorSource", "setErrorInfo", e);
+//		Exception e = new RuntimeException("TestException");
+//		WebHelper.getInstance().errorMessage("sCode", "sErrorType", 20, "sErrorSource", "setErrorInfo", e);
 		
 	}
 }
