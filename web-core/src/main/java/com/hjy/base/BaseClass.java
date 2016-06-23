@@ -14,7 +14,7 @@ import com.hjy.system.config.PropVisitor;
 /**
  * 基类
  * 
- * @author HJY
+ * @author zht
  */
 public abstract class BaseClass {
 	public static BaseLog logger = new BaseLog();
@@ -31,7 +31,9 @@ public abstract class BaseClass {
 				String className = inject.className();
 				try {
 					if (StringUtils.isNotBlank(className)) {
-						this.getBean(className);
+						Object obj =  this.getBean(className);
+						field.setAccessible(true);
+						field.set(this, obj);
 					} else {
 						Object obj = this.getBean(field.getType());
 						field.setAccessible(true);
