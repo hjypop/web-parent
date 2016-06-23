@@ -24,7 +24,7 @@ import com.hjy.system.TopConst;
  * @author HJY
  * 
  */
-public class ServerletLoader implements WebApplicationInitializer {
+public class ServerletLoader {
 
 	/**
 	 * 是否已加载 该参数标记该初始化操作是否已加载 默认初始化只调用一次
@@ -54,7 +54,7 @@ public class ServerletLoader implements WebApplicationInitializer {
 
 				// servletContext.log(sTopConfigString);
 
-				WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(servletContext, "context");
+				WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(servletContext);
 				SpringCtxUtil.setApplicationContext(wac);
 				
 				TopConst.CONST_TOP_DIR_SERVLET = servletContext.getRealPath("");

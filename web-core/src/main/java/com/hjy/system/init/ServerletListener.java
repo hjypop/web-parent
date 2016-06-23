@@ -35,7 +35,5 @@ public class ServerletListener extends ServerletLoader implements
 		}
 		
 		this.contextLoader.init(event.getServletContext());
-
 	}
-
 }

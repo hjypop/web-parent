@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hjy.annotation.Inject;
 import com.hjy.iface.IBaseJob;
 import com.hjy.model.MDataMap;
 import com.hjy.pojo.entity.system.SysJob;
@@ -14,13 +14,13 @@ import com.hjy.quartz.support.JobSupport;
 import com.hjy.service.IJobService;
 import com.hjy.system.init.RootInit;
 
+
 public class JobInit extends RootInit {
 	
-	@Autowired
+	@Inject
 	private IJobService jobService;
 
 	public boolean onInit() {
-		IJobService jobService = this.getBean(IJobService.class);
 		boolean flag = true;
 		SysJob entity = new SysJob();
 		entity.setFlagEnable(1);
