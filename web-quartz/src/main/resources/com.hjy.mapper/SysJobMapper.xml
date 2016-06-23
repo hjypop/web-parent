@@ -28,12 +28,12 @@
 			* 
 		from 
 			sys_job  
-		where 
+		where 1=1 
 			<if test="runGroupDid != null and runGroupDid != '' " >
-				run_group_did = #{runGroupDid , jdbcType=VARCHAR},
+				and run_group_did = #{runGroupDid , jdbcType=VARCHAR}
 			</if>
 			<if test="flagEnable != null and test = flagEnable != '' ">
-				flag_enable = #{flagEnable , jdbcType=INTEGER},
+				and flag_enable = #{flagEnable , jdbcType=INTEGER}
 			</if>
 	</select>
 	
