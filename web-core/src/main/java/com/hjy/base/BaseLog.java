@@ -215,20 +215,6 @@ public class BaseLog extends BaseClass {
 		LogFactory.getLog(this.getClass()).warn(content);
 	}
 	
-//	/**
-//	 * 类日志记录
-//	 * 
-//	 * @param clazz
-//	 * @param objects
-//	 */
-//	/**
-//	 * @param clazz
-//	 * @param objects
-//	 */
-//	public void classLogInfo(Class<?> clazz, Object... objects) {
-//		LogFactory.getLog(clazz).info(StringUtils.join(objects));
-//	}
-	
 	/**
 	 * 格式化日志输出
 	 * 
@@ -237,7 +223,6 @@ public class BaseLog extends BaseClass {
 	 * @return
 	 */
 	public String formatLog(int iInfoCode, Object... sParms) {
-
 		return "[" + String.valueOf(iInfoCode) + "]: " + PropVisitor.getLogInfo(iInfoCode, sParms);
 	}
 	
@@ -261,7 +246,6 @@ public class BaseLog extends BaseClass {
 	 * @return
 	 */
 	public String getInfoValue(long iInfoCode, Object... sParms) {
-
 		return FormatHelper.formatString(PropVisitor.getInfo(iInfoCode), sParms);
 	}
 }

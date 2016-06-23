@@ -31,7 +31,7 @@ public abstract class BaseClass {
 				String className = inject.className();
 				try {
 					if (StringUtils.isNotBlank(className)) {
-						Object obj =  this.getBean(className);
+						Object obj = this.getBean(className);
 						field.setAccessible(true);
 						field.set(this, obj);
 					} else {

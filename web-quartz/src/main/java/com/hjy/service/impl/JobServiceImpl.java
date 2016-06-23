@@ -34,9 +34,6 @@ public class JobServiceImpl extends BaseServiceImpl<JobExectimer, Integer> imple
 	public List<SysJob> findSysJobList(SysJob entity) {
 		return sysJobDao.findList(entity);
 	}
-	
-	
-	
 }
 
 
