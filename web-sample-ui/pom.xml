@@ -15,12 +15,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.huijiayou</groupId>
-			<artifactId>web-sample</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.huijiayou</groupId>
-			<artifactId>web-quartz</artifactId>
+			<artifactId>seller-adapter-kjt</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
