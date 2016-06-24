@@ -14,6 +14,7 @@
 		<module>web-sample-ui</module>
 		<module>web-quartz</module>
 		<module>seller-adapter</module>
+		<module>seller-adapter-kjt</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

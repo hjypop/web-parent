@@ -9,6 +9,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.hjy.annotation.Inject;
 import com.hjy.base.BaseClass;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.FormatHelper;
@@ -22,10 +23,9 @@ import com.hjy.quartz.model.MLogJob;
 import com.hjy.service.IJobService;
 import com.hjy.system.TopConst;
 
-@Component
 public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob {
 
-	@Autowired
+	@Inject
 	public IJobService jobService;
 	
 	public void execute(JobExecutionContext context) throws JobExecutionException {

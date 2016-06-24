@@ -1,36 +1,32 @@
 package com.hjy.helper;
 
 import java.util.Date;
-import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hjy.model.MDataMap;
+import com.hjy.annotation.Inject;
+import com.hjy.base.BaseClass;
 import com.hjy.pojo.entity.system.SysError;
 import com.hjy.service.ISystemService;
 
-@Component  // 将工具类注解成Component
-public class WebHelper {
+public class WebHelper extends BaseClass {
 	
-	@Autowired
+	@Inject
 	private ISystemService systemService;
+	
 	private static WebHelper self;
 	
-	@PostConstruct  
-	public void init() {   
-		self = this;  // spring 容器实例
-	} 
-	
-	
 	public static WebHelper getInstance() {
+		if(self == null) {
+			synchronized(WebHelper.class) {
+				if(self == null) 
+					self = new WebHelper();
+			}
+		}
 		return self;
 	}
 	
-
 	/**
 	 * zw_webcode -> sys_webcode
 	 * #SystemService#
@@ -53,7 +49,7 @@ public class WebHelper {
 	 * 
 	 * @return
 	 */
-	public static String genUuid() {
+	public String genUuid() {
 		return UUID.randomUUID().toString().replace("-", "");
 	}
 
@@ -130,7 +126,7 @@ public class WebHelper {
 	 * @param sUrl
 	 * @return
 	 */
-	public static String checkUrl(String sUrl) {
+	public String checkUrl(String sUrl) {
 		return sUrl;
 	}
 

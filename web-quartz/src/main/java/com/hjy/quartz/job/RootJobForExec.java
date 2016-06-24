@@ -8,6 +8,7 @@ import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.hjy.annotation.Inject;
 import com.hjy.helper.FormatHelper;
 import com.hjy.helper.GsonHelper;
 import com.hjy.helper.LogHelper;
@@ -19,10 +20,9 @@ import com.hjy.quartz.model.ConfigJobExec;
 import com.hjy.quartz.model.JobResult;
 import com.hjy.service.IJobService;
 
-@Component
 public abstract class RootJobForExec extends RootJob {
 	
-	@Autowired
+	@Inject
 	public IJobService jobService;
 
 	public void doExecute(JobExecutionContext context){
