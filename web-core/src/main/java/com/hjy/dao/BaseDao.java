@@ -3,8 +3,6 @@ package com.hjy.dao;
 import java.io.Serializable;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Flush;
-
  
 /**
  * @descriptions 底层基本的dao的接口
@@ -158,7 +156,6 @@ public interface BaseDao<T, PK extends Serializable> {
      * @author Yangcl
      * @version 1.0.0.1
      */
-    @Flush
     public List<T> findList(T entity); 
     
     
