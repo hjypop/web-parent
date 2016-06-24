@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.hjy.quartz.model.RsyncDateCheck;
+import com.hjy.model.RsyncDateCheck;
 import com.hjy.selleradapter.kjt.config.RsyncConfigGetKjtProductIdByDate;
 import com.hjy.selleradapter.kjt.request.RsyncRequestGetKjtProductIdByDate;
 

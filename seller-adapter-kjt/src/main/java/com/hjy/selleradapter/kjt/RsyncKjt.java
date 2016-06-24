@@ -25,7 +25,7 @@ import com.hjy.helper.JsonHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.iface.IRsyncDateCheck;
 import com.hjy.model.MDataMap;
-import com.hjy.quartz.model.RsyncDateCheck;
+import com.hjy.model.RsyncDateCheck;
 import com.hjy.support.WebClientSupport;
 
 /**
