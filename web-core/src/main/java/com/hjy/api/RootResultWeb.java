@@ -9,7 +9,7 @@ public class RootResultWeb extends RootResult {
 
 		setCode(iErrorCode);
 
-		setResultMessage(TopUp.upLogInfo(iErrorCode, sParms)); 
+		setResultMessage(TopUp.upLogInfo(iErrorCode, sParms));
 	}
 
 	public boolean upFlagTrue() {
