@@ -161,7 +161,7 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 		try {
 			RsyncGetKjtProductById aa = new RsyncGetKjtProductById();
 			aa.upRsyncRequest().setProductIDs(productIds);
-			aa.upRsyncRequest().setSaleChannelSysNo(bConfig("groupcenter.rsync_kjt_SaleChannelSysNo"));
+			aa.upRsyncRequest().setSaleChannelSysNo(getConfig("groupcenter.rsync_kjt_SaleChannelSysNo"));
 			aa.doRsync();
 		} catch (Exception e) {
 			result.inErrorMessage(918519034, StringUtils.join(productIds, ","));
@@ -182,9 +182,9 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 	*/
 	private void sendMail(String pCodes1,String pCodes2,String pName){
 		
-		String receives[]= bConfig("groupcenter.kjt_dowProduct_sendMail_receives").split(",");
-		String title= bConfig("groupcenter.kjt_dowProduct_title");
-		String content= bConfig("groupcenter.kjt_dowProduct_content");
+		String receives[]= getConfig("groupcenter.kjt_dowProduct_sendMail_receives").split(",");
+		String title= getConfig("groupcenter.kjt_dowProduct_title");
+		String content= getConfig("groupcenter.kjt_dowProduct_content");
 		
 		for (String receive : receives) {
 			if(StringUtils.isNotBlank(receive)){
