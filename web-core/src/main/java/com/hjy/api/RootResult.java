@@ -10,7 +10,7 @@ import com.hjy.iface.IBaseResult;
  * @date 2016年6月26日-下午3:18:21
  * @version 1.0.0
  */
-public class RootResult implements IBaseResult{  // TODO 猛男涛 感觉这里没必要实现接口！！！！！！！！！！！！！！！！
+public class RootResult implements IBaseResult{  
 
 	/**
 	 * 返回标记 如果该标记为1则表明返回结果正确 否则都是错误消息

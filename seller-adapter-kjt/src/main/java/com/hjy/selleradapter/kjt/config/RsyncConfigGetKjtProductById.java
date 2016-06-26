@@ -9,11 +9,11 @@ import com.hjy.iface.IRsyncDateCheck;
  * @author xiegj
  * 
  */
-public class RsyncConfigGetKjtProductIdByDate implements IRsyncConfig,IRsyncDateCheck {
+public class RsyncConfigGetKjtProductById implements IRsyncConfig , IRsyncDateCheck {
 
 	public String getRsyncTarget() {
 
-		return "Product.ProductIDGetQuery";
+		return "Product.ProudctInfoBatchGet";
 	}
 
 	
@@ -26,7 +26,7 @@ public class RsyncConfigGetKjtProductIdByDate implements IRsyncConfig,IRsyncDate
 	}
 
 	public int getBackSecond() {
-		return 3600;
+		return 0;
 	}
 
 }

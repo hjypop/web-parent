@@ -1,6 +1,6 @@
 package com.hjy.selleradapter.kjt.request;
 
-import com.cmall.groupcenter.groupface.IRsyncRequest;
+import com.hjy.iface.IRsyncRequest;
 
 /**
  * 根据ID批量获取商品基本信息

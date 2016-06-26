@@ -3,8 +3,9 @@ package com.hjy.selleradapter.kjt.response;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cmall.groupcenter.kjt.RsyncKjtResponseBase;
-import com.cmall.groupcenter.kjt.model.RsyncModelGetKjtChangeProduct;
+import com.hjy.selleradapter.kjt.RsyncKjtResponseBase;
+import com.hjy.selleradapter.kjt.model.RsyncModelGetKjtChangeProduct;
+
 
 /**
  * 商品信息返回接口

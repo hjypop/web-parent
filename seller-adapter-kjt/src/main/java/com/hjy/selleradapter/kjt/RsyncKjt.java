@@ -13,22 +13,24 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.commons.httpclient.util.DateUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.http.ParseException;
 
 import com.hjy.base.BaseClass;
+import com.hjy.common.DateUtil;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.FormatHelper;
 import com.hjy.helper.JsonHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.iface.IRsyncConfig;
 import com.hjy.iface.IRsyncDateCheck;
+import com.hjy.iface.IRsyncDo;
 import com.hjy.iface.IRsyncRequest;
 import com.hjy.iface.IRsyncResponse;
 import com.hjy.model.MDataMap;
 import com.hjy.model.RsyncDateCheck;
+import com.hjy.model.RsyncResult;
 import com.hjy.support.WebClientSupport;
 
 /**
@@ -57,13 +59,9 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 	 * @throws KeyStoreException
 	 * @throws CertificateException
 	 */
-	private String getHttps(String sUrl, String sRequestString)
-			throws Exception {
-
+	private String getHttps(String sUrl, String sRequestString) throws Exception {
 		MDataMap mrequest=getsignMap(sRequestString);
-
 		String sResponseString = WebClientSupport.upPost(sUrl, mrequest);
-
 		return sResponseString;
 	}
 
@@ -92,7 +90,7 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		for (String nameString : list) {
 			str.append(nameString + "&");
 		}
-		dataMap.put("sign", HexUtil.toHexString(MD5Util.md5(str.substring(0, str.toString().length() - 1)+"&"+bConfig("groupcenter.rsync_kjt_password"))));
+		dataMap.put("sign", HexUtil.toHexString(MD5Util.md5(str.substring(0, str.toString().length() - 1)+"&"+getConfig("groupcenter.rsync_kjt_password"))));
 		return dataMap;
 	}
 	
@@ -102,7 +100,7 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 	 * @return
 	 */
 	private String upRequestUrl() {
-		return bConfig("groupcenter.rsync_kjt_url");
+		return getConfig("groupcenter.rsync_kjt_url");
 	}
 
 	/**
@@ -111,77 +109,53 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 	 * @return
 	 */
 	public String upLastSuccessStatusData() {
-
-		MDataMap mLog = DbUp.upTable("lc_rsync_kjt_log").oneWhere("status_data",
-				"-zid", "", "rsync_target",
-				upConfig().getRsyncTarget(), "flag_success", "1");
-
+		MDataMap mLog = DbUp.upTable("lc_rsync_kjt_log").oneWhere("status_data", "-zid", "", "rsync_target", upConfig().getRsyncTarget(), "flag_success", "1");
 		String sReturn = "";
-
 		if (mLog != null && mLog.containsKey("status_data")) {
 			sReturn = mLog.get("status_data");
 		}
-
 		return sReturn;
-
 	}
 
 	public boolean doRsync() {
-
-		String sCode = WebHelper.upCode("KCRL");
-
+		String sCode = WebHelper.getInstance().genUniqueCode("KCRL");
 		try {
-
 			String sUrl = upRequestUrl();
-
 			TRequest tRequest = upRsyncRequest();
-
 			JsonHelper<IRsyncRequest> requestJsonHelper = new JsonHelper<IRsyncRequest>();
 			String sRequest = requestJsonHelper.ObjToString(tRequest);
-
 			
 			MDataMap mInsertMap = new MDataMap();
 			// 插入日志表调用的日志记录
-			mInsertMap.inAllValues("code", sCode, "rsync_target", upConfig()
-					.getRsyncTarget(), "rsync_url", sUrl, "request_data",
-					sRequest, "request_time", FormatHelper.upDateTime());
+			mInsertMap.initKeyValues("code", sCode, "rsync_target", upConfig().getRsyncTarget(), "rsync_url", sUrl, "request_data", sRequest, "request_time", FormatHelper.upDateTime());
 			// 插入日志记录表
 			DbUp.upTable("lc_rsync_kjt_log").dataInsert(mInsertMap);
-
 			String sResponseString = getHttps(sUrl, sRequest);
-			mInsertMap.initKeyValues("response_time", FormatHelper.upDateTime(),
-					"response_data", sResponseString);
+			mInsertMap.initKeyValues("response_time", FormatHelper.upDateTime() , "response_data", sResponseString);
 
 			// 更新响应内容和响应时间
-			DbUp.upTable("lc_rsync_kjt_log").dataUpdate(mInsertMap,
-					"response_time,response_data", "code");
+			DbUp.upTable("lc_rsync_kjt_log").dataUpdate(mInsertMap , "response_time,response_data", "code");
 
 			// IRsyncResponse iRsyncResponse=null;
-
 			TResponse tResponse = upResponseObject();
 
 			JsonHelper<TResponse> responseJsonHelper = new JsonHelper<TResponse>();
 
-			tResponse = responseJsonHelper.GsonFromJson(sResponseString,
-					tResponse);
+			tResponse = responseJsonHelper.GsonFromJson(sResponseString, tResponse);
 
 			processResult = tResponse;
 			RsyncResult rsyncResult = doProcess(tRequest, tResponse);
 
 			// 更新处理完成时间
-			mInsertMap.inAllValues("process_time", FormatHelper.upDateTime(),
+			mInsertMap.initKeyValues("process_time", FormatHelper.upDateTime(),
 					"process_data", rsyncResult.upJson(), "status_data",
 					rsyncResult.getStatusData(), "flag_success",
 					rsyncResult.upFlagTrue() ? "1" : "0", "process_num",
 					String.valueOf(rsyncResult.getProcessNum()), "success_num",
 					String.valueOf(rsyncResult.getSuccessNum()));
-			DbUp.upTable("lc_rsync_kjt_log")
-					.dataUpdate(
-							mInsertMap,
-							"process_time,process_data,status_data,flag_success,process_num,success_num",
-							"code");
+			DbUp.upTable("lc_rsync_kjt_log").dataUpdate(mInsertMap , "process_time,process_data,status_data,flag_success,process_num,success_num" , "code");
 
-			if (rsyncResult.getResultCode() == 1) {
+			if (rsyncResult.getCode() == 1) {
 //				Thread.sleep(20000);
 				return true;
 			}
@@ -191,11 +165,8 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 
 			// 如果失败更新错误日志信息
 			MDataMap mErrorMap = new MDataMap();
-			mErrorMap.initKeyValues("code", sCode, "flag_success", "0",
-					"process_time", FormatHelper.upDateTime(),
-					"error_expection", e.getMessage());
-			DbUp.upTable("lc_rsync_kjt_log").dataUpdate(mErrorMap,
-					"process_time,error_expection,flag_success", "code");
+			mErrorMap.initKeyValues("code" , sCode , "flag_success" , "0" , "process_time", FormatHelper.upDateTime() , "error_expection" , e.getMessage());
+			DbUp.upTable("lc_rsync_kjt_log").dataUpdate(mErrorMap , "process_time,error_expection,flag_success", "code");
 		}
 //		try {
 //			Thread.sleep(20000);
@@ -223,9 +194,8 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		Date dStateDate = DateHelper.parseDate(sStatusDate);
 
 		// 将开始时间减去回退时间 以兼容异常情况
-		Date dStart = DateUtils.addSeconds(dStateDate,
-				-iRsyncDateCheck.getBackSecond());
-		rsyncDateCheck.setStartDate(DateHelper.upDate(dStart));
+		Date dStart = DateUtils.addSeconds(dStateDate , -iRsyncDateCheck.getBackSecond());
+		rsyncDateCheck.setStartDate(DateHelper.formatDate(dStart));
 
 		Date dEnd = DateUtils.addSeconds(dStateDate,
 				iRsyncDateCheck.getMaxStepSecond());
@@ -236,7 +206,7 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 			dEnd = dNowDate;
 		}
 
-		rsyncDateCheck.setEndDate(DateHelper.upDate(dEnd));
+		rsyncDateCheck.setEndDate(DateHelper.formatDate(dEnd));
 
 		return rsyncDateCheck;
 

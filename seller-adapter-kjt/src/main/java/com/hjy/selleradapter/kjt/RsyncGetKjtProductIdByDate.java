@@ -6,9 +6,15 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.hjy.helper.FormatHelper;
+import com.hjy.model.MDataMap;
+import com.hjy.model.MWebResult;
 import com.hjy.model.RsyncDateCheck;
+import com.hjy.model.RsyncResult;
 import com.hjy.selleradapter.kjt.config.RsyncConfigGetKjtProductIdByDate;
+import com.hjy.selleradapter.kjt.model.RsyncModelGetKjtChangeProduct;
 import com.hjy.selleradapter.kjt.request.RsyncRequestGetKjtProductIdByDate;
+import com.hjy.selleradapter.kjt.response.RsyncResponseGetKjtProductIdByDate;
 
 
 
@@ -40,6 +46,7 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 	}
 
 	
+
 	public RsyncResult doProcess(RsyncRequestGetKjtProductIdByDate tRequest, RsyncResponseGetKjtProductIdByDate tResponse) {
 
 		RsyncResult result = new RsyncResult();
@@ -121,7 +128,7 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 							if (result.getResultList() == null) {
 								result.setResultList(new ArrayList<Object>());
 							}
-							result.getResultList().add(mResult.getResultMessage());
+							result.getResultList().add(mResult.getMessage());
 						}
 					}
 					try {
@@ -131,8 +138,7 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 						e.printStackTrace();
 					}
 				}
-				result.setProcessData(bInfo(918501102, result.getProcessNum(),
-						iSuccessSum, result.getProcessNum() - iSuccessSum));
+				result.setProcessData(getInfo(918501102 , result.getProcessNum() , iSuccessSum , result.getProcessNum() - iSuccessSum));
 			}
 		}
 		// 如果操作都成功 则设置状态保存数据为同步结束时间 以方便下一轮调用
