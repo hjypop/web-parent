@@ -34,9 +34,9 @@ import com.hjy.selleradapter.kjt.response.RsyncResponseGetKjtProductById;
 public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductById, RsyncRequestGetKjtProductById, RsyncResponseGetKjtProductById> {
 
 	final static RsyncConfigGetKjtProductById CONFIG_GET_TV_BY_ID = new RsyncConfigGetKjtProductById();
-	private static String ProductHead = "8016";
-	private static String SKUHead = "8019";
-	private static String ProductFlowHead = "PF";
+	private static String ProductHead = "8016"; 
+	private static String SKUHead = "8019"; 
+	private static String ProductFlowHead = "PF"; 
 
 	public RsyncConfigGetKjtProductById upConfig() {
 		return CONFIG_GET_TV_BY_ID;
