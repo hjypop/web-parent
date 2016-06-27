@@ -3,7 +3,6 @@ package com.hjy.selleradapter.kjt.response;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hjy.selleradapter.kjt.RsyncKjtResponseBase;
 import com.hjy.selleradapter.kjt.model.RsyncModelGetKjtProduct;
 
 

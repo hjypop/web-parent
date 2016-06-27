@@ -13,7 +13,6 @@ public class MObjMap<K, V> extends ConcurrentHashMap<K, V> {
 	 * #alias# upKeys
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public List<K> getKeys() {
 
 		List<K> lReturnsKs = new ArrayList<K>();
