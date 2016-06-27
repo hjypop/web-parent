@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjy.dao.product.IPcSkuinfoDao">
+	
+	<resultMap id="BaseResultMap" type="com.cmall.dborm.txmodel.PcSkuinfo">
+		<id column="zid" jdbcType="INTEGER" property="zid" />
+		<result column="uid" jdbcType="CHAR" property="uid" />
+		<result column="sku_code_old" jdbcType="VARCHAR" property="skuCodeOld" />
+		<result column="sku_code" jdbcType="VARCHAR" property="skuCode" />
+		<result column="product_code" jdbcType="VARCHAR" property="productCode" />
+		<result column="sell_price" jdbcType="DECIMAL" property="sellPrice" />
+		<result column="market_price" jdbcType="DECIMAL" property="marketPrice" />
+		<result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+		<result column="stock_num" jdbcType="DECIMAL" property="stockNum" />
+		<result column="sku_key" jdbcType="VARCHAR" property="skuKey" />
+		<result column="sku_keyvalue" jdbcType="VARCHAR" property="skuKeyvalue" />
+		<result column="sku_picurl" jdbcType="VARCHAR" property="skuPicurl" />
+		<result column="sell_productcode" jdbcType="VARCHAR" property="sellProductcode" />
+		<result column="seller_code" jdbcType="VARCHAR" property="sellerCode" />
+		<result column="security_stock_num" jdbcType="DECIMAL" property="securityStockNum" />
+		<result column="product_code_old" jdbcType="VARCHAR" property="productCodeOld" />
+		<result column="qrcode_link" jdbcType="VARCHAR" property="qrcodeLink" />
+		<result column="sell_count" jdbcType="INTEGER" property="sellCount" />
+		<result column="sale_yn" jdbcType="VARCHAR" property="saleYn" />
+		<result column="flag_enable" jdbcType="INTEGER" property="flagEnable" />
+		<result column="barcode" jdbcType="VARCHAR" property="barcode" />
+		<result column="mini_order" jdbcType="INTEGER" property="miniOrder" />
+		<result column="sku_name" jdbcType="LONGVARCHAR" property="skuName" />
+		<result column="sku_adv" jdbcType="LONGVARCHAR" property="skuAdv" />
+	</resultMap>
+	
+	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcSkuinfo">
+		insert into pc_skuinfo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="uid != null">
+				uid,
+			</if>
+			<if test="skuCodeOld != null">
+				sku_code_old,
+			</if>
+			<if test="skuCode != null">
+				sku_code,
+			</if>
+			<if test="productCode != null">
+				product_code,
+			</if>
+			<if test="sellPrice != null">
+				sell_price,
+			</if>
+			<if test="marketPrice != null">
+				market_price,
+			</if>
+			<if test="costPrice != null">
+				cost_price,
+			</if>
+			<if test="stockNum != null">
+				stock_num,
+			</if>
+			<if test="skuKey != null">
+				sku_key,
+			</if>
+			<if test="skuKeyvalue != null">
+				sku_keyvalue,
+			</if>
+			<if test="skuPicurl != null">
+				sku_picurl,
+			</if>
+			<if test="sellProductcode != null">
+				sell_productcode,
+			</if>
+			<if test="sellerCode != null">
+				seller_code,
+			</if>
+			<if test="securityStockNum != null">
+				security_stock_num,
+			</if>
+			<if test="productCodeOld != null">
+				product_code_old,
+			</if>
+			<if test="qrcodeLink != null">
+				qrcode_link,
+			</if>
+			<if test="sellCount != null">
+				sell_count,
+			</if>
+			<if test="saleYn != null">
+				sale_yn,
+			</if>
+			<if test="flagEnable != null">
+				flag_enable,
+			</if>
+			<if test="barcode != null">
+				barcode,
+			</if>
+			<if test="miniOrder != null">
+				mini_order,
+			</if>
+			<if test="skuName != null">
+				sku_name,
+			</if>
+			<if test="skuAdv != null">
+				sku_adv,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null">
+				#{uid,jdbcType=CHAR},
+			</if>
+			<if test="skuCodeOld != null">
+				#{skuCodeOld,jdbcType=VARCHAR},
+			</if>
+			<if test="skuCode != null">
+				#{skuCode,jdbcType=VARCHAR},
+			</if>
+			<if test="productCode != null">
+				#{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="sellPrice != null">
+				#{sellPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="marketPrice != null">
+				#{marketPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="costPrice != null">
+				#{costPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="stockNum != null">
+				#{stockNum,jdbcType=DECIMAL},
+			</if>
+			<if test="skuKey != null">
+				#{skuKey,jdbcType=VARCHAR},
+			</if>
+			<if test="skuKeyvalue != null">
+				#{skuKeyvalue,jdbcType=VARCHAR},
+			</if>
+			<if test="skuPicurl != null">
+				#{skuPicurl,jdbcType=VARCHAR},
+			</if>
+			<if test="sellProductcode != null">
+				#{sellProductcode,jdbcType=VARCHAR},
+			</if>
+			<if test="sellerCode != null">
+				#{sellerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="securityStockNum != null">
+				#{securityStockNum,jdbcType=DECIMAL},
+			</if>
+			<if test="productCodeOld != null">
+				#{productCodeOld,jdbcType=VARCHAR},
+			</if>
+			<if test="qrcodeLink != null">
+				#{qrcodeLink,jdbcType=VARCHAR},
+			</if>
+			<if test="sellCount != null">
+				#{sellCount,jdbcType=INTEGER},
+			</if>
+			<if test="saleYn != null">
+				#{saleYn,jdbcType=VARCHAR},
+			</if>
+			<if test="flagEnable != null">
+				#{flagEnable,jdbcType=INTEGER},
+			</if>
+			<if test="barcode != null">
+				#{barcode,jdbcType=VARCHAR},
+			</if>
+			<if test="miniOrder != null">
+				#{miniOrder,jdbcType=INTEGER},
+			</if>
+			<if test="skuName != null">
+				#{skuName,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="skuAdv != null">
+				#{skuAdv,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+</mapper>

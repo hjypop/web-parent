@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjy.dao.log.ILcStockchangeDao">
+
+	<resultMap id="BaseResultMap" type="com.hjy.entity.log.LcStockchange">
+		<id column="zid" jdbcType="INTEGER" property="zid" />
+		<result column="uid" jdbcType="CHAR" property="uid" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="info" jdbcType="VARCHAR" property="info" />
+		<result column="create_time" jdbcType="CHAR" property="createTime" />
+		<result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		<result column="change_stock" jdbcType="INTEGER" property="changeStock" />
+		<result column="old_stock" jdbcType="INTEGER" property="oldStock" />
+		<result column="now_stock" jdbcType="INTEGER" property="nowStock" />
+		<result column="change_type" jdbcType="VARCHAR" property="changeType" />
+		<result column="stock_area" jdbcType="VARCHAR" property="stockArea" />
+		<result column="stock_batch" jdbcType="VARCHAR" property="stockBatch" />
+	</resultMap>
+
+	<insert id="insertSelective" parameterType="com.hjy.entity.log.LcStockchange">
+		insert into lc_stockchange
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="uid != null">
+				uid,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="info != null">
+				info,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="createUser != null">
+				create_user,
+			</if>
+			<if test="changeStock != null">
+				change_stock,
+			</if>
+			<if test="oldStock != null">
+				old_stock,
+			</if>
+			<if test="nowStock != null">
+				now_stock,
+			</if>
+			<if test="changeType != null">
+				change_type,
+			</if>
+			<if test="stockArea != null">
+				stock_area,
+			</if>
+			<if test="stockBatch != null">
+				stock_batch,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null">
+				#{uid,jdbcType=CHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="info != null">
+				#{info,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=CHAR},
+			</if>
+			<if test="createUser != null">
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="changeStock != null">
+				#{changeStock,jdbcType=INTEGER},
+			</if>
+			<if test="oldStock != null">
+				#{oldStock,jdbcType=INTEGER},
+			</if>
+			<if test="nowStock != null">
+				#{nowStock,jdbcType=INTEGER},
+			</if>
+			<if test="changeType != null">
+				#{changeType,jdbcType=VARCHAR},
+			</if>
+			<if test="stockArea != null">
+				#{stockArea,jdbcType=VARCHAR},
+			</if>
+			<if test="stockBatch != null">
+				#{stockBatch,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
