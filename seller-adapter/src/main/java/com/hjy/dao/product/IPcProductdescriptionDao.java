@@ -1,5 +1,8 @@
 package com.hjy.dao.product;
 
-public interface IPcProductdescriptionDao {
+import com.hjy.dao.BaseDao;
+import com.hjy.entity.product.PcProductdescription;
+
+public interface IPcProductdescriptionDao  extends BaseDao<PcProductdescription, Integer> {
 
 }

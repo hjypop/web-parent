@@ -1,5 +1,8 @@
 package com.hjy.dao.user;
 
-public interface IUcSellercategoryProductRelationDao {
+import com.hjy.dao.BaseDao;
+import com.hjy.entity.user.UcSellercategoryProductRelation;
+
+public interface IUcSellercategoryProductRelationDao  extends BaseDao<UcSellercategoryProductRelation, Integer>  {
 
 }

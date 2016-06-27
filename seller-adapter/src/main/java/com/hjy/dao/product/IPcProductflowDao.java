@@ -1,5 +1,8 @@
 package com.hjy.dao.product;
 
-public interface IPcProductflowDao {
+import com.hjy.dao.BaseDao;
+import com.hjy.entity.product.PcProductflow;
+
+public interface IPcProductflowDao extends BaseDao<PcProductflow , Integer> {
 
 }
