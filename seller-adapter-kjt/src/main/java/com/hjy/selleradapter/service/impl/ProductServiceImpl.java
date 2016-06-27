@@ -1,4 +1,4 @@
-package com.hjy.selleradapter.service;
+package com.hjy.selleradapter.service.impl;
 
 import com.hjy.api.RootResult;
 import com.hjy.base.BaseClass;
@@ -6,18 +6,18 @@ import com.hjy.iface.IFlowFunc;
 import com.hjy.jms.ProductJmsSupport;
 import com.hjy.model.MDataMap;
 import com.hjy.selleradapter.kjt.model.PcProductinfo;
+import com.hjy.selleradapter.service.IProductService;
 
-public class ProductService extends BaseClass implements IFlowFunc {
+public class ProductServiceImpl extends BaseClass implements IFlowFunc , IProductService{
 	
 	public int AddProductTx(PcProductinfo pc , StringBuffer error , String manageCode){
 		RootResult rr= new RootResult();
 		
-		TxProductService txs = BeansHelper.upBean("bean_com_cmall_productcenter_txservice_TxProductService");
+		TxProductServiceImpl txs = BeansHelper.upBean("bean_com_cmall_productcenter_txservice_TxProductService");
 		
 		try {
 			txs.insertProduct(pc, rr, manageCode);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			rr.setCode(941901049);
 			rr.setMessage(getInfo(941901049, e.getMessage()));
@@ -41,7 +41,7 @@ public class ProductService extends BaseClass implements IFlowFunc {
 	 * 
 	 * @param product
 	 */
-	public void genarateJmsStaticPageForProduct(PcProductinfo product) {
+	private void genarateJmsStaticPageForProduct(PcProductinfo product) {
 		ProductJmsSupport pjs = new ProductJmsSupport();
 		// 通知前端生成静态页面
 		String skuCodes = "";

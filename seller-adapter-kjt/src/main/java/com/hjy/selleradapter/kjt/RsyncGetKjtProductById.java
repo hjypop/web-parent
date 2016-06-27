@@ -27,7 +27,7 @@ import com.hjy.selleradapter.kjt.model.ProductSkuInfo;
 import com.hjy.selleradapter.kjt.model.RsyncModelGetKjtProduct;
 import com.hjy.selleradapter.kjt.request.RsyncRequestGetKjtProductById;
 import com.hjy.selleradapter.kjt.response.RsyncResponseGetKjtProductById;
-import com.hjy.selleradapter.service.ProductService;
+import com.hjy.selleradapter.service.impl.ProductServiceImpl;
 
 /**
  * 根据商品编号获取商品信息
@@ -118,7 +118,7 @@ dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_se
 				
 				
 				// TODO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Yangcl
-				ProductService productService = BeansHelper.upBean("bean_com_cmall_productcenter_service_ProductService");
+				ProductServiceImpl productService = BeansHelper.upBean("bean_com_cmall_productcenter_service_ProductService");
 				
 				
 				
@@ -134,7 +134,7 @@ dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_se
 				result.setCode(resultCode);
 				result.setMessage(error.toString());
 			}else {
-				productinfo = new ProductService().getProduct(list.get(0).get("product_code").toString());
+				productinfo = new ProductServiceImpl().getProduct(list.get(0).get("product_code").toString());
 				
 				String now=DateUtil.getSysDateTimeString();
 				String cost = list.get(0).get("cost_price").toString();
@@ -156,7 +156,7 @@ dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_se
 				productinfo.getPcProductinfoExt().setProductStoreType(String.valueOf(info.getProductEntryInfo().getProductStoreType()));
 				productinfo.getPcProductinfoExt().setKjtSellerCode(info.getStoreSysNo());
 				productinfo.setTaxRate(info.getProductEntryInfo().getTariffRate());//更新税率
-				new ProductService().UpdateProductTx(productinfo, new StringBuffer(), "jobsystem",  new ProductChangeFlag());
+				new ProductServiceImpl().UpdateProductTx(productinfo, new StringBuffer(), "jobsystem",  new ProductChangeFlag());
 			}
 		} catch (Exception e) {
 			result.inErrorMessage(918519034, info.toString());
