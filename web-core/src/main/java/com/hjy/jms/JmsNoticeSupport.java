@@ -2,16 +2,9 @@ package com.hjy.jms;
 
 import com.hjy.base.BaseClass;
 import com.hjy.iface.IBaseInstance;
+import com.hjy.iface.IJmsListener;
 import com.hjy.model.MDataMap;
 
-//import com.cmall.systemcenter.enumer.JmsNameEnumer;
-//import com.srnpr.zapcom.baseclass.BaseClass;
-//import com.srnpr.zapcom.baseface.IBaseInstance;
-//import com.srnpr.zapcom.basemodel.MDataMap;
-//import com.srnpr.zapweb.websupport.MessageSupport;
-//import com.srnpr.zapzero.enumer.EJmsMessageType;
-//import com.srnpr.zapzero.face.IJmsListener;
-//import com.srnpr.zapzero.support.JmsSupport;
 
 public class JmsNoticeSupport extends BaseClass implements IBaseInstance {
 

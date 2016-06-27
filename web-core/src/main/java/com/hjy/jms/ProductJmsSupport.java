@@ -1,7 +1,5 @@
 package com.hjy.jms;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.hjy.model.MDataMap;
 
 //import com.cmall.systemcenter.enumer.JmsNameEnumer;
