@@ -106,7 +106,7 @@ public class JmsSupport extends BaseClass implements IBaseInstance {
 			consumer.setMessageListener(listener);
 		} catch (JMSException e) {
 			bLogError(970205032, sTypeName, sSubName);
-			WebHelper.errorMessage(sTypeName, "jmserror", 1, "com.srnpr.zapzero.support.JmsSupport.addTopicLisense" , 
+			WebHelper.getInstance().errorMessage(sTypeName, "jmserror", 1, "com.srnpr.zapzero.support.JmsSupport.addTopicLisense" , 
 					sTypeName + WebConst.CONST_SPLIT_LINE + sSubName, e);
 			e.printStackTrace();
 		}
