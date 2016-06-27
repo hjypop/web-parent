@@ -2,18 +2,19 @@ package com.hjy.selleradapter.service.impl;
 
 import com.hjy.api.RootResult;
 import com.hjy.base.BaseClass;
+import com.hjy.entity.product.PcProductinfo;
 import com.hjy.iface.IFlowFunc;
 import com.hjy.jms.ProductJmsSupport;
 import com.hjy.model.MDataMap;
-import com.hjy.selleradapter.kjt.model.PcProductinfo;
 import com.hjy.selleradapter.service.IProductService;
 
 public class ProductServiceImpl extends BaseClass implements IFlowFunc , IProductService{
 	
+	TxProductServiceImpl txs = BeansHelper.upBean("bean_com_cmall_productcenter_txservice_TxProductService");
+
 	public int AddProductTx(PcProductinfo pc , StringBuffer error , String manageCode){
 		RootResult rr= new RootResult();
 		
-		TxProductServiceImpl txs = BeansHelper.upBean("bean_com_cmall_productcenter_txservice_TxProductService");
 		
 		try {
 			txs.insertProduct(pc, rr, manageCode);

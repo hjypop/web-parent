@@ -1,5 +1,7 @@
 package com.hjy.selleradapter.service.impl;
 
+import java.util.UUID;
+
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -9,32 +11,62 @@ import com.hjy.api.RootResult;
 import com.hjy.base.BaseClass;
 import com.hjy.common.DateUtil;
 import com.hjy.dao.ILockDao;
-import com.hjy.selleradapter.kjt.model.PcProductinfo;
+import com.hjy.dao.log.ILcStockchangeDao;
+import com.hjy.dao.product.IPcProductcategoryRelDao;
+import com.hjy.dao.product.IPcProductdescriptionDao;
+import com.hjy.dao.product.IPcProductflowDao;
+import com.hjy.dao.product.IPcProductinfoDao;
+import com.hjy.dao.product.IPcProductinfoExtDao;
+import com.hjy.dao.product.IPcProductpicDao;
+import com.hjy.dao.product.IPcProductpropertyDao;
+import com.hjy.dao.product.IPcSkuinfoDao;
+import com.hjy.dao.system.IScStoreSkunumDao;
+import com.hjy.dao.user.IUcSellercategoryProductRelationDao;
+import com.hjy.entity.product.PcProductinfo;
 import com.hjy.selleradapter.service.ITxProductService;
 
 @Service("txProductService")
 public class TxProductServiceImpl extends BaseClass implements ITxProductService{
 	
 	@Resource
-	private ILockDao lockDao;
-	
-	com.cmall.dborm.txmapper.UcSellercategoryProductRelationMapper usprm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_UcSellercategoryProductRelationMapper");
-	com.cmall.dborm.txmapper.PcProductdescriptionMapper ppsm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductdescriptionMapper");
-	com.cmall.dborm.txmapper.PcProductflowMapper ppfm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductflowMapper");
-	com.cmall.dborm.txmapper.PcSkuinfoMapper pcsm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcSkuinfoMapper");
-	com.cmall.dborm.txmapper.PcProductinfoMapper pcpm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductinfoMapper");
-	com.cmall.dborm.txmapper.PcProductpicMapper pppm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductpicMapper");
-	com.cmall.dborm.txmapper.PcProductpropertyMapper pppmr = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductpropertyMapper");
-	com.cmall.dborm.txmapper.LcStockchangeMapper lsom = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_LcStockchangeMapper");
-	com.cmall.dborm.txmapper.ScStoreSkunumMapper sssm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_ScStoreSkunumMapper");
-	com.cmall.dborm.txmapper.PcProductinfoExtMapper ppem = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductinfoExtMapper");
-	com.cmall.dborm.txmapper.PcProductcategoryRelMapper pprm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductcategoryRelMapper");
+	private IUcSellercategoryProductRelationDao usprm;
+//	com.cmall.dborm.txmapper.UcSellercategoryProductRelationMapper usprm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_UcSellercategoryProductRelationMapper");
+	@Resource
+	private IPcProductdescriptionDao ppsm ; 
+//	com.cmall.dborm.txmapper.PcProductdescriptionMapper ppsm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductdescriptionMapper");
+	@Resource
+	private IPcProductflowDao ppfm;
+//	com.cmall.dborm.txmapper.PcProductflowMapper ppfm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductflowMapper");
+	@Resource
+	private IPcSkuinfoDao pcsm;
+//	com.cmall.dborm.txmapper.PcSkuinfoMapper pcsm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcSkuinfoMapper");
+	@Resource
+	private IPcProductinfoDao pcpm;
+//	com.cmall.dborm.txmapper.PcProductinfoMapper pcpm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductinfoMapper");
+	@Resource
+	private IPcProductpicDao pppm;
+//	com.cmall.dborm.txmapper.PcProductpicMapper pppm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductpicMapper");
+	@Resource
+	private IPcProductpropertyDao pppmr;
+//	com.cmall.dborm.txmapper.PcProductpropertyMapper pppmr = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductpropertyMapper");
+	@Resource
+	private ILcStockchangeDao lsom;
+//	com.cmall.dborm.txmapper.LcStockchangeMapper lsom = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_LcStockchangeMapper");
+	@Resource
+	private IScStoreSkunumDao sssm;
+//	com.cmall.dborm.txmapper.ScStoreSkunumMapper sssm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_ScStoreSkunumMapper");
+	@Resource
+	private IPcProductinfoExtDao ppem;
+//	com.cmall.dborm.txmapper.PcProductinfoExtMapper ppem = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductinfoExtMapper");
+	@Resource
+	private IPcProductcategoryRelDao pprm;
+//	com.cmall.dborm.txmapper.PcProductcategoryRelMapper pprm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductcategoryRelMapper");
 	
 	public void insertProduct(PcProductinfo pc, RootResult ret, String operator) {
 		
 		String createTime = DateUtil.getSysDateTimeString();
 		// 插入商品基本信息
-		com.cmall.dborm.txmodel.PcProductinfo pptModel = new com.cmall.dborm.txmodel.PcProductinfo();
+		com.hjy.entity.product.cmall.dborm.txmodel.PcProductinfo pptModel = new com.hjy.entity.product.cmall.dborm.txmodel.PcProductinfo();
 		pptModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 		pptModel.setCreateTime(createTime);
 		pptModel.setBrandCode(pc.getBrandCode());
@@ -85,7 +117,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 		if (pc.getUsprList() != null && pc.getUsprList().size() > 0) {
 
 			for (int i = 0; i < pc.getUsprList().size(); i++) {
-				com.cmall.dborm.txmodel.UcSellercategoryProductRelation usprModel = new UcSellercategoryProductRelation();
+				com.hjy.entity.user.cmall.dborm.txmodel.UcSellercategoryProductRelation usprModel = new UcSellercategoryProductRelation();
 				usprModel.setCategoryCode(pc.getUsprList().get(i).getCategoryCode());
 				usprModel.setProductCode(pc.getUsprList().get(i).getProductCode());
 				usprModel.setSellerCode(pc.getUsprList().get(i).getSellerCode());
@@ -95,7 +127,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 		}
 		// 添加商品的实类信息
 		if (null != pc.getPcProductcategoryRel()) {
-			com.cmall.dborm.txmodel.PcProductcategoryRel pprModel = new PcProductcategoryRel();
+			com.hjy.entity.product.cmall.dborm.txmodel.PcProductcategoryRel pprModel = new PcProductcategoryRel();
 			pprModel.setCategoryCode(pc.getPcProductcategoryRel().getCategoryCode());
 			pprModel.setFlagMain(Long.parseLong(pc.getPcProductcategoryRel().getFlagMain() + ""));
 			pprModel.setProductCode(pc.getPcProductcategoryRel().getProductCode());
@@ -118,7 +150,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 
 			List<PcProductpic> picList = pc.getPcPicList();
 			for (PcProductpic pic : picList) {
-				com.cmall.dborm.txmodel.PcProductpic picModel = new com.cmall.dborm.txmodel.PcProductpic();
+				com.hjy.entity.cmall.dborm.txmodel.PcProductpic picModel = new com.hjy.entity.cmall.dborm.txmodel.PcProductpic();
 				picModel.setPicUrl(pic.getPicUrl());
 				picModel.setProductCode(pc.getProductCode());
 				picModel.setSkuCode(pic.getSkuCode());
@@ -158,7 +190,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 				if (sku.getScStoreSkunumList() != null) {
 					List<ScStoreSkunum> skuStoreList = sku.getScStoreSkunumList();
 					for (ScStoreSkunum skuStore : skuStoreList) {
-						com.cmall.dborm.txmodel.ScStoreSkunum sssModel = new com.cmall.dborm.txmodel.ScStoreSkunum();
+						com.hjy.entity.cmall.dborm.txmodel.ScStoreSkunum sssModel = new com.hjy.entity.cmall.dborm.txmodel.ScStoreSkunum();
 						sssModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 						sssModel.setSkuCode(skuStore.getSkuCode());
 						sssModel.setStockNum(skuStore.getStockNum());
@@ -176,7 +208,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 
 			for (PcProductproperty ppp : pppList) {
 
-				com.cmall.dborm.txmodel.PcProductproperty pppModel = new com.cmall.dborm.txmodel.PcProductproperty();
+				com.hjy.entity.cmall.dborm.txmodel.PcProductproperty pppModel = new com.hjy.entity.cmall.dborm.txmodel.PcProductproperty();
 
 				pppModel.setProductCode(pc.getProductCode());
 				pppModel.setPropertyCode(ppp.getPropertyCode());
@@ -192,7 +224,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 		// 插入商品扩展信息
 		if (pc.getPcProductinfoExt() != null) {
 
-			com.cmall.dborm.txmodel.PcProductinfoExt ppe = new PcProductinfoExt();
+			com.hjy.entity.product.cmall.dborm.txmodel.PcProductinfoExt ppe = new PcProductinfoExt();
 			ppe.setUid(UUID.randomUUID().toString().replace("-", ""));
 			ppe.setProductCode(pc.getPcProductinfoExt().getProductCode());
 			ppe.setPrchType(pc.getPcProductinfoExt().getPrchType());
@@ -223,7 +255,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 		// 插入商品历史流水信息
 		if (pc.getPcProdcutflow() != null) {
 
-			com.cmall.dborm.txmodel.PcProductflow ppf = new PcProductflow();
+			com.hjy.entity.product.cmall.dborm.txmodel.PcProductflow ppf = new PcProductflow();
 
 			ppf.setCreateTime(createTime);
 			ppf.setCreator(operator);

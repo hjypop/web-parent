@@ -1,10 +1,10 @@
-package com.hjy.selleradapter.kjt.model;
+package com.hjy.entity.product;
 
 
 /**   
 *    
 * 项目名称：productcenter   
-* 类名称：PcCategoryinfo   
+* 类名称：PcProductcategoryRel   
 * 类描述：   
 * 创建人：yanzj  
 * 创建时间：2013-9-10 下午12:41:22   
@@ -14,7 +14,7 @@ package com.hjy.selleradapter.kjt.model;
 * @version    
 *    
 */
-public class PcCategoryinfo  {
+public class PcProductcategoryRel  {
     
     /**
      * 
@@ -25,17 +25,17 @@ public class PcCategoryinfo  {
      */
     private String uid  = ""  ;
     /**
+     * 商品编号
+     */
+    private String productCode  = ""  ;
+    /**
      * 分类编号
      */
     private String categoryCode  = ""  ;
     /**
-     * 分类名称
+     * 是否主分类
      */
-    private String categoryName  = ""  ;
-    /**
-     * 父编号
-     */
-    private String parentCode  = ""  ;
+    private Integer flagMain   = 0 ;
 
     public void setZid(Integer zid) {
         this.zid = zid;
@@ -51,6 +51,13 @@ public class PcCategoryinfo  {
     public String getUid() {
         return this.uid;
     }
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
+    }
+    
+    public String getProductCode() {
+        return this.productCode;
+    }
     public void setCategoryCode(String categoryCode) {
         this.categoryCode = categoryCode;
     }
@@ -58,19 +65,12 @@ public class PcCategoryinfo  {
     public String getCategoryCode() {
         return this.categoryCode;
     }
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setFlagMain(Integer flagMain) {
+        this.flagMain = flagMain;
     }
     
-    public String getCategoryName() {
-        return this.categoryName;
-    }
-    public void setParentCode(String parentCode) {
-        this.parentCode = parentCode;
-    }
-    
-    public String getParentCode() {
-        return this.parentCode;
+    public Integer getFlagMain() {
+        return this.flagMain;
     }
 }
 

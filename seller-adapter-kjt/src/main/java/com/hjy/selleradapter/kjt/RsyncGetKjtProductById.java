@@ -11,19 +11,19 @@ import org.apache.commons.lang.StringUtils;
 import com.hjy.common.DateUtil;
 import com.hjy.common.product.SkuCommon;
 import com.hjy.constant.MemberConst;
+import com.hjy.entity.product.PcProductdescription;
+import com.hjy.entity.product.PcProductflow;
+import com.hjy.entity.product.PcProductinfo;
+import com.hjy.entity.product.PcProductinfoExt;
 import com.hjy.helper.BeansHelper;
 import com.hjy.helper.JsonHelper;
 import com.hjy.helper.PlusHelperNotice;
 import com.hjy.helper.WebHelper;
 import com.hjy.model.MWebResult;
+import com.hjy.model.ProductSkuInfo;
 import com.hjy.model.RsyncDateCheck;
 import com.hjy.model.RsyncResult;
 import com.hjy.selleradapter.kjt.config.RsyncConfigGetKjtProductById;
-import com.hjy.selleradapter.kjt.model.PcProductdescription;
-import com.hjy.selleradapter.kjt.model.PcProductflow;
-import com.hjy.selleradapter.kjt.model.PcProductinfo;
-import com.hjy.selleradapter.kjt.model.PcProductinfoExt;
-import com.hjy.selleradapter.kjt.model.ProductSkuInfo;
 import com.hjy.selleradapter.kjt.model.RsyncModelGetKjtProduct;
 import com.hjy.selleradapter.kjt.request.RsyncRequestGetKjtProductById;
 import com.hjy.selleradapter.kjt.response.RsyncResponseGetKjtProductById;
@@ -269,7 +269,7 @@ dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_se
 					}
 				}
 				String createTime = DateUtil.getSysDateTimeString();
-				com.cmall.dborm.txmodel.PcProductflow ppf = new PcProductflow();
+				com.hjy.entity.product.cmall.dborm.txmodel.PcProductflow ppf = new PcProductflow();
 				
 				ppf.setCreateTime(createTime);
 				ppf.setCreator(userCode);

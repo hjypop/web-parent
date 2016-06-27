@@ -3,6 +3,8 @@ package com.hjy.selleradapter.kjt.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.hjy.model.ProductEntryInfo;
+
 public class RsyncModelGetKjtProduct implements Serializable {
 
 	

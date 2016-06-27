@@ -1,8 +1,11 @@
-package com.hjy.selleradapter.kjt.model;
+package com.hjy.entity.product;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.hjy.entity.user.UcSellercategoryProductRelation;
+import com.hjy.model.ProductSkuInfo;
 
 
 /**   

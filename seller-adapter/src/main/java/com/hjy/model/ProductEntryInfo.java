@@ -1,4 +1,4 @@
-package com.hjy.selleradapter.kjt.model;
+package com.hjy.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

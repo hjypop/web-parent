@@ -1,4 +1,4 @@
-package com.hjy.selleradapter.kjt.model;
+package com.hjy.entity.system;
 
 public class ScStoreSkunum {
     /**
