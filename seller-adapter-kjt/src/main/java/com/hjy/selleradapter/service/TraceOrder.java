@@ -20,10 +20,11 @@ import com.hjy.selleradapter.kjt.response.RsyncResponseOrderStatus.SoOrder;
 import com.hjy.support.MailSupport;
 
 /**
- * 同步订单状态
  * 
- * @author jlin
- *
+ * 类: TraceOrder <br>
+ * 描述: 同步订单状态 <br>
+ * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
+ * 时间: 2016年6月27日 下午4:50:30
  */
 public class TraceOrder extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrderStatus, RsyncResponseOrderStatus> {
 
