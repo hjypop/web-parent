@@ -1,10 +1,10 @@
-package com.hjy.selleradapter.kjt.model;
+package com.hjy.entity.product;
 
 
 /**   
 *    
 * 项目名称：productcenter   
-* 类名称：PcProductcategoryRel   
+* 类名称：PcProductpic   
 * 类描述：   
 * 创建人：yanzj  
 * 创建时间：2013-9-10 下午12:41:22   
@@ -14,7 +14,7 @@ package com.hjy.selleradapter.kjt.model;
 * @version    
 *    
 */
-public class PcProductcategoryRel  {
+public class PcProductpic  {
     
     /**
      * 
@@ -29,15 +29,27 @@ public class PcProductcategoryRel  {
      */
     private String productCode  = ""  ;
     /**
-     * 分类编号
+     * 图片路径
      */
-    private String categoryCode  = ""  ;
+    private String picUrl  = ""  ;
+    
     /**
-     * 是否主分类
+     * 商品的skuCode
      */
-    private Integer flagMain   = 0 ;
+    private String skuCode="";
+    
+    
+    
 
-    public void setZid(Integer zid) {
+    public String getSkuCode() {
+		return skuCode;
+	}
+
+	public void setSkuCode(String skuCode) {
+		this.skuCode = skuCode;
+	}
+
+	public void setZid(Integer zid) {
         this.zid = zid;
     }
     
@@ -58,19 +70,12 @@ public class PcProductcategoryRel  {
     public String getProductCode() {
         return this.productCode;
     }
-    public void setCategoryCode(String categoryCode) {
-        this.categoryCode = categoryCode;
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
     }
     
-    public String getCategoryCode() {
-        return this.categoryCode;
-    }
-    public void setFlagMain(Integer flagMain) {
-        this.flagMain = flagMain;
-    }
-    
-    public Integer getFlagMain() {
-        return this.flagMain;
+    public String getPicUrl() {
+        return this.picUrl;
     }
 }
 

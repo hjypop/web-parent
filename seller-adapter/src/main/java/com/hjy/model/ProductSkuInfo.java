@@ -1,8 +1,10 @@
-package com.hjy.selleradapter.kjt.model;
+package com.hjy.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.hjy.entity.system.ScStoreSkunum;
 
 /**   
 *    
