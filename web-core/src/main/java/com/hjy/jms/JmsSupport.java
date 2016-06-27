@@ -9,6 +9,7 @@ import javax.jms.TextMessage;
 import org.apache.commons.lang.StringUtils;
 
 import com.hjy.base.BaseClass;
+import com.hjy.constant.WebConst;
 import com.hjy.helper.WebHelper;
 import com.hjy.iface.IBaseInstance;
 import com.hjy.model.MDataMap;
@@ -33,8 +34,7 @@ public class JmsSupport extends BaseClass implements IBaseInstance {
 		// 定义如果启用了jms系统
 		if (WebConst.CONST_FLAG_ENABLE_JMS) {
 			try {
-				Session session = JmsConnection.getInstance().createSession(
-						false, Session.AUTO_ACKNOWLEDGE);
+				Session session = JmsConnection.getInstance().createSession( false, Session.AUTO_ACKNOWLEDGE);
 				Destination destination = null;
 				// System.out.println("消息队列触发了,已注释！如使用请搜索本句话~");
 				switch (eMessageType) {
@@ -59,7 +59,7 @@ public class JmsSupport extends BaseClass implements IBaseInstance {
 
 			} catch (JMSException e) {
 				bLogError(970205031, sTypeName, sMsg);
-				WebHelper.errorMessage(sTypeName, "jmserror", 1, "com.srnpr.zapzero.support.JmsSupport.sendToTopic", sTypeName + WebConst.CONST_SPLIT_LINE + sMsg, e);
+				WebHelper.getInstance().errorMessage(sTypeName, "jmserror", 1, "com.srnpr.zapzero.support.JmsSupport.sendToTopic", sTypeName + WebConst.CONST_SPLIT_LINE + sMsg, e);
 				e.printStackTrace();
 			}
 		}
