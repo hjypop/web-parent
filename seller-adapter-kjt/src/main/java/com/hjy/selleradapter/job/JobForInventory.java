@@ -22,7 +22,7 @@ import com.hjy.selleradapter.kjt.model.InventoryPageModel;
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月27日 下午5:27:16
  */
-public class SyncInventory extends RootJob {
+public class JobForInventory extends RootJob {
 
 	@Override
 	public void doExecute(JobExecutionContext context) {
