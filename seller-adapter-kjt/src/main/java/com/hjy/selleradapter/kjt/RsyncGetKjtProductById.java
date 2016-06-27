@@ -27,6 +27,7 @@ import com.hjy.selleradapter.kjt.model.ProductSkuInfo;
 import com.hjy.selleradapter.kjt.model.RsyncModelGetKjtProduct;
 import com.hjy.selleradapter.kjt.request.RsyncRequestGetKjtProductById;
 import com.hjy.selleradapter.kjt.response.RsyncResponseGetKjtProductById;
+import com.hjy.selleradapter.service.ProductService;
 
 /**
  * 根据商品编号获取商品信息
@@ -113,7 +114,14 @@ dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_se
 			
 			if(list==null||list.size()<1){  //若果不存在，就添加
 				setNewProductInfo(productinfo, info);//设置商品实体
+				
+				
+				
+				// TODO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Yangcl
 				ProductService productService = BeansHelper.upBean("bean_com_cmall_productcenter_service_ProductService");
+				
+				
+				
 				StringBuffer error=new StringBuffer();
 				PcProductflow pcProdcutflow = new PcProductflow();
 				pcProdcutflow.setFlowCode(WebHelper.getInstance().genUniqueCode(ProductFlowHead));
@@ -274,7 +282,14 @@ dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_se
 				
 				JsonHelper<PcProductinfo> pHelper=new JsonHelper<PcProductinfo>();
 				ppf.setProductJson(pHelper.ObjToString(productinfo));
+				
+				
+				// TODO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Yangcl
 				com.cmall.dborm.txmapper.PcProductflowMapper ppfm =  BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductflowMapper");
+				
+				
+				
+				
 				ppfm.insertSelective(ppf);
 	}
 	public RsyncResponseGetKjtProductById upResponseObject() {

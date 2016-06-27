@@ -1,7 +1,7 @@
 package com.hjy.api;
 
 import com.hjy.iface.IBaseResult;
-import com.srnpr.zapcom.topdo.TopUp;
+import com.hjy.system.config.PropVisitor;
 
 public class RootResultWeb extends RootResult {
 
@@ -9,7 +9,7 @@ public class RootResultWeb extends RootResult {
 
 		setCode(iErrorCode);
 
-		setResultMessage(TopUp.upLogInfo(iErrorCode, sParms));
+		setMessage(PropVisitor.getLogInfo(iErrorCode, sParms));
 	}
 
 	public boolean upFlagTrue() {

@@ -11,7 +11,9 @@ public class ProductService extends BaseClass implements IFlowFunc {
 	
 	public int AddProductTx(PcProductinfo pc , StringBuffer error , String manageCode){
 		RootResult rr= new RootResult();
+		
 		TxProductService txs = BeansHelper.upBean("bean_com_cmall_productcenter_txservice_TxProductService");
+		
 		try {
 			txs.insertProduct(pc, rr, manageCode);
 		} catch (Exception e) {
