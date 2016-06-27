@@ -45,6 +45,7 @@ public class BeansHelper extends BaseClass {
 		return oReturn;
 	}
 
+	// alias upBean
 	@SuppressWarnings("unchecked")
 	public static <T> T upBean(String sBeanName) {
 		return (T) getBeanObject(sBeanName);

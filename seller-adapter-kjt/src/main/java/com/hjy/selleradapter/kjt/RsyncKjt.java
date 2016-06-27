@@ -19,6 +19,8 @@ import org.apache.http.ParseException;
 
 import com.hjy.base.BaseClass;
 import com.hjy.common.DateUtil;
+import com.hjy.common.bill.HexUtil;
+import com.hjy.common.bill.MD5Util;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.FormatHelper;
 import com.hjy.helper.JsonHelper;
@@ -42,8 +44,7 @@ import com.hjy.support.WebClientSupport;
  * @param <TRequest>
  * @param <TResponse>
  */
-public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IRsyncRequest, TResponse extends IRsyncResponse>
-		extends BaseClass implements IRsyncDo<TConfig, TRequest, TResponse> {
+public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IRsyncRequest, TResponse extends IRsyncResponse> extends BaseClass implements IRsyncDo<TConfig, TRequest, TResponse> {
 
 	private TResponse processResult = null;
 

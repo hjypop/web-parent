@@ -10,14 +10,17 @@ import org.apache.commons.lang.StringUtils;
 
 import com.hjy.common.DateUtil;
 import com.hjy.common.product.SkuCommon;
+import com.hjy.constant.MemberConst;
 import com.hjy.helper.BeansHelper;
 import com.hjy.helper.JsonHelper;
+import com.hjy.helper.PlusHelperNotice;
 import com.hjy.helper.WebHelper;
 import com.hjy.model.MWebResult;
 import com.hjy.model.RsyncDateCheck;
 import com.hjy.model.RsyncResult;
 import com.hjy.selleradapter.kjt.config.RsyncConfigGetKjtProductById;
 import com.hjy.selleradapter.kjt.model.PcProductdescription;
+import com.hjy.selleradapter.kjt.model.PcProductflow;
 import com.hjy.selleradapter.kjt.model.PcProductinfo;
 import com.hjy.selleradapter.kjt.model.PcProductinfoExt;
 import com.hjy.selleradapter.kjt.model.ProductSkuInfo;
@@ -99,18 +102,26 @@ public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductByI
 			//处理info数据逻辑在此写
 			PcProductinfo productinfo=new PcProductinfo();
 			String productId = info.getProductID();
-			List<Map<String, Object>> list= DbUp.upTable("pc_productinfo").dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_sell_price,p.product_name,p.cost_price,d.description_info,p.update_time FROM pc_productinfo p LEFT JOIN pc_productdescription d on p.product_code=d.product_code where p.product_code_old=:product_code_old and p.seller_code=:seller_code ", new MDataMap("product_code_old",productId,"seller_code",MemberConst.MANAGE_CODE_HOMEHAS));
+			
+			List<Map<String, Object>> list = 
+					
+DbUp.upTable("pc_productinfo").
+dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_sell_price,p.product_name,p.cost_price,d.description_info,p.update_time FROM pc_productinfo p LEFT JOIN pc_productdescription d on p.product_code=d.product_code where p.product_code_old=:product_code_old and p.seller_code=:seller_code ", 
+		new MDataMap("product_code_old",productId,"seller_code",MemberConst.MANAGE_CODE_HOMEHAS));
+			
+			
+			
 			if(list==null||list.size()<1){  //若果不存在，就添加
 				setNewProductInfo(productinfo, info);//设置商品实体
-				ProductService productService=BeansHelper.upBean("bean_com_cmall_productcenter_service_ProductService");
+				ProductService productService = BeansHelper.upBean("bean_com_cmall_productcenter_service_ProductService");
 				StringBuffer error=new StringBuffer();
-				com.cmall.productcenter.model.PcProductflow pcProdcutflow = new com.cmall.productcenter.model.PcProductflow();
+				PcProductflow pcProdcutflow = new PcProductflow();
 				pcProdcutflow.setFlowCode(WebHelper.getInstance().genUniqueCode(ProductFlowHead));
 				pcProdcutflow.setFlowStatus(SkuCommon.ProAddOr);
 				productinfo.setPcProdcutflow(pcProdcutflow);
 				int resultCode=productService.AddProductTx(productinfo, error,"");
 				if(resultCode == 1){//添加商品成功刷新缓存
-					PlusHelperNotice.onChangeProductInfo(productinfo.getProductCode());
+					PlusHelperNotice.onChangeProductInfo(productinfo.getProductCode());             // TODO Yangcl 此处等待MNT进行Redis封包
 				}
 				result.setCode(resultCode);
 				result.setMessage(error.toString());
