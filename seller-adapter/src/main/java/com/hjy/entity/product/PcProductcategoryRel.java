@@ -36,8 +36,19 @@ public class PcProductcategoryRel  {
      * 是否主分类
      */
     private Integer flagMain   = 0 ;
+    
+    private String categoryCodeOld;
+    
 
-    public void setZid(Integer zid) {
+    public String getCategoryCodeOld() {
+		return categoryCodeOld;
+	}
+
+	public void setCategoryCodeOld(String categoryCodeOld) {
+		this.categoryCodeOld = categoryCodeOld;
+	}
+
+	public void setZid(Integer zid) {
         this.zid = zid;
     }
     

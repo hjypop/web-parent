@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjy.dao.product.IPcProductinfoExtDao">
+
+	<resultMap id="BaseResultMap" type="com.hjy.entity.product.PcProductinfoExt">
+		<id column="zid" jdbcType="INTEGER" property="zid" />
+		<result column="uid" jdbcType="CHAR" property="uid" />
+		<result column="product_code_old" jdbcType="VARCHAR" property="productCodeOld" />
+		<result column="product_code" jdbcType="VARCHAR" property="productCode" />
+		<result column="prch_type" jdbcType="VARCHAR" property="prchType" />
+		<result column="dlr_id" jdbcType="VARCHAR" property="dlrId" />
+		<result column="dlr_nm" jdbcType="VARCHAR" property="dlrNm" />
+		<result column="oa_site_no" jdbcType="VARCHAR" property="oaSiteNo" />
+		<result column="gross_profit" jdbcType="DECIMAL" property="grossProfit" />
+		<result column="accm_rng" jdbcType="DOUBLE" property="accmRng" />
+		<result column="validate_flag" jdbcType="VARCHAR" property="validateFlag" />
+		<result column="fictitious_sales" jdbcType="INTEGER" property="fictitiousSales" />
+		<result column="poffer" jdbcType="VARCHAR" property="poffer" />
+		<result column="md_id" jdbcType="VARCHAR" property="mdId" />
+		<result column="md_nm" jdbcType="VARCHAR" property="mdNm" />
+		<result column="product_trade_type" jdbcType="VARCHAR" property="productTradeType" />
+		<result column="product_store_type" jdbcType="VARCHAR" property="productStoreType" />
+		<result column="settlement_type" jdbcType="VARCHAR" property="settlementType" />
+		<result column="purchase_type" jdbcType="VARCHAR" property="purchaseType" />
+		<result column="ld_good_id" jdbcType="VARCHAR" property="ldGoodId" />
+		<result column="pic_material_url" jdbcType="VARCHAR" property="picMaterialUrl" />
+		<result column="pic_material_upload" jdbcType="VARCHAR" property="picMaterialUpload" />
+		<result column="kjt_seller_code" jdbcType="VARCHAR" property="kjtSellerCode" />
+	</resultMap>
+
+	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcProductinfoExt">
+		insert into pc_productinfo_ext
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="uid != null">
+				uid,
+			</if>
+			<if test="productCodeOld != null">
+				product_code_old,
+			</if>
+			<if test="productCode != null">
+				product_code,
+			</if>
+			<if test="prchType != null">
+				prch_type,
+			</if>
+			<if test="dlrId != null">
+				dlr_id,
+			</if>
+			<if test="dlrNm != null">
+				dlr_nm,
+			</if>
+			<if test="oaSiteNo != null">
+				oa_site_no,
+			</if>
+			<if test="grossProfit != null">
+				gross_profit,
+			</if>
+			<if test="accmRng != null">
+				accm_rng,
+			</if>
+			<if test="validateFlag != null">
+				validate_flag,
+			</if>
+			<if test="fictitiousSales != null">
+				fictitious_sales,
+			</if>
+			<if test="poffer != null">
+				poffer,
+			</if>
+			<if test="mdId != null">
+				md_id,
+			</if>
+			<if test="mdNm != null">
+				md_nm,
+			</if>
+			<if test="productTradeType != null">
+				product_trade_type,
+			</if>
+			<if test="productStoreType != null">
+				product_store_type,
+			</if>
+			<if test="settlementType != null">
+				settlement_type,
+			</if>
+			<if test="purchaseType != null">
+				purchase_type,
+			</if>
+			<if test="ldGoodId != null">
+				ld_good_id,
+			</if>
+			<if test="picMaterialUrl != null">
+				pic_material_url,
+			</if>
+			<if test="picMaterialUpload != null">
+				pic_material_upload,
+			</if>
+			<if test="kjtSellerCode != null">
+				kjt_seller_code,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null">
+				#{uid,jdbcType=CHAR},
+			</if>
+			<if test="productCodeOld != null">
+				#{productCodeOld,jdbcType=VARCHAR},
+			</if>
+			<if test="productCode != null">
+				#{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="prchType != null">
+				#{prchType,jdbcType=VARCHAR},
+			</if>
+			<if test="dlrId != null">
+				#{dlrId,jdbcType=VARCHAR},
+			</if>
+			<if test="dlrNm != null">
+				#{dlrNm,jdbcType=VARCHAR},
+			</if>
+			<if test="oaSiteNo != null">
+				#{oaSiteNo,jdbcType=VARCHAR},
+			</if>
+			<if test="grossProfit != null">
+				#{grossProfit,jdbcType=DECIMAL},
+			</if>
+			<if test="accmRng != null">
+				#{accmRng,jdbcType=DOUBLE},
+			</if>
+			<if test="validateFlag != null">
+				#{validateFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="fictitiousSales != null">
+				#{fictitiousSales,jdbcType=INTEGER},
+			</if>
+			<if test="poffer != null">
+				#{poffer,jdbcType=VARCHAR},
+			</if>
+			<if test="mdId != null">
+				#{mdId,jdbcType=VARCHAR},
+			</if>
+			<if test="mdNm != null">
+				#{mdNm,jdbcType=VARCHAR},
+			</if>
+			<if test="productTradeType != null">
+				#{productTradeType,jdbcType=VARCHAR},
+			</if>
+			<if test="productStoreType != null">
+				#{productStoreType,jdbcType=VARCHAR},
+			</if>
+			<if test="settlementType != null">
+				#{settlementType,jdbcType=VARCHAR},
+			</if>
+			<if test="purchaseType != null">
+				#{purchaseType,jdbcType=VARCHAR},
+			</if>
+			<if test="ldGoodId != null">
+				#{ldGoodId,jdbcType=VARCHAR},
+			</if>
+			<if test="picMaterialUrl != null">
+				#{picMaterialUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="picMaterialUpload != null">
+				#{picMaterialUpload,jdbcType=VARCHAR},
+			</if>
+			<if test="kjtSellerCode != null">
+				#{kjtSellerCode,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
