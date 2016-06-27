@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjy.dao.product.IPcProductdescriptionDao">
+	<resultMap id="BaseResultMap" type="com.hjy.entity.product.PcProductdescription">
+		<id column="zid" jdbcType="INTEGER" property="zid" />
+		<result column="uid" jdbcType="CHAR" property="uid" />
+		<result column="product_code" jdbcType="VARCHAR" property="productCode" />
+		
+		<result column="description_info" jdbcType="LONGVARCHAR" property="descriptionInfo" />
+		<result column="description_pic" jdbcType="LONGVARCHAR" property="descriptionPic" />
+		<result column="keyword" jdbcType="LONGVARCHAR" property="keyword" />
+	</resultMap>
+	
+	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcProductdescription">
+		insert into pc_productdescription
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="uid != null">
+				uid,
+			</if>
+			<if test="productCode != null">
+				product_code,
+			</if>
+			<if test="descriptionInfo != null">
+				description_info,
+			</if>
+			<if test="descriptionPic != null">
+				description_pic,
+			</if>
+			<if test="keyword != null">
+				keyword,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null">
+				#{uid,jdbcType=CHAR},
+			</if>
+			<if test="productCode != null">
+				#{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="descriptionInfo != null">
+				#{descriptionInfo,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="descriptionPic != null">
+				#{descriptionPic,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="keyword != null">
+				#{keyword,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>

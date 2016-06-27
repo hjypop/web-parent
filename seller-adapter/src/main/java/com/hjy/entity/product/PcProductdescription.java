@@ -28,6 +28,9 @@ public class PcProductdescription  {
      * 商品编号
      */
     private String productCode  = ""  ;
+    
+    
+    
     /**
      * 描述信息
      */
