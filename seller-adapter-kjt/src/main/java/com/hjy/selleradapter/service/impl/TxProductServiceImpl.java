@@ -26,44 +26,33 @@ import com.hjy.entity.product.PcProductinfo;
 import com.hjy.selleradapter.service.ITxProductService;
 
 @Service("txProductService")
-public class TxProductServiceImpl extends BaseClass implements ITxProductService{
-	
+public class TxProductServiceImpl extends BaseClass implements ITxProductService {
+
 	@Resource
 	private IUcSellercategoryProductRelationDao usprm;
-//	com.cmall.dborm.txmapper.UcSellercategoryProductRelationMapper usprm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_UcSellercategoryProductRelationMapper");
 	@Resource
-	private IPcProductdescriptionDao ppsm ; 
-//	com.cmall.dborm.txmapper.PcProductdescriptionMapper ppsm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductdescriptionMapper");
+	private IPcProductdescriptionDao ppsm;
 	@Resource
 	private IPcProductflowDao ppfm;
-//	com.cmall.dborm.txmapper.PcProductflowMapper ppfm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductflowMapper");
 	@Resource
 	private IPcSkuinfoDao pcsm;
-//	com.cmall.dborm.txmapper.PcSkuinfoMapper pcsm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcSkuinfoMapper");
 	@Resource
 	private IPcProductinfoDao pcpm;
-//	com.cmall.dborm.txmapper.PcProductinfoMapper pcpm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductinfoMapper");
 	@Resource
 	private IPcProductpicDao pppm;
-//	com.cmall.dborm.txmapper.PcProductpicMapper pppm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductpicMapper");
 	@Resource
 	private IPcProductpropertyDao pppmr;
-//	com.cmall.dborm.txmapper.PcProductpropertyMapper pppmr = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductpropertyMapper");
 	@Resource
 	private ILcStockchangeDao lsom;
-//	com.cmall.dborm.txmapper.LcStockchangeMapper lsom = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_LcStockchangeMapper");
 	@Resource
 	private IScStoreSkunumDao sssm;
-//	com.cmall.dborm.txmapper.ScStoreSkunumMapper sssm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_ScStoreSkunumMapper");
 	@Resource
 	private IPcProductinfoExtDao ppem;
-//	com.cmall.dborm.txmapper.PcProductinfoExtMapper ppem = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductinfoExtMapper");
 	@Resource
 	private IPcProductcategoryRelDao pprm;
-//	com.cmall.dborm.txmapper.PcProductcategoryRelMapper pprm = BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductcategoryRelMapper");
-	
+
 	public void insertProduct(PcProductinfo pc, RootResult ret, String operator) {
-		
+
 		String createTime = DateUtil.getSysDateTimeString();
 		// 插入商品基本信息
 		com.hjy.entity.product.cmall.dborm.txmodel.PcProductinfo pptModel = new com.hjy.entity.product.cmall.dborm.txmodel.PcProductinfo();
@@ -289,43 +278,5 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 			}
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
