@@ -12,6 +12,7 @@ import com.hjy.base.BaseClass;
 import com.hjy.constant.WebConst;
 import com.hjy.helper.WebHelper;
 import com.hjy.iface.IBaseInstance;
+import com.hjy.iface.IJmsListener;
 import com.hjy.model.MDataMap;
 
 

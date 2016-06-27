@@ -3,6 +3,7 @@ package com.hjy.base;
 import java.lang.reflect.Field;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
@@ -55,10 +56,18 @@ public abstract class BaseClass {
 	}
 
 	/**
+	 * 错误日志
+	 * @param lInfoId 默认请写0 否则读取配置文件
+	 * @param sParms 替换参数
+	 */
+	public void bLogError(int iInfoCode, Object... sParms) {
+		LogFactory.getLog(this.getClass()).error( "[" + String.valueOf(iInfoCode) + "] " + PropVisitor.getLogInfo(iInfoCode, sParms));
+	}
+	
+	/**
 	 * alias bConfig
 	 * 
-	 * @param sKey
-	 *            配置主键
+	 * @param sKey  配置主键
 	 * @return 配置内容字符串
 	 */
 	public String getConfig(String sKey) {
@@ -68,10 +77,8 @@ public abstract class BaseClass {
 	/**
 	 * alias bInfo
 	 * 
-	 * @param lInfoId
-	 *            文本编号
-	 * @param sParms
-	 *            拼接字符串
+	 * @param lInfoId 文本编号
+	 * @param sParms  拼接字符串
 	 * @return
 	 */
 	public String getInfo(long iInfoCode, Object... sParms) {
@@ -87,3 +94,23 @@ public abstract class BaseClass {
 		return (T) SpringCtxUtil.getBean(beanName);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
