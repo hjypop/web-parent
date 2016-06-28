@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.IOcOrderKjtListDao">
+
+	<resultMap type="com.hjy.entity.OcOrderKjtList" id="BaseResultMap">
+		<id column="zid" jdbcType="INTEGER" property="zid" />
+		<result column="uid" jdbcType="CHAR" property="uid" />
+		<result column="order_code_seq" jdbcType="VARCHAR" property="orderCodeSeq" />
+		<result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+		<result column="order_code_out" jdbcType="VARCHAR" property="orderCodeOut" />
+		<result column="product_amount" jdbcType="DECIMAL" property="productAmount" />
+		<result column="tax_amount" jdbcType="DECIMAL" property="taxAmount" />
+		<result column="shipping_amount" jdbcType="DECIMAL" property="shippingAmount" />
+		<result column="create_time" jdbcType="VARCHAR" property="createTime" />
+		<result column="update_time" jdbcType="VARCHAR" property="updateTime" />
+		<result column="sostatus" jdbcType="VARCHAR" property="sostatus" />
+		<result column="local_status" jdbcType="VARCHAR" property="localStatus" />
+		<result column="rsync_desc" jdbcType="VARCHAR" property="rsyncDesc" />
+	</resultMap>
+	<!-- 查询订单列表 2016-06-28 zhy -->
+	<select id="findOrderListByStatus" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		SELECT
+		order_code_seq,
+		order_code,
+		order_code_out,
+		product_amount,
+		tax_amount,
+		shipping_amount,
+		create_time,
+		update_time,
+		sostatus,
+		local_status,
+		rsync_desc
+		FROM
+		ordercenter.oc_order_kjt_list
+		<where>
+			sostatus in (${value}) 
+			<![CDATA[ AND order_code_out<>'' ]]>
+		</where>
+	</select>
+	<!-- 根据外部订单号查询订单信息 2016-06-28 zhy -->
+	<select id="findOrderByOutCode" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select order_code_seq, order_code, order_code_out,sostatus from
+		ordercenter.oc_order_kjt_list
+		<where>
+			order_code_out = #{orderCodeOut,jdbcType=VARCHAR}
+		</where>
+	</select>
+
+	<!-- 根据订单编号更新订单 2016-06-28 zhy -->
+	<update id="updateSelective" parameterType="com.hjy.entity.OcOrderKjtList">
+		UPDATE ordercenter.oc_order_kjt_list
+		<set>
+			<if test="orderCodeSeq != null and orderCodeSeq != ''">
+				order_code_seq = #{orderCodeSeq,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCodeOut != null and orderCodeOut != ''">
+				order_code_out = #{orderCodeOut,jdbcType=VARCHAR},
+			</if>
+			<if test="productAmount != null">
+				product_amount = #{productAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="taxAmount != null">
+				tax_amount = #{taxAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="shippingAmount != null">
+				shipping_amount = #{shippingAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time = #{updateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="sostatus != null and sostatus != ''">
+				sostatus = #{sostatus,jdbcType=VARCHAR},
+			</if>
+			<if test="localStatus != null and localStatus != ''">
+				local_status = #{localStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="rsyncDesc != null and rsyncDesc != ''">
+				rsync_desc = #{rsyncDesc,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<where>
+			order_code = #{orderCode,jdbcType=VARCHAR}
+		</where>
+	</update>
+</mapper>

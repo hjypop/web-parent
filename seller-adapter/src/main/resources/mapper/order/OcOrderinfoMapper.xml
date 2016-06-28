@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.order.IOcOrderinfoDao">
+	<resultMap id="BaseResultMap" type="com.hjy.entity.order.OcOrderinfo">
+		<id column="zid" jdbcType="INTEGER" property="zid" />
+		<result column="uid" jdbcType="CHAR" property="uid" />
+		<result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+		<result column="order_source" jdbcType="VARCHAR" property="orderSource" />
+		<result column="order_type" jdbcType="VARCHAR" property="orderType" />
+		<result column="order_status" jdbcType="VARCHAR" property="orderStatus" />
+		<result column="seller_code" jdbcType="VARCHAR" property="sellerCode" />
+		<result column="buyer_code" jdbcType="VARCHAR" property="buyerCode" />
+		<result column="pay_type" jdbcType="VARCHAR" property="payType" />
+		<result column="send_type" jdbcType="VARCHAR" property="sendType" />
+		<result column="product_money" jdbcType="DECIMAL" property="productMoney" />
+		<result column="transport_money" jdbcType="DECIMAL" property="transportMoney" />
+		<result column="promotion_money" jdbcType="DECIMAL" property="promotionMoney" />
+		<result column="order_money" jdbcType="DECIMAL" property="orderMoney" />
+		<result column="payed_money" jdbcType="DECIMAL" property="payedMoney" />
+		<result column="create_time" jdbcType="CHAR" property="createTime" />
+		<result column="update_time" jdbcType="CHAR" property="updateTime" />
+		<result column="product_name" jdbcType="VARCHAR" property="productName" />
+		<result column="free_transport_money" jdbcType="DECIMAL"
+			property="freeTransportMoney" />
+		<result column="due_money" jdbcType="DECIMAL" property="dueMoney" />
+		<result column="order_channel" jdbcType="VARCHAR" property="orderChannel" />
+		<result column="app_version" jdbcType="VARCHAR" property="appVersion" />
+		<result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
+		<result column="out_order_code" jdbcType="VARCHAR" property="outOrderCode" />
+		<result column="big_order_code" jdbcType="VARCHAR" property="bigOrderCode" />
+		<result column="order_status_ext" jdbcType="VARCHAR" property="orderStatusExt" />
+		<result column="small_seller_code" jdbcType="VARCHAR" property="smallSellerCode" />
+		<result column="order_seq" jdbcType="CHAR" property="orderSeq" />
+		<result column="order_audit_status" jdbcType="VARCHAR"
+			property="orderAuditStatus" />
+		<result column="low_order" jdbcType="VARCHAR" property="lowOrder" />
+		<result column="room_id" jdbcType="VARCHAR" property="roomId" />
+		<result column="anchor_id" jdbcType="VARCHAR" property="anchorId" />
+	</resultMap>
+
+	<!-- 根据订单编号查询订单信息 2016-06-28 zhy -->
+	<select id="findOrderInfoByOrderCode" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		SELECT
+		zid,
+		uid,
+		order_code,
+		order_source,
+		order_type,
+		order_status,
+		seller_code,
+		buyer_code,
+		pay_type,
+		send_type,
+		product_money,
+		transport_money,
+		promotion_money,
+		order_money,
+		payed_money,
+		create_time,
+		update_time,
+		product_name,
+		free_transport_money,
+		due_money,
+		order_channel,
+		app_version,
+		delete_flag,
+		out_order_code,
+		big_order_code,
+		order_status_ext,
+		small_seller_code,
+		order_seq,
+		order_audit_status,
+		low_order,
+		room_id,
+		anchor_id
+		FROM
+		ordercenter.oc_orderinfo
+		<where>
+			order_code = #{orderCode,jdbcType=VARCHAR}
+		</where>
+	</select>
+</mapper>
