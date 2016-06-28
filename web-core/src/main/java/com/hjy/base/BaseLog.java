@@ -225,27 +225,4 @@ public class BaseLog extends BaseClass {
 	public String formatLog(int iInfoCode, Object... sParms) {
 		return "[" + String.valueOf(iInfoCode) + "]: " + PropVisitor.getLogInfo(iInfoCode, sParms);
 	}
-	
-
-	/**
-	 * alias bConfig
-	 * @param sKey
-	 *            配置主键
-	 * @return 配置内容字符串
-	 */
-	public String getConfigValue(String sKey) {
-		return PropVisitor.getConfig(sKey);
-	}
-
-	/**
-	 * alias bInfo
-	 * @param lInfoId
-	 *            文本编号
-	 * @param sParms
-	 *            拼接字符串
-	 * @return
-	 */
-	public String getInfoValue(long iInfoCode, Object... sParms) {
-		return FormatHelper.formatString(PropVisitor.getInfo(iInfoCode), sParms);
-	}
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hjy.dao.product.IPcSkuinfoDao">
-	
+
 	<resultMap id="BaseResultMap" type="com.hjy.entity.product.PcProductinfo">
 		<id column="zid" jdbcType="INTEGER" property="zid" />
 		<result column="uid" jdbcType="CHAR" property="uid" />
@@ -17,7 +17,8 @@
 		<result column="sku_picurl" jdbcType="VARCHAR" property="skuPicurl" />
 		<result column="sell_productcode" jdbcType="VARCHAR" property="sellProductcode" />
 		<result column="seller_code" jdbcType="VARCHAR" property="sellerCode" />
-		<result column="security_stock_num" jdbcType="DECIMAL" property="securityStockNum" />
+		<result column="security_stock_num" jdbcType="DECIMAL"
+			property="securityStockNum" />
 		<result column="product_code_old" jdbcType="VARCHAR" property="productCodeOld" />
 		<result column="qrcode_link" jdbcType="VARCHAR" property="qrcodeLink" />
 		<result column="sell_count" jdbcType="INTEGER" property="sellCount" />
@@ -28,7 +29,7 @@
 		<result column="sku_name" jdbcType="LONGVARCHAR" property="skuName" />
 		<result column="sku_adv" jdbcType="LONGVARCHAR" property="skuAdv" />
 	</resultMap>
-	
+
 	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcSkuinfo">
 		insert into pc_skuinfo
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -180,5 +181,14 @@
 			</if>
 		</trim>
 	</insert>
-	
+	<select id="findSkuCodeByProductCode" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		SELECT
+		sku_code
+		FROM
+		pc_skuinfo
+		<where>
+			product_code = #{productCode,jdbcType=VARCHAR}
+		</where>
+	</select>
 </mapper>

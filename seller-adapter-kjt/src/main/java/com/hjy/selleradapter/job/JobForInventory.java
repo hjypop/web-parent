@@ -8,7 +8,7 @@ import com.hjy.annotation.Inject;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.helper.WebHelper;
 import com.hjy.quartz.job.RootJob;
-import com.hjy.selleradapter.kjt.RsyncKjtProductInventoryById;
+import com.hjy.selleradapter.kjt.RsyncProductInventory;
 import com.hjy.selleradapter.kjt.model.InventoryPageModel;
 import com.hjy.service.product.IPcProductinfoServivce;
 
@@ -33,9 +33,6 @@ public class JobForInventory extends RootJob {
 		String product_ids = "";
 		String newproduct_id = "";
 		int totalpage;
-		// String infosql = "select product_code_old from pc_productinfo where
-		// seller_code='SI2003' and small_seller_code='SF03KJT' ";
-		// DbUp.upTable("pc_productinfo").dataSqlList(infosql,null);
 		// 根据卖家编号和第三方商户编号,查询旧的商品编号
 		PcProductinfo info = new PcProductinfo();
 		info.setSellerCode("SI2003");
@@ -58,7 +55,7 @@ public class JobForInventory extends RootJob {
 						sb.append(newproduct_id).append(",");
 					}
 					product_ids = sb.toString().substring(0, sb.toString().length() - 1);
-					RsyncKjtProductInventoryById rsyncChannel = new RsyncKjtProductInventoryById();
+					RsyncProductInventory rsyncChannel = new RsyncProductInventory();
 					rsyncChannel.upRsyncRequest().setProductIDs(product_ids);
 					rsyncChannel.upRsyncRequest()
 							.setSaleChannelSysNo(getConfig("groupcenter.rsync_kjt_SaleChannelSysNo"));

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.hjy.annotation.Inject;
 import com.hjy.constant.MemberConst;
 import com.hjy.helper.PlusHelperNotice;
 import com.hjy.jms.ProductJmsSupport;
@@ -15,17 +16,21 @@ import com.hjy.selleradapter.kjt.config.RsyncConfigInventory;
 import com.hjy.selleradapter.kjt.request.RsyncRequestInventory;
 import com.hjy.selleradapter.kjt.response.RsyncResponseInventory;
 import com.hjy.selleradapter.kjt.response.RsyncResponseInventory.Data;
+import com.hjy.service.product.IPcProductinfoServivce;
 
 /**
  * alias RsyncGetKjtProductChannelInventoryById<br>
- * 类: RsyncKjtProductInventoryById <br>
+ * 类: RsyncProductInventory <br>
  * 描述: 商品分销渠道库存批量获取 <br>
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月27日 下午5:29:53
  */
-public class RsyncKjtProductInventoryById
+public class RsyncProductInventory
 		extends RsyncKjt<RsyncConfigInventory, RsyncRequestInventory, RsyncResponseInventory> {
 	final static RsyncConfigInventory CONFIG_GET_TV_BY_ID = new RsyncConfigInventory();
+
+	@Inject
+	private IPcProductinfoServivce service;
 
 	public RsyncConfigInventory upConfig() {
 		return CONFIG_GET_TV_BY_ID;
@@ -72,9 +77,8 @@ public class RsyncKjtProductInventoryById
 						result.getResultList().add(mResult.getMessage());
 					}
 				}
-				// result.setProcessData(bInfo(918501102,
-				// result.getProcessNum(), iSuccessSum, result.getProcessNum() -
-				// iSuccessSum));
+				result.setProcessData(
+						getInfo(918501102, result.getProcessNum(), iSuccessSum, result.getProcessNum() - iSuccessSum));
 			}
 		}
 		// 如果操作都成功 则设置状态保存数据为同步结束时间 以方便下一轮调用
@@ -95,13 +99,10 @@ public class RsyncKjtProductInventoryById
 			String productId = info.getProductID();// 跨境通的商品编号
 			String onlineQty = String.valueOf(info.getOnlineQty());// 库存数
 			String wareGouse = String.valueOf(info.getWareHouseID());// 仓库编号
-			MDataMap productMap = null;// DbUp.upTable("pc_productinfo").oneWhere("product_code",
-										// "", "",
-										// "product_code_old",productId);
-			if (productMap != null && StringUtils.isNotBlank(productMap.get("product_code"))) {
-				MDataMap skuMap = null;// DbUp.upTable("pc_skuinfo").oneWhere("sku_code",
-										// "", "",
-										// "product_code",productMap.get("product_code"));
+			// 根据旧编号获取商品编码 2016-06-28 zhy
+			String product_code = service.findProductCodeByOldCode(productId);
+			if (product_code != null && !"".equals(product_code)) {
+				MDataMap skuMap = DbUp.upTable("pc_skuinfo").oneWhere("sku_code", "", "", "product_code",productMap.get("product_code"));
 				String skuCode = skuMap.get("sku_code");
 				mDataMap1.put("store_code", wareGouse);
 				mDataMap1.put("sku_code", skuCode);
@@ -132,16 +133,15 @@ public class RsyncKjtProductInventoryById
 				PlusHelperNotice.onChangeSkuStock(skuCode);
 
 				MDataMap updateMap = new MDataMap();
-				updateMap.put("product_code", productMap.get("product_code"));
+				updateMap.put("product_code", product_code);
 				updateMap.put("oa_site_no", wareGouse);
 				// DbUp.upTable("pc_productinfo_ext").dataUpdate(updateMap,
 				// "oa_site_no", "product_code");
 
-				PlusHelperNotice.onChangeProductInfo(productMap.get("product_code"));
+				PlusHelperNotice.onChangeProductInfo(product_code);
 				// 触发消息队列
 				ProductJmsSupport pjs = new ProductJmsSupport();
-				pjs.onChangeForProductChangeAll(productMap.get("product_code"));
-
+				pjs.onChangeForProductChangeAll(product_code);
 			}
 		} catch (Exception e) {
 			result.inErrorMessage(918519034, info.toString());
