@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.hjy.annotation.Inject;
 import com.hjy.common.DateUtil;
 import com.hjy.common.product.SkuCommon;
 import com.hjy.constant.MemberConst;
@@ -19,6 +20,7 @@ import com.hjy.helper.BeansHelper;
 import com.hjy.helper.JsonHelper;
 import com.hjy.helper.PlusHelperNotice;
 import com.hjy.helper.WebHelper;
+import com.hjy.model.MDataMap;
 import com.hjy.model.MWebResult;
 import com.hjy.model.ProductSkuInfo;
 import com.hjy.model.RsyncDateCheck;
@@ -27,6 +29,7 @@ import com.hjy.selleradapter.kjt.config.RsyncConfigGetKjtProductById;
 import com.hjy.selleradapter.kjt.model.RsyncModelGetKjtProduct;
 import com.hjy.selleradapter.kjt.request.RsyncRequestGetKjtProductById;
 import com.hjy.selleradapter.kjt.response.RsyncResponseGetKjtProductById;
+import com.hjy.selleradapter.service.IProductService;
 import com.hjy.selleradapter.service.impl.ProductServiceImpl;
 
 /**
@@ -37,6 +40,10 @@ import com.hjy.selleradapter.service.impl.ProductServiceImpl;
  */
 public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductById, RsyncRequestGetKjtProductById, RsyncResponseGetKjtProductById> {
 
+	@Inject
+	private IProductService productService;
+	
+	
 	final static RsyncConfigGetKjtProductById CONFIG_GET_TV_BY_ID = new RsyncConfigGetKjtProductById();
 	private static String ProductHead = "8016"; 
 	private static String SKUHead = "8019"; 
@@ -118,7 +125,7 @@ dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_se
 				
 				
 				// TODO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Yangcl
-				ProductServiceImpl productService = BeansHelper.upBean("bean_com_cmall_productcenter_service_ProductService");
+//				ProductServiceImpl productService = BeansHelper.upBean("bean_com_cmall_productcenter_service_ProductService");
 				
 				
 				
@@ -134,7 +141,7 @@ dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_se
 				result.setCode(resultCode);
 				result.setMessage(error.toString());
 			}else {
-				productinfo = new ProductServiceImpl().getProduct(list.get(0).get("product_code").toString());
+				productinfo = productService.getProduct(list.get(0).get("product_code").toString());
 				
 				String now=DateUtil.getSysDateTimeString();
 				String cost = list.get(0).get("cost_price").toString();
@@ -269,7 +276,7 @@ dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_se
 					}
 				}
 				String createTime = DateUtil.getSysDateTimeString();
-				com.hjy.entity.product.cmall.dborm.txmodel.PcProductflow ppf = new PcProductflow();
+				PcProductflow ppf = new PcProductflow();
 				
 				ppf.setCreateTime(createTime);
 				ppf.setCreator(userCode);
