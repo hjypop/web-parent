@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.ILcRsyncKjtLogDao">
+	<insert id="insertSelective" parameterType="com.hjy.entity.LcRsyncKjtLog"
+		useGeneratedKeys="true" keyProperty="zid">
+		INSERT INTO logcenter.lc_rsync_kjt_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null and code != ''">
+				`code`,
+			</if>
+			<if test="rsyncTarget != null and rsyncTarget != ''">
+				rsync_target,
+			</if>
+			<if test="rsyncUrl != null and rsyncUrl != ''">
+				rsync_url,
+			</if>
+			<if test="requestData != null and requestData != ''">
+				request_data,
+			</if>
+			<if test="responseData != null and responseData != ''">
+				response_data,
+			</if>
+			<if test="requestTime != null and requestTime != ''">
+				request_time,
+			</if>
+			<if test="responseTime != null and responseTime != ''">
+				response_time,
+			</if>
+			<if test="flagSuccess != null">
+				flag_success,
+			</if>
+			<if test="errorExpection != null and errorExpection != ''">
+				error_expection,
+			</if>
+			<if test="processTime != null and processTime != ''">
+				process_time,
+			</if>
+			<if test="processData != null and processData != ''">
+				process_data,
+			</if>
+			<if test="statusData != null and statusData != ''">
+				status_data,
+			</if>
+			<if test="processNum != null">
+				process_num,
+			</if>
+			<if test="successNum != null">
+				success_num
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null and code != ''">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="rsyncTarget != null and rsyncTarget != ''">
+				#{rsyncTarget,jdbcType=VARCHAR},
+			</if>
+			<if test="rsyncUrl != null and rsyncUrl != ''">
+				#{rsyncUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="requestData != null and requestData != ''">
+				#{requestData,jdbcType=VARCHAR},
+			</if>
+			<if test="responseData != null and responseData != ''">
+				#{responseData,jdbcType=VARCHAR},
+			</if>
+			<if test="requestTime != null and requestTime != ''">
+				#{requestTime,jdbcType=VARCHAR},
+			</if>
+			<if test="responseTime != null and responseTime != ''">
+				#{responseTime,jdbcType=VARCHAR},
+			</if>
+			<if test="flagSuccess != null">
+				#{flagSuccess,jdbcType=INTEGER},
+			</if>
+			<if test="errorExpection != null and errorExpection != ''">
+				#{errorExpection,jdbcType=VARCHAR},
+			</if>
+			<if test="processTime != null and processTime != ''">
+				#{processTime,jdbcType=VARCHAR},
+			</if>
+			<if test="processData != null and processData != ''">
+				#{processData,jdbcType=VARCHAR},
+			</if>
+			<if test="statusData != null and statusData != ''">
+				#{statusData,jdbcType=VARCHAR},
+			</if>
+			<if test="processNum != null">
+				#{processNum,jdbcType=INTEGER},
+			</if>
+			<if test="successNum != null">
+				#{successNum,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateSelective" parameterType="com.hjy.entity.LcRsyncKjtLog">
+		UPDATE logcenter.lc_rsync_kjt_log
+		<set>
+			<if test="code != null and code != ''">
+				`code` = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="rsyncTarget != null and rsyncTarget != ''">
+				rsync_target = #{rsyncTarget,jdbcType=VARCHAR},
+			</if>
+			<if test="rsyncUrl != null and rsyncUrl != ''">
+				rsync_url = #{rsyncUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="requestData != null and requestData != ''">
+				request_data = #{requestData,jdbcType=VARCHAR},
+			</if>
+			<if test="responseData != null and responseData != ''">
+				response_data = #{responseData,jdbcType=VARCHAR},
+			</if>
+			<if test="requestTime != null and requestTime != ''">
+				request_time = #{requestTime,jdbcType=VARCHAR},
+			</if>
+			<if test="responseTime != null and responseTime != ''">
+				response_time = #{responseTime,jdbcType=VARCHAR},
+			</if>
+			<if test="flagSuccess != null">
+				flag_success = #{flagSuccess,jdbcType=INTEGER},
+			</if>
+			<if test="errorExpection != null and errorExpection != ''">
+				error_expection = #{errorExpection,jdbcType=VARCHAR},
+			</if>
+			<if test="processTime != null and processTime != ''">
+				process_time = #{processTime,jdbcType=VARCHAR},
+			</if>
+			<if test="processData != null and processData != ''">
+				process_data = #{processData,jdbcType=VARCHAR},
+			</if>
+			<if test="statusData != null and statusData != ''">
+				status_data = #{statusData,jdbcType=VARCHAR},
+			</if>
+			<if test="processNum != null">
+				process_num = #{processNum,jdbcType=INTEGER},
+			</if>
+			<if test="successNum != null">
+				success_num = #{successNum,jdbcType=INTEGER},
+			</if>
+		</set>
+		<where>
+			`code` = #{code,jdbcType=VARCHAR}
+		</where>
+	</update>
+	<!-- 获取最近一次成功处理的状态数据 2016-06-28 zhy -->
+	<select id="findLatelyStatusData" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		SELECT
+		status_data
+		FROM
+		logcenter.lc_rsync_kjt_log
+		<where>
+			rsync_target = #{rsyncTarget,jdbcType=VARCHAR}
+			AND flag_success
+			= 1
+		</where>
+		ORDER BY
+		zid DESC
+		LIMIT 1
+	</select>
+</mapper>

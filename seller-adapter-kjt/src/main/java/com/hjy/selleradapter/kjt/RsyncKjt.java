@@ -17,10 +17,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.http.ParseException;
 
+import com.hjy.annotation.Inject;
 import com.hjy.base.BaseClass;
 import com.hjy.common.DateUtil;
 import com.hjy.common.bill.HexUtil;
 import com.hjy.common.bill.MD5Util;
+import com.hjy.entity.LcRsyncKjtLog;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.FormatHelper;
 import com.hjy.helper.JsonHelper;
@@ -33,6 +35,7 @@ import com.hjy.iface.IRsyncResponse;
 import com.hjy.model.MDataMap;
 import com.hjy.model.RsyncDateCheck;
 import com.hjy.model.RsyncResult;
+import com.hjy.service.ILcRsyncKjtLogService;
 import com.hjy.support.WebClientSupport;
 
 /**
@@ -44,8 +47,11 @@ import com.hjy.support.WebClientSupport;
  * @param <TRequest>
  * @param <TResponse>
  */
-public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IRsyncRequest, TResponse extends IRsyncResponse> extends BaseClass implements IRsyncDo<TConfig, TRequest, TResponse> {
+public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IRsyncRequest, TResponse extends IRsyncResponse>
+		extends BaseClass implements IRsyncDo<TConfig, TRequest, TResponse> {
 
+	@Inject
+	private ILcRsyncKjtLogService lcRsyncKjtLogService;
 	private TResponse processResult = null;
 
 	/**
@@ -61,12 +67,12 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 	 * @throws CertificateException
 	 */
 	private String getHttps(String sUrl, String sRequestString) throws Exception {
-		MDataMap mrequest=getsignMap(sRequestString);
+		MDataMap mrequest = getsignMap(sRequestString);
 		String sResponseString = WebClientSupport.upPost(sUrl, mrequest);
 		return sResponseString;
 	}
 
-	private MDataMap getsignMap(String requestStr){
+	private MDataMap getsignMap(String requestStr) {
 		MDataMap dataMap = new MDataMap();
 		dataMap.put("method", upConfig().getRsyncTarget());
 		dataMap.put("format", "json");
@@ -78,12 +84,12 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		List<String> list = new ArrayList<String>();
 		for (Iterator<String> iter = dataMap.keySet().iterator(); iter.hasNext();) {
 			String name = iter.next();
-			String value =  dataMap.get(name);
+			String value = dataMap.get(name);
 
-			if(name.equals("data")){
+			if (name.equals("data")) {
 				value = URLEncoder.encode(requestStr);
 			}
-			
+
 			list.add(name + "=" + value);
 		}
 		Collections.sort(list); // 对List内容进行排序
@@ -91,10 +97,11 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		for (String nameString : list) {
 			str.append(nameString + "&");
 		}
-		dataMap.put("sign", HexUtil.toHexString(MD5Util.md5(str.substring(0, str.toString().length() - 1)+"&"+getConfig("groupcenter.rsync_kjt_password"))));
+		dataMap.put("sign", HexUtil.toHexString(MD5Util.md5(
+				str.substring(0, str.toString().length() - 1) + "&" + getConfig("groupcenter.rsync_kjt_password"))));
 		return dataMap;
 	}
-	
+
 	/**
 	 * 获取请求的url
 	 * 
@@ -105,17 +112,16 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 	}
 
 	/**
-	 * 获取最近一次成功处理的状态数据
+	 * 
+	 * 方法: upLastSuccessStatusData <br>
+	 * 描述: 获取最近一次成功处理的状态数据 <br>
+	 * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
+	 * 时间: 2016年6月28日 下午3:53:22
 	 * 
 	 * @return
 	 */
 	public String upLastSuccessStatusData() {
-		MDataMap mLog = DbUp.upTable("lc_rsync_kjt_log").oneWhere("status_data", "-zid", "", "rsync_target", upConfig().getRsyncTarget(), "flag_success", "1");
-		String sReturn = "";
-		if (mLog != null && mLog.containsKey("status_data")) {
-			sReturn = mLog.get("status_data");
-		}
-		return sReturn;
+		return lcRsyncKjtLogService.findLatelyStatusData(upConfig().getRsyncTarget());
 	}
 
 	public boolean doRsync() {
@@ -125,19 +131,28 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 			TRequest tRequest = upRsyncRequest();
 			JsonHelper<IRsyncRequest> requestJsonHelper = new JsonHelper<IRsyncRequest>();
 			String sRequest = requestJsonHelper.ObjToString(tRequest);
-			
+
 			MDataMap mInsertMap = new MDataMap();
 			// 插入日志表调用的日志记录
-			mInsertMap.initKeyValues("code", sCode, "rsync_target", upConfig().getRsyncTarget(), "rsync_url", sUrl, "request_data", sRequest, "request_time", FormatHelper.upDateTime());
+			mInsertMap.initKeyValues("code", sCode, "rsync_target", upConfig().getRsyncTarget(), "rsync_url", sUrl,
+					"request_data", sRequest, "request_time", FormatHelper.upDateTime());
 			// 插入日志记录表
-			DbUp.upTable("lc_rsync_kjt_log").dataInsert(mInsertMap);
+			LcRsyncKjtLog log = new LcRsyncKjtLog();
+			log.setCode(sCode);
+			log.setRsyncTarget(upConfig().getRsyncTarget());
+			log.setRsyncUrl(sUrl);
+			log.setRequestData(sRequest);
+			log.setRequestTime(FormatHelper.upDateTime());
+			// 执行插入操作
+			lcRsyncKjtLogService.insertSelective(log);
+			// 获取响应数据
 			String sResponseString = getHttps(sUrl, sRequest);
-			mInsertMap.initKeyValues("response_time", FormatHelper.upDateTime() , "response_data", sResponseString);
-
+			// 根据日志的响应时间和相应数据
+			log.setResponseTime(FormatHelper.upDateTime());
+			log.setResponseData(sResponseString);
 			// 更新响应内容和响应时间
-			DbUp.upTable("lc_rsync_kjt_log").dataUpdate(mInsertMap , "response_time,response_data", "code");
+			lcRsyncKjtLogService.updateSelective(log);
 
-			// IRsyncResponse iRsyncResponse=null;
 			TResponse tResponse = upResponseObject();
 
 			JsonHelper<TResponse> responseJsonHelper = new JsonHelper<TResponse>();
@@ -148,32 +163,30 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 			RsyncResult rsyncResult = doProcess(tRequest, tResponse);
 
 			// 更新处理完成时间
-			mInsertMap.initKeyValues("process_time", FormatHelper.upDateTime(),
-					"process_data", rsyncResult.upJson(), "status_data",
-					rsyncResult.getStatusData(), "flag_success",
-					rsyncResult.upFlagTrue() ? "1" : "0", "process_num",
-					String.valueOf(rsyncResult.getProcessNum()), "success_num",
-					String.valueOf(rsyncResult.getSuccessNum()));
-			DbUp.upTable("lc_rsync_kjt_log").dataUpdate(mInsertMap , "process_time,process_data,status_data,flag_success,process_num,success_num" , "code");
-
+			log.setProcessTime(FormatHelper.upDateTime());
+			log.setProcessData(rsyncResult.upJson());
+			log.setStatusData(rsyncResult.getStatusData());
+			log.setFlagSuccess(rsyncResult.upFlagTrue() ? 1 : 0);
+			log.setProcessNum(rsyncResult.getProcessNum());
+			log.setSuccessNum(rsyncResult.getSuccessNum());
+			lcRsyncKjtLogService.updateSelective(log);
 			if (rsyncResult.getCode() == 1) {
-//				Thread.sleep(20000);
 				return true;
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-
 			// 如果失败更新错误日志信息
 			MDataMap mErrorMap = new MDataMap();
-			mErrorMap.initKeyValues("code" , sCode , "flag_success" , "0" , "process_time", FormatHelper.upDateTime() , "error_expection" , e.getMessage());
-			DbUp.upTable("lc_rsync_kjt_log").dataUpdate(mErrorMap , "process_time,error_expection,flag_success", "code");
+			mErrorMap.initKeyValues("code", sCode, "flag_success", "0", "process_time", FormatHelper.upDateTime(),
+					"error_expection", e.getMessage());
+			LcRsyncKjtLog log = new LcRsyncKjtLog();
+			log.setCode(sCode);
+			log.setFlagSuccess(0);
+			log.setProcessTime(FormatHelper.upDateTime());
+			log.setErrorExpection(e.getMessage());
+			lcRsyncKjtLogService.updateSelective(log);
 		}
-//		try {
-//			Thread.sleep(20000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
 		return false;
 	}
 
@@ -195,22 +208,18 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		Date dStateDate = DateHelper.parseDate(sStatusDate);
 
 		// 将开始时间减去回退时间 以兼容异常情况
-		Date dStart = DateUtils.addSeconds(dStateDate , -iRsyncDateCheck.getBackSecond());
+		Date dStart = DateUtils.addSeconds(dStateDate, -iRsyncDateCheck.getBackSecond());
 		rsyncDateCheck.setStartDate(DateHelper.formatDate(dStart));
 
-		Date dEnd = DateUtils.addSeconds(dStateDate,
-				iRsyncDateCheck.getMaxStepSecond());
+		Date dEnd = DateUtils.addSeconds(dStateDate, iRsyncDateCheck.getMaxStepSecond());
 
 		Date dNowDate = new Date();
 		// 判断如果结束时间晚于当前时间 则将结束时间设置为当前时间
 		if (dEnd.after(dNowDate)) {
 			dEnd = dNowDate;
 		}
-
 		rsyncDateCheck.setEndDate(DateHelper.formatDate(dEnd));
-
 		return rsyncDateCheck;
-
 	}
 
 	/**
@@ -222,6 +231,4 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		return processResult;
 	}
 
-	
-	
 }
