@@ -7,7 +7,11 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.hjy.annotation.Inject;
 import com.hjy.common.DateUtil;
+import com.hjy.entity.OcOrderKjtList;
+import com.hjy.entity.order.OcOrderaddress;
+import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.FormatHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.model.MDataMap;
@@ -17,6 +21,9 @@ import com.hjy.selleradapter.kjt.config.RsyncConfigOrderStatus;
 import com.hjy.selleradapter.kjt.request.RsyncRequestOrderStatus;
 import com.hjy.selleradapter.kjt.response.RsyncResponseOrderStatus;
 import com.hjy.selleradapter.kjt.response.RsyncResponseOrderStatus.SoOrder;
+import com.hjy.service.IOcOrderKjtListService;
+import com.hjy.service.order.IOcOrderadressService;
+import com.hjy.service.order.IOcOrderinfoService;
 import com.hjy.support.MailSupport;
 
 /**
@@ -28,6 +35,12 @@ import com.hjy.support.MailSupport;
  */
 public class TraceOrder extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrderStatus, RsyncResponseOrderStatus> {
 
+	@Inject
+	private IOcOrderKjtListService ocOrderKjtListService;
+	@Inject
+	private IOcOrderadressService ocOrderadressService;
+	@Inject
+	private IOcOrderinfoService ocOrderinfoService;
 	private final static RsyncConfigOrderStatus RSYNC_CONFIG_TRACE_ORDER = new RsyncConfigOrderStatus();
 	private RsyncRequestOrderStatus rsyncRequestTraceOrder = new RsyncRequestOrderStatus();
 
@@ -59,36 +72,31 @@ public class TraceOrder extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrd
 				int soid = soOrder.getSOID();
 				int sostatus = soOrder.getSOStatus();
 
-				MDataMap dataMap = null;// DbUp.upTable("oc_order_kjt_list").oneWhere("order_code_seq,
-										// order_code, order_code_out,sostatus",
-										// "",
-										// "order_code_out=:order_code_out","order_code_out",
-										// String.valueOf(soid));
-				String now = DateUtil.getSysDateTimeString();
-				String order_code = dataMap.get("order_code");
-				String order_code_seq = dataMap.get("order_code_seq");
+				String order_code_out = String.valueOf(soid);
+				// 根据外部订单号查询订单信息
+				OcOrderKjtList order = ocOrderKjtListService.findOrderByOutCode(order_code_out);
+				String order_code = order.getOrderCode();
+				String order_code_seq = order.getOrderCodeSeq();
 
-				if (StringUtils.isBlank(dataMap.get("sostatus"))
-						|| Integer.valueOf(dataMap.get("sostatus")) != sostatus) {
-					// DbUp.upTable("oc_order_kjt_list")
-					// .dataUpdate(
-					// new MDataMap("sostatus", String.valueOf(sostatus),
-					// "local_status",
-					// OrderService.orderStatusMapper(sostatus),
-					// "order_code_out",
-					// String.valueOf(soid), "update_time", now),
-					// "sostatus,update_time,local_status", "order_code_out");
-
+				if (StringUtils.isBlank(order.getSostatus()) || Integer.valueOf(order.getSostatus()) != sostatus) {
+					OcOrderKjtList editOrder = new OcOrderKjtList();
+					editOrder.setSostatus(String.valueOf(sostatus));
+					editOrder.setLocalStatus(orderStatusMapper(sostatus));
+					editOrder.setOrderCode(order_code);
+					editOrder.setUpdateTime(DateUtil.getSysDateTimeString());
+					// 根据订单编号更新订单
+					ocOrderKjtListService.updateSelective(editOrder);
 					if (sostatus == 65 || sostatus == 42) {
 
-						MDataMap addressInfo = null;// DbUp.upTable("oc_orderadress").oneWhere("auth_idcard_number",
-													// "","order_code=:order_code",
-													// "order_code",
-													// order_code);
+						OcOrderaddress address = ocOrderadressService.findOrderAddressByOrderCode(order_code);
 
-						String auth_idcard_number = addressInfo.get("auth_idcard_number");
+						String auth_idcard_number = address.getAuthIdcardNumber();
 
 						if (StringUtils.isNotBlank(auth_idcard_number)) {
+							OcOrderinfo orderInfo = ocOrderinfoService.findOrderInfoByOrderCode(order_code);
+							if (orderInfo.getBuyerCode() != null && !"".equals(orderInfo.getBuyerCode())) {
+
+							}
 							// String buyer_code = DbUp.upTable("oc_orderinfo")
 							// .oneWhere("buyer_code", "",
 							// "order_code=:order_code", "order_code",
@@ -159,8 +167,7 @@ public class TraceOrder extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrd
 
 				// 判断发个邮件通知一下
 				if (sostatus == -4 || sostatus == -1 || sostatus == 6 || sostatus == 65 || sostatus == 7) {
-					sendMail(dataMap.get("order_code_seq"), dataMap.get("order_code"), dataMap.get("order_code_out"),
-							sostatus);
+					sendMail(order_code_seq, order_code, order_code_out, sostatus);
 				}
 			}
 		}
