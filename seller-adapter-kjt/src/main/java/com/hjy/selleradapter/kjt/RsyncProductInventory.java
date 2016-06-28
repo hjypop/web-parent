@@ -2,8 +2,6 @@ package com.hjy.selleradapter.kjt;
 
 import java.util.ArrayList;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.hjy.annotation.Inject;
 import com.hjy.constant.MemberConst;
 import com.hjy.entity.product.PcProductinfoExt;
@@ -11,7 +9,6 @@ import com.hjy.entity.system.ScStore;
 import com.hjy.entity.system.ScStoreSkunum;
 import com.hjy.helper.PlusHelperNotice;
 import com.hjy.jms.ProductJmsSupport;
-import com.hjy.model.MDataMap;
 import com.hjy.model.MWebResult;
 import com.hjy.model.RsyncDateCheck;
 import com.hjy.model.RsyncResult;
@@ -124,7 +121,7 @@ public class RsyncProductInventory
 				// 判断scStoreSkunum对象是否存在，如果存在更新对象的stock_num库存数
 				if (scStoreSkunum != null) {
 					// 更新库存数stock_num
-					scStoreSkunumService.updateScStoreSkunum(scStoreSkunum);
+					scStoreSkunumService.updateSelective(scStoreSkunum);
 				} else {
 					// 判断对象在sc_store中是否存在
 					int storeCount = scStoreService.findScStoreIsExists(wareGouse);
@@ -138,7 +135,7 @@ public class RsyncProductInventory
 						scStoreService.insertSelective(scStore);
 					}
 					// 插入库存信息
-					scStoreSkunumService.insertScStoreSkunum(scStoreSkunum);
+					scStoreSkunumService.insertSelective(scStoreSkunum);
 				}
 				// 修改SKU库存
 				PlusHelperNotice.onChangeSkuStock(sku_code);
@@ -157,7 +154,6 @@ public class RsyncProductInventory
 			result.inErrorMessage(918519034, info.toString());
 			e.printStackTrace();
 		}
-
 		return result;
 	}
 	public RsyncResponseInventory upResponseObject() {

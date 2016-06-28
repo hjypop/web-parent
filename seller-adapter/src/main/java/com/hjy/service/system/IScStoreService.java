@@ -1,6 +1,7 @@
 package com.hjy.service.system;
 
 import com.hjy.entity.system.ScStore;
+import com.hjy.service.IBaseService;
 
 /**
  * 
@@ -9,7 +10,7 @@ import com.hjy.entity.system.ScStore;
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月28日 下午1:56:51
  */
-public interface IScStoreService {
+public interface IScStoreService extends IBaseService<ScStore, Integer> {
 
 	/**
 	 * 
@@ -22,17 +23,4 @@ public interface IScStoreService {
 	 * @return
 	 */
 	int findScStoreIsExists(String storeCode);
-
-	/**
-	 * 
-	 * 方法: insertSelective <br>
-	 * 描述: 添加新的对象到sc_store <br>
-	 * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
-	 * 时间: 2016年6月28日 下午2:21:12
-	 * 
-	 * @param entity
-	 * @return
-	 */
-	int insertSelective(ScStore entity);
-
 }
