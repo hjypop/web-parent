@@ -6,6 +6,9 @@ import org.apache.commons.lang.StringUtils;
 
 import com.hjy.annotation.Inject;
 import com.hjy.constant.MemberConst;
+import com.hjy.entity.product.PcProductinfoExt;
+import com.hjy.entity.system.ScStore;
+import com.hjy.entity.system.ScStoreSkunum;
 import com.hjy.helper.PlusHelperNotice;
 import com.hjy.jms.ProductJmsSupport;
 import com.hjy.model.MDataMap;
@@ -16,7 +19,11 @@ import com.hjy.selleradapter.kjt.config.RsyncConfigInventory;
 import com.hjy.selleradapter.kjt.request.RsyncRequestInventory;
 import com.hjy.selleradapter.kjt.response.RsyncResponseInventory;
 import com.hjy.selleradapter.kjt.response.RsyncResponseInventory.Data;
+import com.hjy.service.product.IPcProductinfoExtService;
 import com.hjy.service.product.IPcProductinfoServivce;
+import com.hjy.service.product.IPcSkuinfoService;
+import com.hjy.service.system.IScStoreService;
+import com.hjy.service.system.IScStoreSkunumService;
 
 /**
  * alias RsyncGetKjtProductChannelInventoryById<br>
@@ -30,7 +37,15 @@ public class RsyncProductInventory
 	final static RsyncConfigInventory CONFIG_GET_TV_BY_ID = new RsyncConfigInventory();
 
 	@Inject
-	private IPcProductinfoServivce service;
+	private IPcProductinfoServivce productInfoService;
+	@Inject
+	private IPcSkuinfoService skuInfoService;
+	@Inject
+	private IScStoreSkunumService scStoreSkunumService;
+	@Inject
+	private IScStoreService scStoreService;
+	@Inject
+	private IPcProductinfoExtService pcProductinfoExtService;
 
 	public RsyncConfigInventory upConfig() {
 		return CONFIG_GET_TV_BY_ID;
@@ -54,11 +69,8 @@ public class RsyncProductInventory
 				result.setProcessNum(tResponse.getData().size());
 			} else {
 				result.setProcessNum(0);
-
 			}
-
 		}
-
 		// 开始循环处理结果数据
 		if (result.upFlagTrue()) {
 			// 判断有需要处理的数据才开始处理
@@ -95,48 +107,46 @@ public class RsyncProductInventory
 	private MWebResult saveProductData(Data info) {
 		MWebResult result = new MWebResult();
 		try {
-			MDataMap mDataMap1 = new MDataMap();
 			String productId = info.getProductID();// 跨境通的商品编号
 			String onlineQty = String.valueOf(info.getOnlineQty());// 库存数
 			String wareGouse = String.valueOf(info.getWareHouseID());// 仓库编号
-			// 根据旧编号获取商品编码 2016-06-28 zhy
-			String product_code = service.findProductCodeByOldCode(productId);
+			// 根据旧编号获取商品编码
+			String product_code = productInfoService.findProductCodeByOldCode(productId);
 			if (product_code != null && !"".equals(product_code)) {
-				MDataMap skuMap = DbUp.upTable("pc_skuinfo").oneWhere("sku_code", "", "", "product_code",productMap.get("product_code"));
-				String skuCode = skuMap.get("sku_code");
-				mDataMap1.put("store_code", wareGouse);
-				mDataMap1.put("sku_code", skuCode);
-				mDataMap1.put("stock_num", onlineQty);
-				MDataMap mDataMap = null;// DbUp.upTable("sc_store_skunum").one("store_code",
-											// wareGouse, "sku_code", skuCode);
-				// 处理info数据逻辑在此写
-				if (mDataMap != null) {
-					// DbUp.upTable("sc_store_skunum").dataUpdate(mDataMap1,
-					// "stock_num", "sku_code,store_code");
+				// 根据商品编号查询产品编号
+				String sku_code = skuInfoService.findSkuCodeByProductCode(product_code);
+				// 根据查询条件查询ScStoreSkunum对象
+				ScStoreSkunum scStoreSkunum = new ScStoreSkunum();
+				scStoreSkunum.setStoreCode(wareGouse);
+				scStoreSkunum.setSkuCode(sku_code);
+				scStoreSkunum.setStockNum(Long.valueOf(onlineQty));
+				scStoreSkunum = scStoreSkunumService.findScStoreSkunumByParams(scStoreSkunum);
+				// 判断scStoreSkunum对象是否存在，如果存在更新对象的stock_num库存数
+				if (scStoreSkunum != null) {
+					// 更新库存数stock_num
+					scStoreSkunumService.updateScStoreSkunum(scStoreSkunum);
 				} else {
-					int storeCount = 0;// DbUp.upTable("sc_store").count("store_code",
-										// wareGouse);
+					// 判断对象在sc_store中是否存在
+					int storeCount = scStoreService.findScStoreIsExists(wareGouse);
 					if (storeCount == 0) {
-						MDataMap storeMap = new MDataMap();
-						storeMap.put("store_code", wareGouse);
-						storeMap.put("store_name", "跨境通");
-						storeMap.put("app_name", "惠家有");
-						storeMap.put("app_code", MemberConst.MANAGE_CODE_HOMEHAS);
-						// DbUp.upTable("sc_store").dataInsert(storeMap);//
+						ScStore scStore = new ScStore();
+						scStore.setAppCode(MemberConst.MANAGE_CODE_HOMEHAS);
+						scStore.setAppName("惠家有");
+						scStore.setStoreName("跨境通");
+						scStore.setStoreCode(wareGouse);
 						// 插入仓库信息
+						scStoreService.insertSelective(scStore);
 					}
-					// DbUp.upTable("sc_store_skunum").dataInsert(mDataMap1);//
 					// 插入库存信息
+					scStoreSkunumService.insertScStoreSkunum(scStoreSkunum);
 				}
-
-				//
-				PlusHelperNotice.onChangeSkuStock(skuCode);
-
-				MDataMap updateMap = new MDataMap();
-				updateMap.put("product_code", product_code);
-				updateMap.put("oa_site_no", wareGouse);
-				// DbUp.upTable("pc_productinfo_ext").dataUpdate(updateMap,
-				// "oa_site_no", "product_code");
+				// 修改SKU库存
+				PlusHelperNotice.onChangeSkuStock(sku_code);
+				// 编辑商品属性
+				PcProductinfoExt pcProductinfoExt = new PcProductinfoExt();
+				pcProductinfoExt.setProductCode(product_code);
+				pcProductinfoExt.setOaSiteNo(wareGouse);
+				pcProductinfoExtService.updatePcProductinfoExt(pcProductinfoExt);
 
 				PlusHelperNotice.onChangeProductInfo(product_code);
 				// 触发消息队列
@@ -150,9 +160,7 @@ public class RsyncProductInventory
 
 		return result;
 	}
-
 	public RsyncResponseInventory upResponseObject() {
-
 		return new RsyncResponseInventory();
 	}
 

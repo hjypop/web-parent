@@ -18,13 +18,16 @@
 		<result column="poffer" jdbcType="VARCHAR" property="poffer" />
 		<result column="md_id" jdbcType="VARCHAR" property="mdId" />
 		<result column="md_nm" jdbcType="VARCHAR" property="mdNm" />
-		<result column="product_trade_type" jdbcType="VARCHAR" property="productTradeType" />
-		<result column="product_store_type" jdbcType="VARCHAR" property="productStoreType" />
+		<result column="product_trade_type" jdbcType="VARCHAR"
+			property="productTradeType" />
+		<result column="product_store_type" jdbcType="VARCHAR"
+			property="productStoreType" />
 		<result column="settlement_type" jdbcType="VARCHAR" property="settlementType" />
 		<result column="purchase_type" jdbcType="VARCHAR" property="purchaseType" />
 		<result column="ld_good_id" jdbcType="VARCHAR" property="ldGoodId" />
 		<result column="pic_material_url" jdbcType="VARCHAR" property="picMaterialUrl" />
-		<result column="pic_material_upload" jdbcType="VARCHAR" property="picMaterialUpload" />
+		<result column="pic_material_upload" jdbcType="VARCHAR"
+			property="picMaterialUpload" />
 		<result column="kjt_seller_code" jdbcType="VARCHAR" property="kjtSellerCode" />
 	</resultMap>
 
@@ -173,6 +176,19 @@
 			</if>
 		</trim>
 	</insert>
+	<!-- 商品属性表编辑 2016-06-28 zhy -->
+	<!-- 注：如果条件相同，在set标签中添加判断即可 -->
+	<update id="updateSelective" parameterType="com.hjy.entity.product.PcProductinfoExt">
+		UPDATE productcenter.pc_productinfo_ext
+		<set>
+			<if test="oaSiteNo != null and oaSiteNo != ''">
+				oa_site_no = #{oaSiteNo,jdbcType=VARCHAR}
+			</if>
+		</set>
+		<where>
+			product_code = #{productCode,jdbcType=VARCHAR}
+		</where>
+	</update>
 </mapper>
 
 

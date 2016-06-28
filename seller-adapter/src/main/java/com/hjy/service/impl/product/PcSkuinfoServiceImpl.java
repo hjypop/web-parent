@@ -7,6 +7,13 @@ import org.springframework.stereotype.Service;
 import com.hjy.dao.product.IPcSkuinfoDao;
 import com.hjy.service.product.IPcSkuinfoService;
 
+/**
+ * 
+ * 类: PcSkuinfoServiceImpl <br>
+ * 描述: 产品表业务处理接口实现类 <br>
+ * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
+ * 时间: 2016年6月28日 下午2:43:21
+ */
 @Service
 public class PcSkuinfoServiceImpl implements IPcSkuinfoService {
 
