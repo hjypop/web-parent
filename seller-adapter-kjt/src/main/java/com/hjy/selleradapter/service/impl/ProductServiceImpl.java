@@ -28,6 +28,7 @@ import com.hjy.entity.product.PcProductinfoExt;
 import com.hjy.entity.product.PcProductpic;
 import com.hjy.entity.product.PcProductproperty;
 import com.hjy.entity.product.PcSkuinfo;
+import com.hjy.entity.product.ProductChangeFlag;
 import com.hjy.entity.user.UcSellercategoryProductRelation;
 import com.hjy.helper.JsonHelper;
 import com.hjy.iface.IFlowFunc;
@@ -232,6 +233,19 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 			return null;
 		}
 
+	}
+	
+	public int UpdateProductTx(PcProductinfo pc,StringBuffer error,String manageCode,ProductChangeFlag pcf){
+		RootResult rr= new RootResult();
+		try {
+			txs.updateProduct(pc, rr, manageCode,pcf);
+		} catch (Exception e) {
+			e.printStackTrace();
+			rr.setCode(941901049);
+			rr.setMessage(getInfo(941901049, e.getMessage()));
+		}
+		error.append(rr.getMessage());
+		return rr.getCode();
 	}
 
 	@Override

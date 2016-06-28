@@ -16,6 +16,7 @@ import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductflow;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.product.PcProductinfoExt;
+import com.hjy.entity.product.ProductChangeFlag;
 import com.hjy.helper.BeansHelper;
 import com.hjy.helper.JsonHelper;
 import com.hjy.helper.PlusHelperNotice;
@@ -134,7 +135,7 @@ dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_se
 				pcProdcutflow.setFlowCode(WebHelper.getInstance().genUniqueCode(ProductFlowHead));
 				pcProdcutflow.setFlowStatus(SkuCommon.ProAddOr);
 				productinfo.setPcProdcutflow(pcProdcutflow);
-				int resultCode=productService.AddProductTx(productinfo, error,"");
+				int resultCode = productService.AddProductTx(productinfo, error,"");
 				if(resultCode == 1){//添加商品成功刷新缓存
 					PlusHelperNotice.onChangeProductInfo(productinfo.getProductCode());             // TODO Yangcl 此处等待MNT进行Redis封包
 				}
@@ -163,7 +164,7 @@ dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_se
 				productinfo.getPcProductinfoExt().setProductStoreType(String.valueOf(info.getProductEntryInfo().getProductStoreType()));
 				productinfo.getPcProductinfoExt().setKjtSellerCode(info.getStoreSysNo());
 				productinfo.setTaxRate(info.getProductEntryInfo().getTariffRate());//更新税率
-				new ProductServiceImpl().UpdateProductTx(productinfo, new StringBuffer(), "jobsystem",  new ProductChangeFlag());
+				productService.UpdateProductTx(productinfo, new StringBuffer(), "jobsystem",  new ProductChangeFlag());
 			}
 		} catch (Exception e) {
 			result.inErrorMessage(918519034, info.toString());

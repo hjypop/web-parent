@@ -32,6 +32,7 @@ import com.hjy.entity.product.PcProductinfoExt;
 import com.hjy.entity.product.PcProductpic;
 import com.hjy.entity.product.PcProductproperty;
 import com.hjy.entity.product.PcSkuinfo;
+import com.hjy.entity.product.ProductChangeFlag;
 import com.hjy.entity.system.ScStoreSkunum;
 import com.hjy.entity.user.UcSellercategoryProductRelation;
 import com.hjy.helper.JsonHelper;
@@ -283,6 +284,11 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 				lsom.insertSelective(lsModel);
 			}
 		}
+	}
+
+
+	public void updateProduct(PcProductinfo pc, RootResult rr, String manageCode, ProductChangeFlag pcf) {
+		// TODO 
 	}
 
 	
