@@ -125,26 +125,14 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 				if (description != null)
 					product.setDescription(description);
 
-				PcProductpic pcProductpic = new PcProductpic();
-				pcProductpic.setProductCode(productCode); 
-//				MDataMap pcPicListMapParam = new MDataMap();
-//				pcPicListMapParam.put("product_code", productCode);
-				List<PcProductpic> pcPicList = pcProductpicDao.findList(pcProductpic);
-				List<MDataMap> pcPicListMap = DbUp.upTable("pc_productpic").query("", "", "product_code=:product_code  and (sku_code='' or sku_code is null)", pcPicListMapParam, -1, -1);
-				if (pcPicListMap != null) {
-					int size = pcPicListMap.size();
-					pcPicList = new ArrayList<PcProductpic>();
-					SerializeSupport ss = new SerializeSupport<PcProductpic>();
-					for (int i = 0; i < size; i++) {
-						PcProductpic pic = new PcProductpic();
-						ss.serialize(pcPicListMap.get(i), pic);
-						pcPicList.add(pic);
-					}
-				}
-
+				// 图片
+				PcProductpic pic = new PcProductpic();
+				pic.setProductCode(productCode); 
+				List<PcProductpic> pcPicList = pcProductpicDao.findList(pic);
 				if (pcPicList != null)
 					product.setPcPicList(pcPicList);
 
+				
 				// 取得商品属性信息
 				MDataMap pcProductpropertyListMapParam = new MDataMap();
 				pcProductpropertyListMapParam.put("product_code", productCode);
