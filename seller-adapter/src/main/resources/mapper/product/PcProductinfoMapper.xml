@@ -23,14 +23,16 @@
 		<result column="tax_rate" jdbcType="DECIMAL" property="taxRate" />
 		<result column="product_status" jdbcType="VARCHAR" property="productStatus" />
 		<result column="product_volume" jdbcType="DECIMAL" property="productVolume" />
-		<result column="transport_template" jdbcType="VARCHAR" property="transportTemplate" />
+		<result column="transport_template" jdbcType="VARCHAR"
+			property="transportTemplate" />
 		<result column="area_template" jdbcType="VARCHAR" property="areaTemplate" />
 		<result column="sell_productcode" jdbcType="VARCHAR" property="sellProductcode" />
 		<result column="supplier_name" jdbcType="VARCHAR" property="supplierName" />
 		<result column="mainpic_url" jdbcType="VARCHAR" property="mainpicUrl" />
 		<result column="labels" jdbcType="VARCHAR" property="labels" />
 		<result column="flag_payway" jdbcType="INTEGER" property="flagPayway" />
-		<result column="product_volume_item" jdbcType="VARCHAR" property="productVolumeItem" />
+		<result column="product_volume_item" jdbcType="VARCHAR"
+			property="productVolumeItem" />
 		<result column="sale_scope_did" jdbcType="VARCHAR" property="saleScopeDid" />
 		<result column="validate_flag" jdbcType="VARCHAR" property="validateFlag" />
 		<result column="product_code_copy" jdbcType="VARCHAR" property="productCodeCopy" />
@@ -38,10 +40,11 @@
 		<result column="expiry_date" jdbcType="INTEGER" property="expiryDate" />
 		<result column="expiry_unit" jdbcType="VARCHAR" property="expiryUnit" />
 		<result column="low_good" jdbcType="VARCHAR" property="lowGood" />
-		<result column="qualification_category_code" jdbcType="VARCHAR" property="qualificationCategoryCode" />
+		<result column="qualification_category_code" jdbcType="VARCHAR"
+			property="qualificationCategoryCode" />
 		<result column="product_adv" jdbcType="LONGVARCHAR" property="productAdv" />
 	</resultMap>
-	
+
 	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcProductinfo">
 		insert into pc_productinfo
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -277,6 +280,20 @@
 			</if>
 		</trim>
 	</insert>
+	<!-- 根据卖家编号和第三方商户编号,查询旧的商品编号 2016-06-28 zhy -->
+	<!-- 用于跨境通商品库存同步 -->
+	<select id="findProductCodeOld" parameterType="com.hjy.entity.product.PcProductinfo"
+		resultType="String">
+		SELECT
+		product_code_old
+		FROM
+		pc_productinfo
+		<where>
+			seller_code = #{sellerCode,jdbcType=VARCHAR}
+			AND
+			small_seller_code = #{smallSellerCode,jdbcType=VARCHAR}
+		</where>
+	</select>
 </mapper>
 
 
