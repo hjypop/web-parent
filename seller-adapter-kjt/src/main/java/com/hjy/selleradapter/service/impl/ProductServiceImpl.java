@@ -9,13 +9,17 @@ import javax.annotation.Resource;
 import com.hjy.annotation.Inject;
 import com.hjy.api.RootResult;
 import com.hjy.base.BaseClass;
+import com.hjy.dao.product.IPcBrandinfoDao;
 import com.hjy.dao.product.IPcProductcategoryRelDao;
 import com.hjy.dao.product.IPcProductdescriptionDao;
 import com.hjy.dao.product.IPcProductflowDao;
 import com.hjy.dao.product.IPcProductinfoDao;
+import com.hjy.dao.product.IPcProductinfoExtDao;
 import com.hjy.dao.product.IPcProductpicDao;
 import com.hjy.dao.product.IPcProductpropertyDao;
 import com.hjy.dao.product.IPcSkuinfoDao;
+import com.hjy.dao.user.IUcSellercategoryProductRelationDao;
+import com.hjy.entity.product.PcBrandinfo;
 import com.hjy.entity.product.PcCategoryinfo;
 import com.hjy.entity.product.PcProductcategoryRel;
 import com.hjy.entity.product.PcProductdescription;
@@ -52,11 +56,14 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 	private IPcProductpropertyDao pcProductpropertyDao;  
 	@Inject
 	private IPcSkuinfoDao pcSkuinfoDao;
+	@Inject
+	private IPcBrandinfoDao pcBrandinfoDao;
 	
+	@Inject
+	private IPcProductinfoExtDao pcProductinfoExtDao;
 	
-	
-	
-	
+	@Inject
+	private IUcSellercategoryProductRelationDao ucSellercategoryProductRelationDao; 
 	
 	
 
@@ -142,7 +149,7 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 				// 图片
 				PcProductpic pic = new PcProductpic();
 				pic.setProductCode(productCode); 
-				List<PcProductpic> pcPicList = pcProductpicDao.findList(pic);
+				List<PcProductpic> pcPicList = pcProductpicDao.findListBySkuNull(pic);
 				if (pcPicList != null)
 					product.setPcPicList(pcPicList);
 
@@ -195,32 +202,29 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 					product.setProductSkuInfoList(productSkuInfoList);
 				}
 
-				
-				MDataMap brandMapParam = new MDataMap();
-				brandMapParam = DbUp.upTable("pc_brandinfo").one("brand_code", product.getBrandCode());
-				if (brandMapParam != null) {
-					product.setBrandName(brandMapParam.get("brand_name"));
+				PcBrandinfo brandInfo = new PcBrandinfo();
+				brandInfo.setBrandCode(product.getBrandCode()); 
+				brandInfo = pcBrandinfoDao.findByType(brandInfo);
+				if (brandInfo != null) {
+					product.setBrandName(brandInfo.getBrandName());
 				}
 
 				// 商品的扩展属性
-				MDataMap fictitiousSalesMap = DbUp.upTable("pc_productinfo_ext").one("product_code", productCode);
-				if (fictitiousSalesMap != null) {
-					SerializeSupport<PcProductinfoExt> ss = new SerializeSupport<PcProductinfoExt>();
-					PcProductinfoExt pcProductinfoExt = new PcProductinfoExt();
-					ss.serialize(fictitiousSalesMap, pcProductinfoExt);
-					product.setPcProductinfoExt(pcProductinfoExt);
+				PcProductinfoExt pExt = new PcProductinfoExt();
+				pExt.setProductCode(productCode); 
+				pExt = pcProductinfoExtDao.findByType(pExt);
+				if (pExt != null) {
+					product.setPcProductinfoExt(pExt);
 				}
 				
 				// 商品虚类
-				List<MDataMap> categoryProductRelationMap = DbUp.upTable("uc_sellercategory_product_relation").queryAll("", "", "product_code='" + productCode + "'", null);
-				List<UcSellercategoryProductRelation> categoryProductRelationList = new ArrayList<UcSellercategoryProductRelation>();
-				SerializeSupport<UcSellercategoryProductRelation> ss = new SerializeSupport<UcSellercategoryProductRelation>();
-				for (MDataMap mDataMap : categoryProductRelationMap) {
-					UcSellercategoryProductRelation categoryProductRelation = new UcSellercategoryProductRelation();
-					ss.serialize(mDataMap, categoryProductRelation);
-					categoryProductRelationList.add(categoryProductRelation);
+				UcSellercategoryProductRelation spr = new UcSellercategoryProductRelation();
+				spr.setProductCode(productCode); 
+				List<UcSellercategoryProductRelation> sprList = ucSellercategoryProductRelationDao.findList(spr);
+				if(sprList == null ){
+					sprList = new ArrayList<UcSellercategoryProductRelation>();
 				}
-				product.setUsprList(categoryProductRelationList);
+				product.setUsprList(sprList);
 			}
 
 			return product;

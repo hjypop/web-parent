@@ -189,6 +189,15 @@
 			product_code = #{productCode,jdbcType=VARCHAR}
 		</where>
 	</update>
+	
+	<select id="findByType" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcProductinfoExt">
+		select
+					* from productcenter.pc_productinfo_ext
+		where 1=1 
+		<if test="brandCode != null and brandCode !='' ">
+			and product_code = #{productCode,jdbcType=VARCHAR}
+		</if>
+	</select>
 </mapper>
 
 
