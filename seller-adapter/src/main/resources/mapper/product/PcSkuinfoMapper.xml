@@ -186,7 +186,7 @@
 		SELECT
 		sku_code
 		FROM
-		pc_skuinfo
+		productcenter.pc_skuinfo
 		<where>
 			product_code = #{productCode,jdbcType=VARCHAR}
 		</where>

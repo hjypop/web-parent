@@ -297,7 +297,7 @@
 	<!-- 根据商品编码获取旧编号 2016-06-28 zhy -->
 	<select id="findProductCodeByOldCode" parameterType="String"
 		resultType="String">
-		select product_code from pc_productinfo
+		select product_code from productcenter.pc_productinfo
 		<where>
 			product_code_old=#{productCodeOld,jdbcType=VARCHAR}
 		</where>
