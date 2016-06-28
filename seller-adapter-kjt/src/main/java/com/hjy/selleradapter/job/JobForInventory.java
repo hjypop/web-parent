@@ -1,15 +1,16 @@
 package com.hjy.selleradapter.job;
 
 import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
 
+import com.hjy.annotation.Inject;
+import com.hjy.entity.product.PcProductinfo;
 import com.hjy.helper.WebHelper;
 import com.hjy.quartz.job.RootJob;
 import com.hjy.selleradapter.kjt.RsyncKjtProductInventoryById;
 import com.hjy.selleradapter.kjt.model.InventoryPageModel;
+import com.hjy.service.product.IPcProductinfoServivce;
 
 /**
  * 
@@ -23,6 +24,8 @@ import com.hjy.selleradapter.kjt.model.InventoryPageModel;
  * 时间: 2016年6月27日 下午5:27:16
  */
 public class JobForInventory extends RootJob {
+	@Inject
+	private IPcProductinfoServivce service;
 
 	@Override
 	public void doExecute(JobExecutionContext context) {
@@ -30,9 +33,14 @@ public class JobForInventory extends RootJob {
 		String product_ids = "";
 		String newproduct_id = "";
 		int totalpage;
-		String infosql = "select product_code_old from pc_productinfo where seller_code='SI2003' and small_seller_code='SF03KJT' ";
-		List<Map<String, Object>> list = null;// DbUp.upTable("pc_productinfo").dataSqlList(infosql,
-												// null);
+		// String infosql = "select product_code_old from pc_productinfo where
+		// seller_code='SI2003' and small_seller_code='SF03KJT' ";
+		// DbUp.upTable("pc_productinfo").dataSqlList(infosql,null);
+		// 根据卖家编号和第三方商户编号,查询旧的商品编号
+		PcProductinfo info = new PcProductinfo();
+		info.setSellerCode("SI2003");
+		info.setSmallSellerCode("SF03KJT");
+		List<String> list = service.findProductCodeOld(info);
 		InventoryPageModel cpp = new InventoryPageModel(list, 20);
 		totalpage = cpp.getTotalPages();
 		if (list != null) {
@@ -45,7 +53,7 @@ public class JobForInventory extends RootJob {
 					for (int j = startNum; j < endNum; j++) {
 						if (j >= list.size())
 							break;
-						product_id = (String) list.get(j).get("product_code_old");
+						product_id = list.get(j);
 						newproduct_id = product_id.replaceAll("'", "");
 						sb.append(newproduct_id).append(",");
 					}
