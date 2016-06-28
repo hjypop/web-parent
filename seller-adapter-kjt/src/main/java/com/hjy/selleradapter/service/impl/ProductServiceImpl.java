@@ -3,9 +3,13 @@ package com.hjy.selleradapter.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import com.hjy.annotation.Inject;
 import com.hjy.api.RootResult;
 import com.hjy.base.BaseClass;
+import com.hjy.dao.product.IPcProductflowDao;
+import com.hjy.dao.product.IPcProductinfoDao;
 import com.hjy.entity.product.PcCategoryinfo;
 import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductinfo;
@@ -26,6 +30,12 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 
 	@Inject
 	private ITxProductService txs; // TxProductServiceImpl txs = BeansHelper.upBean("bean_com_cmall_productcenter_txservice_TxProductService");
+	
+	@Inject
+	private IPcProductflowDao pcpFlowdao;
+	
+	@Inject
+	private IPcProductinfoDao pcProductInfoDao;
 
 	public int AddProductTx(PcProductinfo pc, StringBuffer error, String manageCode) {
 		RootResult rr = new RootResult();
@@ -76,47 +86,32 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 		try {
 			PcProductinfo product = new PcProductinfo();
 			
-			if (productCode == null || productCode.length() <= 2){
+//			MDataMap prodcutData = null;
+//			if(productCode.trim().length() == 32){
+//				prodcutData = DbUp.upTable("pc_productinfo").one("uid", productCode);
+//			}else{
+//				prodcutData = DbUp.upTable("pc_productinfo").one("product_code", productCode);
+//			}
+			
+			PcProductinfo pcProductInfo = new PcProductinfo();
+			if(productCode.trim().length() == 32){
+				pcProductInfo.setUid(productCode); 
+			}else{
+				pcProductInfo.setProductCode(productCode); 
+			}
+			pcProductInfo = pcProductInfoDao.findByType(pcProductInfo);
+			
+			
+
+			if (pcProductInfo == null){
 				return null;
 			}else {
-				if (productCode.indexOf("_1") > 0) {
-					productCode = productCode.substring(0, productCode.length() - 2);
-					MDataMap productData = new MDataMap();
-
-					List<MDataMap> productDataList = DbUp.upTable("pc_productflow").query("", "zid desc", "product_code='" + productCode + "'", null, 0, 1);
-
-					if (null != productDataList && productDataList.size() > 0) {
-						productData = productDataList.get(0);
-					}
-
-					if (productData == null)
-						return null;
-
-					String pValue = productData.get("product_json");
-					JsonHelper<PcProductinfo> pHelper = new JsonHelper<PcProductinfo>();
-					product = pHelper.StringToObj(pValue, product);
-
-					return product;
-				}
-			}
-
-			MDataMap prodcutData = null;
-			if (productCode.trim().length() == 32) {
-				prodcutData = DbUp.upTable("pc_productinfo").one("uid", productCode);
-			} else {
-				prodcutData = DbUp.upTable("pc_productinfo").one("product_code", productCode);
-			}
-
-			if (prodcutData == null)
-				return null;
-			else {
-				productCode = prodcutData.get("product_code");
+				productCode = pcProductInfo.getProductCode(); //prodcutData.get("product_code");
 				product = new SerializeSupport<PcProductinfo>().serialize(prodcutData, new PcProductinfo());
 
-				product.setProdutName(prodcutData.get("product_name"));
+				product.setProdutName(pcProductInfo.getProductName());  // prodcutData.get("product_name")
 
-				MDataMap pcCategorypropertyRelData = DbUp.upTable("pc_productcategory_rel").one("product_code",
-						productCode, "flag_main", "1");
+				MDataMap pcCategorypropertyRelData = DbUp.upTable("pc_productcategory_rel").one("product_code" , productCode, "flag_main", "1");
 				// 取得商品分类信息
 				PcCategoryinfo category = new PcCategoryinfo();
 				if (pcCategorypropertyRelData != null) {

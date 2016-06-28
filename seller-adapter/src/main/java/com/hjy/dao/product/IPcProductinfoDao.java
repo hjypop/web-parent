@@ -28,4 +28,45 @@ public interface IPcProductinfoDao extends BaseDao<PcProductinfo , Integer> {
 	 * @return
 	 */
 	String findProductCodeByOldCode(String productCodeOld);
+	
+	/**
+	 * @descriptions 
+	 * 
+	 * @param entity
+	 * @return
+	 * @date 2016年6月28日下午1:44:04
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public PcProductinfo findByType(PcProductinfo entity);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
