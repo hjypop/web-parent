@@ -146,6 +146,17 @@ public interface BaseDao<T, PK extends Serializable> {
     public T find(PK id); 
     
     /**
+	 * @descriptions 根据实体类中的字段条件返回一条记录
+	 * 
+	 * @param entity
+	 * @return
+	 * @date 2016年6月28日下午1:44:04
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+    public T findByType(T entity);
+    
+    /**
      * @descriptions 根据任意属性查询 
      * 	注意！此方法需要你自己在*****Mapper.xml 文件中重写查询条件
      * 

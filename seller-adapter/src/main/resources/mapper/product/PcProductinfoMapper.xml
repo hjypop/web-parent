@@ -295,13 +295,25 @@
 		</where>
 	</select>
 	<!-- 根据商品编码获取旧编号 2016-06-28 zhy -->
-	<select id="findProductCodeByOldCode" parameterType="String"
-		resultType="String">
+	<select id="findProductCodeByOldCode" parameterType="String" resultType="String">
 		select product_code from productcenter.pc_productinfo
 		<where>
 			product_code_old=#{productCodeOld,jdbcType=VARCHAR}
 		</where>
 		ORDER BY zid DESC
+	</select>
+
+	<!-- 可以扩展if中的查询条件 - Yangcl  -->
+	<select id="findByType" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcProductinfo">
+		select
+					* from productcenter.pc_productinfo
+		where 1=1
+		<if test="uid != null and uid !='' ">
+			and uid = #{uid , jdbcType=VARCHAR}
+		</if>
+		<if test="productCode != null and productCode !='' ">
+			and product_code = #{productCode , jdbcType=VARCHAR}
+		</if>
 	</select>
 </mapper>
 

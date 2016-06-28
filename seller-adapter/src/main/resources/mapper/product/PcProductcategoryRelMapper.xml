@@ -56,7 +56,36 @@
 			</if>
 		</trim>
 	</insert>
+	
+	<!-- 可以扩展if中的查询条件 - Yangcl  -->
+	<select id="findByType" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcProductcategoryRel">
+		select
+					* from productcenter.pc_productcategory_rel
+		where 1=1
+		<if test="flagMain != null and flagMain !='' ">
+			and flag_main = #{flagMain , jdbcType=DECIMAL}
+		</if>
+		<if test="productCode != null and productCode !='' ">
+			and product_code = #{productCode , jdbcType=VARCHAR}
+		</if>
+	</select>
+	
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
