@@ -35,7 +35,7 @@ public class PcProductcategoryRel  {
     /**
      * 是否主分类
      */
-    private Integer flagMain   = 0 ;
+    private Long flagMain   = (long) 0 ;
     
     private String categoryCodeOld;
     
@@ -76,12 +76,16 @@ public class PcProductcategoryRel  {
     public String getCategoryCode() {
         return this.categoryCode;
     }
-    public void setFlagMain(Integer flagMain) {
-        this.flagMain = flagMain;
-    }
+
+	public Long getFlagMain() {
+		return flagMain;
+	}
+
+	public void setFlagMain(Long flagMain) {
+		this.flagMain = flagMain;
+	}
     
-    public Integer getFlagMain() {
-        return this.flagMain;
-    }
+    
+    
 }
 

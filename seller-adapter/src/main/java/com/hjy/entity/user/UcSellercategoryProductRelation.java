@@ -2,10 +2,24 @@ package com.hjy.entity.user;
 
 public class UcSellercategoryProductRelation {
 
-	
+	private Integer zid;
+	private String uid;
 	private String productCode = "";
 	private String categoryCode = "";
 	private String sellerCode = "";
+	
+	public Integer getZid() {
+		return zid;
+	}
+	public void setZid(Integer zid) {
+		this.zid = zid;
+	}
+	public String getUid() {
+		return uid;
+	}
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
 	public String getProductCode() {
 		return productCode;
 	}

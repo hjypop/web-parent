@@ -1,5 +1,6 @@
 package com.hjy.selleradapter.service.impl;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.hjy.api.RootResult;
 import com.hjy.base.BaseClass;
 import com.hjy.common.DateUtil;
-import com.hjy.dao.ILockDao;
+import com.hjy.common.product.SkuCommon;
 import com.hjy.dao.log.ILcStockchangeDao;
 import com.hjy.dao.product.IPcProductcategoryRelDao;
 import com.hjy.dao.product.IPcProductdescriptionDao;
@@ -22,9 +23,28 @@ import com.hjy.dao.product.IPcProductpropertyDao;
 import com.hjy.dao.product.IPcSkuinfoDao;
 import com.hjy.dao.system.IScStoreSkunumDao;
 import com.hjy.dao.user.IUcSellercategoryProductRelationDao;
+import com.hjy.entity.log.LcStockchange;
+import com.hjy.entity.product.PcProductcategoryRel;
+import com.hjy.entity.product.PcProductdescription;
+import com.hjy.entity.product.PcProductflow;
 import com.hjy.entity.product.PcProductinfo;
+import com.hjy.entity.product.PcProductinfoExt;
+import com.hjy.entity.product.PcProductpic;
+import com.hjy.entity.product.PcProductproperty;
+import com.hjy.entity.product.PcSkuinfo;
+import com.hjy.entity.system.ScStoreSkunum;
+import com.hjy.entity.user.UcSellercategoryProductRelation;
+import com.hjy.helper.JsonHelper;
+import com.hjy.model.ProductSkuInfo;
 import com.hjy.selleradapter.service.ITxProductService;
 
+/**
+ * @descriptions 这个类的原名称：TxProductService.java
+ * 
+ * @date 2016年6月28日上午9:46:57
+ * @author Yangcl
+ * @version 1.0.1
+ */
 @Service("txProductService")
 public class TxProductServiceImpl extends BaseClass implements ITxProductService {
 
@@ -51,18 +71,19 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 	@Resource
 	private IPcProductcategoryRelDao pprm;
 
+	
 	public void insertProduct(PcProductinfo pc, RootResult ret, String operator) {
 
 		String createTime = DateUtil.getSysDateTimeString();
 		// 插入商品基本信息
-		com.hjy.entity.product.cmall.dborm.txmodel.PcProductinfo pptModel = new com.hjy.entity.product.cmall.dborm.txmodel.PcProductinfo();
+		PcProductinfo pptModel = new PcProductinfo();
 		pptModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 		pptModel.setCreateTime(createTime);
 		pptModel.setBrandCode(pc.getBrandCode());
 		pptModel.setFlagPayway(pc.getFlagPayway());
 		pptModel.setFlagSale(pc.getFlagSale());
 		pptModel.setLabels(pc.getLabels());
-		pptModel.setMainpicUrl(pc.getMainPicUrl());
+		pptModel.setMainPicUrl(pc.getMainPicUrl());
 		pptModel.setMarketPrice(pc.getMarketPrice());
 		pptModel.setMaxSellPrice(pc.getMaxSellPrice());
 		pptModel.setMinSellPrice(pc.getMinSellPrice());
@@ -83,49 +104,40 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 		pptModel.setProductShortname(pc.getProductShortname());
 		pptModel.setSupplierName(pc.getSupplierName());
 		pptModel.setVideoUrl(pc.getVideoUrl());
-		pptModel.setValidateFlag(pc.getValidate_flag());// 添加是否是虚拟商品字段
+		pptModel.setValidate_flag(pc.getValidate_flag());// 添加是否是虚拟商品字段
 		pptModel.setTaxRate(pc.getTaxRate());
 		pptModel.setProductCodeCopy(pc.getProductCodeCopy());
-		pptModel.setAdpicUrl(pc.getAdPicUrl());
+		pptModel.setAdPicUrl(pc.getAdPicUrl());
 		pptModel.setExpiryDate(pc.getExpiryDate());// 保质期
 		pptModel.setExpiryUnit(pc.getExpiryUnit());// 保质期单位
 		pptModel.setQualificationCategoryCode(pc.getQualificationCategoryCode());// 资质品类
 		pcpm.insertSelective(pptModel);
 
 		// 添加商品的分类信息
-		// if(pc.getCategory()!=null){
-		// com.cmall.dborm.txmodel.PcProductcategoryRel ppcrModel = new
-		// PcProductcategoryRel();
-		// ppcrModel.setCategoryCode(pc.getCategory().getCategoryCode());
-		// ppcrModel.setProductCode(pc.getProductCode());
-		// ppcrModel.setUid(UUID.randomUUID().toString().replace("-", ""));
-		// ppcrModel.setFlagMain(1l);
-		// pptrm.insertSelective(ppcrModel);
-		// }
-		// 添加商品的分类信息
 		if (pc.getUsprList() != null && pc.getUsprList().size() > 0) {
-
 			for (int i = 0; i < pc.getUsprList().size(); i++) {
-				com.hjy.entity.user.cmall.dborm.txmodel.UcSellercategoryProductRelation usprModel = new UcSellercategoryProductRelation();
+				UcSellercategoryProductRelation usprModel = new UcSellercategoryProductRelation();
+				usprModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 				usprModel.setCategoryCode(pc.getUsprList().get(i).getCategoryCode());
 				usprModel.setProductCode(pc.getUsprList().get(i).getProductCode());
 				usprModel.setSellerCode(pc.getUsprList().get(i).getSellerCode());
-				usprModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 				usprm.insertSelective(usprModel);
 			}
 		}
+		
 		// 添加商品的实类信息
 		if (null != pc.getPcProductcategoryRel()) {
-			com.hjy.entity.product.cmall.dborm.txmodel.PcProductcategoryRel pprModel = new PcProductcategoryRel();
+			PcProductcategoryRel pprModel = new PcProductcategoryRel();
 			pprModel.setCategoryCode(pc.getPcProductcategoryRel().getCategoryCode());
 			pprModel.setFlagMain(Long.parseLong(pc.getPcProductcategoryRel().getFlagMain() + ""));
 			pprModel.setProductCode(pc.getPcProductcategoryRel().getProductCode());
 			pprModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 			pprm.insertSelective(pprModel);
 		}
+		
 		// 添加 描述信息
 		if (pc.getDescription() != null) {
-			com.cmall.dborm.txmodel.PcProductdescriptionWithBLOBs ppdModel = new PcProductdescriptionWithBLOBs();
+			PcProductdescription ppdModel = new PcProductdescription();
 			ppdModel.setProductCode(pc.getProductCode());
 			ppdModel.setKeyword(pc.getDescription().getKeyword());
 			ppdModel.setDescriptionPic(pc.getDescription().getDescriptionPic());
@@ -136,10 +148,9 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 
 		// 插入商品图片信息
 		if (pc.getPcPicList() != null) {
-
 			List<PcProductpic> picList = pc.getPcPicList();
 			for (PcProductpic pic : picList) {
-				com.hjy.entity.cmall.dborm.txmodel.PcProductpic picModel = new com.hjy.entity.cmall.dborm.txmodel.PcProductpic();
+				PcProductpic picModel = new PcProductpic();
 				picModel.setPicUrl(pic.getPicUrl());
 				picModel.setProductCode(pc.getProductCode());
 				picModel.setSkuCode(pic.getSkuCode());
@@ -147,13 +158,13 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 				pppm.insertSelective(picModel);
 			}
 		}
+		
 		// 插入sku信息
 		if (pc.getProductSkuInfoList() != null) {
 			List<ProductSkuInfo> skuList = pc.getProductSkuInfoList();
 
 			for (ProductSkuInfo sku : skuList) {
-				com.cmall.dborm.txmodel.PcSkuinfoWithBLOBs psModel = new PcSkuinfoWithBLOBs();
-
+				PcSkuinfo psModel = new PcSkuinfo();
 				psModel.setMarketPrice(sku.getMarketPrice());
 				psModel.setProductCode(pc.getProductCode());
 				psModel.setProductCodeOld("");
@@ -175,11 +186,12 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 				psModel.setCostPrice(sku.getCostPrice());
 				psModel.setMiniOrder(sku.getMiniOrder());
 				pcsm.insertSelective(psModel);
+				
 				// 插入商品sku库存
 				if (sku.getScStoreSkunumList() != null) {
 					List<ScStoreSkunum> skuStoreList = sku.getScStoreSkunumList();
 					for (ScStoreSkunum skuStore : skuStoreList) {
-						com.hjy.entity.cmall.dborm.txmodel.ScStoreSkunum sssModel = new com.hjy.entity.cmall.dborm.txmodel.ScStoreSkunum();
+						ScStoreSkunum sssModel = new ScStoreSkunum();
 						sssModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 						sssModel.setSkuCode(skuStore.getSkuCode());
 						sssModel.setStockNum(skuStore.getStockNum());
@@ -190,15 +202,12 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 				}
 			}
 		}
+		
 		// 插入商品属性信息
 		if (pc.getPcProductpropertyList() != null) {
-
 			List<PcProductproperty> pppList = pc.getPcProductpropertyList();
-
 			for (PcProductproperty ppp : pppList) {
-
-				com.hjy.entity.cmall.dborm.txmodel.PcProductproperty pppModel = new com.hjy.entity.cmall.dborm.txmodel.PcProductproperty();
-
+				PcProductproperty pppModel = new PcProductproperty();
 				pppModel.setProductCode(pc.getProductCode());
 				pppModel.setPropertyCode(ppp.getPropertyCode());
 				pppModel.setPropertyKey(ppp.getPropertyKey());
@@ -206,14 +215,13 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 				pppModel.setPropertyType(ppp.getPropertyType());
 				pppModel.setPropertyValue(ppp.getPropertyValue());
 				pppModel.setUid(UUID.randomUUID().toString().replace("-", ""));
-
 				pppmr.insertSelective(pppModel);
 			}
 		}
+		
 		// 插入商品扩展信息
 		if (pc.getPcProductinfoExt() != null) {
-
-			com.hjy.entity.product.cmall.dborm.txmodel.PcProductinfoExt ppe = new PcProductinfoExt();
+			PcProductinfoExt ppe = new PcProductinfoExt();
 			ppe.setUid(UUID.randomUUID().toString().replace("-", ""));
 			ppe.setProductCode(pc.getPcProductinfoExt().getProductCode());
 			ppe.setPrchType(pc.getPcProductinfoExt().getPrchType());
@@ -225,12 +233,17 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 			ppe.setProductStoreType(pc.getPcProductinfoExt().getProductStoreType());
 			ppe.setProductTradeType(pc.getPcProductinfoExt().getProductTradeType());
 			ppe.setPoffer(pc.getPcProductinfoExt().getPoffer());
-			String fictitious = pc.getPcProductinfoExt().getFictitiousSales();
-			ppe.setFictitiousSales(Integer.parseInt(StringUtils.isBlank(fictitious) ? "0" : fictitious));
-			String grossProfit = pc.getPcProductinfoExt().getGrossProfit();
-			ppe.setGrossProfit(Long.parseLong(StringUtils.isBlank(grossProfit) ? "0" : grossProfit));
-			String accmrng = pc.getPcProductinfoExt().getAccmRng();
+			
+			Integer fictitious = pc.getPcProductinfoExt().getFictitiousSales();
+			if(StringUtils.isBlank(fictitious.toString())){
+				fictitious = 0;
+			}
+			ppe.setFictitiousSales(fictitious);	
+			String grossProfit = pc.getPcProductinfoExt().getGrossProfit().toString();
+			ppe.setGrossProfit(Long.parseLong((StringUtils.isBlank(grossProfit) ? "0" : grossProfit)));
+			String accmrng = pc.getPcProductinfoExt().getAccmRng().toString();
 			ppe.setAccmRng(Double.parseDouble(StringUtils.isBlank(accmrng) ? "0" : accmrng));
+			
 			ppe.setMdId(pc.getPcProductinfoExt().getMdId());
 			ppe.setMdNm(pc.getPcProductinfoExt().getMdNm());
 			ppe.setSettlementType(pc.getPcProductinfoExt().getSettlementType());
@@ -243,10 +256,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 
 		// 插入商品历史流水信息
 		if (pc.getPcProdcutflow() != null) {
-
-			com.hjy.entity.product.cmall.dborm.txmodel.PcProductflow ppf = new PcProductflow();
-
-			ppf.setCreateTime(createTime);
+			PcProductflow ppf = new PcProductflow();
 			ppf.setCreator(operator);
 			ppf.setFlowCode(pc.getPcProdcutflow().getFlowCode());
 			ppf.setFlowStatus(pc.getPcProdcutflow().getFlowStatus());
@@ -254,20 +264,16 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 			ppf.setUid(UUID.randomUUID().toString().replace("-", ""));
 			ppf.setUpdateTime(createTime);
 			ppf.setUpdator(operator);
-
 			JsonHelper<PcProductinfo> pHelper = new JsonHelper<PcProductinfo>();
 			ppf.setProductJson(pHelper.ObjToString(pc));
-
 			ppfm.insertSelective(ppf);
 		}
 
 		// 插入商品库存流水
 		if (pc.getProductSkuInfoList() != null) {
 			List<ProductSkuInfo> skuList = pc.getProductSkuInfoList();
-
 			for (ProductSkuInfo sku : skuList) {
-				com.cmall.dborm.txmodel.LcStockchange lsModel = new LcStockchange();
-
+				LcStockchange lsModel = new LcStockchange();
 				lsModel.setChangeStock(sku.getStockNum());
 				lsModel.setChangeType(SkuCommon.SkuStockChangeTypeCreateProduct);
 				lsModel.setCode(sku.getSkuCode());
@@ -279,4 +285,34 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 		}
 	}
 
+	
+	
+	
+	
+	
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
