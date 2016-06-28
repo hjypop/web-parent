@@ -12,7 +12,7 @@ import com.hjy.service.product.IPcProductinfoServivce;
 
 /**
  * 
- * 类: IPcProductinfoServivce <br>
+ * 类: PcProductInfoServiceImpl <br>
  * 描述: 商品信息业务逻辑处理接口实现类 <br>
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月28日 上午10:05:39

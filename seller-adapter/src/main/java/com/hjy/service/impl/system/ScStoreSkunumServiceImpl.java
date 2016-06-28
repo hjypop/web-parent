@@ -45,8 +45,22 @@ public class ScStoreSkunumServiceImpl implements IScStoreSkunumService {
 	 * @see com.hjy.service.system.IScStoreSkunumService#updateSelective(com.hjy.entity.system.ScStoreSkunum)
 	 */
 	@Override
-	public Integer updateSelective(ScStoreSkunum entity) {
+	public Integer updateScStoreSkunum(ScStoreSkunum entity) {
 		return dao.updateSelective(entity);
+	}
+
+	/**
+	 * 
+	 * 方法: insertSelective <br>
+	 * 描述: TODO
+	 * 
+	 * @param entity
+	 * @return
+	 * @see com.hjy.service.system.IScStoreSkunumService#insertSelective(com.hjy.entity.system.ScStoreSkunum)
+	 */
+	@Override
+	public Integer insertScStoreSkunum(ScStoreSkunum entity) {
+		return dao.insertSelective(entity);
 	}
 
 }
