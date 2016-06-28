@@ -13,6 +13,7 @@ import com.hjy.dao.product.IPcProductdescriptionDao;
 import com.hjy.dao.product.IPcProductflowDao;
 import com.hjy.dao.product.IPcProductinfoDao;
 import com.hjy.dao.product.IPcProductpicDao;
+import com.hjy.dao.product.IPcProductpropertyDao;
 import com.hjy.entity.product.PcCategoryinfo;
 import com.hjy.entity.product.PcProductcategoryRel;
 import com.hjy.entity.product.PcProductdescription;
@@ -44,6 +45,8 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 	private IPcProductdescriptionDao pcProductdescriptionDao;
 	@Inject
 	private IPcProductpicDao pcProductpicDao;
+	@Inject
+	private IPcProductpropertyDao pcProductpropertyDao;  
 	
 	
 
@@ -134,23 +137,13 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 
 				
 				// 取得商品属性信息
-				MDataMap pcProductpropertyListMapParam = new MDataMap();
-				pcProductpropertyListMapParam.put("product_code", productCode);
-				List<PcProductproperty> pcProductpropertyList = null;
-				List<MDataMap> pcProductpropertyListMap = DbUp.upTable("pc_productproperty").query("" , " property_type,small_sort desc,zid asc ", "product_code=:product_code", pcProductpropertyListMapParam, -1, -1);
-				if (pcProductpropertyListMap != null) {
-					int size = pcProductpropertyListMap.size();
-					pcProductpropertyList = new ArrayList<PcProductproperty>();
-					SerializeSupport ss = new SerializeSupport<PcProductproperty>();
-					for (int i = 0; i < size; i++) {
-						PcProductproperty pic = new PcProductproperty();
-						ss.serialize(pcProductpropertyListMap.get(i), pic);
-						pcProductpropertyList.add(pic);
-					}
-				}
+				PcProductproperty property = new PcProductproperty();
+				property.setProductCode(productCode); 
+				List<PcProductproperty> pcProductpropertyList = pcProductpropertyDao.findListByProductCode(property); 
 				if (pcProductpropertyList != null)
 					product.setPcProductpropertyList(pcProductpropertyList);
 
+				
 				// 取得商品的sku信息
 				MDataMap pcSkuMapParam = new MDataMap();
 				pcSkuMapParam.put("product_code", productCode);

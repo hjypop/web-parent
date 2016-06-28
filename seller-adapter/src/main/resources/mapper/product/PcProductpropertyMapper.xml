@@ -82,6 +82,17 @@
 			</if>
 		</trim>
 	</insert>
+	
+	<!-- 原来的 order by : property_type,small_sort desc,zid asc  - Yangcl -->
+	<select id="findListByProductCode" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcProductproperty">
+		select
+					* from productcenter.pc_productproperty
+		where 1=1 
+			and 
+				product_code = #{productCode , jdbcType=VARCHAR} 
+			order by 
+				small_sort desc , zid asc 
+	</select>
 </mapper>
 
 
