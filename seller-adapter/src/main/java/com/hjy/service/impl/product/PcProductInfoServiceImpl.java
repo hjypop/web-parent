@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hjy.dao.product.IPcProductinfoDao;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.service.product.IPcProductinfoServivce;
@@ -49,6 +50,108 @@ public class PcProductInfoServiceImpl implements IPcProductinfoServivce {
 	@Override
 	public String findProductCodeByOldCode(String productCodeOld) {
 		return dao.findProductCodeByOldCode(productCodeOld);
+	}
+
+	@Override
+	public Integer insertSelective(PcProductinfo entity) {
+		
+		return null;
+	}
+
+	@Override
+	public Integer insertGotEntityId(PcProductinfo entity) {
+		
+		return null;
+	}
+
+	@Override
+	public Integer insertGotEntityUuid(PcProductinfo entity) {
+		
+		return null;
+	}
+
+	@Override
+	public Integer batchInsert(List<PcProductinfo> list) {
+		
+		return null;
+	}
+
+	@Override
+	public Integer updateSelective(PcProductinfo entity) {
+		
+		return null;
+	}
+
+	@Override
+	public Integer batchUpdate(List<PcProductinfo> list) {
+		
+		return null;
+	}
+
+	@Override
+	public Integer deleteById(Integer id) {
+		
+		return null;
+	}
+
+	@Override
+	public Integer batchDelete(List<Integer> list) {
+		
+		return null;
+	}
+
+	@Override
+	public <DTO> void deleteByCondition(DTO dto) {
+		
+		
+	}
+
+	@Override
+	public PcProductinfo find(Integer id) {
+		
+		return null;
+	}
+
+	@Override
+	public List<PcProductinfo> findList(PcProductinfo entity) {
+		
+		return null;
+	}
+
+	@Override
+	public JSONObject jsonList(PcProductinfo entity) {
+		
+		return null;
+	}
+
+	@Override
+	public <DTO> List<PcProductinfo> findGroupList(DTO dto) {
+		
+		return null;
+	}
+
+	@Override
+	public int count(PcProductinfo entity) {
+		
+		return 0;
+	}
+
+	@Override
+	public List<PcProductinfo> queryPage(PcProductinfo entity) {
+		
+		return null;
+	}
+
+	@Override
+	public List<PcProductinfo> like(PcProductinfo entity) {
+		
+		return null;
+	}
+
+	@Override
+	public Integer selectMaxId() {
+		
+		return null;
 	}
 
 }

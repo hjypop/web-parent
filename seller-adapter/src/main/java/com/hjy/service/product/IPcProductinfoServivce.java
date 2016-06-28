@@ -3,6 +3,7 @@ package com.hjy.service.product;
 import java.util.List;
 
 import com.hjy.entity.product.PcProductinfo;
+import com.hjy.service.IBaseService;
 
 /**
  * 
@@ -11,7 +12,7 @@ import com.hjy.entity.product.PcProductinfo;
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月28日 上午10:05:39
  */
-public interface IPcProductinfoServivce {
+public interface IPcProductinfoServivce extends IBaseService<PcProductinfo, Integer> {
 
 	/**
 	 * 

@@ -1,6 +1,7 @@
 package com.hjy.service.product;
 
 import com.hjy.entity.product.PcProductinfoExt;
+import com.hjy.service.IBaseService;
 
 /**
  * 
@@ -9,7 +10,7 @@ import com.hjy.entity.product.PcProductinfoExt;
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月28日 下午2:42:26
  */
-public interface IPcProductinfoExtService {
+public interface IPcProductinfoExtService extends IBaseService<PcProductinfoExt, Integer> {
 
 	/**
 	 * 

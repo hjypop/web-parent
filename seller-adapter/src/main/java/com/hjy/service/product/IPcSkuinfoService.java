@@ -1,5 +1,8 @@
 package com.hjy.service.product;
 
+import com.hjy.entity.product.PcSkuinfo;
+import com.hjy.service.IBaseService;
+
 /**
  * 
  * 类: IPcSkuinfoService <br>
@@ -7,7 +10,7 @@ package com.hjy.service.product;
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月28日 上午11:13:32
  */
-public interface IPcSkuinfoService {
+public interface IPcSkuinfoService extends IBaseService<PcSkuinfo, Integer> {
 
 	/**
 	 * 
