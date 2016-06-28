@@ -9,8 +9,10 @@ import com.hjy.annotation.Inject;
 import com.hjy.api.RootResult;
 import com.hjy.base.BaseClass;
 import com.hjy.dao.product.IPcProductcategoryRelDao;
+import com.hjy.dao.product.IPcProductdescriptionDao;
 import com.hjy.dao.product.IPcProductflowDao;
 import com.hjy.dao.product.IPcProductinfoDao;
+import com.hjy.dao.product.IPcProductpicDao;
 import com.hjy.entity.product.PcCategoryinfo;
 import com.hjy.entity.product.PcProductcategoryRel;
 import com.hjy.entity.product.PcProductdescription;
@@ -38,6 +40,11 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 	private IPcProductinfoDao pcProductInfoDao;
 	@Inject
 	private IPcProductcategoryRelDao pcProductcategoryRelDao;
+	@Inject
+	private IPcProductdescriptionDao pcProductdescriptionDao;
+	@Inject
+	private IPcProductpicDao pcProductpicDao;
+	
 	
 
 	public int AddProductTx(PcProductinfo pc, StringBuffer error, String manageCode) {
@@ -111,36 +118,21 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 				}
 				product.setCategory(category);
 				
-
 				PcProductdescription description = new PcProductdescription();
-				MDataMap pcProductdescriptionData = DbUp.upTable("pc_productdescription").one("product_code" , productCode);
-
-				if (pcProductdescriptionData != null && !pcProductdescriptionData.isEmpty()) {
-					description = new SerializeSupport<PcProductdescription>().serialize(pcProductdescriptionData , new PcProductdescription());
-				}
-
+				description.setProductCode(productCode);
+				description = pcProductdescriptionDao.findByType(description);
 				// 取得商品描述信息
 				if (description != null)
 					product.setDescription(description);
 
-				MDataMap pcPicListMapParam = new MDataMap();
-				pcPicListMapParam.put("product_code", productCode);
-				List<PcProductpic> pcPicList = null;
-				List<MDataMap> pcPicListMap = DbUp.upTable("pc_productpic").query("", "", "product_code=:product_code  and (sku_code='' or sku_code is null)", pcPicListMapParam, -1, -1);
-				if (pcPicListMap != null) {
-					int size = pcPicListMap.size();
-					pcPicList = new ArrayList<PcProductpic>();
-					SerializeSupport ss = new SerializeSupport<PcProductpic>();
-					for (int i = 0; i < size; i++) {
-						PcProductpic pic = new PcProductpic();
-						ss.serialize(pcPicListMap.get(i), pic);
-						pcPicList.add(pic);
-					}
-				}
-
+				// 图片
+				PcProductpic pic = new PcProductpic();
+				pic.setProductCode(productCode); 
+				List<PcProductpic> pcPicList = pcProductpicDao.findList(pic);
 				if (pcPicList != null)
 					product.setPcPicList(pcPicList);
 
+				
 				// 取得商品属性信息
 				MDataMap pcProductpropertyListMapParam = new MDataMap();
 				pcProductpropertyListMapParam.put("product_code", productCode);
