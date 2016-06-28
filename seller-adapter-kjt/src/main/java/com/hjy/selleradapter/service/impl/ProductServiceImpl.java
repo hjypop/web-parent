@@ -1,5 +1,6 @@
 package com.hjy.selleradapter.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import com.hjy.dao.product.IPcProductflowDao;
 import com.hjy.dao.product.IPcProductinfoDao;
 import com.hjy.dao.product.IPcProductpicDao;
 import com.hjy.dao.product.IPcProductpropertyDao;
+import com.hjy.dao.product.IPcSkuinfoDao;
 import com.hjy.entity.product.PcCategoryinfo;
 import com.hjy.entity.product.PcProductcategoryRel;
 import com.hjy.entity.product.PcProductdescription;
@@ -21,6 +23,7 @@ import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.product.PcProductinfoExt;
 import com.hjy.entity.product.PcProductpic;
 import com.hjy.entity.product.PcProductproperty;
+import com.hjy.entity.product.PcSkuinfo;
 import com.hjy.entity.user.UcSellercategoryProductRelation;
 import com.hjy.helper.JsonHelper;
 import com.hjy.iface.IFlowFunc;
@@ -47,8 +50,16 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 	private IPcProductpicDao pcProductpicDao;
 	@Inject
 	private IPcProductpropertyDao pcProductpropertyDao;  
+	@Inject
+	private IPcSkuinfoDao pcSkuinfoDao;
 	
 	
+	
+	
+	
+	
+	
+
 
 	public int AddProductTx(PcProductinfo pc, StringBuffer error, String manageCode) {
 		RootResult rr = new RootResult();
@@ -145,27 +156,46 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 
 				
 				// 取得商品的sku信息
-				MDataMap pcSkuMapParam = new MDataMap();
-				pcSkuMapParam.put("product_code", productCode);
-				List<ProductSkuInfo> productSkuInfoList = null;
-				List<MDataMap> productSkuInfoListMap = DbUp.upTable("pc_skuinfo").query("" ,  "" , "product_code=:product_code", pcSkuMapParam, -1, -1);
-
-				if (productSkuInfoListMap != null) {
-					int size = productSkuInfoListMap.size();
-					productSkuInfoList = new ArrayList<ProductSkuInfo>();
-					SerializeSupport ss = new SerializeSupport<ProductSkuInfo>();
-					for (int i = 0; i < size; i++) {
-						ProductSkuInfo pic = new ProductSkuInfo();
-						ss.serialize(productSkuInfoListMap.get(i), pic);
-						pic.setSkuValue(productSkuInfoListMap.get(i).get("sku_keyvalue"));
-						productSkuInfoList.add(pic);
+				PcSkuinfo skuInfo = new PcSkuinfo();
+				skuInfo.setProductCode(productCode); 
+				List<PcSkuinfo> skuInfoList = pcSkuinfoDao.findList(skuInfo);
+				if (skuInfoList != null && skuInfoList.size() > 0) {
+					List <ProductSkuInfo> productSkuInfoList = new ArrayList<ProductSkuInfo>();
+					for(PcSkuinfo sku : skuInfoList){
+						ProductSkuInfo info = new ProductSkuInfo();
+						info.setUid(sku.getUid()); 
+						info.setSkuCode(sku.getSkuCode());
+						info.setSkuCodeOld(sku.getSkuCodeOld());
+						info.setProductCode(sku.getProductCode());
+						info.setSellPrice(sku.getSellPrice());
+						info.setMarketPrice(sku.getMarketPrice());
+						info.setCostPrice(sku.getCostPrice());
+						info.setStockNum(Integer.valueOf(sku.getStockNum().toString()));
+						info.setSkuKey(sku.getSkuKey());
+//						info.setSkuValue("");// 数据库无此字段
+						info.setSkuKeyvalue(sku.getSkuKeyvalue());
+						info.setSkuPicUrl(sku.getSkuPicurl());
+						info.setSkuName(sku.getSkuName());
+						info.setSellProductcode(sku.getSellProductcode());
+						info.setSecurityStockNum(Integer.valueOf(sku.getSecurityStockNum().toString()));
+						info.setSellerCode(sku.getSellerCode());
+						info.setSkuAdv(sku.getSkuAdv());
+						info.setQrcodeLink(sku.getQrcodeLink());
+						info.setVirtualMoneyDeduction(new BigDecimal(0.00)); // 数据库无此字段
+						info.setSellCount(sku.getSellCount());
+						info.setSaleYn(sku.getSaleYn());
+						info.setFlagEnable(sku.getFlagEnable().toString());
+						info.setBarcode(sku.getBarcode());
+						info.setMiniOrder(sku.getMiniOrder());
+//						info.setScStoreSkunumList();// 数据库无此字段
+//						info.setValidateFlag("");// 数据库无此字段
+//						info.setSmallSellerCode("");// 数据库无此字段
+						productSkuInfoList.add(info);
 					}
-				}
-
-				if (productSkuInfoList != null) {
 					product.setProductSkuInfoList(productSkuInfoList);
 				}
 
+				
 				MDataMap brandMapParam = new MDataMap();
 				brandMapParam = DbUp.upTable("pc_brandinfo").one("brand_code", product.getBrandCode());
 				if (brandMapParam != null) {

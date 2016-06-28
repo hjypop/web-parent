@@ -17,8 +17,7 @@
 		<result column="sku_picurl" jdbcType="VARCHAR" property="skuPicurl" />
 		<result column="sell_productcode" jdbcType="VARCHAR" property="sellProductcode" />
 		<result column="seller_code" jdbcType="VARCHAR" property="sellerCode" />
-		<result column="security_stock_num" jdbcType="DECIMAL"
-			property="securityStockNum" />
+		<result column="security_stock_num" jdbcType="DECIMAL" property="securityStockNum" />
 		<result column="product_code_old" jdbcType="VARCHAR" property="productCodeOld" />
 		<result column="qrcode_link" jdbcType="VARCHAR" property="qrcodeLink" />
 		<result column="sell_count" jdbcType="INTEGER" property="sellCount" />
@@ -181,6 +180,7 @@
 			</if>
 		</trim>
 	</insert>
+	
 	<select id="findSkuCodeByProductCode" parameterType="java.lang.String"
 		resultType="java.lang.String">
 		SELECT
@@ -191,4 +191,36 @@
 			product_code = #{productCode,jdbcType=VARCHAR}
 		</where>
 	</select>
+	
+	<!-- 可以扩展if中的查询条件 - Yangcl  -->
+	<select id="findList" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcSkuinfo">
+		select
+					* from productcenter.pc_skuinfo
+		where 1=1 
+		<if test="productCode != null and productCode !='' ">
+			and product_code = #{productCode , jdbcType=VARCHAR}
+		</if>
+	</select>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

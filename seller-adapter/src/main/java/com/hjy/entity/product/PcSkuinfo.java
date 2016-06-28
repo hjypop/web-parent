@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 public class PcSkuinfo {
     private Integer zid;
     private String uid;
-    private String skuCodeOld;
     private String skuCode;
+    private String skuCodeOld;
     private String productCode;
     private BigDecimal sellPrice;
     private BigDecimal marketPrice;
