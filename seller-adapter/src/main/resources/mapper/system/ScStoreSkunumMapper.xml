@@ -54,15 +54,42 @@
 			</if>
 		</trim>
 	</insert>
+	<!-- 根据查询条件查询ScStoreSkunum对象 2016-06-28 zhy -->
+	<select id="findScStoreSkunumByParams" parameterType="com.hjy.entity.system.ScStoreSkunum"
+		resultMap="BaseResultMap">
+		select zid, uid, store_code, sku_code, batch_code, stock_num from
+		systemcenter.sc_store_skunum
+		<where>
+			store_code = #{storeCode,jdbcType=VARCHAR}
+			AND sku_code =
+			#{skuCode,jdbcType=VARCHAR}
+		</where>
+		ORDER BY
+		zid DESC
+		LIMIT 1
+	</select>
+	<!-- 根据zid更新信息 2016-06-28 zhy -->
+	<update id="updateSelective" parameterType="com.hjy.entity.system.ScStoreSkunum">
+		update systemcenter.sc_store_skunum
+		<set>
+			<if test="storeCode != null and  storeCode != ''">
+				store_code = #{storeCode,jdbcType=VARCHAR}
+			</if>
+			<if test="skuCode != null and  skuCode != ''">
+				sku_code = #{skuCode,jdbcType=VARCHAR}
+			</if>
+			<if test="batchCode != null and  batchCode != ''">
+				batch_code = #{batchCode,jdbcType=VARCHAR}
+			</if>
+			<if test="stockNum != null">
+				stock_num = #{stockNum,jdbcType=DECIMAL}
+			</if>
+		</set>
+		<where>
+			zid = #{zid,jdbcType=INTEGER}
+		</where>
+	</update>
 </mapper>
-
-
-
-
-
-
-
-
 
 
 
