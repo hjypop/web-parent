@@ -28,8 +28,8 @@ import com.hjy.entity.product.PcProductcategoryRel;
 import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductflow;
 import com.hjy.entity.product.PcProductinfo;
+import com.hjy.entity.product.PcProductinfoExample;
 import com.hjy.entity.product.PcProductinfoExt;
-import com.hjy.entity.product.PcProductinfoExtExample;
 import com.hjy.entity.product.PcProductpic;
 import com.hjy.entity.product.PcProductpicExample;
 import com.hjy.entity.product.PcProductproperty;
@@ -38,6 +38,7 @@ import com.hjy.entity.product.ProductChangeFlag;
 import com.hjy.entity.system.ScStoreSkunum;
 import com.hjy.entity.user.UcSellercategoryProductRelation;
 import com.hjy.helper.JsonHelper;
+import com.hjy.helper.WebHelper;
 import com.hjy.model.ProductSkuInfo;
 import com.hjy.selleradapter.service.ITxProductService;
 
@@ -286,8 +287,8 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 			}
 		}
 	}
-
-	public void updateProduct(PcProductinfo pc, RootResult rr, String manageCode, ProductChangeFlag pcf) {
+	
+	public void updateProduct(PcProductinfo pc , RootResult ret , String operator , ProductChangeFlag pcf) {
 		// 创建时间
 		String createTime = DateUtil.getSysDateTimeString();
 		// 更新商品的基本信息
@@ -355,9 +356,10 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 
 		// 商品扩展属性(暂只支持家有汇)(2015-08-13开始支持惠家有与沙皮狗)
 		if (pcf.isChangeProductExt() && ("SI2009".equals(pc.getSellerCode()) || "SI2003".equals(pc.getSellerCode()) || "SI3003".equals(pc.getSellerCode()))) {
-			PcProductinfoExtExample extExample = new PcProductinfoExtExample();
-			extExample.createCriteria().andProductCodeEqualTo(ppModel.getProductCode());
-			ppem.updateByExampleSelective(ppExtModel, extExample);
+//			PcProductinfoExtExample extExample = new PcProductinfoExtExample();
+//			extExample.createCriteria().andProductCodeEqualTo(ppModel.getProductCode());
+//			ppem.updateByExampleSelective(ppExtModel, extExample);
+			ppem.updateSelectiveByProductCode(ppExtModel);
 		}
 		
 		if (pcf.isChangeProductPic()) {
@@ -368,18 +370,17 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 			// 插入商品图片信息
 			if (pc.getPcPicList() != null) {
 				// 如果商品主图不为空和轮播图列表不为0的时候商品主图为轮播图第一张
-				// edit 内容 （新增判断条件(null == pc.getMainPicUrl() ||
-				// "".equals(pc.getMainPicUrl())）
+				// edit 内容 （新增判断条件(null == pc.getMainPicUrl() ||"".equals(pc.getMainPicUrl())）
 				if ((null == pc.getMainPicUrl() || "".equals(pc.getMainPicUrl())) && pc.getPcPicList().size() > 0) {
-					ppModel.setMainpicUrl(pc.getPcPicList().get(0).getPicUrl());
+					ppModel.setMainPicUrl(pc.getPcPicList().get(0).getPicUrl());
 				} else {
-					ppModel.setMainpicUrl(pc.getMainPicUrl());
+					ppModel.setMainPicUrl(pc.getMainPicUrl());
 				}
 
 				List<PcProductpic> picList = pc.getPcPicList();
 
 				for (PcProductpic pic : picList) {
-					com.cmall.dborm.txmodel.PcProductpic picModel = new com.cmall.dborm.txmodel.PcProductpic();
+					PcProductpic picModel = new PcProductpic();
 					picModel.setPicUrl(pic.getPicUrl());
 					picModel.setProductCode(pc.getProductCode());
 					picModel.setSkuCode(pic.getSkuCode());
@@ -389,55 +390,29 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 			}
 		}
 
-		PcProductinfoExample example = new PcProductinfoExample();
-		example.createCriteria().andProductCodeEqualTo(ppModel.getProductCode());
-
-		// 如果图片换了
-		if (!ppModel.getMainpicUrl().equals(pcf.getOldPicUrl())) {
-
-			PcSkuinfoExample psexample = new PcSkuinfoExample();
-			psexample.createCriteria().andProductCodeEqualTo(ppModel.getProductCode())
-					.andSkuPicurlEqualTo(pcf.getOldPicUrl());
-			PcSkuinfoWithBLOBs psModel = new PcSkuinfoWithBLOBs();
-			psModel.setSkuPicurl(ppModel.getMainpicUrl());
-			pcsm.updateByExampleSelective(psModel, psexample);
+		if (pcf.isChangeProductMain()){
+			pcpm.updateSelectiveByProductCode(ppModel);
 		}
-		// 如果名字改了
-		if (!ppModel.getProductName().equals(pcf.getOldProductName())) {
-
-			PcSkuinfoExample psexample = new PcSkuinfoExample();
-			psexample.createCriteria().andProductCodeEqualTo(ppModel.getProductCode());
-			PcSkuinfoWithBLOBsForD psModel = new PcSkuinfoWithBLOBsForD();
-			psModel.setOldProductName(pcf.getOldProductName());
-			psModel.setNewProductName(ppModel.getProductName());
-			pcsm.updateByExampleSelectiveForSkuName(psModel, psexample);    		// BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcSkuinfoMapperForD");
-
-		}
-
-		if (pcf.isChangeProductMain())
-			pcpm.updateByExampleSelective(ppModel, example);
 
 		if (pcf.isChangeProductSku()) {
 			// 插入或者更新sku信息
 			if (pc.getProductSkuInfoList() != null) {
 				List<ProductSkuInfo> skuList = pc.getProductSkuInfoList();
-
 				for (int i = 0; i < skuList.size(); i++) {
 					ProductSkuInfo sku = skuList.get(i);
-
 					// 新增DSF开头，只是用来对第三方商户商品做特殊判断，入库时需要把DSF去掉，并且skuCode无须再次生成--lgj
 					if (sku.getSkuCode() == null || sku.getSkuCode().equals("") || sku.getSkuCode().startsWith("WSP")
 							|| sku.getSkuCode().startsWith("DSF")) {
 						if (sku.getSkuKey() == null || sku.getSkuKey().equals("")) {
 							continue;
 						}
-						com.cmall.dborm.txmodel.PcSkuinfoWithBLOBs psModel = new PcSkuinfoWithBLOBs();
+						PcSkuinfo psModel = new PcSkuinfo();
 						psModel.setSellerCode(pc.getSellerCode());
 						if (sku.getSkuCode().startsWith("DSF")) {
 							pc.getProductSkuInfoList().get(i).setSkuCode(sku.getSkuCode().replace("DSF", ""));
 							psModel.setSkuCode(sku.getSkuCode().replace("DSF", ""));
 						} else {
-							psModel.setSkuCode(WebHelper.upCode(SkuCommon.SKUHead));
+							psModel.setSkuCode(WebHelper.getInstance().genUniqueCode(SkuCommon.SKUHead));
 						}
 						psModel.setSkuCodeOld(sku.getSkuCodeOld());
 						pc.getProductSkuInfoList().get(i).setSkuCode(psModel.getSkuCode());
@@ -471,7 +446,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 							int changeStock = 0; // 库存变化总量
 							for (ScStoreSkunum scStore : sku.getScStoreSkunumList()) {
 								// 插入库存
-								com.cmall.dborm.txmodel.ScStoreSkunum sssModel = new com.cmall.dborm.txmodel.ScStoreSkunum();
+								ScStoreSkunum sssModel = new ScStoreSkunum();
 								sssModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 								sssModel.setSkuCode(psModel.getSkuCode()); // 此处取skuCode一定要取psModel里面的。
 								sssModel.setStockNum(scStore.getStockNum());
@@ -479,7 +454,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 								sssm.insertSelective(sssModel);
 								changeStock += Integer.parseInt(scStore.getStockNum() + "");
 							}
-							com.cmall.dborm.txmodel.LcStockchange lsModel = new LcStockchange();
+							LcStockchange lsModel = new LcStockchange();
 							lsModel.setChangeStock(changeStock);
 							lsModel.setChangeType(SkuCommon.SkuStockChangeTypeCreateProduct);
 							lsModel.setCode(psModel.getSkuCode());
@@ -489,7 +464,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 							lsom.insertSelective(lsModel);
 						}
 					} else {
-						com.cmall.dborm.txmodel.PcSkuinfoWithBLOBs psModel = new PcSkuinfoWithBLOBs();
+						PcSkuinfo psModel = new PcSkuinfo();
 						psModel.setSkuCode(sku.getSkuCode());
 						psModel.setSkuCodeOld(sku.getSkuCodeOld());
 						psModel.setSkuAdv(sku.getSkuAdv());
@@ -510,10 +485,11 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 						} else {
 							psModel.setSkuPicurl(sku.getSkuPicUrl());
 						}
-
-						PcSkuinfoExample psexample = new PcSkuinfoExample();
-						psexample.createCriteria().andSkuCodeEqualTo(sku.getSkuCode());
-						pcsm.updateByExampleSelective(psModel, psexample);
+//						PcSkuinfoExample psexample = new PcSkuinfoExample();
+//						psexample.createCriteria().andSkuCodeEqualTo(sku.getSkuCode());
+//						pcsm.updateByExampleSelective(psModel, psexample);
+						pcsm.updateSelectiveBySkuCode(psModel);
+						
 						if (sku.getScStoreSkunumList() != null) {
 							int changeStock = 0; // 库存变化总量
 							int oldStock = 0;
@@ -521,19 +497,20 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 							boolean flagModStock = false;
 							for (ScStoreSkunum scStore : sku.getScStoreSkunumList()) {
 								// 更新库存
-								MDataMap mDataMap = DbUp.upTable("sc_store_skunum").one("sku_code", sku.getSkuCode());
-								com.cmall.dborm.txmodel.ScStoreSkunum sssModel = new com.cmall.dborm.txmodel.ScStoreSkunum();
-								if (null != mDataMap) {
-									sssModel.setUid(mDataMap.get("uid"));
+								ScStoreSkunum sssModel = new ScStoreSkunum();
+								sssModel.setSkuCode(sku.getSkuCode());
+								sssModel = sssm.findByType(sssModel);
+								if(sssModel != null){
 									sssModel.setSkuCode(sku.getSkuCode());
 									sssModel.setStockNum(scStore.getStockNum());
 									sssModel.setStoreCode(scStore.getStoreCode());
-									sssModel.setBatchCode(mDataMap.get("batch_code"));
-
 									nowStock = Integer.parseInt(scStore.getStockNum() + "");
-									oldStock = Integer.parseInt(mDataMap.get("stock_num"));
+									oldStock = Integer.parseInt(sssModel.getStockNum() + "");	 	// mDataMap.get("stock_num")
 								}
 								changeStock += (nowStock - oldStock);
+
+								
+								// TODO 
 								if (nowStock != oldStock) {
 									ScStoreSkunumExample sssexample = new ScStoreSkunumExample();
 									sssexample.createCriteria().andUidEqualTo(sssModel.getUid());
@@ -567,6 +544,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 								lsom.insertSelective(lsModel);
 							}
 						}
+						
 					}
 				}
 			}

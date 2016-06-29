@@ -308,13 +308,131 @@
 		select
 					* from productcenter.pc_productinfo
 		where 1=1
-		<if test="uid != null and uid !='' ">
+		<if test="uid != null">
 			and uid = #{uid , jdbcType=VARCHAR}
 		</if>
-		<if test="productCode != null and productCode !='' ">
+		<if test="productCode != null">
 			and product_code = #{productCode , jdbcType=VARCHAR}
 		</if>
 	</select>
+	
+	<update id="updateSelectiveByProductCode" parameterType="com.hjy.entity.product.PcProductinfo">
+		update productcenter.pc_productinfo
+		<set>
+			<if test="uid != null">
+				uid = #{uid,jdbcType=CHAR},
+			</if>
+			<if test="productCodeOld != null">
+				product_code_old = #{productCodeOld,jdbcType=VARCHAR},
+			</if>
+			<if test="productCode != null">
+				product_code = #{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="productName != null">
+				product_name = #{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="productShortname != null">
+				product_shortname = #{productShortname,jdbcType=VARCHAR},
+			</if>
+			<if test="videoUrl != null">
+				video_url = #{videoUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="sellerCode != null">
+				seller_code = #{sellerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="smallSellerCode != null">
+				small_seller_code = #{smallSellerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="brandCode != null">
+				brand_code = #{brandCode,jdbcType=VARCHAR},
+			</if>
+			<if test="productWeight != null">
+				product_weight = #{productWeight,jdbcType=DECIMAL},
+			</if>
+			<if test="flagSale != null">
+				flag_sale = #{flagSale,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=CHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=CHAR},
+			</if>
+			<if test="minSellPrice != null">
+				min_sell_price = #{minSellPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="maxSellPrice != null">
+				max_sell_price = #{maxSellPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="marketPrice != null">
+				market_price = #{marketPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="costPrice != null">
+				cost_price = #{costPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="taxRate != null">
+				tax_rate = #{taxRate,jdbcType=DECIMAL},
+			</if>
+			<if test="productStatus != null">
+				product_status = #{productStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="productVolume != null">
+				product_volume = #{productVolume,jdbcType=DECIMAL},
+			</if>
+			<if test="transportTemplate != null">
+				transport_template = #{transportTemplate,jdbcType=VARCHAR},
+			</if>
+			<if test="areaTemplate != null">
+				area_template = #{areaTemplate,jdbcType=VARCHAR},
+			</if>
+			<if test="sellProductcode != null">
+				sell_productcode = #{sellProductcode,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierName != null">
+				supplier_name = #{supplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="mainpicUrl != null">
+				mainpic_url = #{mainpicUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="labels != null">
+				labels = #{labels,jdbcType=VARCHAR},
+			</if>
+			<if test="flagPayway != null">
+				flag_payway = #{flagPayway,jdbcType=INTEGER},
+			</if>
+			<if test="productVolumeItem != null">
+				product_volume_item = #{productVolumeItem,jdbcType=VARCHAR},
+			</if>
+			<if test="saleScopeDid != null">
+				sale_scope_did = #{saleScopeDid,jdbcType=VARCHAR},
+			</if>
+			<if test="validateFlag != null">
+				validate_flag = #{validateFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="productCodeCopy != null">
+				product_code_copy = #{productCodeCopy,jdbcType=VARCHAR},
+			</if>
+			<if test="adpicUrl != null">
+				adpic_url = #{adpicUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="expiryDate != null">
+				expiry_date = #{expiryDate,jdbcType=INTEGER},
+			</if>
+			<if test="expiryUnit != null">
+				expiry_unit = #{expiryUnit,jdbcType=VARCHAR},
+			</if>
+			<if test="lowGood != null">
+				low_good = #{lowGood,jdbcType=VARCHAR},
+			</if>
+			<if test="qualificationCategoryCode != null">
+				qualification_category_code = #{qualificationCategoryCode,jdbcType=VARCHAR},
+			</if>
+			<if test="productAdv != null">
+				product_adv = #{productAdv,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where product_code = #{productCode,jdbcType=VARCHAR}
+	</update>
 </mapper>
 
 

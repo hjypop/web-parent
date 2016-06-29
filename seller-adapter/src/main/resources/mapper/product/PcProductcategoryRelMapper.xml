@@ -62,10 +62,10 @@
 		select
 					* from productcenter.pc_productcategory_rel
 		where 1=1
-		<if test="flagMain != null and flagMain !='' ">
+		<if test="flagMain != null ">
 			and flag_main = #{flagMain , jdbcType=DECIMAL}
 		</if>
-		<if test="productCode != null and productCode !='' ">
+		<if test="productCode != null ">
 			and product_code = #{productCode , jdbcType=VARCHAR}
 		</if>
 	</select>

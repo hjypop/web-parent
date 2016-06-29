@@ -89,7 +89,42 @@
 			zid = #{zid,jdbcType=INTEGER}
 		</where>
 	</update>
+	
+	<!-- 可以扩展if中的查询条件 - Yangcl  --> 
+	<select id="findByType" resultMap="BaseResultMap" parameterType="com.hjy.entity.system.ScStoreSkunum">
+		select
+					* from systemcenter.sc_store_skunum
+		where  sku_code = #{skuCode , jdbcType=VARCHAR}
+	</select>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

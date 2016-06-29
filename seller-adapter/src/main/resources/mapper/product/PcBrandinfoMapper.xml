@@ -155,7 +155,7 @@
 		select
 					* from productcenter.pc_brandinfo
 		where 1=1 
-		<if test="brandCode != null and brandCode !='' ">
+		<if test="brandCode != null">
 			and brand_code = #{brandCode , jdbcType=VARCHAR}
 		</if>
 	</select>

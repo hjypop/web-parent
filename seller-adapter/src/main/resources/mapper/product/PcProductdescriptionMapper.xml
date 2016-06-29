@@ -60,10 +60,10 @@
 		select
 					* from productcenter.pc_productdescription
 		where 1=1
-		<if test="uid != null and uid !='' ">
+		<if test="uid != null">
 			and uid = #{uid , jdbcType=VARCHAR}
 		</if>
-		<if test="productCode != null and productCode !='' ">
+		<if test="productCode != null">
 			and product_code = #{productCode , jdbcType=VARCHAR}
 		</if>
 	</select>

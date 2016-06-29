@@ -92,7 +92,7 @@
 		select
 		* from productcenter.pc_productpic
 		where 1=1
-		<if test="productCode != null and productCode !='' ">
+		<if test="productCode != null ">
 			and product_code = #{productCode , jdbcType=VARCHAR}
 		</if>
 		and (sku_code = '' or sku_code is null)

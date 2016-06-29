@@ -24,4 +24,44 @@ public interface IPcSkuinfoDao extends BaseDao<PcSkuinfo, Integer> {
 	 * @return
 	 */
 	String findSkuCodeByProductCode(String productCode);
+
+	int updateSelectiveByProductCode(PcSkuinfo psModel); 
+	
+	int updateSelectiveBySkuCode(PcSkuinfo psModel); 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

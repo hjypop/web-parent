@@ -53,7 +53,7 @@
 		select
 					* from productcenter.uc_sellercategory_product_relation
 		where 1=1 
-		<if test="brandCode != null and brandCode !='' ">
+		<if test="brandCode != null">
 			and product_code = #{productCode , jdbcType=VARCHAR}
 		</if>
 	</select>
