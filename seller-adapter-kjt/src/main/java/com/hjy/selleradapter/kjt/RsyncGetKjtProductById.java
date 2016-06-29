@@ -112,24 +112,14 @@ public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductByI
 			PcProductinfo productinfo=new PcProductinfo();
 			String productId = info.getProductID();
 			
-			List<Map<String, Object>> list = 
-					
-DbUp.upTable("pc_productinfo").
-dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_sell_price,p.product_name,p.cost_price,d.description_info,p.update_time FROM pc_productinfo p LEFT JOIN pc_productdescription d on p.product_code=d.product_code where p.product_code_old=:product_code_old and p.seller_code=:seller_code ", 
-		new MDataMap("product_code_old",productId,"seller_code",MemberConst.MANAGE_CODE_HOMEHAS));
-			
-			
-			
+//			List<Map<String, Object>> list =  DbUp.upTable("pc_productinfo"). dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_sell_price,p.product_name,p.cost_price,d.description_info,p.update_time FROM pc_productinfo p LEFT JOIN pc_productdescription d on p.product_code=d.product_code where p.product_code_old=:product_code_old and p.seller_code=:seller_code",  
+//					new MDataMap("product_code_old",productId,"seller_code",MemberConst.MANAGE_CODE_HOMEHAS));
+			PcProductinfo entity = new PcProductinfo();
+			entity.setProductCodeOld(productId);
+			entity.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS); 
+			List<PcProductinfo> list = productService.getListBySellerCode(entity);
 			if(list==null||list.size()<1){  //若果不存在，就添加
 				setNewProductInfo(productinfo, info);//设置商品实体
-				
-				
-				
-				// TODO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Yangcl
-//				ProductServiceImpl productService = BeansHelper.upBean("bean_com_cmall_productcenter_service_ProductService");
-				
-				
-				
 				StringBuffer error=new StringBuffer();
 				PcProductflow pcProdcutflow = new PcProductflow();
 				pcProdcutflow.setFlowCode(WebHelper.getInstance().genUniqueCode(ProductFlowHead));
@@ -142,10 +132,10 @@ dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_se
 				result.setCode(resultCode);
 				result.setMessage(error.toString());
 			}else {
-				productinfo = productService.getProduct(list.get(0).get("product_code").toString());
+				productinfo = productService.getProduct(list.get(0).getProductCode());
 				
 				String now=DateUtil.getSysDateTimeString();
-				String cost = list.get(0).get("cost_price").toString();
+				String cost = list.get(0).getCostPrice().toString();
 				String p1 = info.getPrice().setScale(2,BigDecimal.ROUND_HALF_UP).toString();//同步过来的商品价格
 				//修改商品表
 				if(!cost.equals(p1)){//价格变化时商品下架

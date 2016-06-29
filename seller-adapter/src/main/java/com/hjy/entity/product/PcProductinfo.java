@@ -267,6 +267,18 @@ public class PcProductinfo  {
      */
     private String qualificationCategoryCode="";
 
+    private String descriptionInfo = "";
+    
+    
+    
+	public String getDescriptionInfo() {
+		return descriptionInfo;
+	}
+
+	public void setDescriptionInfo(String descriptionInfo) {
+		this.descriptionInfo = descriptionInfo;
+	}
+
 	public String getProductCodeOld() {
 		return productCodeOld;
 	}

@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import com.hjy.annotation.Inject;
 import com.hjy.api.RootResult;
 import com.hjy.base.BaseClass;
@@ -30,14 +28,12 @@ import com.hjy.entity.product.PcProductproperty;
 import com.hjy.entity.product.PcSkuinfo;
 import com.hjy.entity.product.ProductChangeFlag;
 import com.hjy.entity.user.UcSellercategoryProductRelation;
-import com.hjy.helper.JsonHelper;
 import com.hjy.iface.IFlowFunc;
 import com.hjy.jms.ProductJmsSupport;
 import com.hjy.model.MDataMap;
 import com.hjy.model.ProductSkuInfo;
 import com.hjy.selleradapter.service.IProductService;
 import com.hjy.selleradapter.service.ITxProductService;
-import com.hjy.support.SerializeSupport;
 
 public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProductService {
 
@@ -260,6 +256,11 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 			MDataMap mSubMap) {
 
 		return null;
+	}
+
+	@Override
+	public List<PcProductinfo> getListBySellerCode(PcProductinfo entity) {
+		return pcProductInfoDao.getListBySellerCode(entity); 
 	}
 
 }

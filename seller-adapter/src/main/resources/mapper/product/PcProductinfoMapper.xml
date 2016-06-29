@@ -433,6 +433,25 @@
 		</set>
 		where product_code = #{productCode,jdbcType=VARCHAR}
 	</update>
+	
+	<!-- 可以扩展if中的查询条件 - Yangcl  -->
+	<select id="getListBySellerCode" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcProductinfo">
+		SELECT 
+			  p.product_code AS productCode, 
+			  p.product_shortname AS productShortname, 
+			  p.max_sell_price AS maxSellPrice,
+			  p.min_sell_price AS minSellPrice,
+			  p.product_name AS productName,
+			  p.cost_price AS costPrice,
+			  d.description_info AS descriptionInfo,
+			  p.update_time AS updateTime  
+		FROM
+		  	  productcenter.pc_productinfo p  LEFT JOIN productcenter.pc_productdescription d  ON p.product_code = d.product_code 
+		WHERE 
+		      p.product_code_old = #{productCodeOld , jdbcType=VARCHAR} 
+		      AND 
+		      p.seller_code = #{sellerCode , jdbcType=VARCHAR}
+	</select>
 </mapper>
 
 
