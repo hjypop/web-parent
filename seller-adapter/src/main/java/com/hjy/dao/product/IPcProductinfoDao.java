@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.product.PcProductinfo;
-import com.hjy.entity.product.PcProductinfoExample;
 
 public interface IPcProductinfoDao extends BaseDao<PcProductinfo , Integer> {
 

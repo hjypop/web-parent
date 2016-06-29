@@ -93,7 +93,45 @@
 			order by 
 				small_sort desc , zid asc 
 	</select>
+	
+	<delete id="deleteByExample" parameterType="com.hjy.model.PcProductpropertyExample">
+    	delete 
+    		from productcenter.pc_productproperty
+    	where 
+    		product_code = #{productCode , jdbcType=VARCHAR} 
+    		and 
+    			property_type in 
+    			<foreach  item="item" index="index" collection="propertyTypeList"  open="(" close=")" separator="," >
+				          #{item}
+				</foreach>  
+  	</delete>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

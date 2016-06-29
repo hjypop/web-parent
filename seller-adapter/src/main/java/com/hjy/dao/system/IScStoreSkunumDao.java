@@ -23,4 +23,6 @@ public interface IScStoreSkunumDao extends BaseDao<ScStoreSkunum, Integer> {
 	 * @return
 	 */
 	ScStoreSkunum findScStoreSkunumByParams(ScStoreSkunum param);
+
+	int updateSelectiveByUuid(ScStoreSkunum sssModel); 
 }

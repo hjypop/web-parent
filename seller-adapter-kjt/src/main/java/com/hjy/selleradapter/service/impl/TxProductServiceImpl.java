@@ -1,5 +1,6 @@
 package com.hjy.selleradapter.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,7 +29,6 @@ import com.hjy.entity.product.PcProductcategoryRel;
 import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductflow;
 import com.hjy.entity.product.PcProductinfo;
-import com.hjy.entity.product.PcProductinfoExample;
 import com.hjy.entity.product.PcProductinfoExt;
 import com.hjy.entity.product.PcProductpic;
 import com.hjy.entity.product.PcProductpicExample;
@@ -39,6 +39,7 @@ import com.hjy.entity.system.ScStoreSkunum;
 import com.hjy.entity.user.UcSellercategoryProductRelation;
 import com.hjy.helper.JsonHelper;
 import com.hjy.helper.WebHelper;
+import com.hjy.model.PcProductpropertyExample;
 import com.hjy.model.ProductSkuInfo;
 import com.hjy.selleradapter.service.ITxProductService;
 
@@ -507,19 +508,14 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 									nowStock = Integer.parseInt(scStore.getStockNum() + "");
 									oldStock = Integer.parseInt(sssModel.getStockNum() + "");	 	// mDataMap.get("stock_num")
 								}
-								changeStock += (nowStock - oldStock);
-
-								
-								// TODO 
-								if (nowStock != oldStock) {
-									ScStoreSkunumExample sssexample = new ScStoreSkunumExample();
-									sssexample.createCriteria().andUidEqualTo(sssModel.getUid());
-									sssm.updateByExampleSelective(sssModel, sssexample);
+								changeStock += (nowStock - oldStock); 
+								if (nowStock != oldStock) { 
+									sssm.updateSelectiveByUuid(sssModel);
 									flagModStock = true;
 								}
 								// 这个if必须写在这里。不能再这个if (nowStock != oldStock )
 								// {}上面。
-								if (null == mDataMap) {
+								if (null == sssModel) {
 									// 如果没有库存则添加
 									sssModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 									sssModel.setSkuCode(psModel.getSkuCode()); // 此处取skuCode一定要取psModel里面的。
@@ -531,7 +527,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 								}
 							}
 							if (flagModStock) {
-								com.cmall.dborm.txmodel.LcStockchange lsModel = new LcStockchange();
+								LcStockchange lsModel = new LcStockchange();
 								lsModel.setCode(sku.getSkuCode());
 								lsModel.setCreateTime(createTime);
 								lsModel.setCreateUser(operator);
@@ -551,25 +547,21 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 		}
 
 		if (pcf.isChangeSkuPropertyMain()) {
-
 			// 属性信息操作--先删除--再添加
 			PcProductpropertyExample ppteample = new PcProductpropertyExample();
 			List<String> values = new ArrayList<String>();
 			values.add("449736200001");
 			values.add("449736200002");
-			ppteample.createCriteria().andProductCodeEqualTo(pc.getProductCode()).andPropertyTypeIn(values);
-			pppmr.deleteByExample(ppteample);
+			ppteample.setPropertyTypeList(values);
+			ppteample.setProductCode(pc.getProductCode()); 
+			pppmr.deleteByExample(ppteample); 
 
 			// 插入商品属性信息
 			if (pc.getPcProductpropertyList() != null) {
-
 				List<PcProductproperty> pppList = pc.getPcProductpropertyList();
-
 				for (PcProductproperty ppp : pppList) {
-
 					if (ppp.getPropertyType().equals("449736200001") || ppp.getPropertyType().equals("449736200002")) {
-						com.cmall.dborm.txmodel.PcProductproperty pppModel = new com.cmall.dborm.txmodel.PcProductproperty();
-
+						PcProductproperty pppModel = new PcProductproperty();
 						pppModel.setProductCode(pc.getProductCode());
 						pppModel.setPropertyCode(ppp.getPropertyCode());
 						pppModel.setPropertyKey(ppp.getPropertyKey());
@@ -577,7 +569,6 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 						pppModel.setPropertyType(ppp.getPropertyType());
 						pppModel.setPropertyValue(ppp.getPropertyValue());
 						pppModel.setUid(UUID.randomUUID().toString().replace("-", ""));
-
 						pppmr.insertSelective(pppModel);
 					}
 				}
@@ -585,25 +576,21 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 		}
 
 		if (pcf.isChangeSkuPropertySub()) {
-
 			// 属性信息操作--先删除--再添加
 			PcProductpropertyExample ppteample = new PcProductpropertyExample();
 			List<String> values = new ArrayList<String>();
 			values.add("449736200003");
 			values.add("449736200004");
-			ppteample.createCriteria().andProductCodeEqualTo(pc.getProductCode()).andPropertyTypeIn(values);
-			pppmr.deleteByExample(ppteample);
+			ppteample.setPropertyTypeList(values);
+			ppteample.setProductCode(pc.getProductCode()); 
+			pppmr.deleteByExample(ppteample); 
 
 			// 插入商品属性信息
 			if (pc.getPcProductpropertyList() != null) {
-
 				List<PcProductproperty> pppList = pc.getPcProductpropertyList();
-
 				for (PcProductproperty ppp : pppList) {
-
 					if (ppp.getPropertyType().equals("449736200003") || ppp.getPropertyType().equals("449736200004")) {
-						com.cmall.dborm.txmodel.PcProductproperty pppModel = new com.cmall.dborm.txmodel.PcProductproperty();
-
+						PcProductproperty pppModel = new PcProductproperty();
 						pppModel.setProductCode(pc.getProductCode());
 						pppModel.setPropertyCode(ppp.getPropertyCode());
 						pppModel.setPropertyKey(ppp.getPropertyKey());
@@ -611,7 +598,6 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 						pppModel.setPropertyType(ppp.getPropertyType());
 						pppModel.setPropertyValue(ppp.getPropertyValue());
 						pppModel.setUid(UUID.randomUUID().toString().replace("-", ""));
-
 						pppmr.insertSelective(pppModel);
 					}
 				}
@@ -622,28 +608,22 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 		if (pcf.isChangeProductFlow()) {
 			// 插入商品历史流水信息
 			if (pc.getPcProdcutflow() != null) {
-
-				com.cmall.dborm.txmodel.PcProductflow ppf = new PcProductflow();
-
+				PcProductflow ppf = new PcProductflow();
 				ppf.setCreateTime(createTime);
 				ppf.setCreator(operator);
 				ppf.setFlowCode(pc.getPcProdcutflow().getFlowCode());
 				ppf.setFlowStatus(pc.getPcProdcutflow().getFlowStatus());
 				ppf.setProductCode(pc.getProductCode());
-
 				JsonHelper<PcProductinfo> pHelper = new JsonHelper<PcProductinfo>();
 				ppf.setProductJson(pHelper.ObjToString(pc));
-
 				ppf.setUid(UUID.randomUUID().toString().replace("-", ""));
 				ppf.setUpdateTime(createTime);
 				ppf.setUpdator(operator);
-
 				ppfm.insertSelective(ppf);
 			}
 		}
 
 		if (pcf.isChangeDescription()) {
-
 			// 描述信息操作--先删除--再添加
 			PcProductdescriptionExample pppeamle = new PcProductdescriptionExample();
 			pppeamle.createCriteria().andProductCodeEqualTo(pc.getProductCode());
