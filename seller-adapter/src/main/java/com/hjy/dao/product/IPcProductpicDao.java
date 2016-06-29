@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.product.PcProductpic;
+import com.hjy.entity.product.PcProductpicExample;
 
 public interface IPcProductpicDao extends BaseDao<PcProductpic , Integer> {
 	/**
@@ -15,4 +16,6 @@ public interface IPcProductpicDao extends BaseDao<PcProductpic , Integer> {
 	 * @version 1.0.0.1
 	 */
 	 public List<PcProductpic> findListBySkuNull(PcProductpic entity); 
+	 
+	 int deleteByExample(PcProductpicExample example);
 }

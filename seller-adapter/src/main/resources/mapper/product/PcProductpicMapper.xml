@@ -10,7 +10,40 @@
 		<result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
 		<result column="product_code_old" jdbcType="VARCHAR" property="productCodeOld" />
 	</resultMap>
-	
+
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value" item="listItem"
+										open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+
 	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcProductpic">
 		insert into pc_productpic
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -54,16 +87,23 @@
 			</if>
 		</trim>
 	</insert>
-	
+
 	<select id="findListBySkuNull" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcProductpic">
 		select
-					* from productcenter.pc_productpic
-		where 1=1 
+		* from productcenter.pc_productpic
+		where 1=1
 		<if test="productCode != null and productCode !='' ">
 			and product_code = #{productCode , jdbcType=VARCHAR}
 		</if>
 		and (sku_code = '' or sku_code is null)
 	</select>
+
+	<delete id="deleteByExample" parameterType="com.hjy.entity.product.PcProductpicExample">
+		delete from pc_productpic
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
 </mapper>
 
 

@@ -31,6 +31,37 @@
 		<result column="kjt_seller_code" jdbcType="VARCHAR" property="kjtSellerCode" />
 	</resultMap>
 
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+
 	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcProductinfoExt">
 		insert into pc_productinfo_ext
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -176,6 +207,7 @@
 			</if>
 		</trim>
 	</insert>
+
 	<!-- 商品属性表编辑 2016-06-28 zhy -->
 	<!-- 注：如果条件相同，在set标签中添加判断即可 -->
 	<update id="updateSelective" parameterType="com.hjy.entity.product.PcProductinfoExt">
@@ -189,15 +221,102 @@
 			product_code = #{productCode,jdbcType=VARCHAR}
 		</where>
 	</update>
-	
+
 	<select id="findByType" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcProductinfoExt">
 		select
-					* from productcenter.pc_productinfo_ext
-		where 1=1 
-		<if test="brandCode != null and brandCode !='' ">
+		* from productcenter.pc_productinfo_ext
+		where 1=1
+		<if test="productCode != null and productCode !='' ">
 			and product_code = #{productCode,jdbcType=VARCHAR}
 		</if>
 	</select>
+
+	<!-- 从老系统摘出，未做改动 - Yancl -->
+	<update id="updateByExampleSelective" parameterType="map">
+		update productcenter.pc_productinfo_ext
+		<set>
+			<if test="record.zid != null">
+				zid = #{record.zid,jdbcType=INTEGER},
+			</if>
+			<if test="record.uid != null">
+				uid = #{record.uid,jdbcType=CHAR},
+			</if>
+			<if test="record.productCodeOld != null">
+				product_code_old =
+				#{record.productCodeOld,jdbcType=VARCHAR},
+			</if>
+			<if test="record.productCode != null">
+				product_code = #{record.productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="record.prchType != null">
+				prch_type = #{record.prchType,jdbcType=VARCHAR},
+			</if>
+			<if test="record.dlrId != null">
+				dlr_id = #{record.dlrId,jdbcType=VARCHAR},
+			</if>
+			<if test="record.dlrNm != null">
+				dlr_nm = #{record.dlrNm,jdbcType=VARCHAR},
+			</if>
+			<if test="record.oaSiteNo != null">
+				oa_site_no = #{record.oaSiteNo,jdbcType=VARCHAR},
+			</if>
+			<if test="record.grossProfit != null">
+				gross_profit = #{record.grossProfit,jdbcType=DECIMAL},
+			</if>
+			<if test="record.accmRng != null">
+				accm_rng = #{record.accmRng,jdbcType=DOUBLE},
+			</if>
+			<if test="record.validateFlag != null">
+				validate_flag = #{record.validateFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="record.fictitiousSales != null">
+				fictitious_sales =
+				#{record.fictitiousSales,jdbcType=INTEGER},
+			</if>
+			<if test="record.poffer != null">
+				poffer = #{record.poffer,jdbcType=VARCHAR},
+			</if>
+			<if test="record.mdId != null">
+				md_id = #{record.mdId,jdbcType=VARCHAR},
+			</if>
+			<if test="record.mdNm != null">
+				md_nm = #{record.mdNm,jdbcType=VARCHAR},
+			</if>
+			<if test="record.productTradeType != null">
+				product_trade_type =
+				#{record.productTradeType,jdbcType=VARCHAR},
+			</if>
+			<if test="record.productStoreType != null">
+				product_store_type =
+				#{record.productStoreType,jdbcType=VARCHAR},
+			</if>
+			<if test="record.settlementType != null">
+				settlement_type =
+				#{record.settlementType,jdbcType=VARCHAR},
+			</if>
+			<if test="record.purchaseType != null">
+				purchase_type = #{record.purchaseType,jdbcType=VARCHAR},
+			</if>
+			<if test="record.ldGoodId != null">
+				ld_good_id = #{record.ldGoodId,jdbcType=VARCHAR},
+			</if>
+			<if test="record.picMaterialUrl != null">
+				pic_material_url =
+				#{record.picMaterialUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="record.picMaterialUpload != null">
+				pic_material_upload =
+				#{record.picMaterialUpload,jdbcType=VARCHAR},
+			</if>
+			<if test="record.kjtSellerCode != null">
+				kjt_seller_code =
+				#{record.kjtSellerCode,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
 </mapper>
 
 
