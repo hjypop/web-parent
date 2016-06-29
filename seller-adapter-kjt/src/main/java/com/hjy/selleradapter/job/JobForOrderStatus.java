@@ -5,9 +5,11 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
 
-import com.hjy.model.MDataMap;
+import com.hjy.annotation.Inject;
+import com.hjy.entity.OcOrderKjtList;
 import com.hjy.quartz.job.RootJob;
 import com.hjy.selleradapter.service.TraceOrder;
+import com.hjy.service.IOcOrderKjtListService;
 
 /**
  * 
@@ -17,18 +19,17 @@ import com.hjy.selleradapter.service.TraceOrder;
  * 时间: 2016年6月27日 下午3:51:51
  */
 public class JobForOrderStatus extends RootJob {
+	@Inject
+	private IOcOrderKjtListService service;
 
 	@Override
 	public void doExecute(JobExecutionContext context) {
-		// List<MDataMap> list =
-		// DbUp.upTable("oc_order_kjt_list").queryAll("order_code_out", "",
-		// "sostatus in (0,1,4,41,45) and order_code_out<>'' ", null);
-		List<MDataMap> list = null;
 
+		String sostatus = "0,1,4,41,45";
+		List<OcOrderKjtList> list = service.findOrderListByStatus(sostatus);
 		List<Long> idList = new ArrayList<Long>(20);
-
 		for (int i = 0; i < list.size(); i++) {
-			String order_code_out = list.get(i).get("order_code_out");
+			String order_code_out = list.get(i).getOrderCodeOut();
 			if (StringUtils.isNotBlank(order_code_out)) {
 				idList.add(Long.valueOf(order_code_out));
 				if ((i != 0 && (i + 1) % 20 == 0) || (list.size() - 1 == i)) {
@@ -42,5 +43,4 @@ public class JobForOrderStatus extends RootJob {
 			}
 		}
 	}
-
 }
