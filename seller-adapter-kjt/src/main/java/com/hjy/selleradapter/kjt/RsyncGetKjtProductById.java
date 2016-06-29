@@ -12,6 +12,7 @@ import com.hjy.annotation.Inject;
 import com.hjy.common.DateUtil;
 import com.hjy.common.product.SkuCommon;
 import com.hjy.constant.MemberConst;
+import com.hjy.dao.product.IPcProductflowDao;
 import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductflow;
 import com.hjy.entity.product.PcProductinfo;
@@ -22,6 +23,7 @@ import com.hjy.helper.JsonHelper;
 import com.hjy.helper.PlusHelperNotice;
 import com.hjy.helper.WebHelper;
 import com.hjy.model.MDataMap;
+import com.hjy.model.MUserInfo;
 import com.hjy.model.MWebResult;
 import com.hjy.model.ProductSkuInfo;
 import com.hjy.model.RsyncDateCheck;
@@ -32,6 +34,7 @@ import com.hjy.selleradapter.kjt.request.RsyncRequestGetKjtProductById;
 import com.hjy.selleradapter.kjt.response.RsyncResponseGetKjtProductById;
 import com.hjy.selleradapter.service.IProductService;
 import com.hjy.selleradapter.service.impl.ProductServiceImpl;
+import com.hjy.system.UserFactory;
 
 /**
  * 根据商品编号获取商品信息
@@ -43,7 +46,8 @@ public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductByI
 
 	@Inject
 	private IProductService productService;
-	
+	@Inject
+	private IPcProductflowDao pcpFlowdao;
 	
 	final static RsyncConfigGetKjtProductById CONFIG_GET_TV_BY_ID = new RsyncConfigGetKjtProductById();
 	private static String ProductHead = "8016"; 
@@ -281,14 +285,7 @@ public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductByI
 				JsonHelper<PcProductinfo> pHelper=new JsonHelper<PcProductinfo>();
 				ppf.setProductJson(pHelper.ObjToString(productinfo));
 				
-				
-				// TODO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Yangcl
-				com.cmall.dborm.txmapper.PcProductflowMapper ppfm =  BeansHelper.upBean("bean_com_cmall_dborm_txmapper_PcProductflowMapper");
-				
-				
-				
-				
-				ppfm.insertSelective(ppf);
+				pcpFlowdao.insertSelective(ppf);
 	}
 	public RsyncResponseGetKjtProductById upResponseObject() {
 

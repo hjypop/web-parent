@@ -15,6 +15,7 @@ import com.hjy.selleradapter.kjt.config.RsyncConfigGetKjtProductIdByDate;
 import com.hjy.selleradapter.kjt.model.RsyncModelGetKjtChangeProduct;
 import com.hjy.selleradapter.kjt.request.RsyncRequestGetKjtProductIdByDate;
 import com.hjy.selleradapter.kjt.response.RsyncResponseGetKjtProductIdByDate;
+import com.hjy.support.MailSupport;
 
 
 
