@@ -5,4 +5,6 @@ import com.hjy.entity.product.PcProductdescription;
 
 public interface IPcProductdescriptionDao  extends BaseDao<PcProductdescription, Integer> {
 
+	public int deleteByProductCode(PcProductdescription entity); 
+
 }

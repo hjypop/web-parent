@@ -51,12 +51,19 @@
 	
 	<select id="findList" resultMap="BaseResultMap" parameterType="com.hjy.entity.user.UcSellercategoryProductRelation">
 		select
-					* from productcenter.uc_sellercategory_product_relation
+					* from usercenter.uc_sellercategory_product_relation
 		where 1=1 
 		<if test="brandCode != null">
 			and product_code = #{productCode , jdbcType=VARCHAR}
 		</if>
 	</select>
+	
+	<delete id="deleteByProductCode" parameterType="com.hjy.entity.user.UcSellercategoryProductRelation">
+    	delete 
+    		from usercenter.uc_sellercategory_product_relation
+    	where 
+    		product_code = #{productCode , jdbcType=VARCHAR} 
+  	</delete>
 </mapper>
 
 

@@ -624,30 +624,30 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 		}
 
 		if (pcf.isChangeDescription()) {
-			// 描述信息操作--先删除--再添加
-			PcProductdescriptionExample pppeamle = new PcProductdescriptionExample();
-			pppeamle.createCriteria().andProductCodeEqualTo(pc.getProductCode());
-			ppsm.deleteByExample(pppeamle);
+			// 描述信息操作--先删除--再添加 
+			PcProductdescription pd = new PcProductdescription();
+			pd.setProductCode(pc.getProductCode()); 
+			ppsm.deleteByProductCode(pd);
 			// 添加 描述信息
 			if (pc.getDescription() != null) {
-				com.cmall.dborm.txmodel.PcProductdescriptionWithBLOBs ppdModel = new PcProductdescriptionWithBLOBs();
+				PcProductdescription ppdModel = new PcProductdescription();
 				ppdModel.setProductCode(pc.getProductCode());
 				ppdModel.setKeyword(pc.getDescription().getKeyword());
 				ppdModel.setDescriptionInfo(pc.getDescription().getDescriptionInfo());
 				ppdModel.setDescriptionPic(pc.getDescription().getDescriptionPic());
 				ppdModel.setUid(UUID.randomUUID().toString().replace("-", ""));
-
 				ppsm.insertSelective(ppdModel);
 			}
 
 		}
 		if (pcf.isChangeProductCategory()) {
-			if (pc.getUsprList() != null && pc.getUsprList().size() > 0) {
-				UcSellercategoryProductRelationExample uspreamle = new UcSellercategoryProductRelationExample();
-				uspreamle.createCriteria().andProductCodeEqualTo(pc.getProductCode());
-				usprm.deleteByExample(uspreamle);
+			if (pc.getUsprList() != null && pc.getUsprList().size() > 0) {  
+				UcSellercategoryProductRelation spr = new UcSellercategoryProductRelation();
+				spr.setProductCode(pc.getProductCode()); 
+				usprm.deleteByProductCode(spr);
+				
 				for (int i = 0; i < pc.getUsprList().size(); i++) {
-					com.cmall.dborm.txmodel.UcSellercategoryProductRelation usprModel = new UcSellercategoryProductRelation();
+					UcSellercategoryProductRelation usprModel = new UcSellercategoryProductRelation();
 					usprModel.setCategoryCode(pc.getUsprList().get(i).getCategoryCode());
 					usprModel.setProductCode(pc.getProductCode());
 					usprModel.setSellerCode(pc.getSellerCode());
@@ -657,5 +657,66 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 			}
 		}
 	}
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

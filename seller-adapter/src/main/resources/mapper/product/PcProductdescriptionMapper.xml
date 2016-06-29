@@ -67,6 +67,13 @@
 			and product_code = #{productCode , jdbcType=VARCHAR}
 		</if>
 	</select>
+	
+	<delete id="deleteByProductCode" parameterType="com.hjy.entity.product.PcProductdescription">
+    	delete 
+    		from productcenter.pc_productdescription
+    	where 
+    		product_code = #{productCode , jdbcType=VARCHAR} 
+  	</delete>
 </mapper>
 
 
