@@ -9,7 +9,10 @@ import org.apache.commons.lang.StringUtils;
 
 import com.hjy.annotation.Inject;
 import com.hjy.common.DateUtil;
+import com.hjy.entity.OcOrderKjtDetail;
 import com.hjy.entity.OcOrderKjtList;
+import com.hjy.entity.log.LcOrderstatus;
+import com.hjy.entity.member.McAuthenticationInfo;
 import com.hjy.entity.order.OcOrderaddress;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.FormatHelper;
@@ -21,7 +24,10 @@ import com.hjy.selleradapter.kjt.config.RsyncConfigOrderStatus;
 import com.hjy.selleradapter.kjt.request.RsyncRequestOrderStatus;
 import com.hjy.selleradapter.kjt.response.RsyncResponseOrderStatus;
 import com.hjy.selleradapter.kjt.response.RsyncResponseOrderStatus.SoOrder;
+import com.hjy.service.IOcOrderKjtDetailService;
 import com.hjy.service.IOcOrderKjtListService;
+import com.hjy.service.log.ILcOrderstatusService;
+import com.hjy.service.member.IMcAuthenticationInfoService;
 import com.hjy.service.order.IOcOrderadressService;
 import com.hjy.service.order.IOcOrderinfoService;
 import com.hjy.support.MailSupport;
@@ -41,6 +47,12 @@ public class TraceOrder extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrd
 	private IOcOrderadressService ocOrderadressService;
 	@Inject
 	private IOcOrderinfoService ocOrderinfoService;
+	@Inject
+	private IMcAuthenticationInfoService mcAuthenticationInfoService;
+	@Inject
+	private ILcOrderstatusService lcOrderstatusService;
+	@Inject
+	private IOcOrderKjtDetailService ocOrderKjtDetailService;
 	private final static RsyncConfigOrderStatus RSYNC_CONFIG_TRACE_ORDER = new RsyncConfigOrderStatus();
 	private RsyncRequestOrderStatus rsyncRequestTraceOrder = new RsyncRequestOrderStatus();
 
@@ -71,13 +83,13 @@ public class TraceOrder extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrd
 			for (SoOrder soOrder : list) {
 				int soid = soOrder.getSOID();
 				int sostatus = soOrder.getSOStatus();
-
 				String order_code_out = String.valueOf(soid);
-				// 根据外部订单号查询订单信息
+				// 根据外部订单号查询跨境通订单信息
 				OcOrderKjtList order = ocOrderKjtListService.findOrderByOutCode(order_code_out);
 				String order_code = order.getOrderCode();
+				// 根据order_code查询订单信息
+				OcOrderinfo orderInfo = ocOrderinfoService.findOrderInfoByOrderCode(order_code);
 				String order_code_seq = order.getOrderCodeSeq();
-
 				if (StringUtils.isBlank(order.getSostatus()) || Integer.valueOf(order.getSostatus()) != sostatus) {
 					OcOrderKjtList editOrder = new OcOrderKjtList();
 					editOrder.setSostatus(String.valueOf(sostatus));
@@ -87,27 +99,18 @@ public class TraceOrder extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrd
 					// 根据订单编号更新订单
 					ocOrderKjtListService.updateSelective(editOrder);
 					if (sostatus == 65 || sostatus == 42) {
-
 						OcOrderaddress address = ocOrderadressService.findOrderAddressByOrderCode(order_code);
-
 						String auth_idcard_number = address.getAuthIdcardNumber();
-
 						if (StringUtils.isNotBlank(auth_idcard_number)) {
-							OcOrderinfo orderInfo = ocOrderinfoService.findOrderInfoByOrderCode(order_code);
 							if (orderInfo.getBuyerCode() != null && !"".equals(orderInfo.getBuyerCode())) {
-
+								String buyer_code = orderInfo.getBuyerCode();
+								// 修改通关状态; 0正常 1 通关失败
+								McAuthenticationInfo mai = new McAuthenticationInfo();
+								mai.setMemberCode(buyer_code);
+								mai.setCustomsStatus(sostatus == 65 ? 1 : 0);
+								mai.setIdcardNumber(auth_idcard_number);
+								mcAuthenticationInfoService.updateCustomsStatus(mai);
 							}
-							// String buyer_code = DbUp.upTable("oc_orderinfo")
-							// .oneWhere("buyer_code", "",
-							// "order_code=:order_code", "order_code",
-							// order_code)
-							// .get("buyer_code");
-							// DbUp.upTable("mc_authenticationInfo").dataUpdate(
-							// new MDataMap("member_code", buyer_code,
-							// "idcard_number", auth_idcard_number,
-							// "customs_status", sostatus == 65 ? "1" : "0"),
-							// "customs_status", "member_code,idcard_number");
-
 						}
 					}
 				}
@@ -124,41 +127,33 @@ public class TraceOrder extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrd
 				// 4497153900010005 交易成功
 				// 4497153900010006 交易失败
 
-				List<Map<String, Object>> klist = null;// DbUp.upTable("oc_order_kjt_list").dataSqlList("SELECT
-														// local_status from
-														// oc_order_kjt_list
-														// where
-														// order_code=:order_code
-														// GROUP BY
-														// local_status",new
-														// MDataMap("order_code",
-														// dataMap.get("order_code")));
+				List<String> localStatusList = ocOrderKjtListService.findLocalStatusByOrderCode(order_code);
+				// 根据order_code查询跨境通订单列表集合
 				String status = "";
-				if (klist.size() == 1) {
-					status = (String) klist.get(0).get("local_status");
+				if (localStatusList.size() == 1) {
+					status = (String) localStatusList.get(0);
 				} else {
 					// 此处映射状态不全，暂时不考虑其他
 					status = "4497153900010003";
 				}
 
-				MDataMap orderMap = null;// DbUp.upTable("oc_orderinfo").oneWhere("order_code,order_status",
-											// "","order_code=:order_code",
-											// "order_code",
-											// dataMap.get("order_code"));
-				if (StringUtils.isNotBlank(status) && !status.equals(orderMap.get("order_status"))
-						&& !"4497153900010005".equals(orderMap.get("order_status"))) {
-					// DbUp.upTable("oc_orderinfo")
-					// .dataUpdate(
-					// new MDataMap("order_status", status, "update_time",
-					// DateUtil.getSysDateTimeString(),
-					// "order_code", dataMap.get("order_code")),
-					// "order_status,update_time", "order_code");
-					// DbUp.upTable("lc_orderstatus")
-					// .dataInsert(new MDataMap("code",
-					// dataMap.get("order_code"), "create_time",
-					// DateUtil.getSysDateTimeString(), "create_user", "system",
-					// "old_status",
-					// orderMap.get("order_status"), "now_status", status));
+				if (StringUtils.isNotBlank(status) && !status.equals(orderInfo.getOrderStatus())
+						&& !"4497153900010005".equals(orderInfo.getOrderStatus())) {
+
+					// 更新oc_orderinfo订单状态信息
+					OcOrderinfo ocOrderInfo = new OcOrderinfo();
+					ocOrderInfo.setOrderCode(order_code);
+					ocOrderInfo.setOrderStatus(status);
+					ocOrderInfo.setUpdateTime(DateUtil.getSysDateTimeString());
+					ocOrderinfoService.updateSelective(ocOrderInfo);
+					// 添加订单状态日志表记录
+					LcOrderstatus lcOrderstatus = new LcOrderstatus();
+					lcOrderstatus.setCode(order_code);
+					lcOrderstatus.setCreateTime(DateUtil.getSysDateTimeString());
+					lcOrderstatus.setCreateUser("system");
+					lcOrderstatus.setOldStatus(orderInfo.getOrderStatus());
+					lcOrderstatus.setNowStatus(status);
+					lcOrderstatusService.insertSelective(lcOrderstatus);
 				}
 
 				if (sostatus == -4 || sostatus == -1 || sostatus == 6 || sostatus == 65) {
@@ -220,37 +215,26 @@ public class TraceOrder extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrd
 	// 此处不牵扯运费的问题
 	private void creatReturnMoney(String order_code_seq, String order_code) {
 
-		BigDecimal expected_return_group_money = BigDecimal.ZERO;
 		BigDecimal expected_return_money = BigDecimal.ZERO;
 
-		List<MDataMap> failDetails = null;// DbUp.upTable("oc_order_kjt_detail").queryAll("",
-											// "","order_code_seq=:order_code_seq",
-											// new MDataMap("order_code_seq",
-											// order_code_seq));
-		for (MDataMap mDataMap : failDetails) {
-			String sku_code = mDataMap.get("sku_code");
-			BigDecimal sku_num = new BigDecimal(mDataMap.get("sku_num"));
-			MDataMap detailInfo = null;// DbUp.upTable("oc_orderdetail").one("order_code",
-										// order_code, "sku_code", sku_code);
-			BigDecimal sku_price = new BigDecimal(detailInfo.get("sku_price"));
-			BigDecimal group_price = new BigDecimal(detailInfo.get("group_price"));
-
-			expected_return_money = expected_return_money.add(sku_num.multiply(sku_price));
-			expected_return_group_money = expected_return_group_money.add(sku_num.multiply(group_price));
+		List<OcOrderKjtDetail> details = ocOrderKjtDetailService.findOrderDetailByCodeSeq(order_code_seq);
+		if (details != null && details.size() > 0) {
+			for (OcOrderKjtDetail ocOrderKjtDetail : details) {
+				String sku_code = ocOrderKjtDetail.getSkuCode();
+				BigDecimal sku_num = BigDecimal.valueOf(ocOrderKjtDetail.getSkuNum());
+				expected_return_money = expected_return_money.add(sku_num.multiply(ocOrderKjtDetail.getSkuPrice()));
+			}
 		}
-
-		MDataMap orderInfo = null; // DbUp.upTable("oc_orderinfo").one("order_code",
-									// order_code);
-
+		OcOrderinfo order = ocOrderinfoService.findOrderInfoByOrderCode(order_code);
 		String money_no = WebHelper.getInstance().genUniqueCode("RTM");
 		if (expected_return_money.compareTo(BigDecimal.ZERO) > 0) {
 			// 生成退款单
 			MDataMap map = new MDataMap();
 			map.put("return_money_code", money_no);
 			map.put("return_goods_code", "");
-			map.put("buyer_code", orderInfo.get("buyer_code"));
-			map.put("seller_code", orderInfo.get("seller_code"));
-			map.put("small_seller_code", orderInfo.get("small_seller_code"));
+			map.put("buyer_code", order.getBuyerCode());
+			map.put("seller_code", order.getSellerCode());
+			map.put("small_seller_code", order.getSmallSellerCode());
 			map.put("contacts", "");// 联系人
 			map.put("status", "4497153900040003");
 			map.put("return_money", expected_return_money.toString());

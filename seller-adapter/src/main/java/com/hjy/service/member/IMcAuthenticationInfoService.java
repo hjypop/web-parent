@@ -11,5 +11,13 @@ import com.hjy.service.IBaseService;
  * 时间: 2016年6月28日 下午6:32:09
  */
 public interface IMcAuthenticationInfoService extends IBaseService<McAuthenticationInfo, Integer>{
-
+	/**
+	 * 
+	 * 方法: updateCustomsStatus <br>
+	 * 描述: TODO <br>
+	 * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
+	 * 时间: 2016年6月30日 上午7:50:35
+	 * @return
+	 */
+	int updateCustomsStatus(McAuthenticationInfo entity);
 }

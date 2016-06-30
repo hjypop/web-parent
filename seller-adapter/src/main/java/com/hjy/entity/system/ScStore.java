@@ -1,5 +1,7 @@
 package com.hjy.entity.system;
 
+import com.hjy.base.BaseModel;
+
 /**
  * 
  * 类: ScStore <br>
@@ -7,10 +9,8 @@ package com.hjy.entity.system;
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月28日 下午2:44:15
  */
-public class ScStore {
+public class ScStore extends BaseModel {
 
-	private Integer zid;
-	private String uid;
 	// 仓库编号
 	private String storeCode;
 	// 仓库名称
@@ -21,22 +21,6 @@ public class ScStore {
 	private String appCode;
 	// 仓库描述
 	private String remark;
-
-	public Integer getZid() {
-		return zid;
-	}
-
-	public void setZid(Integer zid) {
-		this.zid = zid;
-	}
-
-	public String getUid() {
-		return uid;
-	}
-
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
 
 	public String getStoreCode() {
 		return storeCode;

@@ -2,6 +2,8 @@ package com.hjy.entity;
 
 import java.math.BigDecimal;
 
+import com.hjy.base.BaseModel;
+
 /**
  * 
  * 类: OcOrderKjtList <br>
@@ -9,10 +11,8 @@ import java.math.BigDecimal;
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月28日 下午4:41:40
  */
-public class OcOrderKjtList {
+public class OcOrderKjtList extends BaseModel {
 
-	private Integer zid;
-	private String uid;
 	private String orderCodeSeq;
 	private String orderCode;
 	private String orderCodeOut;
@@ -24,22 +24,6 @@ public class OcOrderKjtList {
 	private String sostatus;
 	private String localStatus;
 	private String rsyncDesc;
-
-	public Integer getZid() {
-		return zid;
-	}
-
-	public void setZid(Integer zid) {
-		this.zid = zid;
-	}
-
-	public String getUid() {
-		return uid;
-	}
-
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
 
 	public String getOrderCodeSeq() {
 		return orderCodeSeq;

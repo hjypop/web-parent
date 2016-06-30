@@ -1,5 +1,7 @@
 package com.hjy.entity.order;
 
+import com.hjy.base.BaseModel;
+
 /**
  * 
  * 类: OcOrderaddress <br>
@@ -7,10 +9,7 @@ package com.hjy.entity.order;
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月28日 下午5:57:30
  */
-public class OcOrderaddress {
-	private Integer zid;
-
-	private String uid;
+public class OcOrderaddress extends BaseModel {
 
 	private String orderCode;
 
@@ -50,22 +49,6 @@ public class OcOrderaddress {
 	private String authEmail;
 
 	private String authAddress;
-
-	public Integer getZid() {
-		return zid;
-	}
-
-	public void setZid(Integer zid) {
-		this.zid = zid;
-	}
-
-	public String getUid() {
-		return uid;
-	}
-
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
 
 	public String getOrderCode() {
 		return orderCode;

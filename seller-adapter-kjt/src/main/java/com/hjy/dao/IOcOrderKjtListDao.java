@@ -37,4 +37,16 @@ public interface IOcOrderKjtListDao extends BaseDao<OcOrderKjtList, Integer> {
 	 * @return
 	 */
 	OcOrderKjtList findOrderByOutCode(String orderCodeOut);
+
+	/**
+	 * 
+	 * 方法: findLocalStatusByOrderCode <br>
+	 * 描述: 根据订单编号查询本地订单状态 <br>
+	 * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
+	 * 时间: 2016年6月30日 上午8:55:11
+	 * 
+	 * @param orderCode
+	 * @return
+	 */
+	List<String> findLocalStatusByOrderCode(String orderCode);
 }

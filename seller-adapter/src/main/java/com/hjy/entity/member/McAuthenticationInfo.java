@@ -2,6 +2,8 @@ package com.hjy.entity.member;
 
 import java.math.BigDecimal;
 
+import com.hjy.base.BaseModel;
+
 /**
  * 
  * 类: McAuthenticationInfo <br>
@@ -9,10 +11,8 @@ import java.math.BigDecimal;
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月28日 下午6:26:29
  */
-public class McAuthenticationInfo {
-
-	private Integer zid;
-	private String uid;
+public class McAuthenticationInfo extends BaseModel{
+	
 	private String memberCode;
 	// 认证信息编号
 	private String authCode;
@@ -39,21 +39,6 @@ public class McAuthenticationInfo {
 	// 地址编号
 	private String addressId;
 
-	public Integer getZid() {
-		return zid;
-	}
-
-	public void setZid(Integer zid) {
-		this.zid = zid;
-	}
-
-	public String getUid() {
-		return uid;
-	}
-
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
 
 	public String getMemberCode() {
 		return memberCode;
