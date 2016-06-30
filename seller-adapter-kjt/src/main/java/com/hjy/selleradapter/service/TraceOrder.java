@@ -12,9 +12,12 @@ import com.hjy.common.DateUtil;
 import com.hjy.entity.OcOrderKjtDetail;
 import com.hjy.entity.OcOrderKjtList;
 import com.hjy.entity.log.LcOrderstatus;
+import com.hjy.entity.log.LcReturnMoneyStatus;
 import com.hjy.entity.member.McAuthenticationInfo;
+import com.hjy.entity.member.McLoginInfo;
 import com.hjy.entity.order.OcOrderaddress;
 import com.hjy.entity.order.OcOrderinfo;
+import com.hjy.entity.order.OcReturnMoney;
 import com.hjy.helper.FormatHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.model.MDataMap;
@@ -27,9 +30,12 @@ import com.hjy.selleradapter.kjt.response.RsyncResponseOrderStatus.SoOrder;
 import com.hjy.service.IOcOrderKjtDetailService;
 import com.hjy.service.IOcOrderKjtListService;
 import com.hjy.service.log.ILcOrderstatusService;
+import com.hjy.service.log.ILcReturnMoneyStatusService;
 import com.hjy.service.member.IMcAuthenticationInfoService;
+import com.hjy.service.member.IMcLoginInfoService;
 import com.hjy.service.order.IOcOrderadressService;
 import com.hjy.service.order.IOcOrderinfoService;
+import com.hjy.service.order.IOcReturnMoneyService;
 import com.hjy.support.MailSupport;
 
 /**
@@ -53,6 +59,13 @@ public class TraceOrder extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrd
 	private ILcOrderstatusService lcOrderstatusService;
 	@Inject
 	private IOcOrderKjtDetailService ocOrderKjtDetailService;
+	@Inject
+	private IMcLoginInfoService mcLoginInfoService;
+	@Inject
+	private IOcReturnMoneyService ocReturnMoneyService;
+	@Inject
+	private ILcReturnMoneyStatusService lcReturnMoneyStatusService;
+
 	private final static RsyncConfigOrderStatus RSYNC_CONFIG_TRACE_ORDER = new RsyncConfigOrderStatus();
 	private RsyncRequestOrderStatus rsyncRequestTraceOrder = new RsyncRequestOrderStatus();
 
@@ -228,41 +241,37 @@ public class TraceOrder extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrd
 		OcOrderinfo order = ocOrderinfoService.findOrderInfoByOrderCode(order_code);
 		String money_no = WebHelper.getInstance().genUniqueCode("RTM");
 		if (expected_return_money.compareTo(BigDecimal.ZERO) > 0) {
+			McLoginInfo mli = mcLoginInfoService.findLoginInfoByMemberCode(order.getBuyerCode());
 			// 生成退款单
-			MDataMap map = new MDataMap();
-			map.put("return_money_code", money_no);
-			map.put("return_goods_code", "");
-			map.put("buyer_code", order.getBuyerCode());
-			map.put("seller_code", order.getSellerCode());
-			map.put("small_seller_code", order.getSmallSellerCode());
-			map.put("contacts", "");// 联系人
-			map.put("status", "4497153900040003");
-			map.put("return_money", expected_return_money.toString());
-			// map.put("mobile", (String)
-			// DbUp.upTable("mc_login_info").dataGet("login_name",
-			// "member_code=:member_code",
-			// new MDataMap("member_code", orderInfo.get("buyer_code"))));
-			map.put("create_time", DateUtil.getSysDateTimeString());
-			map.put("poundage", "0");
-			map.put("order_code", order_code);
-			map.put("pay_method", "449716200001");
-			map.put("online_money", expected_return_money.toString());
-			// DbUp.upTable("oc_return_money").dataInsert(map);
-
+			OcReturnMoney orm = new OcReturnMoney();
+			orm.setReturnMoneyCode(money_no);
+			orm.setReturnGoodsCode("");
+			orm.setBuyerCode(order.getBuyerCode());
+			orm.setSellerCode(order.getSellerCode());
+			orm.setSmallSellerCode(order.getSmallSellerCode());
+			orm.setContacts("");
+			orm.setStatus("4497153900040003");
+			orm.setMobile(mli.getLoginName());
+			orm.setReturnedMoney(expected_return_money);
+			orm.setCreateTime(DateUtil.getSysDateTimeString());
+			orm.setPoundage(BigDecimal.ZERO);
+			orm.setOrderCode(order_code);
+			orm.setPayMethod("449716200001");
+			orm.setOnlineMoney(expected_return_money);
+			ocReturnMoneyService.insertSelective(orm);
 			// 创建流水日志
-			MDataMap logMap = new MDataMap();
-			logMap.put("return_money_no", money_no);
-			logMap.put("info", "跨境通订单失败，直接生成退款单");
-			logMap.put("create_time", DateUtil.getSysDateTimeString());
 			String create_user = "";
 			try {
-				create_user = null;// UserFactory.INSTANCE.create().getLoginName();
+				create_user = UserFactory.INSTANCE.create().getLoginName();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			logMap.put("create_user", create_user);
-			logMap.put("status", map.get("status"));
-			// DbUp.upTable("lc_return_money_status").dataInsert(logMap);
+			LcReturnMoneyStatus lrms = new LcReturnMoneyStatus();
+			lrms.setReturnMoneyNo(money_no);
+			lrms.setInfo("跨境通订单失败，直接生成退款单");
+			lrms.setCreateTime(DateUtil.getSysDateTimeString());
+			lrms.setCreateUser(create_user);
+			lcReturnMoneyStatusService.insertSelective(lrms);
 		}
 
 	}
