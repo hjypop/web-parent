@@ -37,4 +37,6 @@ public interface IOcOrderKjtListDao extends BaseDao<OcOrderKjtList, Integer> {
 	 * @return
 	 */
 	OcOrderKjtList findOrderByOutCode(String orderCodeOut);
+
+	public List<OcOrderKjtList> findListByOrderCode(String orderCode); 
 }

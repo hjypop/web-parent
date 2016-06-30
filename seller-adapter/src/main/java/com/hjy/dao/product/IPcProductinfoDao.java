@@ -42,6 +42,35 @@ public interface IPcProductinfoDao extends BaseDao<PcProductinfo , Integer> {
 	 * @version 1.0.0.1
 	 */
 	public List<PcProductinfo> getListBySellerCode(PcProductinfo entity);
+	
+	/**
+	 * @descriptions 
+	 * 
+	 * @param list productCodeOld list 另一个查询条件是 product_status = '4497153900060002'
+	 * @return
+	 * @date 2016年6月30日上午10:05:58
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public List<PcProductinfo> getListByOldProductCode(List<String> list);
+	
+	/**
+	 * @descriptions 条件依据如下：
+	 * set
+	 * 	product_status  4497153900060003
+	 * 	flag_sale 0
+	 * 
+	 * where
+	 * 	small_seller_code='SF03KJT' 
+	 * 	seller_code='SI2003'
+	 * 	product_code_old list
+	 * @param list
+	 * @return
+	 * @date 2016年6月30日上午10:20:44
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public int updateByOldProductCode(List<String> list);
 }
 
 

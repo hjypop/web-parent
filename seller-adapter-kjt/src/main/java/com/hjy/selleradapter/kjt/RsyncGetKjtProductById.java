@@ -34,7 +34,6 @@ import com.hjy.selleradapter.kjt.request.RsyncRequestGetKjtProductById;
 import com.hjy.selleradapter.kjt.response.RsyncResponseGetKjtProductById;
 import com.hjy.selleradapter.service.IProductService;
 import com.hjy.selleradapter.service.impl.ProductServiceImpl;
-import com.hjy.system.UserFactory;
 
 /**
  * 根据商品编号获取商品信息
@@ -247,8 +246,10 @@ public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductByI
 		pcProductinfoExt.setKjtSellerCode(info.getStoreSysNo());//跨境通店铺编号
 		productinfo.setPcProductinfoExt(pcProductinfoExt);
 	}
+	
+	
 	/** 
-	* @Description:插入商品历史流水信息
+	* @Description:插入商品历史流水信息        TODO 
 	* @param productinfo 商品信息实体
 	* @param productCode 
 	* @author 张海生
@@ -256,46 +257,44 @@ public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductByI
 	* @return void 
 	* @throws 
 	*/
-	public void saveHistoryFlow(PcProductinfo productinfo,String productCode){
-		//设置商品历史流水信息
-				MUserInfo userInfo = null;
-				String userCode = "";
-				if (UserFactory.INSTANCE != null) {
-					try {
-						userInfo = UserFactory.INSTANCE.create();
-					} catch (Exception e) {
-						// TODO: handle exception
-					}
-					if (userInfo != null) {
-						userCode = userInfo.getUserCode();
-					}
-				}
-				MDataMap mUserMap = DbUp.upTable("za_userinfo").one("cookie_user", sCookieUser);
-				if (mUserMap != null) {
-					mUserInfo = inUserInfo(mUserMap);
-				}
-				
-				
-				
-				
-				
-				String createTime = DateUtil.getSysDateTimeString();
-				PcProductflow ppf = new PcProductflow();
-				
-				ppf.setCreateTime(createTime);
-				ppf.setCreator(userCode);
-				ppf.setFlowCode(WebHelper.getInstance().genUniqueCode(ProductFlowHead));
-				ppf.setFlowStatus(SkuCommon.ProUpaOr);
-				ppf.setProductCode(productCode);
-				ppf.setUid(UUID.randomUUID().toString().replace("-", ""));
-				ppf.setUpdateTime(createTime);
-				ppf.setUpdator(userCode);
-				
-				JsonHelper<PcProductinfo> pHelper=new JsonHelper<PcProductinfo>();
-				ppf.setProductJson(pHelper.ObjToString(productinfo));
-				
-				pcpFlowdao.insertSelective(ppf);
+	public void saveHistoryFlow22222222(PcProductinfo productinfo, String productCode) {
+		// 设置商品历史流水信息
+		MUserInfo userInfo = null;
+		String userCode = "";
+//		if (UserFactory.INSTANCE != null) {
+//			try {
+//				userInfo = UserFactory.INSTANCE.create();
+//			} catch (Exception e) {
+//				// TODO: handle exception
+//			}
+//			if (userInfo != null) {
+//				userCode = userInfo.getUserCode();
+//			}
+//		}
+//		MDataMap mUserMap = DbUp.upTable("za_userinfo").one("cookie_user", sCookieUser);
+//		if (mUserMap != null) {
+//			mUserInfo = inUserInfo(mUserMap);
+//		}
+
+		String createTime = DateUtil.getSysDateTimeString();
+		PcProductflow ppf = new PcProductflow();
+
+		ppf.setCreateTime(createTime);
+		ppf.setCreator(userCode);
+		ppf.setFlowCode(WebHelper.getInstance().genUniqueCode(ProductFlowHead));
+		ppf.setFlowStatus(SkuCommon.ProUpaOr);
+		ppf.setProductCode(productCode);
+		ppf.setUid(UUID.randomUUID().toString().replace("-", ""));
+		ppf.setUpdateTime(createTime);
+		ppf.setUpdator(userCode);
+
+		JsonHelper<PcProductinfo> pHelper = new JsonHelper<PcProductinfo>();
+		ppf.setProductJson(pHelper.ObjToString(productinfo));
+
+		pcpFlowdao.insertSelective(ppf);
 	}
+	
+	
 	public RsyncResponseGetKjtProductById upResponseObject() {
 
 		return new RsyncResponseGetKjtProductById();

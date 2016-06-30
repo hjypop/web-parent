@@ -452,6 +452,37 @@
 		      AND 
 		      p.seller_code = #{sellerCode , jdbcType=VARCHAR}
 	</select>
+	
+	
+	<select id="getListByOldProductCode" resultMap="BaseResultMap" parameterType="java.util.List">
+		select
+					* from productcenter.pc_productinfo
+		where 
+			product_status = '4497153900060002'
+    		and 
+    			product_code_old in 
+    			<foreach  item="item" index="index" collection="list"  open="(" close=")" separator="," >
+				          #{item}
+				</foreach>  
+	</select>
+	
+	<update id="updateSelectiveByProductCode" parameterType="java.util.List">
+		update 
+			productcenter.pc_productinfo 
+		set
+		  	product_status = '4497153900060003', 
+		  	flag_sale = 0 
+		where
+			small_seller_code='SF03KJT' 
+		and 
+			seller_code='SI2003'
+		and
+		 	product_code_old in 
+			<foreach  item="item" index="index" collection="list"  open="(" close=")" separator="," >
+			          #{item}
+			</foreach>  
+	</update>
+	
 </mapper>
 
 

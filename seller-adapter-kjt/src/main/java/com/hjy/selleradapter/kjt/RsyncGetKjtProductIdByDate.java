@@ -6,6 +6,9 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.hjy.annotation.Inject;
+import com.hjy.dao.product.IPcProductinfoDao;
+import com.hjy.entity.product.PcProductinfo;
 import com.hjy.helper.FormatHelper;
 import com.hjy.model.MDataMap;
 import com.hjy.model.MWebResult;
@@ -26,6 +29,10 @@ import com.hjy.support.MailSupport;
  * 
  */
 public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProductIdByDate, RsyncRequestGetKjtProductIdByDate, RsyncResponseGetKjtProductIdByDate> {
+	
+	@Inject
+	private IPcProductinfoDao productinfoDao;
+	
 
 	final static RsyncConfigGetKjtProductIdByDate CONFIG_GET_TV_BY_DATE = new RsyncConfigGetKjtProductIdByDate();
 	final static int qnum = 5;//每次查询的数量
@@ -79,27 +86,23 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 					}
 				}
 				if(dowProductCodeOldList!= null && dowProductCodeOldList.size() > 0){
-					String qSql = "SELECT product_code_old,product_code, product_name, product_status FROM pc_productinfo where product_code_old in('"
-							+ StringUtils.join(dowProductCodeOldList, "','")
-							+ "') and product_status = '4497153900060002'";//查询将要从上架变为下架的商品
-					List<Map<String, Object>> downProductList = DbUp.upTable("pc_productinfo").dataSqlList(qSql, new MDataMap());
+					List<PcProductinfo> downProductList = productinfoDao.getListByOldProductCode(dowProductCodeOldList);
 					if(downProductList != null && downProductList.size() > 0){
 						List<String> pCode1 = new ArrayList<String>();//商品在跨境通的编号
 						List<String> pCode2 = new ArrayList<String>();//商品在惠家有的编号
 						List<String> pName = new ArrayList<String>();//商品的名字
-						for (Map<String, Object> pro : downProductList) {
-							pCode1.add((String)pro.get("product_code_old"));
-							pCode2.add((String)pro.get("product_code"));
-							pName.add((String)pro.get("product_name"));
+						for (PcProductinfo pro : downProductList) {
+							pCode1.add( pro.getProductCodeOld());
+							pCode2.add( pro.getProductCode());
+							pName.add( pro.getProductName());
 						}
 						this.sendMail(StringUtils.join(pCode1, ","), StringUtils.join(pCode2, ","), StringUtils.join(pName, ","));//发送下架商品的邮件
 						MDataMap upMap = new MDataMap();
 						upMap.put("product_status", RsyncGetKjtProductIdByDate.downStatus);//下架
 						upMap.put("flag_sale", "0");//是否可售
+						
 						if(pCode1 != null && pCode1.size() > 0){
-							String sSql = "UPDATE pc_productinfo SET product_status=:product_status,flag_sale=:flag_sale where product_code_old in('"
-									+ StringUtils.join(pCode1, "','")+"')  and small_seller_code='SF03KJT' and seller_code='SI2003'";
-							DbUp.upTable("pc_productinfo").dataExec(sSql, upMap);//商品下架
+							productinfoDao.updateByOldProductCode(pCode1);//商品下架
 						}
 					}
 				}
