@@ -270,6 +270,15 @@ public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductByI
 						userCode = userInfo.getUserCode();
 					}
 				}
+				MDataMap mUserMap = DbUp.upTable("za_userinfo").one("cookie_user", sCookieUser);
+				if (mUserMap != null) {
+					mUserInfo = inUserInfo(mUserMap);
+				}
+				
+				
+				
+				
+				
 				String createTime = DateUtil.getSysDateTimeString();
 				PcProductflow ppf = new PcProductflow();
 				
