@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hjy.dao.member.IMcAuthenticationInfoDao">
+
+	<!-- 根据member_code和idcard_number修改customs_status 2016-06-30 zhy -->
+	<update id="updateCustomsStatus" parameterType="com.hjy.entity.member.McAuthenticationInfo">
+		UPDATE mc_authenticationInfo
+		<set>
+			customs_status = #{customsStatus,jdbcType=INTEGER}
+		</set>
+		<where>
+			member_code = #{memberCode,jdbcType=VARCHAR}
+			AND idcard_number = #{idcardNumber,jdbcType=VARCHAR}
+		</where>
+	</update>
 </mapper>

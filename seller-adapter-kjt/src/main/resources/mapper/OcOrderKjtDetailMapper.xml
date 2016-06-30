@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.IOcOrderKjtDetailDao">
+	<select id="findOrderDetailByCodeSeq" parameterType="java.lang.String">
+		SELECT
+			zid,
+			uid,
+			order_code_seq,
+			product_code,
+			sku_code,
+			sku_name,
+			sku_price,
+			sku_num,
+			product_code_out,
+			order_code
+		FROM
+			ordercenter.oc_order_kjt_detail
+		<where>
+			order_code_seq = #{orderCodeSeq,jdbcType=VARCHAR}
+		</where>
+	</select>
+</mapper>

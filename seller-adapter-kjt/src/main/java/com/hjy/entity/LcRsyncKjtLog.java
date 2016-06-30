@@ -1,5 +1,7 @@
 package com.hjy.entity;
 
+import com.hjy.base.BaseModel;
+
 /**
  * 
  * 类: LcRsyncKjtLog <br>
@@ -7,10 +9,8 @@ package com.hjy.entity;
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月28日 下午3:26:20
  */
-public class LcRsyncKjtLog {
+public class LcRsyncKjtLog extends BaseModel {
 
-	private Integer zid;
-	private String uid;
 	// 编码
 	private String code;
 	// 同步目标
@@ -39,22 +39,6 @@ public class LcRsyncKjtLog {
 	private Integer processNum;
 	// 成功处理数量
 	private Integer successNum;
-
-	public Integer getZid() {
-		return zid;
-	}
-
-	public void setZid(Integer zid) {
-		this.zid = zid;
-	}
-
-	public String getUid() {
-		return uid;
-	}
-
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
 
 	public String getCode() {
 		return code;

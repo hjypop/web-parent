@@ -85,6 +85,17 @@
 			order_code = #{orderCode,jdbcType=VARCHAR}
 		</where>
 	</update>
+
+	<!-- 根据订单编号查询本地订单状态 2016-06-30 zhy -->
+	<select id="findLocalStatusByOrderCode" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT
+			local_status
+		FROM
+			ordercenter.oc_order_kjt_list
+		<where>
+			order_code = #{orderCode,jdbcType=VARCHAR}
+		</where>
+	</select>
 	
 	<select id="findListByOrderCode" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select * from ordercenter.oc_order_kjt_list  where  order_code = #{orderCode,jdbcType=VARCHAR}
@@ -93,19 +104,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 

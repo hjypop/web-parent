@@ -12,7 +12,7 @@
 	</resultMap>
 
 	<insert id="insertSelective" parameterType="com.hjy.entity.system.ScStoreSkunum">
-		insert into sc_store_skunum
+		insert into systemcenter.sc_store_skunum
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
 				zid,

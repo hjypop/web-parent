@@ -2,10 +2,10 @@ package com.hjy.entity.product;
 
 import java.math.BigDecimal;
 
-public class PcBrandinfo {
-	
-	private Integer zid;
-	private String uid;
+import com.hjy.base.BaseModel;
+
+public class PcBrandinfo extends BaseModel {
+
 	private String brandCode;
 	private String brandName;
 	private String brandNameEn;
@@ -17,86 +17,93 @@ public class PcBrandinfo {
 	private String createUsernm;
 	private String createTime;
 	private String createUsercode;
-	
-	
-	public Integer getZid() {
-		return zid;
-	}
-	public void setZid(Integer zid) {
-		this.zid = zid;
-	}
-	public String getUid() {
-		return uid;
-	}
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
+
 	public String getBrandCode() {
 		return brandCode;
 	}
+
 	public void setBrandCode(String brandCode) {
 		this.brandCode = brandCode;
 	}
+
 	public String getBrandName() {
 		return brandName;
 	}
+
 	public void setBrandName(String brandName) {
 		this.brandName = brandName;
 	}
+
 	public String getBrandNameEn() {
 		return brandNameEn;
 	}
+
 	public void setBrandNameEn(String brandNameEn) {
 		this.brandNameEn = brandNameEn;
 	}
+
 	public Integer getFlagEnable() {
 		return flagEnable;
 	}
+
 	public void setFlagEnable(Integer flagEnable) {
 		this.flagEnable = flagEnable;
 	}
+
 	public String getBrandPic() {
 		return brandPic;
 	}
+
 	public void setBrandPic(String brandPic) {
 		this.brandPic = brandPic;
 	}
+
 	public String getBrandNote() {
 		return brandNote;
 	}
+
 	public void setBrandNote(String brandNote) {
 		this.brandNote = brandNote;
 	}
+
 	public String getParentCode() {
 		return parentCode;
 	}
+
 	public void setParentCode(String parentCode) {
 		this.parentCode = parentCode;
 	}
+
 	public BigDecimal getCpsrate() {
 		return cpsrate;
 	}
+
 	public void setCpsrate(BigDecimal cpsrate) {
 		this.cpsrate = cpsrate;
 	}
+
 	public String getCreateUsernm() {
 		return createUsernm;
 	}
+
 	public void setCreateUsernm(String createUsernm) {
 		this.createUsernm = createUsernm;
 	}
+
 	public String getCreateTime() {
 		return createTime;
 	}
+
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
+
 	public String getCreateUsercode() {
 		return createUsercode;
 	}
+
 	public void setCreateUsercode(String createUsercode) {
 		this.createUsercode = createUsercode;
 	}
-	
-	
+
 }

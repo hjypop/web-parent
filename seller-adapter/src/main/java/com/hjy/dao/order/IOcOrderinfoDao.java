@@ -1,5 +1,6 @@
 package com.hjy.dao.order;
 
+import com.hjy.dao.BaseDao;
 import com.hjy.entity.order.OcOrderinfo;
 
 /**
@@ -9,7 +10,7 @@ import com.hjy.entity.order.OcOrderinfo;
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月28日 下午6:16:08
  */
-public interface IOcOrderinfoDao {
+public interface IOcOrderinfoDao extends BaseDao<OcOrderinfo, Integer>{
 
 	/**
 	 * 
@@ -22,4 +23,5 @@ public interface IOcOrderinfoDao {
 	 * @return
 	 */
 	OcOrderinfo findOrderInfoByOrderCode(String orderCode);
+	
 }

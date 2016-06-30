@@ -80,4 +80,19 @@
 			order_code = #{orderCode,jdbcType=VARCHAR}
 		</where>
 	</select>
+	<!-- 根据订单编号更新订单信息表 2016-06-30 zhy -->
+	<update id="updateSelective" parameterType="com.hjy.entity.order.OcOrderinfo">
+		UPDATE ordercenter.oc_orderinfo
+		<set>
+			<if test="orderStatus != null and orderStatus != ''">
+				order_status = #{orderStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time = #{updateTime,jdbcType=VARCHAR}
+			</if>
+		</set>
+		<where>
+			order_code = #{orderCode,jdbcType=VARCHAR}
+		</where>
+	</update>
 </mapper>

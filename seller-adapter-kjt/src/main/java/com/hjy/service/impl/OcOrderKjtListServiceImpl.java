@@ -51,4 +51,18 @@ public class OcOrderKjtListServiceImpl extends BaseServiceImpl<OcOrderKjtList, I
 	public OcOrderKjtList findOrderByOutCode(String orderCodeOut) {
 		return dao.findOrderByOutCode(orderCodeOut);
 	}
+
+	/**
+	 * 
+	 * 方法: findLocalStatusByOrderCode <br>
+	 * 描述: TODO
+	 * 
+	 * @param orderCode
+	 * @return
+	 * @see com.hjy.service.IOcOrderKjtListService#findLocalStatusByOrderCode(java.lang.String)
+	 */
+	@Override
+	public List<String> findLocalStatusByOrderCode(String orderCode) {
+		return dao.findLocalStatusByOrderCode(orderCode);
+	}
 }

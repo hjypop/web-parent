@@ -12,4 +12,15 @@ import com.hjy.entity.member.McAuthenticationInfo;
  */
 public interface IMcAuthenticationInfoDao extends BaseDao<McAuthenticationInfo, Integer> {
 
+	/**
+	 * 
+	 * 方法: updateCustomsStatus <br>
+	 * 描述: 根据member_code和idcard_number修改customs_status <br>
+	 * 		用于定时任务：定时同步跨境通订单状态<br>
+	 * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
+	 * 时间: 2016年6月30日 上午7:48:29
+	 * @param entity
+	 * @return
+	 */
+	int updateCustomsStatus(McAuthenticationInfo entity);
 }
