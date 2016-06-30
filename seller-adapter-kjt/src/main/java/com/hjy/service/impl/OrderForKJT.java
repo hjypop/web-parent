@@ -15,14 +15,21 @@ import com.alibaba.fastjson.JSON;
 import com.hjy.annotation.Inject;
 import com.hjy.base.BaseClass;
 import com.hjy.common.DateUtil;
+import com.hjy.dao.IOcOrderKjtDetailDao;
 import com.hjy.dao.IOcOrderKjtListDao;
 import com.hjy.dao.IOcOrderKjtListDataDao;
+import com.hjy.entity.OcOrderKjtDetail;
 import com.hjy.entity.OcOrderKjtList;
 import com.hjy.entity.OcOrderKjtListData;
+import com.hjy.entity.order.OcOrderPay;
+import com.hjy.helper.WebHelper;
 import com.hjy.model.MDataMap;
+import com.hjy.model.order.Express;
 import com.hjy.model.order.Order;
+import com.hjy.model.order.OrderAddress;
 import com.hjy.model.order.OrderDetail;
 import com.hjy.support.MailSupport;
+import com.hjy.support.SerializeSupport;
 
 /**
  * 跨境通订单
@@ -35,6 +42,8 @@ public class OrderForKJT extends BaseClass {
 	private IOcOrderKjtListDao  ocOrderKjtListDao;
 	@Inject
 	private IOcOrderKjtListDataDao ocOrderKjtListDataDao; 
+	@Inject
+	private IOcOrderKjtDetailDao ocOrderKjtDetailDao;
 	
 	/**
 	 * 同步跨境通订单
@@ -65,12 +74,31 @@ public class OrderForKJT extends BaseClass {
 			for (int i = 0; i < orderList.size(); i++) {
 				Order order = orderList.get(i);
 				String now=DateUtil.getSysDateTimeString();
-				DbUp.upTable("oc_order_kjt_list").dataInsert(new MDataMap("order_code_seq", order.getOrderCode(),"order_code", order_code,"create_time", now,"update_time",now));
-				DbUp.upTable("oc_order_kjt_list_data").dataInsert(new MDataMap("order_code_seq", order.getOrderCode(),"request_clazz", JSON.toJSONString(order)));
+				
+				OcOrderKjtList okl = new OcOrderKjtList();
+				okl.setOrderCodeSeq(order.getOrderCode());
+				okl.setOrderCode(order_code);
+				okl.setCreateTime(now);
+				okl.setUpdateTime(now);
+				ocOrderKjtListDao.insertSelective(okl);
+				
+				OcOrderKjtListData okld = new OcOrderKjtListData();
+				okld.setOrderCodeSeq(order.getOrderCode());
+				okld.setRequestClazz(JSON.toJSONString(order)); 
+				ocOrderKjtListDataDao.insertSelective(okld);
 				
 				List<OrderDetail> details=order.getProductList();
 				for (OrderDetail orderDetail : details) {
-					DbUp.upTable("oc_order_kjt_detail").dataInsert(new MDataMap("order_code", order_code,"order_code_seq", order.getOrderCode(),"product_code",orderDetail.getProductCode(),"sku_code",orderDetail.getSkuCode(),"sku_name",orderDetail.getSkuName(),"sku_price",String.valueOf(orderDetail.getSkuPrice()),"sku_num",String.valueOf(orderDetail.getSkuNum()),"product_code_out",orderDetail.getProductCodeOut()));
+					OcOrderKjtDetail okd = new OcOrderKjtDetail();
+					okd.setOrderCode(order_code);
+					okd.setOrderCodeSeq(order.getOrderCode());
+					okd.setProductCode(orderDetail.getProductCode());
+					okd.setSkuCode(orderDetail.getSkuCode());
+					okd.setSkuName(orderDetail.getSkuName());
+					okd.setSkuPrice(orderDetail.getSkuPrice());
+					okd.setSkuNum(orderDetail.getSkuNum());
+					okd.setProductCodeOut(orderDetail.getProductCodeOut());
+					ocOrderKjtDetailDao.insertSelective(okd);
 				}
 			}
 			
@@ -84,6 +112,9 @@ public class OrderForKJT extends BaseClass {
 		return process_succ;
 	}
 	
+
+	
+	
 	/**
 	 * 拆单组单
 	 * @param order_code
@@ -92,8 +123,7 @@ public class OrderForKJT extends BaseClass {
 		
 		List<Order> orderList=new ArrayList<Order>();
 		//获取订单信息
-		OrderService orderService = new OrderService();
-		Order order=orderService.getOrder(order_code);
+		Order order = this.getOrder(order_code);
 		List<OrderDetail> detailList = order.getProductList();
 		
 		//此处更新商品的价格为 成本价
@@ -160,6 +190,167 @@ public class OrderForKJT extends BaseClass {
 		
 		return orderList;
 	}
+	
+	/**
+	 * 获取订单
+	 * 
+	 * @param orderCode
+	 * @return
+	 */
+	private Order getOrder(String orderCode) {
+		Order ret = null;
+		MDataMap dm = DbUp.upTable("oc_orderinfo").one("order_code", orderCode);
+		if (dm != null) {
+			SerializeSupport ss = new SerializeSupport<Order>();
+			Order pic = new Order();
+			ss.serialize(dm, pic);
+			ret = pic;
+			ret.setAddress(this.getOrderAddressByOrderCode(orderCode));
+			ret.setActivityList(this.getOrderActivityListByOrderCode(orderCode));
+			ret.setOcOrderPayList(this.getOrderPayListByOrderCode(orderCode));
+			ret.setProductList(this.getOrderDetaiListByOrderCode(orderCode));
+			ret.setOcorderShipments(this.getOcOrderShipmentsByOrderCode(orderCode));
+			ret.setExpressList(this.getExpressList(orderCode));
+		}
+		return ret;
+	}
+	
+	/**
+	 * 获取订单地址通过商品编号
+	 * 
+	 * @param orderCode
+	 * @return
+	 */
+	private OrderAddress getOrderAddressByOrderCode(String orderCode) {
+		OrderAddress address = null;
+		MDataMap dm = DbUp.upTable("oc_orderadress").one("order_code", orderCode);
+		if (dm != null) {
+			SerializeSupport ss = new SerializeSupport<OrderAddress>();
+			OrderAddress pic = new OrderAddress();
+			ss.serialize(dm, pic);
+			address = pic;
+		}
+		return address;
+	}
+	
+	/**
+	 * 获取订单的活动list，通过商品编号
+	 * 
+	 * @param orderCode
+	 * @return
+	 */
+	private List<OcOrderActivity> getOrderActivityListByOrderCode(String orderCode) {
+		List<OcOrderActivity> ret = new ArrayList<OcOrderActivity>();
+		MDataMap mapParam = new MDataMap();
+		mapParam.put("order_code", orderCode);
+		List<MDataMap> listMap = DbUp.upTable("oc_order_activity").query("" , "", "order_code=:order_code", mapParam, -1, -1);
+		if (listMap != null) {
+			int size = listMap.size();
+			SerializeSupport ss = new SerializeSupport<OcOrderActivity>();
+			for (int j = 0; j < size; j++) {
+				OcOrderActivity pic = new OcOrderActivity();
+				ss.serialize(listMap.get(j), pic);
+				ret.add(pic);
+			}
+		}
+		return ret;
+	}
+	
+	/**
+	 * 获取订单的支付list，通过商品编号
+	 * 
+	 * @param orderCode
+	 * @return
+	 */
+	private List<OcOrderPay> getOrderPayListByOrderCode(String orderCode) {
+		List<OcOrderPay> ret = new ArrayList<OcOrderPay>();
+		MDataMap mapParam = new MDataMap();
+		mapParam.put("order_code", orderCode);
+		List<MDataMap> listMap = DbUp.upTable("oc_order_pay").query("", "", "order_code=:order_code", mapParam, -1, -1);
+		if (listMap != null) {
+			int size = listMap.size();
+			SerializeSupport ss = new SerializeSupport<OcOrderPay>();
+			for (int j = 0; j < size; j++) {
+				OcOrderPay pic = new OcOrderPay();
+				ss.serialize(listMap.get(j), pic);
+				ret.add(pic);
+			}
+		}
+		return ret;
+	}
+	
+	/**
+	 * 获取订单的明细,通过商品编号
+	 * 
+	 * @param orderCode
+	 * @return
+	 */
+	private List<OrderDetail> getOrderDetaiListByOrderCode(String orderCode) {
+		List<OrderDetail> ret = new ArrayList<OrderDetail>();
+		MDataMap mapParam = new MDataMap();
+		mapParam.put("order_code", orderCode);
+		List<MDataMap> listMap = DbUp.upTable("oc_orderdetail").query("", "", "order_code=:order_code", mapParam, -1, -1);
+		if (listMap != null) {
+			int size = listMap.size();
+			SerializeSupport ss = new SerializeSupport<OrderDetail>();
+			for (int j = 0; j < size; j++) {
+				OrderDetail pic = new OrderDetail();
+				ss.serialize(listMap.get(j), pic);
+				ret.add(pic);
+			}
+		}
+		return ret;
+	}
+	
+	/**
+	 * 获取订单运输信息
+	 * 
+	 * @param orderCode
+	 * @return
+	 */
+	private OcOrderShipments getOcOrderShipmentsByOrderCode(String orderCode) {
+		OcOrderShipments ocOrderShipments = null;
+		MDataMap dm = DbUp.upTable("oc_order_shipments").one("order_code", orderCode);
+		if (dm != null) {
+			SerializeSupport ss = new SerializeSupport<OcOrderShipments>();
+			OcOrderShipments pic = new OcOrderShipments();
+			ss.serialize(dm, pic);
+			ocOrderShipments = pic;
+		}
+		return ocOrderShipments;
+	}
+	
+	private List<Express> getExpressList(String orderCode) {
+		List<Express> ret = new ArrayList<Express>();
+		MDataMap mapParam = new MDataMap();
+		mapParam.put("order_code", orderCode);
+		List<MDataMap> listMap = DbUp.upTable("oc_express_detail").query("", "time asc", "order_code=:order_code", mapParam, -1, -1);
+		int size = listMap.size();
+		SerializeSupport ss = new SerializeSupport<Express>();
+		MDataMap express = new MDataMap();
+		for (int j = 0; j < size; j++) {
+			Express pic = new Express();
+			ss.serialize(listMap.get(j), pic);
+			ret.add(pic);
+			if (express.containsKey(pic.getWaybill())) {
+				pic.setLogisticseName(express.get(pic.getWaybill()));
+			} else {
+				MDataMap mdOne = DbUp.upTable("oc_order_shipments").one(
+						"order_code", orderCode, "waybill", pic.getWaybill());
+				if (mdOne != null) {
+					pic.setLogisticseName(mdOne.get("logisticse_name"));
+				}
+				express.put(pic.getWaybill(), pic.getLogisticseName());
+			}
+		}
+		return ret;
+	}
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * 同步跨境通订单，不拆单，直发
@@ -280,7 +471,6 @@ public class OrderForKJT extends BaseClass {
 		
 		return orderSoCreate.responseSucc();
 	}
-	
 	private String getAreaName(String area_code){
 		String prov=DbUp.upTable("sc_tmp").one("code", area_code.subSequence(0, 2)+ "0000").get("name");
 		String city=DbUp.upTable("sc_tmp").one("code", area_code.subSequence(0, 4)+ "00").get("name");

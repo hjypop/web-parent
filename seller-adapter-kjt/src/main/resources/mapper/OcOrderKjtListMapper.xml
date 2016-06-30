@@ -48,6 +48,92 @@
 			order_code_out = #{orderCodeOut,jdbcType=VARCHAR}
 		</where>
 	</select>
+	
+	<insert id="insertSelective" parameterType="com.hjy.entity.OcOrderKjtList">
+		insert into ordercenter.oc_order_kjt_list
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="uid != null">
+				uid,
+			</if>
+			<if test="orderCodeSeq != null">
+				order_code_seq,
+			</if>
+			<if test="orderCode != null">
+				order_code,
+			</if>
+			<if test="orderCodeOut != null">
+				order_code_out,
+			</if>
+			<if test="productAmount != null">
+				product_amount,
+			</if>
+			<if test="taxAmount != null">
+				tax_amount,
+			</if>
+			<if test="shippingAmount != null">
+				shipping_amount,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="sostatus != null">
+				sostatus,
+			</if>
+			<if test="localStatus != null">
+				local_status,
+			</if>
+			<if test="rsyncDesc != null">
+				rsync_desc,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null">
+				#{uid,jdbcType=CHAR},
+			</if>
+			<if test="orderCodeSeq != null">
+				#{orderCodeSeq,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCode != null">
+				#{orderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCodeOut != null">
+				#{orderCodeOut,jdbcType=VARCHAR},
+			</if>
+			<if test="productAmount != null">
+				#{productAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="taxAmount != null">
+				#{taxAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="shippingAmount != null">
+				#{shippingAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=CHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=CHAR},
+			</if>
+			<if test="sostatus != null">
+				#{sostatus,jdbcType=VARCHAR},
+			</if>
+			<if test="localStatus != null">
+				#{localStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="rsyncDesc != null">
+				#{rsyncDesc,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
 
 	<!-- 根据订单编号更新订单 2016-06-28 zhy -->
 	<update id="updateSelective" parameterType="com.hjy.entity.OcOrderKjtList">
