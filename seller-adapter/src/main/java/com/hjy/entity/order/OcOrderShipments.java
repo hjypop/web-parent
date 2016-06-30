@@ -11,11 +11,19 @@ package com.hjy.entity.order;
 * 修改人：yanzj
 * 修改时间：2013-9-10 上午9:41:22   
 * 修改备注：   
+* 
+* 修改人：Yangcl
+* 修改时间：2016-6-30  
+* 修改备注：已经与数据库字段同步  
 * @version    
 *    
 */
 public class OcOrderShipments  {
 
+   private Integer zid = 0;
+
+    private String uid = "";
+	    
     /**
      * 订单编号
      */
@@ -28,10 +36,26 @@ public class OcOrderShipments  {
      * 物流商家name
      */
     private String logisticseName  = ""  ;
+    
+    private Integer sendCount;
+    
+    private String sendRemark;
+
+    private String orderCodeSeq;
+
+    private String updateTime;
+
+    private String updateUser;
+
+    private String shipmentsCode;
+    
     /**
      * 运单号码
      */
     private String waybill  = ""  ;
+    
+    private Integer isSend100Flag;
+    
     /**
      * 创建人
      */
@@ -114,5 +138,79 @@ public class OcOrderShipments  {
 	public void setOrder_code_seq(String order_code_seq) {
 		this.order_code_seq = order_code_seq;
 	}
+
+	public Integer getZid() {
+		return zid;
+	}
+
+	public void setZid(Integer zid) {
+		this.zid = zid;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public Integer getSendCount() {
+		return sendCount;
+	}
+
+	public void setSendCount(Integer sendCount) {
+		this.sendCount = sendCount;
+	}
+
+	public String getSendRemark() {
+		return sendRemark;
+	}
+
+	public void setSendRemark(String sendRemark) {
+		this.sendRemark = sendRemark;
+	}
+
+	public String getOrderCodeSeq() {
+		return orderCodeSeq;
+	}
+
+	public void setOrderCodeSeq(String orderCodeSeq) {
+		this.orderCodeSeq = orderCodeSeq;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public String getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(String updateUser) {
+		this.updateUser = updateUser;
+	}
+
+	public String getShipmentsCode() {
+		return shipmentsCode;
+	}
+
+	public void setShipmentsCode(String shipmentsCode) {
+		this.shipmentsCode = shipmentsCode;
+	}
+
+	public Integer getIsSend100Flag() {
+		return isSend100Flag;
+	}
+
+	public void setIsSend100Flag(Integer isSend100Flag) {
+		this.isSend100Flag = isSend100Flag;
+	}
+	
+	
 }
 

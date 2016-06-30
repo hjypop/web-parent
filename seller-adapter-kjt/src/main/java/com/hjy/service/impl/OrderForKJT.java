@@ -20,7 +20,9 @@ import com.hjy.dao.IOcOrderKjtListDao;
 import com.hjy.dao.IOcOrderKjtListDataDao;
 import com.hjy.dao.order.IOcOrderActivityDao;
 import com.hjy.dao.order.IOcOrderPayDao;
+import com.hjy.dao.order.IOcOrderShipmentsDao;
 import com.hjy.dao.order.IOcOrderaddressDao;
+import com.hjy.dao.order.IOcOrderdetailDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.entity.OcOrderKjtDetail;
 import com.hjy.entity.OcOrderKjtList;
@@ -60,6 +62,10 @@ public class OrderForKJT extends BaseClass {
 	private IOcOrderActivityDao ocOrderActivityDao;
 	@Inject
 	private IOcOrderPayDao ocOrderPayDao;
+	@Inject
+	private IOcOrderdetailDao ocOrderdetailDao;
+	@Inject
+	private IOcOrderShipmentsDao ocOrderShipmentsDao;
 	
 	
 	
@@ -335,20 +341,13 @@ public class OrderForKJT extends BaseClass {
 	 * @return
 	 */
 	private List<OrderDetail> getOrderDetaiListByOrderCode(String orderCode) {
-		List<OrderDetail> ret = new ArrayList<OrderDetail>();
-		MDataMap mapParam = new MDataMap();
-		mapParam.put("order_code", orderCode);
-		List<MDataMap> listMap = DbUp.upTable("oc_orderdetail").query("", "", "order_code=:order_code", mapParam, -1, -1);
-		if (listMap != null) {
-			int size = listMap.size();
-			SerializeSupport ss = new SerializeSupport<OrderDetail>();
-			for (int j = 0; j < size; j++) {
-				OrderDetail pic = new OrderDetail();
-				ss.serialize(listMap.get(j), pic);
-				ret.add(pic);
-			}
+		OrderDetail entity = new OrderDetail();
+		entity.setOrderCode(orderCode);
+		List<OrderDetail> list = ocOrderdetailDao.findList(entity);
+		if(list == null){
+			list = new ArrayList<OrderDetail>();
 		}
-		return ret;
+		return list;
 	}
 	
 	/**
@@ -358,16 +357,15 @@ public class OrderForKJT extends BaseClass {
 	 * @return
 	 */
 	private OcOrderShipments getOcOrderShipmentsByOrderCode(String orderCode) {
-		OcOrderShipments ocOrderShipments = null;
-		MDataMap dm = DbUp.upTable("oc_order_shipments").one("order_code", orderCode);
-		if (dm != null) {
-			SerializeSupport ss = new SerializeSupport<OcOrderShipments>();
-			OcOrderShipments pic = new OcOrderShipments();
-			ss.serialize(dm, pic);
-			ocOrderShipments = pic;
+		OcOrderShipments entity = new OcOrderShipments();
+		entity.setOrderCode(orderCode);
+		entity = ocOrderShipmentsDao.findByType(entity);
+		if(entity == null){
+			entity = new OcOrderShipments();
 		}
-		return ocOrderShipments;
+		return entity;
 	}
+	
 	
 	private List<Express> getExpressList(String orderCode) {
 		List<Express> ret = new ArrayList<Express>();

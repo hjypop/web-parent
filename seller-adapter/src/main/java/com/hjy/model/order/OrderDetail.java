@@ -16,7 +16,11 @@ import com.hjy.base.BaseClass;
 * 创建时间：2013-9-2 上午11:03:07   
 * 修改人：yanzj
 * 修改时间：2013-9-2 上午11:03:07   
-* 修改备注：   
+* 修改备注： 
+* 
+* 修改人：Yangcl
+* 修改时间：2016-6-30  
+* 修改备注：与数据库所有字段已经对应   
 * @version    
 *    
 */
@@ -27,6 +31,9 @@ public class OrderDetail extends BaseClass implements Serializable{
 	 * 订单明细的zid(创建订单勿传)
 	 */
 	private String zid= "";
+	
+    private String uid ="";
+    
 	/**
 	 * 订单编号(创建接口勿传,此值会被覆盖，请勿传)
 	 */
@@ -45,6 +52,8 @@ public class OrderDetail extends BaseClass implements Serializable{
 	 */
 	private String skuName = "";
 	
+    private String giftCd ="";
+    
 	/**
 	 * 产品价格
 	 */
@@ -60,6 +69,8 @@ public class OrderDetail extends BaseClass implements Serializable{
 	 * 商品的主图url
 	 */
 	private String productPicUrl = "";
+	
+	private String detailCode ="";
 	
 	
 	 /**
@@ -94,12 +105,56 @@ public class OrderDetail extends BaseClass implements Serializable{
     
     private BigDecimal taxRate=BigDecimal.ZERO;//税率
     
+    private String flagAsale ="";
+
+    private String asaleCode ="";
+    
 	public String getZid() {
 		return zid;
 	}
 
 	public void setZid(String zid) {
 		this.zid = zid;
+	}
+	
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getGiftCd() {
+		return giftCd;
+	}
+
+	public void setGiftCd(String giftCd) {
+		this.giftCd = giftCd;
+	}
+
+	public String getDetailCode() {
+		return detailCode;
+	}
+
+	public void setDetailCode(String detailCode) {
+		this.detailCode = detailCode;
+	}
+
+	public String getFlagAsale() {
+		return flagAsale;
+	}
+
+	public void setFlagAsale(String flagAsale) {
+		this.flagAsale = flagAsale;
+	}
+
+	public String getAsaleCode() {
+		return asaleCode;
+	}
+
+	public void setAsaleCode(String asaleCode) {
+		this.asaleCode = asaleCode;
 	}
 
 	public String getProductPicUrl() {
