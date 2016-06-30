@@ -43,14 +43,14 @@ public class OcOrderActivity  {
     
     
     /**
-     * 活动名称
+     * 活动名称  非数据库字段
      */
     private String activityName = "";
     
     
     /**
-     * 订单最低价格
-     */
+     * 订单最低价格 非数据库字段
+     */ 
     private float orderMinMoney = 0;
     
     /**

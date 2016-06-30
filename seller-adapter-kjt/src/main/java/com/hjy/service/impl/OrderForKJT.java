@@ -18,10 +18,17 @@ import com.hjy.common.DateUtil;
 import com.hjy.dao.IOcOrderKjtDetailDao;
 import com.hjy.dao.IOcOrderKjtListDao;
 import com.hjy.dao.IOcOrderKjtListDataDao;
+import com.hjy.dao.order.IOcOrderActivityDao;
+import com.hjy.dao.order.IOcOrderaddressDao;
+import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.entity.OcOrderKjtDetail;
 import com.hjy.entity.OcOrderKjtList;
 import com.hjy.entity.OcOrderKjtListData;
+import com.hjy.entity.order.OcOrderActivity;
 import com.hjy.entity.order.OcOrderPay;
+import com.hjy.entity.order.OcOrderShipments;
+import com.hjy.entity.order.OcOrderaddress;
+import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.WebHelper;
 import com.hjy.model.MDataMap;
 import com.hjy.model.order.Express;
@@ -44,6 +51,15 @@ public class OrderForKJT extends BaseClass {
 	private IOcOrderKjtListDataDao ocOrderKjtListDataDao; 
 	@Inject
 	private IOcOrderKjtDetailDao ocOrderKjtDetailDao;
+	@Inject
+	private IOcOrderinfoDao ocOrderinfoDao;
+	@Inject
+	private IOcOrderaddressDao ocOrderaddressDao;
+	@Inject
+	private IOcOrderActivityDao ocOrderActivityDao;
+	
+	
+	
 	
 	/**
 	 * 同步跨境通订单
@@ -198,21 +214,50 @@ public class OrderForKJT extends BaseClass {
 	 * @return
 	 */
 	private Order getOrder(String orderCode) {
-		Order ret = null;
-		MDataMap dm = DbUp.upTable("oc_orderinfo").one("order_code", orderCode);
-		if (dm != null) {
-			SerializeSupport ss = new SerializeSupport<Order>();
-			Order pic = new Order();
-			ss.serialize(dm, pic);
-			ret = pic;
-			ret.setAddress(this.getOrderAddressByOrderCode(orderCode));
-			ret.setActivityList(this.getOrderActivityListByOrderCode(orderCode));
-			ret.setOcOrderPayList(this.getOrderPayListByOrderCode(orderCode));
-			ret.setProductList(this.getOrderDetaiListByOrderCode(orderCode));
-			ret.setOcorderShipments(this.getOcOrderShipmentsByOrderCode(orderCode));
-			ret.setExpressList(this.getExpressList(orderCode));
+		Order order = new Order();
+		OcOrderinfo i = ocOrderinfoDao.findOrderInfoByOrderCode(orderCode);
+		if (i != null) {
+			order.setUid(i.getUid());
+			order.setOrderCode(i.getOrderCode());
+			order.setOrderSource(i.getOrderSource());
+			order.setOrderType(i.getOrderType());
+			order.setOrderStatus(i.getOrderStatus()); 
+			order.setSellerCode(i.getSellerCode());
+			order.setBuyerCode(i.getBuyerCode());
+			order.setPayType(i.getPayType());
+			order.setSendType(i.getSendType());
+			order.setProductMoney(i.getProductMoney());
+			order.setTransportMoney(i.getTransportMoney());
+			order.setPromotionMoney(i.getPromotionMoney());
+			order.setOrderMoney(i.getOrderMoney());
+			order.setPayedMoney(i.getPayedMoney());
+			order.setCreateTime(i.getCreateTime());
+			order.setUpdateTime(i.getUpdateTime());
+//			order.setProductName()      数据库有 order实体没有
+			order.setFreeTransportMoney(i.getFreeTransportMoney());
+			order.setDueMoney(i.getDueMoney());
+			order.setOrderChannel(i.getOrderChannel());
+			order.setAppVersion(i.getAppVersion());
+//			order.setDeleteFlag()      数据库有 order实体没有  
+//			order.setOutOrderCode      数据库有 order实体没有  
+//			order.setBigOrderCode      数据库有 order实体没有  
+//			order.setOrderStatusExt      数据库有 order实体没有  
+			order.setSmallSellerCode(i.getSmallSellerCode());
+			order.setOrderSeq(i.getOrderSeq());
+//			order.setOrderAuditStatus      数据库有 order实体没有  
+			order.setLowOrder(i.getLowOrder());
+//			order.setRoomId      数据库有 order实体没有  
+//			order.setAnchorId      数据库有 order实体没有  
+			
+			
+			order.setAddress(this.getOrderAddressByOrderCode(orderCode));
+			order.setActivityList(this.getOrderActivityListByOrderCode(orderCode));
+			order.setOcOrderPayList(this.getOrderPayListByOrderCode(orderCode));
+			order.setProductList(this.getOrderDetaiListByOrderCode(orderCode));
+			order.setOcorderShipments(this.getOcOrderShipmentsByOrderCode(orderCode));
+			order.setExpressList(this.getExpressList(orderCode));
 		}
-		return ret;
+		return order;
 	}
 	
 	/**
@@ -222,15 +267,31 @@ public class OrderForKJT extends BaseClass {
 	 * @return
 	 */
 	private OrderAddress getOrderAddressByOrderCode(String orderCode) {
-		OrderAddress address = null;
-		MDataMap dm = DbUp.upTable("oc_orderadress").one("order_code", orderCode);
-		if (dm != null) {
-			SerializeSupport ss = new SerializeSupport<OrderAddress>();
-			OrderAddress pic = new OrderAddress();
-			ss.serialize(dm, pic);
-			address = pic;
+		OrderAddress a = new OrderAddress();
+		OcOrderaddress i = ocOrderaddressDao.findOrderAddressByOrderCode(orderCode);
+		if (i != null) {
+			a.setOrderCode(i.getOrderCode());
+			a.setAreaCode(i.getAreaCode());
+			a.setAddress(i.getAddress());
+			a.setPostCode(i.getPostcode());
+			a.setMobilephone(i.getMobilephone());
+			a.setTelephone(i.getTelephone());
+			a.setReceivePerson(i.getReceivePerson());
+			a.setEmail(i.getEmail());
+			a.setInvoiceTitle(i.getInvoiceTitle());
+			a.setInvoiceType(i.getInvoiceType());
+			a.setInvoiceContent(i.getInvoiceContent());
+			a.setFlagInvoice(i.getFlagInvoice().toString());
+			a.setRemark(i.getRemark());
+//			a.setIN invoiceStatus
+			a.setAuthTrueName(i.getAuthTrueName());
+			a.setAuthIdcardType(i.getAuthIdcardType());
+			a.setAuthIdcardNumber(i.getAuthIdcardNumber());
+			a.setAuthPhoneNumber(i.getAuthPhoneNumber());
+			a.setAuthEmail(i.getAuthEmail());
+			a.setAuthAddress(i.getAuthAddress());
 		}
-		return address;
+		return a;
 	}
 	
 	/**
@@ -240,20 +301,13 @@ public class OrderForKJT extends BaseClass {
 	 * @return
 	 */
 	private List<OcOrderActivity> getOrderActivityListByOrderCode(String orderCode) {
-		List<OcOrderActivity> ret = new ArrayList<OcOrderActivity>();
-		MDataMap mapParam = new MDataMap();
-		mapParam.put("order_code", orderCode);
-		List<MDataMap> listMap = DbUp.upTable("oc_order_activity").query("" , "", "order_code=:order_code", mapParam, -1, -1);
-		if (listMap != null) {
-			int size = listMap.size();
-			SerializeSupport ss = new SerializeSupport<OcOrderActivity>();
-			for (int j = 0; j < size; j++) {
-				OcOrderActivity pic = new OcOrderActivity();
-				ss.serialize(listMap.get(j), pic);
-				ret.add(pic);
-			}
+		OcOrderActivity entity = new OcOrderActivity();
+		entity.setOrderCode(orderCode);
+		List<OcOrderActivity> list = ocOrderActivityDao.findList(entity);
+		if(list == null){
+			list = new ArrayList<OcOrderActivity>();
 		}
-		return ret;
+		return list;
 	}
 	
 	/**

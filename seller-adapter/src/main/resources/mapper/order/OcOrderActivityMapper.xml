@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.order.IOcOrderActivityDao">
+	
+	<resultMap id="BaseResultMap" type="com.hjy.entity.order.OcOrderActivity">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="uid" property="uid" jdbcType="VARCHAR" />
+		<result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+		<result column="product_code" property="productCode" jdbcType="VARCHAR" />
+		<result column="sku_code" property="skuCode" jdbcType="VARCHAR" />
+		<result column="preferential_money" property="preferentialMoney"
+			jdbcType="DECIMAL" />
+		<result column="activity_code" property="activityCode"
+			jdbcType="VARCHAR" />
+		<result column="activity_type" property="activityType"
+			jdbcType="VARCHAR" />
+		<result column="out_active_code" property="outActiveCode"
+			jdbcType="VARCHAR" />
+		<result column="ticket_code" property="ticketCode" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		 *
+		from ordercenter.oc_orderadress
+		where zid = #{zid,jdbcType=INTEGER}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from ordercenter.oc_orderadress where zid = #{zid,jdbcType=INTEGER}
+	</delete>
+	
+	<insert id="insertSelective" parameterType="com.hjy.entity.order.OcOrderActivity">
+		insert into ordercenter.oc_orderadress
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="uid != null">
+				uid,
+			</if>
+			<if test="orderCode != null">
+				order_code,
+			</if>
+			<if test="productCode != null">
+				product_code,
+			</if>
+			<if test="skuCode != null">
+				sku_code,
+			</if>
+			<if test="preferentialMoney != null">
+				preferential_money,
+			</if>
+			<if test="activityCode != null">
+				activity_code,
+			</if>
+			<if test="activityType != null">
+				activity_type,
+			</if>
+			<if test="outActiveCode != null">
+				out_active_code,
+			</if>
+			<if test="ticketCode != null">
+				ticket_code,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null">
+				#{uid,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCode != null">
+				#{orderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="productCode != null">
+				#{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="skuCode != null">
+				#{skuCode,jdbcType=VARCHAR},
+			</if>
+			<if test="preferentialMoney != null">
+				#{preferentialMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="activityCode != null">
+				#{activityCode,jdbcType=VARCHAR},
+			</if>
+			<if test="activityType != null">
+				#{activityType,jdbcType=VARCHAR},
+			</if>
+			<if test="outActiveCode != null">
+				#{outActiveCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ticketCode != null">
+				#{ticketCode,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateSelective" parameterType="com.hjy.entity.order.OcOrderActivity">
+		update ordercenter.oc_orderadress
+		<set>
+			<if test="uid != null">
+				uid = #{uid,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCode != null">
+				order_code = #{orderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="productCode != null">
+				product_code = #{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="skuCode != null">
+				sku_code = #{skuCode,jdbcType=VARCHAR},
+			</if>
+			<if test="preferentialMoney != null">
+				preferential_money = #{preferentialMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="activityCode != null">
+				activity_code = #{activityCode,jdbcType=VARCHAR},
+			</if>
+			<if test="activityType != null">
+				activity_type = #{activityType,jdbcType=VARCHAR},
+			</if>
+			<if test="outActiveCode != null">
+				out_active_code = #{outActiveCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ticketCode != null">
+				ticket_code = #{ticketCode,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where zid = #{zid,jdbcType=INTEGER}
+	</update>
+	
+	<select id="findList" resultMap="BaseResultMap" parameterType="com.hjy.entity.order.OcOrderActivity">
+		select
+		 	*
+		from 
+			ordercenter.oc_orderadress
+		where 
+			1=1 
+			<if test="orderCode != null">
+				and order_code = #{orderCode , jdbcType=VARCHAR} 
+			</if>
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
