@@ -1,4 +1,4 @@
-package com.hjy.selleradapter.service;
+package com.hjy.selleradapter.kjt;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -18,11 +18,10 @@ import com.hjy.entity.member.McLoginInfo;
 import com.hjy.entity.order.OcOrderaddress;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.entity.order.OcReturnMoney;
+import com.hjy.factory.UserFactory;
 import com.hjy.helper.FormatHelper;
 import com.hjy.helper.WebHelper;
-import com.hjy.model.MDataMap;
 import com.hjy.model.RsyncResult;
-import com.hjy.selleradapter.kjt.RsyncKjt;
 import com.hjy.selleradapter.kjt.config.RsyncConfigOrderStatus;
 import com.hjy.selleradapter.kjt.request.RsyncRequestOrderStatus;
 import com.hjy.selleradapter.kjt.response.RsyncResponseOrderStatus;
@@ -45,7 +44,8 @@ import com.hjy.support.MailSupport;
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月27日 下午4:50:30
  */
-public class TraceOrder extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrderStatus, RsyncResponseOrderStatus> {
+public class RsyncOrderStatus
+		extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrderStatus, RsyncResponseOrderStatus> {
 
 	@Inject
 	private IOcOrderKjtListService ocOrderKjtListService;
@@ -233,7 +233,6 @@ public class TraceOrder extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrd
 		List<OcOrderKjtDetail> details = ocOrderKjtDetailService.findOrderDetailByCodeSeq(order_code_seq);
 		if (details != null && details.size() > 0) {
 			for (OcOrderKjtDetail ocOrderKjtDetail : details) {
-				String sku_code = ocOrderKjtDetail.getSkuCode();
 				BigDecimal sku_num = BigDecimal.valueOf(ocOrderKjtDetail.getSkuNum());
 				expected_return_money = expected_return_money.add(sku_num.multiply(ocOrderKjtDetail.getSkuPrice()));
 			}

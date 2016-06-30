@@ -8,7 +8,7 @@ import org.quartz.JobExecutionContext;
 import com.hjy.annotation.Inject;
 import com.hjy.entity.OcOrderKjtList;
 import com.hjy.quartz.job.RootJob;
-import com.hjy.selleradapter.service.TraceOrder;
+import com.hjy.selleradapter.kjt.RsyncOrderStatus;
 import com.hjy.service.IOcOrderKjtListService;
 
 /**
@@ -33,7 +33,7 @@ public class JobForOrderStatus extends RootJob {
 			if (StringUtils.isNotBlank(order_code_out)) {
 				idList.add(Long.valueOf(order_code_out));
 				if ((i != 0 && (i + 1) % 20 == 0) || (list.size() - 1 == i)) {
-					TraceOrder traceOrder = new TraceOrder();
+					RsyncOrderStatus traceOrder = new RsyncOrderStatus();
 					traceOrder.upRsyncRequest()
 							.setSalesChannelSysNo(Long.valueOf(getConfig("groupcenter.rsync_kjt_SaleChannelSysNo")));
 					traceOrder.upRsyncRequest().setOrderIds(idList);
