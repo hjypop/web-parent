@@ -16,6 +16,10 @@ package com.hjy.entity.order;
 */
 public class OcOrderActivity  {
     
+	private Integer zid;
+	
+	private String uid;
+	
     /**
      * 订单编号(接口勿传,此值会被覆盖，请勿传)
      */
@@ -135,6 +139,22 @@ public class OcOrderActivity  {
 
 	public void setTicketCode(String ticketCode) {
 		this.ticketCode = ticketCode;
+	}
+
+	public Integer getZid() {
+		return zid;
+	}
+
+	public void setZid(Integer zid) {
+		this.zid = zid;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
     
     

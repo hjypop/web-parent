@@ -19,6 +19,7 @@ import com.hjy.dao.IOcOrderKjtDetailDao;
 import com.hjy.dao.IOcOrderKjtListDao;
 import com.hjy.dao.IOcOrderKjtListDataDao;
 import com.hjy.dao.order.IOcOrderActivityDao;
+import com.hjy.dao.order.IOcOrderPayDao;
 import com.hjy.dao.order.IOcOrderaddressDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.entity.OcOrderKjtDetail;
@@ -57,7 +58,8 @@ public class OrderForKJT extends BaseClass {
 	private IOcOrderaddressDao ocOrderaddressDao;
 	@Inject
 	private IOcOrderActivityDao ocOrderActivityDao;
-	
+	@Inject
+	private IOcOrderPayDao ocOrderPayDao;
 	
 	
 	
@@ -317,20 +319,13 @@ public class OrderForKJT extends BaseClass {
 	 * @return
 	 */
 	private List<OcOrderPay> getOrderPayListByOrderCode(String orderCode) {
-		List<OcOrderPay> ret = new ArrayList<OcOrderPay>();
-		MDataMap mapParam = new MDataMap();
-		mapParam.put("order_code", orderCode);
-		List<MDataMap> listMap = DbUp.upTable("oc_order_pay").query("", "", "order_code=:order_code", mapParam, -1, -1);
-		if (listMap != null) {
-			int size = listMap.size();
-			SerializeSupport ss = new SerializeSupport<OcOrderPay>();
-			for (int j = 0; j < size; j++) {
-				OcOrderPay pic = new OcOrderPay();
-				ss.serialize(listMap.get(j), pic);
-				ret.add(pic);
-			}
-		}
-		return ret;
+		OcOrderPay entity = new OcOrderPay();
+		entity.setOrderCode(orderCode);
+		List<OcOrderPay> list = ocOrderPayDao.findList(entity);
+		if(list == null){
+			list  = new ArrayList<OcOrderPay>();
+		} 
+		return list;
 	}
 	
 	/**

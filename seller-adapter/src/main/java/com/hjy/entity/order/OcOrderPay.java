@@ -16,6 +16,9 @@ package com.hjy.entity.order;
 */
 public class OcOrderPay  {
     
+	private Integer zid;
+	
+	private String uid;
   
     /**
      * 订单编号
@@ -46,8 +49,32 @@ public class OcOrderPay  {
      * 买家编号 
      */
     private String merchantId = "";
+    /**
+     * 支付备注
+     */
+    private String payRemark  = ""  ;
     
-    public String getMerchantId() {
+    
+    
+    
+    
+    public Integer getZid() {
+		return zid;
+	}
+
+	public void setZid(Integer zid) {
+		this.zid = zid;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getMerchantId() {
 		return merchantId;
 	}
 
@@ -62,11 +89,6 @@ public class OcOrderPay  {
 	public void setPassWord(String passWord) {
 		this.passWord = passWord;
 	}
-
-	/**
-     * 支付备注
-     */
-    private String payRemark  = ""  ;
   
     public void setOrderCode(String orderCode) {
         this.orderCode = orderCode;
