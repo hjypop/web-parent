@@ -14,7 +14,7 @@ public interface IMcAuthenticationInfoService extends IBaseService<McAuthenticat
 	/**
 	 * 
 	 * 方法: updateCustomsStatus <br>
-	 * 描述: TODO <br>
+	 * 描述: 修改通关状态 <br>
 	 * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
 	 * 时间: 2016年6月30日 上午7:50:35
 	 * @return
