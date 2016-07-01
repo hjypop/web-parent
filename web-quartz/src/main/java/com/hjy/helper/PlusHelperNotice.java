@@ -42,5 +42,16 @@ public class PlusHelperNotice {
 
 		return true;
 	}
+	/**
+	 * 当修改SKU库存时调用
+	 * 
+	 * @param sSkuCode
+	 * @return
+	 */
+	public static boolean onChangeSkuStock(String sSkuCode) {
+//		XmasKv.upFactory(EKvSchema.Stock).del(sSkuCode);
+//		XmasKv.upFactory(EKvSchema.SkuStoreStock).del(sSkuCode);
+		return true;
+	}
 
 }

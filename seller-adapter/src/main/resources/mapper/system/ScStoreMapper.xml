@@ -3,8 +3,8 @@
 <mapper namespace="com.hjy.dao.system.IScStoreDao">
 
 	<!-- 根据storeCode仓库编号查询对象是否存在 2016-06-28 zhy -->
-	<select id="count" parameterType="com.hjy.entity.system.ScStore">
-		select count(1) from sc_store
+	<select id="count" parameterType="com.hjy.entity.system.ScStore" resultType="int">
+		select count(1) from systemcenter.sc_store
 		<where>
 			store_code = #{storeCode,jdbcType=VARCHAR}
 		</where>

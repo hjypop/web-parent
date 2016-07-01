@@ -38,8 +38,7 @@ import com.hjy.service.order.IOcReturnMoneyService;
 import com.hjy.support.MailSupport;
 
 /**
- * 
- * 类: TraceOrder <br>
+ * alias TraceOrder 类: RsyncOrderStatus <br>
  * 描述: 同步订单状态 <br>
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月27日 下午4:50:30
@@ -127,19 +126,15 @@ public class RsyncOrderStatus
 						}
 					}
 				}
-
 				// 更新本地订单状态
-
 				// 全部对应交易成功 交易成功
 				// 部分对应已发货 已发货
 				// 全部对应下单成功-未发货 下单成功-未发货
 				// 全部对应交易失败 交易失败
-
 				// 4497153900010002 下单成功-未发货
 				// 4497153900010003 已发货
 				// 4497153900010005 交易成功
 				// 4497153900010006 交易失败
-
 				List<String> localStatusList = ocOrderKjtListService.findLocalStatusByOrderCode(order_code);
 				// 根据order_code查询跨境通订单列表集合
 				String status = "";
@@ -149,10 +144,8 @@ public class RsyncOrderStatus
 					// 此处映射状态不全，暂时不考虑其他
 					status = "4497153900010003";
 				}
-
 				if (StringUtils.isNotBlank(status) && !status.equals(orderInfo.getOrderStatus())
 						&& !"4497153900010005".equals(orderInfo.getOrderStatus())) {
-
 					// 更新oc_orderinfo订单状态信息
 					OcOrderinfo ocOrderInfo = new OcOrderinfo();
 					ocOrderInfo.setOrderCode(order_code);
@@ -168,18 +161,15 @@ public class RsyncOrderStatus
 					lcOrderstatus.setNowStatus(status);
 					lcOrderstatusService.insertSelective(lcOrderstatus);
 				}
-
 				if (sostatus == -4 || sostatus == -1 || sostatus == 6 || sostatus == 65) {
 					creatReturnMoney(order_code_seq, order_code);
 				}
-
 				// 判断发个邮件通知一下
 				if (sostatus == -4 || sostatus == -1 || sostatus == 6 || sostatus == 65 || sostatus == 7) {
 					sendMail(order_code_seq, order_code, order_code_out, sostatus);
 				}
 			}
 		}
-
 		return rsyncResult;
 	}
 
@@ -189,11 +179,9 @@ public class RsyncOrderStatus
 	}
 
 	private void sendMail(String order_code_seq, String order_code, String order_code_out, int sostatus) {
-
 		String receives[] = getConfig("groupcenter.kjt_orderstata_sendMail_receives").split(",");
 		String title = getConfig("groupcenter.kjt_orderstata_sendMail_title");
 		String content = getConfig("groupcenter.kjt_orderstata_sendMail_content");
-
 		for (String receive : receives) {
 			if (StringUtils.isNotBlank(receive)) {
 				MailSupport.INSTANCE.sendMail(receive,

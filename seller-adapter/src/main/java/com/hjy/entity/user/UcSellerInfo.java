@@ -1,5 +1,7 @@
 package com.hjy.entity.user;
 
+import com.hjy.base.BaseModel;
+
 /**
  * ClassName: UcSellerInfo <br/>
  * Function: TODO ADD FUNCTION. <br/>
@@ -8,7 +10,7 @@ package com.hjy.entity.user;
  * @version 
  * @since JDK 1.6
  */
-public class UcSellerInfo {
+public class UcSellerInfo extends BaseModel{
 	/**
 	 * 卖家编号
 	 */
