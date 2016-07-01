@@ -38,6 +38,7 @@
 			login_group,
 			if_delete
 		FROM
+			membercenter.mc_login_info
 		<where>
 			member_code = #{memberCode,jdbcType=VARCHAR}
 		</where>
