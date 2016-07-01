@@ -4,10 +4,11 @@
 
 	<!-- 根据member_code和idcard_number修改customs_status 2016-06-30 zhy -->
 	<update id="updateCustomsStatus" parameterType="com.hjy.entity.member.McAuthenticationInfo">
-		UPDATE mc_authenticationInfo
+		UPDATE membercenter.mc_authenticationInfo
 		<set>
 			customs_status = #{customsStatus,jdbcType=INTEGER}
 		</set>
+		
 		<where>
 			member_code = #{memberCode,jdbcType=VARCHAR}
 			AND idcard_number = #{idcardNumber,jdbcType=VARCHAR}
