@@ -23,4 +23,38 @@ public interface IMcAuthenticationInfoDao extends BaseDao<McAuthenticationInfo, 
 	 * @return
 	 */
 	int updateCustomsStatus(McAuthenticationInfo entity);
+
+	public McAuthenticationInfo findByOrderPrice(McAuthenticationInfo entity);
+
+	public int updateSurmoneyByAuthCode(McAuthenticationInfo entity);  
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

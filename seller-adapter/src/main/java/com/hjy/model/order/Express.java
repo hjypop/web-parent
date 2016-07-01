@@ -8,7 +8,7 @@ package com.hjy.model.order;
  */
 public class Express  {
 	
-
+    private Integer zid;
 
 	/**
 	 * 快递状态描述
@@ -50,7 +50,16 @@ public class Express  {
 
 	
 	
-	
+
+	public Integer getZid() {
+		return zid;
+	}
+
+
+	public void setZid(Integer zid) {
+		this.zid = zid;
+	}
+
 
 	public String getLogisticseName() {
 		return logisticseName;

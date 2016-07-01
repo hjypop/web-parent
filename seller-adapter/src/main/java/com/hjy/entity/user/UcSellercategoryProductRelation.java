@@ -2,7 +2,7 @@ package com.hjy.entity.user;
 
 import com.hjy.base.BaseModel;
 
-public class UcSellercategoryProductRelation extends BaseModel{
+public class UcSellercategoryProductRelation extends BaseModel {
 
 	private String productCode = "";
 	private String categoryCode = "";

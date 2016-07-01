@@ -18,21 +18,31 @@ import com.hjy.common.DateUtil;
 import com.hjy.dao.IOcOrderKjtDetailDao;
 import com.hjy.dao.IOcOrderKjtListDao;
 import com.hjy.dao.IOcOrderKjtListDataDao;
+import com.hjy.dao.member.IMcAuthenticationInfoDao;
+import com.hjy.dao.order.IOcExpressEetailDao;
 import com.hjy.dao.order.IOcOrderActivityDao;
 import com.hjy.dao.order.IOcOrderPayDao;
 import com.hjy.dao.order.IOcOrderShipmentsDao;
 import com.hjy.dao.order.IOcOrderaddressDao;
 import com.hjy.dao.order.IOcOrderdetailDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
+import com.hjy.dao.product.IPcProductinfoDao;
+import com.hjy.dao.product.IPcProductinfoExtDao;
+import com.hjy.dao.system.IScTmpDao;
 import com.hjy.entity.OcOrderKjtDetail;
 import com.hjy.entity.OcOrderKjtList;
 import com.hjy.entity.OcOrderKjtListData;
+import com.hjy.entity.member.McAuthenticationInfo;
 import com.hjy.entity.order.OcOrderActivity;
 import com.hjy.entity.order.OcOrderPay;
 import com.hjy.entity.order.OcOrderShipments;
 import com.hjy.entity.order.OcOrderaddress;
 import com.hjy.entity.order.OcOrderinfo;
+import com.hjy.entity.product.PcProductinfo;
+import com.hjy.entity.product.PcProductinfoExt;
+import com.hjy.entity.system.ScTmp;
 import com.hjy.helper.WebHelper;
+import com.hjy.model.AuthenticationInfo;
 import com.hjy.model.MDataMap;
 import com.hjy.model.order.Express;
 import com.hjy.model.order.Order;
@@ -66,7 +76,16 @@ public class OrderForKJT extends BaseClass {
 	private IOcOrderdetailDao ocOrderdetailDao;
 	@Inject
 	private IOcOrderShipmentsDao ocOrderShipmentsDao;
-	
+	@Inject
+	private IOcExpressEetailDao ocExpressEetailDao;
+	@Inject
+	private IPcProductinfoDao pcProductinfoDao;
+	@Inject
+	private IPcProductinfoExtDao pcProductinfoExtDao;
+	@Inject
+	private IMcAuthenticationInfoDao mcAuthenticationInfoDao; 
+	@Inject
+	private IScTmpDao scTmpDao;
 	
 	
 	/**
@@ -152,14 +171,19 @@ public class OrderForKJT extends BaseClass {
 		
 		//此处更新商品的价格为 成本价
 		for (OrderDetail orderDetail : detailList) {
-			BigDecimal costPrice=(BigDecimal)DbUp.upTable("pc_productinfo").dataGet("cost_price", "product_code=:product_code", new MDataMap("product_code",orderDetail.getProductCode()));
-			orderDetail.setCostPrice(costPrice==null?BigDecimal.ZERO:costPrice);
+			pcProductinfoDao
+			
+			BigDecimal costPrice = (BigDecimal)DbUp.upTable("pc_productinfo").dataGet("cost_price", "product_code=:product_code", 
+					new MDataMap("product_code",orderDetail.getProductCode()));
+			
+			orderDetail.setCostPrice(costPrice==null ? BigDecimal.ZERO : costPrice);
 		}
 		
 		
 		//拆单1 按商品拆单
 		Map<String, List<OrderDetail>> listOrderMap1=new HashMap<String, List<OrderDetail>>();
 		for (OrderDetail orderDetail : detailList) {
+			pcProductinfoExtDao
 			
 			MDataMap pext=DbUp.upTable("pc_productinfo_ext").oneWhere("dlr_id,product_trade_type,product_store_type,kjt_seller_code", "", "product_code=:product_code", "product_code",orderDetail.getProductCode());
 			String theKey=pext.get("product_trade_type")+"_"+pext.get("dlr_id")+"_"+pext.get("product_store_type")+"_"+pext.get("kjt_seller_code")+"_"+getWarehouseID(orderDetail.getStoreCode());
@@ -366,31 +390,18 @@ public class OrderForKJT extends BaseClass {
 		return entity;
 	}
 	
-	
 	private List<Express> getExpressList(String orderCode) {
-		List<Express> ret = new ArrayList<Express>();
-		MDataMap mapParam = new MDataMap();
-		mapParam.put("order_code", orderCode);
-		List<MDataMap> listMap = DbUp.upTable("oc_express_detail").query("", "time asc", "order_code=:order_code", mapParam, -1, -1);
-		int size = listMap.size();
-		SerializeSupport ss = new SerializeSupport<Express>();
-		MDataMap express = new MDataMap();
-		for (int j = 0; j < size; j++) {
-			Express pic = new Express();
-			ss.serialize(listMap.get(j), pic);
-			ret.add(pic);
-			if (express.containsKey(pic.getWaybill())) {
-				pic.setLogisticseName(express.get(pic.getWaybill()));
-			} else {
-				MDataMap mdOne = DbUp.upTable("oc_order_shipments").one(
-						"order_code", orderCode, "waybill", pic.getWaybill());
-				if (mdOne != null) {
-					pic.setLogisticseName(mdOne.get("logisticse_name"));
-				}
-				express.put(pic.getWaybill(), pic.getLogisticseName());
-			}
-		}
-		return ret;
+		 List<Express> list = ocExpressEetailDao.selectByOrderCode(orderCode);
+		 if(list != null && list.size() > 0){
+			 for(int i =0 ; i < list.size() ; i ++){
+				 OcOrderShipments entity = new OcOrderShipments();
+				 entity.setOrderCode(orderCode);
+				 entity.setWaybill(list.get(i).getWaybill()); 
+				 entity = ocOrderShipmentsDao.findByType(entity);
+				 list.get(i).setLogisticseName(entity.getLogisticseName()); 
+			 }
+		 }
+		return list;
 	}
 	
 	
@@ -404,9 +415,12 @@ public class OrderForKJT extends BaseClass {
 	 * @param order
 	 */
 	public boolean rsyncOrder(Order order){
-		
 		//判断订单状态  //领导强制添加：即使发货单写一半，也不再同步订单到跨境通
-		if(DbUp.upTable("oc_orderinfo").count("order_code",order.getAddress().getOrderCode(),"order_status","4497153900010002")<1){
+		OcOrderinfo entity = new OcOrderinfo();
+		entity.setOrderCode(order.getAddress().getOrderCode());
+		entity.setOrderStatus("4497153900010002");
+		int count = ocOrderinfoDao.countByOrderCode(entity);
+		if(count < 1){
 			return true;
 		}
 		
@@ -518,11 +532,24 @@ public class OrderForKJT extends BaseClass {
 		
 		return orderSoCreate.responseSucc();
 	}
+	
 	private String getAreaName(String area_code){
-		String prov=DbUp.upTable("sc_tmp").one("code", area_code.subSequence(0, 2)+ "0000").get("name");
-		String city=DbUp.upTable("sc_tmp").one("code", area_code.subSequence(0, 4)+ "00").get("name");
-		String area=DbUp.upTable("sc_tmp").one("code", area_code).get("name");
-//		Map<String, Object> map = DbUp.upTable("sc_tmp").dataSqlOne(" SELECT CONCAT((SELECT name from sc_tmp WHERE code=:code1 LIMIT 0,1 ),',',(SELECT DISTINCT name from sc_tmp WHERE code=:code2 LIMIT 0,1 ),',',(SELECT DISTINCT name from sc_tmp WHERE code=:code3 LIMIT 0,1 )) as code from sc_tmp LIMIT 0,1  ",new MDataMap("code1", area_code.subSequence(0, 2)+ "0000", "code2", area_code.subSequence(0, 4)+ "00", "code3", area_code));
+		ScTmp p = new ScTmp();
+		p.setCode(area_code.subSequence(0, 2)+ "0000");
+		p = scTmpDao.findByType(p);
+		
+		ScTmp c = new ScTmp();
+		c.setCode(area_code.subSequence(0, 4)+ "00");
+		c = scTmpDao.findByType(c);
+		
+		ScTmp a = new ScTmp();
+		a.setCode(area_code);
+		a = scTmpDao.findByType(a);
+		
+		String prov = p.getName();
+		String city = c.getName();
+		String area = a.getName();
+		
 		return prov+","+(StringUtils.startsWith(city, "省直辖县级行政区划")?area:city)+","+area;
 	}
 	
@@ -534,7 +561,11 @@ public class OrderForKJT extends BaseClass {
 	private String getServerType(String product_code){
 		String type="S02";
 		//直邮商品 S01   自贸商品 S02
-		String product_trade_type=(String)DbUp.upTable("pc_productinfo_ext").dataGet("product_trade_type", "product_code=:product_code", new MDataMap("product_code",product_code));
+		PcProductinfoExt entity = new PcProductinfoExt();
+		entity.setProductCode(product_code); 
+		entity = pcProductinfoExtDao.findByType(entity);
+		String product_trade_type = entity.getProductTradeType();		
+		
 //		0 = 直邮 1 = 自贸
 		if(StringUtils.isNotBlank(product_trade_type)){
 			if("0".equals(product_trade_type)){
@@ -575,16 +606,24 @@ public class OrderForKJT extends BaseClass {
 	 * @return
 	 */
 	private AuthenticationInfo getAuth(BigDecimal order_price){
-		MDataMap dataMap = DbUp.upTable("mc_authenticationInfo").oneWhere("", "surmoney desc", "surmoney>=:order_price", "order_price",String.valueOf(order_price));
-		
-		if (dataMap!=null) {
+		McAuthenticationInfo entity = new McAuthenticationInfo();
+		entity.setSurmoney(order_price);
+		entity = mcAuthenticationInfoDao.findByOrderPrice(entity);
+		if (entity != null) {
+			McAuthenticationInfo entity_ = new McAuthenticationInfo();
+			entity_.setSurmoney(order_price);
+			entity.setAuthCode(entity.getAuthCode()); 
+			mcAuthenticationInfoDao.updateSurmoneyByAuthCode(entity_);
 			
-			DbUp.upTable("mc_authenticationInfo").dataExec("update mc_authenticationInfo set surmoney=surmoney-"+order_price+" where auth_code=:auth_code", new MDataMap("auth_code",dataMap.get("auth_code")));
-			
-			SerializeSupport<AuthenticationInfo> ss = new SerializeSupport<AuthenticationInfo>();
-			AuthenticationInfo authenticationInfo = new AuthenticationInfo();
-			ss.serialize(dataMap, authenticationInfo);
-			return authenticationInfo;
+			AuthenticationInfo info = new AuthenticationInfo();
+			info.setAuth_code(entity.getAuthCode());
+			info.setTrue_name(entity.getTrueName());
+			info.setIdcard_type(entity.getIdcardType());
+			info.setIdcard_number(entity.getIdcardNumber());
+			info.setPhone_number(entity.getPhoneNumber());
+			info.setEmail(entity.getEmail());
+			info.setAddress(entity.getAddress()); 
+			return info;
 		}else{
 			//发邮件通知
 			sendMailForAuth();
@@ -624,11 +663,14 @@ public class OrderForKJT extends BaseClass {
 		for (OrderDetail sku : skuList) {
 			
 			if(BigDecimal.ZERO.compareTo(sku.getCostPrice())>=0||BigDecimal.ZERO.compareTo(sku.getTaxRate())>=0){
-				
 				String product_code=sku.getProductCode();
-				MDataMap proMap=DbUp.upTable("pc_productinfo").one("product_code",product_code);
-				sku.setCostPrice(new BigDecimal(proMap.get("cost_price")));
-				sku.setTaxRate(new BigDecimal(proMap.get("tax_rate")));
+				
+				PcProductinfo entity = new PcProductinfo();
+				entity.setProductCode(product_code); 
+				entity = pcProductinfoDao.findByType(entity);
+				
+				sku.setCostPrice( entity.getCostPrice() );
+				sku.setTaxRate( entity.getTaxRate() );
 			}
 			
 			// 根据完税价每单不超过2000的规则拆单
