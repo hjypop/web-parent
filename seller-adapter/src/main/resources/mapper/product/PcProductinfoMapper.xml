@@ -466,7 +466,7 @@
 				</foreach>  
 	</select>
 	
-	<update id="updateSelectiveByProductCode" parameterType="java.util.List">
+	<update id="updateByOldProductCode" parameterType="java.util.List">
 		update 
 			productcenter.pc_productinfo 
 		set
