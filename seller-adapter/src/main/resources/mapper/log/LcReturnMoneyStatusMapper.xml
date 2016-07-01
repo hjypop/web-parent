@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hjy.dao.log.ILcReturnMoneyStatusDao">
 	<insert id="insertSelective" parameterType="com.hjy.entity.log.LcReturnMoneyStatus">
-		insert into ordercenter.oc_return_money
+		insert into logcenter.lc_return_money_status
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
 				zid,
