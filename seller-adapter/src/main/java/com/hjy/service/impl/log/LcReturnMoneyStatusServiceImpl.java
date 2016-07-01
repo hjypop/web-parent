@@ -1,5 +1,7 @@
 package com.hjy.service.impl.log;
 
+import org.springframework.stereotype.Service;
+
 import com.hjy.entity.log.LcReturnMoneyStatus;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.log.ILcReturnMoneyStatusService;
@@ -11,6 +13,7 @@ import com.hjy.service.log.ILcReturnMoneyStatusService;
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月30日 下午2:20:00
  */
+@Service
 public class LcReturnMoneyStatusServiceImpl extends BaseServiceImpl<LcReturnMoneyStatus, Integer>
 		implements ILcReturnMoneyStatusService {
 
