@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.order.IOcExpressEetailDao">
+
+	<resultMap id="BaseResultMap" type="com.hjy.model.order.Express">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+		<result column="logisticse_code" property="logisticseCode" jdbcType="VARCHAR" />
+		<result column="waybill" property="waybill" jdbcType="VARCHAR" />
+		<result column="context" property="context" jdbcType="VARCHAR" />
+		<result column="time" property="time" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+			*
+		from ordercenter.oc_express_detail
+		where zid = #{zid,jdbcType=INTEGER}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from ordercenter.oc_express_detail
+		where zid = #{zid,jdbcType=INTEGER}
+	</delete>
+	
+	<insert id="insertSelective" parameterType="com.hjy.model.order.Express">
+		insert into ordercenter.oc_express_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="orderCode != null">
+				order_code,
+			</if>
+			<if test="logisticseCode != null">
+				logisticse_code,
+			</if>
+			<if test="waybill != null">
+				waybill,
+			</if>
+			<if test="context != null">
+				context,
+			</if>
+			<if test="time != null">
+				time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="orderCode != null">
+				#{orderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="logisticseCode != null">
+				#{logisticseCode,jdbcType=VARCHAR},
+			</if>
+			<if test="waybill != null">
+				#{waybill,jdbcType=VARCHAR},
+			</if>
+			<if test="context != null">
+				#{context,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				#{time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateSelective" parameterType="com.hjy.model.order.Express">
+		update ordercenter.oc_express_detail
+		<set>
+			<if test="orderCode != null">
+				order_code = #{orderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="logisticseCode != null">
+				logisticse_code = #{logisticseCode,jdbcType=VARCHAR},
+			</if>
+			<if test="waybill != null">
+				waybill = #{waybill,jdbcType=VARCHAR},
+			</if>
+			<if test="context != null">
+				context = #{context,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				time = #{time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where zid = #{zid,jdbcType=INTEGER}
+	</update>
+	
+	<select id="selectByOrderCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+			*
+		from 
+			ordercenter.oc_express_detail
+		where 
+			order_code = #{orderCode , jdbcType=VARCHAR} 
+		order by time asc
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

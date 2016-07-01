@@ -200,6 +200,9 @@
 			<if test="orderCode != null">
 				and order_code = #{orderCode , jdbcType=VARCHAR} 
 			</if>
+			<if test="waybill != null">
+				and waybill = #{waybill,jdbcType=VARCHAR}
+			</if>
 	</select>
 </mapper>
 
