@@ -48,7 +48,7 @@
 			order_code_out = #{orderCodeOut,jdbcType=VARCHAR}
 		</where>
 	</select>
-	
+
 	<insert id="insertSelective" parameterType="com.hjy.entity.OcOrderKjtList">
 		insert into ordercenter.oc_order_kjt_list
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -173,19 +173,32 @@
 	</update>
 
 	<!-- 根据订单编号查询本地订单状态 2016-06-30 zhy -->
-	<select id="findLocalStatusByOrderCode" parameterType="java.lang.String" resultType="java.lang.String">
+	<select id="findLocalStatusByOrderCode" parameterType="java.lang.String"
+		resultType="java.lang.String">
 		SELECT
-			local_status
+		local_status
 		FROM
-			ordercenter.oc_order_kjt_list
+		ordercenter.oc_order_kjt_list
 		<where>
 			order_code = #{orderCode,jdbcType=VARCHAR}
 		</where>
 	</select>
-	
-	<select id="findListByOrderCode" parameterType="java.lang.String" resultMap="BaseResultMap">
-		select * from ordercenter.oc_order_kjt_list  where  order_code = #{orderCode,jdbcType=VARCHAR}
+
+	<select id="findListByOrderCode" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from ordercenter.oc_order_kjt_list where order_code
+		= #{orderCode,jdbcType=VARCHAR}
 	</select>
+	<!-- 根据序列订单号修改订单编号 2016-07-02 zhy -->
+	<update id="updateCodeByCodeSeq" parameterType="com.hjy.entity.OcOrderKjtList">
+		UPDATE ordercenter.oc_order_kjt_list
+		<set>
+			order_code = #{orderCode,jdbcType=VARCHAR}
+		</set>
+		<where>
+			order_code_seq = #{orderCodeSeq,jdbcType=VARCHAR}
+		</where>
+	</update>
 </mapper>
 
 

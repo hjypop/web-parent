@@ -65,4 +65,9 @@ public class OcOrderKjtListServiceImpl extends BaseServiceImpl<OcOrderKjtList, I
 	public List<String> findLocalStatusByOrderCode(String orderCode) {
 		return dao.findLocalStatusByOrderCode(orderCode);
 	}
+
+	@Override
+	public int updateCodeByCodeSeq(OcOrderKjtList entity) {
+		return dao.updateCodeByCodeSeq(entity);
+	}
 }

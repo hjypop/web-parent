@@ -48,20 +48,26 @@ import com.hjy.model.order.Express;
 import com.hjy.model.order.Order;
 import com.hjy.model.order.OrderAddress;
 import com.hjy.model.order.OrderDetail;
+import com.hjy.selleradapter.kjt.model.OrderSoCreate;
+import com.hjy.selleradapter.kjt.model.SOAuthenticationInfo;
+import com.hjy.selleradapter.kjt.model.SOItemInfo;
+import com.hjy.selleradapter.kjt.model.SOPayInfo;
+import com.hjy.selleradapter.kjt.model.SOShippingInfo;
+import com.hjy.selleradapter.kjt.request.RsyncRequestOrderSoCreate;
 import com.hjy.support.MailSupport;
-import com.hjy.support.SerializeSupport;
 
 /**
  * 跨境通订单
+ * 
  * @author jlin
  *
  */
 public class OrderForKJT extends BaseClass {
-	
+
 	@Inject
-	private IOcOrderKjtListDao  ocOrderKjtListDao;
+	private IOcOrderKjtListDao ocOrderKjtListDao;
 	@Inject
-	private IOcOrderKjtListDataDao ocOrderKjtListDataDao; 
+	private IOcOrderKjtListDataDao ocOrderKjtListDataDao;
 	@Inject
 	private IOcOrderKjtDetailDao ocOrderKjtDetailDao;
 	@Inject
@@ -83,54 +89,54 @@ public class OrderForKJT extends BaseClass {
 	@Inject
 	private IPcProductinfoExtDao pcProductinfoExtDao;
 	@Inject
-	private IMcAuthenticationInfoDao mcAuthenticationInfoDao; 
+	private IMcAuthenticationInfoDao mcAuthenticationInfoDao;
 	@Inject
 	private IScTmpDao scTmpDao;
-	
-	
+
 	/**
 	 * 同步跨境通订单
+	 * 
 	 * @param order
 	 */
 	public boolean rsyncOrder(String order_code) {
-		boolean process_succ=true; 
+		boolean process_succ = true;
 		List<OcOrderKjtList> list = ocOrderKjtListDao.findListByOrderCode(order_code);
-		if(list.size()>0){
+		if (list.size() > 0) {
 			for (OcOrderKjtList okl : list) {
 				String order_code_seq = okl.getOrderCodeSeq();
 				String order_code_out = okl.getOrderCodeOut();
-				if(StringUtils.isBlank(order_code_out)){
+				if (StringUtils.isBlank(order_code_out)) {
 					OcOrderKjtListData okld = new OcOrderKjtListData();
 					okld.setOrderCodeSeq(order_code_seq);
 					okld = ocOrderKjtListDataDao.findByType(okld);
-					if(okld!=null){
-						Order order = JSON.parseObject(okld.getRequestClazz() , Order.class);
-						if(!rsyncOrder(order)){
-							process_succ=false;
+					if (okld != null) {
+						Order order = JSON.parseObject(okld.getRequestClazz(), Order.class);
+						if (!rsyncOrder(order)) {
+							process_succ = false;
 						}
 					}
 				}
 			}
-			
-		}else{
+
+		} else {
 			List<Order> orderList = groupOrder(order_code);
 			for (int i = 0; i < orderList.size(); i++) {
 				Order order = orderList.get(i);
-				String now=DateUtil.getSysDateTimeString();
-				
+				String now = DateUtil.getSysDateTimeString();
+
 				OcOrderKjtList okl = new OcOrderKjtList();
 				okl.setOrderCodeSeq(order.getOrderCode());
 				okl.setOrderCode(order_code);
 				okl.setCreateTime(now);
 				okl.setUpdateTime(now);
 				ocOrderKjtListDao.insertSelective(okl);
-				
+
 				OcOrderKjtListData okld = new OcOrderKjtListData();
 				okld.setOrderCodeSeq(order.getOrderCode());
-				okld.setRequestClazz(JSON.toJSONString(order)); 
+				okld.setRequestClazz(JSON.toJSONString(order));
 				ocOrderKjtListDataDao.insertSelective(okld);
-				
-				List<OrderDetail> details=order.getProductList();
+
+				List<OrderDetail> details = order.getProductList();
 				for (OrderDetail orderDetail : details) {
 					OcOrderKjtDetail okd = new OcOrderKjtDetail();
 					okd.setOrderCode(order_code);
@@ -144,101 +150,100 @@ public class OrderForKJT extends BaseClass {
 					ocOrderKjtDetailDao.insertSelective(okd);
 				}
 			}
-			
+
 			for (Order order : orderList) {
-				if(!rsyncOrder(order)){
-					process_succ=false;
+				if (!rsyncOrder(order)) {
+					process_succ = false;
 				}
 			}
 		}
-		
+
 		return process_succ;
 	}
-	
 
-	
-	
 	/**
 	 * 拆单组单
+	 * 
 	 * @param order_code
 	 */
-	public List<Order> groupOrder(String order_code){
-		
-		List<Order> orderList=new ArrayList<Order>();
-		//获取订单信息
+	public List<Order> groupOrder(String order_code) {
+
+		List<Order> orderList = new ArrayList<Order>();
+		// 获取订单信息
 		Order order = this.getOrder(order_code);
 		List<OrderDetail> detailList = order.getProductList();
-		
-		//此处更新商品的价格为 成本价
+
+		// 此处更新商品的价格为 成本价
 		for (OrderDetail orderDetail : detailList) {
-			pcProductinfoDao
-			
-			BigDecimal costPrice = (BigDecimal)DbUp.upTable("pc_productinfo").dataGet("cost_price", "product_code=:product_code", 
-					new MDataMap("product_code",orderDetail.getProductCode()));
-			
-			orderDetail.setCostPrice(costPrice==null ? BigDecimal.ZERO : costPrice);
+			PcProductinfo info = new PcProductinfo();
+			info.setProductCode(orderDetail.getProductCode());
+			PcProductinfo product = pcProductinfoDao.findByType(info);
+			orderDetail.setCostPrice(product.getCostPrice() == null ? BigDecimal.ZERO : product.getCostPrice());
 		}
-		
-		
-		//拆单1 按商品拆单
-		Map<String, List<OrderDetail>> listOrderMap1=new HashMap<String, List<OrderDetail>>();
+
+		// 拆单1 按商品拆单
+		Map<String, List<OrderDetail>> listOrderMap1 = new HashMap<String, List<OrderDetail>>();
 		for (OrderDetail orderDetail : detailList) {
-			pcProductinfoExtDao
-			
-			MDataMap pext=DbUp.upTable("pc_productinfo_ext").oneWhere("dlr_id,product_trade_type,product_store_type,kjt_seller_code", "", "product_code=:product_code", "product_code",orderDetail.getProductCode());
-			String theKey=pext.get("product_trade_type")+"_"+pext.get("dlr_id")+"_"+pext.get("product_store_type")+"_"+pext.get("kjt_seller_code")+"_"+getWarehouseID(orderDetail.getStoreCode());
-			
-			List<OrderDetail> olist=listOrderMap1.get(theKey);
-			if(olist==null){
+			PcProductinfoExt extInfo = new PcProductinfoExt();
+			extInfo.setProductCode(orderDetail.getProductCode());
+			PcProductinfoExt productExt = pcProductinfoExtDao.findByType(extInfo);
+			StringBuffer theKey = new StringBuffer();
+			theKey.append(productExt).append("_").append(productExt.getDlrId()).append("_")
+					.append(productExt.getProductStoreType()).append("_").append(productExt.getKjtSellerCode())
+					.append("_").append(getWarehouseID(orderDetail.getStoreCode()));
+			List<OrderDetail> olist = listOrderMap1.get(theKey.toString());
+			if (olist == null) {
 				olist = new ArrayList<OrderDetail>();
-				listOrderMap1.put(theKey, olist);
+				listOrderMap1.put(theKey.toString(), olist);
 			}
 			olist.add(orderDetail);
 		}
-		
-		int order_code_seq=0;//订单序列
-		//拆单2 按金额组单   循环太多 代码以后优化
+
+		int order_code_seq = 0;// 订单序列
+		// 拆单2 按金额组单 循环太多 代码以后优化
 		for (Map.Entry<String, List<OrderDetail>> map : listOrderMap1.entrySet()) {
-			List<OrderDetail> list=map.getValue();
-			List<OrderDetail> groupDetailBe=new ArrayList<OrderDetail>();
+			List<OrderDetail> list = map.getValue();
+			List<OrderDetail> groupDetailBe = new ArrayList<OrderDetail>();
 			for (OrderDetail orderDetail : list) {
 				for (int i = 0; i < orderDetail.getSkuNum(); i++) {
-					OrderDetail orderDetailc=SerializationUtils.clone(orderDetail);
+					OrderDetail orderDetailc = SerializationUtils.clone(orderDetail);
 					orderDetailc.setSkuNum(1);
 					groupDetailBe.add(orderDetailc);
 				}
 			}
-			
-//			List<Map<String,OrderDetail>> groupDetailAf=group(map.getKey(),groupDetailBe);
-			List<Map<String,OrderDetail>> groupDetailAf=group(groupDetailBe);
-			
-			//组建订单信息
-			for (Map<String,OrderDetail> omap : groupDetailAf) {
-				
-				BigDecimal orderMoney = BigDecimal.ZERO;//重新计算订单金额
-				
-				List<OrderDetail> detailListNew= new ArrayList<OrderDetail>();
-				for (Map.Entry<String,OrderDetail> map2 : omap.entrySet()) {
+
+			// List<Map<String,OrderDetail>>
+			// groupDetailAf=group(map.getKey(),groupDetailBe);
+			List<Map<String, OrderDetail>> groupDetailAf = group(groupDetailBe);
+
+			// 组建订单信息
+			for (Map<String, OrderDetail> omap : groupDetailAf) {
+
+				BigDecimal orderMoney = BigDecimal.ZERO;// 重新计算订单金额
+
+				List<OrderDetail> detailListNew = new ArrayList<OrderDetail>();
+				for (Map.Entry<String, OrderDetail> map2 : omap.entrySet()) {
 					OrderDetail detail = map2.getValue();
 					detailListNew.add(detail);
-					orderMoney=orderMoney.add(detail.getCostPrice().multiply(new BigDecimal(String.valueOf(detail.getSkuNum()))));
+					orderMoney = orderMoney
+							.add(detail.getCostPrice().multiply(new BigDecimal(String.valueOf(detail.getSkuNum()))));
 				}
-				
-				Order norder=new Order();//新订单
-				norder.setOrderCode(order_code+"#"+(++order_code_seq));
+
+				Order norder = new Order();// 新订单
+				norder.setOrderCode(order_code + "#" + (++order_code_seq));
 				norder.setOrderMoney(orderMoney);
-				
+
 				norder.setAddress(order.getAddress());
 				norder.setProductList(detailListNew);
 				norder.setOcOrderPayList(order.getOcOrderPayList());
-				
+
 				orderList.add(norder);
 			}
 		}
-		
+
 		return orderList;
 	}
-	
+
 	/**
 	 * 获取订单
 	 * 
@@ -253,7 +258,7 @@ public class OrderForKJT extends BaseClass {
 			order.setOrderCode(i.getOrderCode());
 			order.setOrderSource(i.getOrderSource());
 			order.setOrderType(i.getOrderType());
-			order.setOrderStatus(i.getOrderStatus()); 
+			order.setOrderStatus(i.getOrderStatus());
 			order.setSellerCode(i.getSellerCode());
 			order.setBuyerCode(i.getBuyerCode());
 			order.setPayType(i.getPayType());
@@ -265,23 +270,22 @@ public class OrderForKJT extends BaseClass {
 			order.setPayedMoney(i.getPayedMoney());
 			order.setCreateTime(i.getCreateTime());
 			order.setUpdateTime(i.getUpdateTime());
-//			order.setProductName()      数据库有 order实体没有
+			// order.setProductName() 数据库有 order实体没有
 			order.setFreeTransportMoney(i.getFreeTransportMoney());
 			order.setDueMoney(i.getDueMoney());
 			order.setOrderChannel(i.getOrderChannel());
 			order.setAppVersion(i.getAppVersion());
-//			order.setDeleteFlag()      数据库有 order实体没有  
-//			order.setOutOrderCode      数据库有 order实体没有  
-//			order.setBigOrderCode      数据库有 order实体没有  
-//			order.setOrderStatusExt      数据库有 order实体没有  
+			// order.setDeleteFlag() 数据库有 order实体没有
+			// order.setOutOrderCode 数据库有 order实体没有
+			// order.setBigOrderCode 数据库有 order实体没有
+			// order.setOrderStatusExt 数据库有 order实体没有
 			order.setSmallSellerCode(i.getSmallSellerCode());
 			order.setOrderSeq(i.getOrderSeq());
-//			order.setOrderAuditStatus      数据库有 order实体没有  
+			// order.setOrderAuditStatus 数据库有 order实体没有
 			order.setLowOrder(i.getLowOrder());
-//			order.setRoomId      数据库有 order实体没有  
-//			order.setAnchorId      数据库有 order实体没有  
-			
-			
+			// order.setRoomId 数据库有 order实体没有
+			// order.setAnchorId 数据库有 order实体没有
+
 			order.setAddress(this.getOrderAddressByOrderCode(orderCode));
 			order.setActivityList(this.getOrderActivityListByOrderCode(orderCode));
 			order.setOcOrderPayList(this.getOrderPayListByOrderCode(orderCode));
@@ -291,7 +295,7 @@ public class OrderForKJT extends BaseClass {
 		}
 		return order;
 	}
-	
+
 	/**
 	 * 获取订单地址通过商品编号
 	 * 
@@ -315,7 +319,7 @@ public class OrderForKJT extends BaseClass {
 			a.setInvoiceContent(i.getInvoiceContent());
 			a.setFlagInvoice(i.getFlagInvoice().toString());
 			a.setRemark(i.getRemark());
-//			a.setIN invoiceStatus
+			// a.setIN invoiceStatus
 			a.setAuthTrueName(i.getAuthTrueName());
 			a.setAuthIdcardType(i.getAuthIdcardType());
 			a.setAuthIdcardNumber(i.getAuthIdcardNumber());
@@ -325,7 +329,7 @@ public class OrderForKJT extends BaseClass {
 		}
 		return a;
 	}
-	
+
 	/**
 	 * 获取订单的活动list，通过商品编号
 	 * 
@@ -336,12 +340,12 @@ public class OrderForKJT extends BaseClass {
 		OcOrderActivity entity = new OcOrderActivity();
 		entity.setOrderCode(orderCode);
 		List<OcOrderActivity> list = ocOrderActivityDao.findList(entity);
-		if(list == null){
+		if (list == null) {
 			list = new ArrayList<OcOrderActivity>();
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 获取订单的支付list，通过商品编号
 	 * 
@@ -352,12 +356,12 @@ public class OrderForKJT extends BaseClass {
 		OcOrderPay entity = new OcOrderPay();
 		entity.setOrderCode(orderCode);
 		List<OcOrderPay> list = ocOrderPayDao.findList(entity);
-		if(list == null){
-			list  = new ArrayList<OcOrderPay>();
-		} 
+		if (list == null) {
+			list = new ArrayList<OcOrderPay>();
+		}
 		return list;
 	}
-	
+
 	/**
 	 * 获取订单的明细,通过商品编号
 	 * 
@@ -368,12 +372,12 @@ public class OrderForKJT extends BaseClass {
 		OrderDetail entity = new OrderDetail();
 		entity.setOrderCode(orderCode);
 		List<OrderDetail> list = ocOrderdetailDao.findList(entity);
-		if(list == null){
+		if (list == null) {
 			list = new ArrayList<OrderDetail>();
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 获取订单运输信息
 	 * 
@@ -384,85 +388,81 @@ public class OrderForKJT extends BaseClass {
 		OcOrderShipments entity = new OcOrderShipments();
 		entity.setOrderCode(orderCode);
 		entity = ocOrderShipmentsDao.findByType(entity);
-		if(entity == null){
+		if (entity == null) {
 			entity = new OcOrderShipments();
 		}
 		return entity;
 	}
-	
+
 	private List<Express> getExpressList(String orderCode) {
-		 List<Express> list = ocExpressEetailDao.selectByOrderCode(orderCode);
-		 if(list != null && list.size() > 0){
-			 for(int i =0 ; i < list.size() ; i ++){
-				 OcOrderShipments entity = new OcOrderShipments();
-				 entity.setOrderCode(orderCode);
-				 entity.setWaybill(list.get(i).getWaybill()); 
-				 entity = ocOrderShipmentsDao.findByType(entity);
-				 list.get(i).setLogisticseName(entity.getLogisticseName()); 
-			 }
-		 }
+		List<Express> list = ocExpressEetailDao.selectByOrderCode(orderCode);
+		if (list != null && list.size() > 0) {
+			for (int i = 0; i < list.size(); i++) {
+				OcOrderShipments entity = new OcOrderShipments();
+				entity.setOrderCode(orderCode);
+				entity.setWaybill(list.get(i).getWaybill());
+				entity = ocOrderShipmentsDao.findByType(entity);
+				list.get(i).setLogisticseName(entity.getLogisticseName());
+			}
+		}
 		return list;
 	}
-	
-	
-	
-	
-	
-	
-	
+
 	/**
 	 * 同步跨境通订单，不拆单，直发
+	 * 
 	 * @param order
 	 */
-	public boolean rsyncOrder(Order order){
-		//判断订单状态  //领导强制添加：即使发货单写一半，也不再同步订单到跨境通
+	public boolean rsyncOrder(Order order) {
+		// 判断订单状态 //领导强制添加：即使发货单写一半，也不再同步订单到跨境通
 		OcOrderinfo entity = new OcOrderinfo();
 		entity.setOrderCode(order.getAddress().getOrderCode());
 		entity.setOrderStatus("4497153900010002");
 		int count = ocOrderinfoDao.countByOrderCode(entity);
-		if(count < 1){
+		if (count < 1) {
 			return true;
 		}
-		
+
 		OrderSoCreate orderSoCreate = new OrderSoCreate();
-		
-		OrderAddress orderAddress= order.getAddress();
+
+		OrderAddress orderAddress = order.getAddress();
 		List<OrderDetail> detailList = order.getProductList();
-		List<OcOrderPay> payList=order.getOcOrderPayList();
-		
-		OrderDetail orderDetail0=detailList.get(0);
-		OcOrderPay ocOrderPay = payList.get(payList.size()-1);
-		
-		
-		//组装报文
+		List<OcOrderPay> payList = order.getOcOrderPayList();
+
+		OrderDetail orderDetail0 = detailList.get(0);
+		OcOrderPay ocOrderPay = payList.get(payList.size() - 1);
+
+		// 组装报文
 		RsyncRequestOrderSoCreate requestOrderSoCreate = orderSoCreate.upRsyncRequest();
-		
+
 		requestOrderSoCreate.setSaleChannelSysNo(Long.valueOf(getConfig("groupcenter.rsync_kjt_SaleChannelSysNo")));
 		requestOrderSoCreate.setMerchantOrderID(order.getOrderCode());
-		requestOrderSoCreate.setServerType(getServerType(orderDetail0.getProductCode())); // 直邮商品 S01   自贸商品 S02
+		requestOrderSoCreate.setServerType(getServerType(orderDetail0.getProductCode())); // 直邮商品
+																							// S01
+																							// 自贸商品
+																							// S02
 		requestOrderSoCreate.setWarehouseID(getWarehouseID(orderDetail0.getStoreCode()));
-		
+
 		SOPayInfo soPayInfo = new SOPayInfo();
 		soPayInfo.setShippingAmount(BigDecimal.ZERO);
 		soPayInfo.setTaxAmount(BigDecimal.ZERO);
 		soPayInfo.setCommissionAmount(BigDecimal.ZERO);
 		soPayInfo.setProductAmount(order.getOrderMoney());
-		
-		
-		//添加对0元订单的支持 ，没有支付信息时，默认为支付宝
-		String payType=PayTypeMapper.get(ocOrderPay.getPayType());
-		if(StringUtils.isBlank(payType)){
+
+		// 添加对0元订单的支持 ，没有支付信息时，默认为支付宝
+		String payType = PayTypeMapper.get(ocOrderPay.getPayType());
+		if (StringUtils.isBlank(payType)) {
 			soPayInfo.setPayTypeSysNo(112);
-			soPayInfo.setPaySerialNumber(WebHelper.upCode("88")+WebHelper.upCode("88"));
-		}else{
+			soPayInfo.setPaySerialNumber(
+					WebHelper.getInstance().genUniqueCode("88") + WebHelper.getInstance().genUniqueCode("88"));
+		} else {
 			soPayInfo.setPayTypeSysNo(Long.valueOf(payType));
-			soPayInfo.setPaySerialNumber(WebHelper.upCode("88")+ocOrderPay.getPaySequenceid().substring(14));
+			soPayInfo.setPaySerialNumber(
+					WebHelper.getInstance().genUniqueCode("88") + ocOrderPay.getPaySequenceid().substring(14));
 		}
-		
-		
+
 		requestOrderSoCreate.setPayInfo(soPayInfo);
-		
-		
+
 		SOShippingInfo soShippingInfo = new SOShippingInfo();
 		soShippingInfo.setReceiveName(orderAddress.getReceivePerson());
 		soShippingInfo.setReceivePhone(orderAddress.getMobilephone());
@@ -478,29 +478,30 @@ public class OrderForKJT extends BaseClass {
 		soShippingInfo.setSenderProvince("");
 		soShippingInfo.setSenderCountry("");
 		soShippingInfo.setReceiveAreaName(getAreaName(orderAddress.getAreaCode()));
-		
-		String kjt_shipTypeID=getConfig("groupcenter.kjt_shipTypeID");
-		soShippingInfo.setShipTypeID("-1".equals(kjt_shipTypeID)?"":kjt_shipTypeID);
-		
+
+		String kjt_shipTypeID = getConfig("groupcenter.kjt_shipTypeID");
+		soShippingInfo.setShipTypeID("-1".equals(kjt_shipTypeID) ? "" : kjt_shipTypeID);
+
 		requestOrderSoCreate.setShippingInfo(soShippingInfo);
-		
+
 		SOAuthenticationInfo authenticationInfo = new SOAuthenticationInfo();
-		if(StringUtils.isBlank(orderAddress.getAuthIdcardNumber())||StringUtils.isBlank(orderAddress.getAuthEmail())){
-			//没有 从系统取
-			//过度时期 ，需要系统认证
+		if (StringUtils.isBlank(orderAddress.getAuthIdcardNumber())
+				|| StringUtils.isBlank(orderAddress.getAuthEmail())) {
+			// 没有 从系统取
+			// 过度时期 ，需要系统认证
 			AuthenticationInfo authen = getAuth(order.getOrderMoney());
-			if(authen==null){
+			if (authen == null) {
 				return false;
 			}
-			
+
 			authenticationInfo.setName(authen.getTrue_name());
 			authenticationInfo.setIDCardType(Integer.valueOf(IDcardMapper.get(authen.getIdcard_type())));
 			authenticationInfo.setIDCardNumber(authen.getIdcard_number());
 			authenticationInfo.setPhoneNumber(authen.getPhone_number());
 			authenticationInfo.setEmail(authen.getEmail());
 			authenticationInfo.setAddress(authen.getAddress());
-			
-		}else{//如果有
+
+		} else {// 如果有
 			authenticationInfo.setName(orderAddress.getAuthTrueName());
 			authenticationInfo.setIDCardType(Integer.valueOf(IDcardMapper.get(orderAddress.getAuthIdcardType())));
 			authenticationInfo.setIDCardNumber(orderAddress.getAuthIdcardNumber());
@@ -508,113 +509,122 @@ public class OrderForKJT extends BaseClass {
 			authenticationInfo.setEmail(orderAddress.getAuthEmail());
 			authenticationInfo.setAddress(orderAddress.getAuthAddress());
 		}
-		
-		
-		
+
 		requestOrderSoCreate.setAuthenticationInfo(authenticationInfo);
-		
-		List<SOItemInfo> itemList= new ArrayList<SOItemInfo>();
+
+		List<SOItemInfo> itemList = new ArrayList<SOItemInfo>();
 		for (OrderDetail orderDetail : detailList) {
 			SOItemInfo soItemInfo = new SOItemInfo();
-			soItemInfo.setProductID((String)DbUp.upTable("pc_productinfo").dataGet("product_code_old", "", new MDataMap("product_code",orderDetail.getProductCode())));
+			PcProductinfo info = new PcProductinfo();
+			info.setProductCode(orderDetail.getProductCode());
+			;
+			PcProductinfo product = pcProductinfoDao.findByType(info);
+			soItemInfo.setProductID(product.getProductCodeOld());
 			soItemInfo.setQuantity(orderDetail.getSkuNum());
-			soItemInfo.setSalePrice(orderDetail.getCostPrice());//商品售价   Sum(SalePrice* Quantity)=PayInfo.ProductAmount
-			
-			//需求：TaxAmount=0 
-			soItemInfo.setTaxPrice(BigDecimal.ZERO); // Sum(TaxPrice * Quantity)=PayInfo. TaxAmount
+			soItemInfo.setSalePrice(orderDetail.getCostPrice());// 商品售价
+																// Sum(SalePrice*
+																// Quantity)=PayInfo.ProductAmount
+
+			// 需求：TaxAmount=0
+			soItemInfo.setTaxPrice(BigDecimal.ZERO); // Sum(TaxPrice *
+														// Quantity)=PayInfo.
+														// TaxAmount
 			itemList.add(soItemInfo);
 		}
-		
+
 		requestOrderSoCreate.setItemList(itemList);
-		
-		//同步
+
+		// 同步
 		orderSoCreate.doRsync();
-		
+
 		return orderSoCreate.responseSucc();
 	}
-	
-	private String getAreaName(String area_code){
+
+	private String getAreaName(String area_code) {
 		ScTmp p = new ScTmp();
-		p.setCode(area_code.subSequence(0, 2)+ "0000");
+		p.setCode(area_code.subSequence(0, 2) + "0000");
 		p = scTmpDao.findByType(p);
-		
+
 		ScTmp c = new ScTmp();
-		c.setCode(area_code.subSequence(0, 4)+ "00");
+		c.setCode(area_code.subSequence(0, 4) + "00");
 		c = scTmpDao.findByType(c);
-		
+
 		ScTmp a = new ScTmp();
 		a.setCode(area_code);
 		a = scTmpDao.findByType(a);
-		
+
 		String prov = p.getName();
 		String city = c.getName();
 		String area = a.getName();
-		
-		return prov+","+(StringUtils.startsWith(city, "省直辖县级行政区划")?area:city)+","+area;
+
+		return prov + "," + (StringUtils.startsWith(city, "省直辖县级行政区划") ? area : city) + "," + area;
 	}
-	
+
 	/**
 	 * S01：一般进口 S02：保税区进口 为空默认 S02
+	 * 
 	 * @param order
 	 * @return
 	 */
-	private String getServerType(String product_code){
-		String type="S02";
-		//直邮商品 S01   自贸商品 S02
+	private String getServerType(String product_code) {
+		String type = "S02";
+		// 直邮商品 S01 自贸商品 S02
 		PcProductinfoExt entity = new PcProductinfoExt();
-		entity.setProductCode(product_code); 
+		entity.setProductCode(product_code);
 		entity = pcProductinfoExtDao.findByType(entity);
-		String product_trade_type = entity.getProductTradeType();		
-		
-//		0 = 直邮 1 = 自贸
-		if(StringUtils.isNotBlank(product_trade_type)){
-			if("0".equals(product_trade_type)){
-				type="S01";
+		String product_trade_type = entity.getProductTradeType();
+
+		// 0 = 直邮 1 = 自贸
+		if (StringUtils.isNotBlank(product_trade_type)) {
+			if ("0".equals(product_trade_type)) {
+				type = "S01";
 			}
 		}
 		return type;
 	}
-	
+
 	/**
 	 * 订单出库仓库在Kjt平台的编号
+	 * 
 	 * @param store_code
 	 * @return
 	 */
 	private int getWarehouseID(String store_code) {
-		if(StringUtils.isNotBlank(store_code)){
-			return Integer.valueOf(store_code.substring(0,store_code.indexOf("_")));
+		if (StringUtils.isNotBlank(store_code)) {
+			return Integer.valueOf(store_code.substring(0, store_code.indexOf("_")));
 		}
 		return -1;
 	}
-	
-	
+
 	/**
 	 * 支付方式
+	 * 
 	 * @param payType
 	 * @return
 	 */
-//							111: 东方支付
-//	112: 支付宝
-//							114: 财付通
-//							117: 银联支付
-//	118: 微信支付
-	private static MDataMap PayTypeMapper = new MDataMap("449746280003","112","449746280005","118");
-	
+	// 111: 东方支付
+	// 112: 支付宝
+	// 114: 财付通
+	// 117: 银联支付
+	// 118: 微信支付
+	private static MDataMap PayTypeMapper = new MDataMap("449746280003", "112", "449746280005", "118");
+
 	/**
 	 * 随机获取一个可以用的真实认证信息
+	 * 
 	 * @param order_price
 	 * @return
 	 */
-	private AuthenticationInfo getAuth(BigDecimal order_price){
+	private AuthenticationInfo getAuth(BigDecimal order_price) {
 		McAuthenticationInfo entity = new McAuthenticationInfo();
 		entity.setSurmoney(order_price);
 		entity = mcAuthenticationInfoDao.findByOrderPrice(entity);
 		if (entity != null) {
 			McAuthenticationInfo entity_ = new McAuthenticationInfo();
 			entity_.setSurmoney(order_price);
-			entity.setAuthCode(entity.getAuthCode()); 
+			entity.setAuthCode(entity.getAuthCode());
 			mcAuthenticationInfoDao.updateSurmoneyByAuthCode(entity_);
-			
+
 			AuthenticationInfo info = new AuthenticationInfo();
 			info.setAuth_code(entity.getAuthCode());
 			info.setTrue_name(entity.getTrueName());
@@ -622,86 +632,85 @@ public class OrderForKJT extends BaseClass {
 			info.setIdcard_number(entity.getIdcardNumber());
 			info.setPhone_number(entity.getPhoneNumber());
 			info.setEmail(entity.getEmail());
-			info.setAddress(entity.getAddress()); 
+			info.setAddress(entity.getAddress());
 			return info;
-		}else{
-			//发邮件通知
+		} else {
+			// 发邮件通知
 			sendMailForAuth();
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 证件类型转换
+	 * 
 	 * @param idcard_type
 	 * @return
 	 */
-	private static MDataMap IDcardMapper = new MDataMap("4497465200090001","0");
-	
-	
-	
-	
+	private static MDataMap IDcardMapper = new MDataMap("4497465200090001", "0");
+
 	/**
 	 * 拆单规则变更： 每单商品总成本金额不能大于2000元
+	 * 
 	 * @param skuList
 	 * @return
 	 */
-	private List<Map<String,OrderDetail>> group (List<OrderDetail> skuList){
-		
+	private List<Map<String, OrderDetail>> group(List<OrderDetail> skuList) {
+
 		sort(skuList);
-		
-		
-		List<Map<String,OrderDetail>> list = new ArrayList<Map<String,OrderDetail>>();
-		
-		BigDecimal max_sum_price=new BigDecimal("50");
+
+		List<Map<String, OrderDetail>> list = new ArrayList<Map<String, OrderDetail>>();
+
+		BigDecimal max_sum_price = new BigDecimal("50");
 		// 单个订单最大订单金额
 		BigDecimal maxCostPrice = new BigDecimal("2000");
-		
+
 		BigDecimal tprice = BigDecimal.ZERO;
-		Map<String,OrderDetail> skus=new HashMap<String,OrderDetail>();
-		
+		Map<String, OrderDetail> skus = new HashMap<String, OrderDetail>();
+
 		for (OrderDetail sku : skuList) {
-			
-			if(BigDecimal.ZERO.compareTo(sku.getCostPrice())>=0||BigDecimal.ZERO.compareTo(sku.getTaxRate())>=0){
-				String product_code=sku.getProductCode();
-				
+
+			if (BigDecimal.ZERO.compareTo(sku.getCostPrice()) >= 0
+					|| BigDecimal.ZERO.compareTo(sku.getTaxRate()) >= 0) {
+				String product_code = sku.getProductCode();
+
 				PcProductinfo entity = new PcProductinfo();
-				entity.setProductCode(product_code); 
+				entity.setProductCode(product_code);
 				entity = pcProductinfoDao.findByType(entity);
-				
-				sku.setCostPrice( entity.getCostPrice() );
-				sku.setTaxRate( entity.getTaxRate() );
+
+				sku.setCostPrice(entity.getCostPrice());
+				sku.setTaxRate(entity.getTaxRate());
 			}
-			
+
 			// 根据完税价每单不超过2000的规则拆单
 			tprice = tprice.add(sku.getCostPrice());
-			if(tprice.compareTo(maxCostPrice) > 0){
+			if (tprice.compareTo(maxCostPrice) > 0) {
 				tprice = sku.getCostPrice();
-				skus = new HashMap<String,OrderDetail>();
+				skus = new HashMap<String, OrderDetail>();
 				list.add(skus);
 			}
-			
-			if(list.size() < 1){
+
+			if (list.size() < 1) {
 				list.add(skus);
 			}
-			
-			OrderDetail sku_old=skus.get(sku.getSkuCode());
-			if(sku_old!=null){
-				sku_old.setSkuNum(sku_old.getSkuNum()+sku.getSkuNum());
-			}else{
-				skus.put(sku.getSkuCode(),sku);
+
+			OrderDetail sku_old = skus.get(sku.getSkuCode());
+			if (sku_old != null) {
+				sku_old.setSkuNum(sku_old.getSkuNum() + sku.getSkuNum());
+			} else {
+				skus.put(sku.getSkuCode(), sku);
 			}
 		}
-		
+
 		return list;
 	}
-	
+
 	private void sort(List<OrderDetail> list) {
 		Collections.sort(list, new Comparator<OrderDetail>() {
 			public int compare(OrderDetail sku1, OrderDetail sku2) {
-				
-				BigDecimal txp1=sku1.getCostPrice().multiply(sku1.getTaxRate());
-				BigDecimal txp2=sku2.getCostPrice().multiply(sku2.getTaxRate());
+
+				BigDecimal txp1 = sku1.getCostPrice().multiply(sku1.getTaxRate());
+				BigDecimal txp2 = sku2.getCostPrice().multiply(sku2.getTaxRate());
 
 				if (txp1.compareTo(txp2) > 0) {
 					return 1;
@@ -713,114 +722,88 @@ public class OrderForKJT extends BaseClass {
 			}
 		});
 	}
-	
-//	-4	系统作废	交易失败
-//	-1	作废	交易失败
-//	0	待审核	下单成功-未发货
-//	1	待出库	下单成功-未发货
-//	4	已出库待申报	下单成功-未发货  已发货
-//	41	已申报待通关	下单成功-未发货  已发货
-//	45	已通过发往顾客	已发货
-//	5	订单完成	交易成功
-//	6	申报失败订单作废	交易失败
-//	65	通关失败订单作废	交易失败
-//	7	订单拒收	交易失败
 
-//	4497153900010001	下单成功-未付款
-//	4497153900010002	下单成功-未发货
-//	4497153900010003	已发货
-//	4497153900010004	已收货
-//	4497153900010005	交易成功
-//	4497153900010006	交易失败
-	
+	// -4 系统作废 交易失败
+	// -1 作废 交易失败
+	// 0 待审核 下单成功-未发货
+	// 1 待出库 下单成功-未发货
+	// 4 已出库待申报 下单成功-未发货 已发货
+	// 41 已申报待通关 下单成功-未发货 已发货
+	// 45 已通过发往顾客 已发货
+	// 5 订单完成 交易成功
+	// 6 申报失败订单作废 交易失败
+	// 65 通关失败订单作废 交易失败
+	// 7 订单拒收 交易失败
+
+	// 4497153900010001 下单成功-未付款
+	// 4497153900010002 下单成功-未发货
+	// 4497153900010003 已发货
+	// 4497153900010004 已收货
+	// 4497153900010005 交易成功
+	// 4497153900010006 交易失败
+
 	/**
 	 * 订单状态映射
+	 * 
 	 * @param ostatus
 	 * @return
 	 */
-	public static String orderStatusMapper(int ostatus){
-		
-		String status=null;
-		
+	public static String orderStatusMapper(int ostatus) {
+
+		String status = null;
+
 		switch (ostatus) {
 		case -4:
-			status="4497153900010006";
+			status = "4497153900010006";
 			break;
 		case -1:
-			status="4497153900010006";
+			status = "4497153900010006";
 			break;
 		case 0:
-			status="4497153900010002";
+			status = "4497153900010002";
 			break;
 		case 1:
-			status="4497153900010002";
+			status = "4497153900010002";
 			break;
 		case 4:
-			status="4497153900010003";
-			break;	
+			status = "4497153900010003";
+			break;
 		case 41:
-			status="4497153900010003";
-			break;		
+			status = "4497153900010003";
+			break;
 		case 45:
-			status="4497153900010003";
-			break;	
+			status = "4497153900010003";
+			break;
 		case 5:
-			status="4497153900010005";
-			break;	
+			status = "4497153900010005";
+			break;
 		case 6:
-			status="4497153900010006";
-			break;	
+			status = "4497153900010006";
+			break;
 		case 65:
-			status="4497153900010006";
-			break;	
+			status = "4497153900010006";
+			break;
 		case 7:
-			status="4497153900010006";
-			break;	
+			status = "4497153900010006";
+			break;
 		default:
-			 status="";
+			status = "";
 			break;
 		}
 		return status;
 	}
-	
-	private void sendMailForAuth(){
-		
-		String receives[]= getConfig("groupcenter.kjt_auth_sendMail_receives").split(",");
-		String title= getConfig("groupcenter.kjt_auth_sendMail_title");
-		String content= getConfig("groupcenter.kjt_auth_sendMail_content");
-		
+
+	private void sendMailForAuth() {
+
+		String receives[] = getConfig("groupcenter.kjt_auth_sendMail_receives").split(",");
+		String title = getConfig("groupcenter.kjt_auth_sendMail_title");
+		String content = getConfig("groupcenter.kjt_auth_sendMail_content");
+
 		for (String receive : receives) {
-			if(StringUtils.isNotBlank(receive)){
+			if (StringUtils.isNotBlank(receive)) {
 				MailSupport.INSTANCE.sendMail(receive, title, content);
 			}
 		}
 	}
-	
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

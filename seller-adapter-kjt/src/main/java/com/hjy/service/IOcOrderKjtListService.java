@@ -48,4 +48,12 @@ public interface IOcOrderKjtListService extends IBaseService<OcOrderKjtList, Int
 	 * @return
 	 */
 	List<String> findLocalStatusByOrderCode(String orderCode);
+
+	/**
+	 * 根据序列订单号修改订单编号 2016-07-02 zhy
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	int updateCodeByCodeSeq(OcOrderKjtList entity);
 }

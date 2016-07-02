@@ -1,5 +1,7 @@
 package com.hjy.entity.product;
 
+import java.util.List;
+
 import com.hjy.base.BaseModel;
 
 /**
@@ -49,6 +51,19 @@ public class PcProductproperty extends BaseModel {
 	private int smallSort = 0;
 
 	private String skuCode = "";
+
+	/*
+	 * 新加查询条件propertyType集合
+	 */
+	private List<String> propertyTypeList;
+
+	public List<String> getPropertyTypeList() {
+		return propertyTypeList;
+	}
+
+	public void setPropertyTypeList(List<String> propertyTypeList) {
+		this.propertyTypeList = propertyTypeList;
+	}
 
 	public int getBigSort() {
 		return bigSort;

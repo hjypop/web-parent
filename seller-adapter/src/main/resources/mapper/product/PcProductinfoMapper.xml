@@ -295,7 +295,8 @@
 		</where>
 	</select>
 	<!-- 根据商品编码获取旧编号 2016-06-28 zhy -->
-	<select id="findProductCodeByOldCode" parameterType="String" resultType="String">
+	<select id="findProductCodeByOldCode" parameterType="String"
+		resultType="String">
 		select product_code from productcenter.pc_productinfo
 		<where>
 			product_code_old=#{productCodeOld,jdbcType=VARCHAR}
@@ -303,10 +304,11 @@
 		ORDER BY zid DESC
 	</select>
 
-	<!-- 可以扩展if中的查询条件 - Yangcl  -->
-	<select id="findByType" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcProductinfo">
+	<!-- 可以扩展if中的查询条件 - Yangcl -->
+	<select id="findByType" resultMap="BaseResultMap"
+		parameterType="com.hjy.entity.product.PcProductinfo">
 		select
-					* from productcenter.pc_productinfo
+		* from productcenter.pc_productinfo
 		where 1=1
 		<if test="uid != null">
 			and uid = #{uid , jdbcType=VARCHAR}
@@ -315,7 +317,7 @@
 			and product_code = #{productCode , jdbcType=VARCHAR}
 		</if>
 	</select>
-	
+
 	<update id="updateSelectiveByProductCode" parameterType="com.hjy.entity.product.PcProductinfo">
 		update productcenter.pc_productinfo
 		<set>
@@ -380,7 +382,8 @@
 				product_volume = #{productVolume,jdbcType=DECIMAL},
 			</if>
 			<if test="transportTemplate != null">
-				transport_template = #{transportTemplate,jdbcType=VARCHAR},
+				transport_template =
+				#{transportTemplate,jdbcType=VARCHAR},
 			</if>
 			<if test="areaTemplate != null">
 				area_template = #{areaTemplate,jdbcType=VARCHAR},
@@ -401,7 +404,8 @@
 				flag_payway = #{flagPayway,jdbcType=INTEGER},
 			</if>
 			<if test="productVolumeItem != null">
-				product_volume_item = #{productVolumeItem,jdbcType=VARCHAR},
+				product_volume_item =
+				#{productVolumeItem,jdbcType=VARCHAR},
 			</if>
 			<if test="saleScopeDid != null">
 				sale_scope_did = #{saleScopeDid,jdbcType=VARCHAR},
@@ -425,7 +429,8 @@
 				low_good = #{lowGood,jdbcType=VARCHAR},
 			</if>
 			<if test="qualificationCategoryCode != null">
-				qualification_category_code = #{qualificationCategoryCode,jdbcType=VARCHAR},
+				qualification_category_code =
+				#{qualificationCategoryCode,jdbcType=VARCHAR},
 			</if>
 			<if test="productAdv != null">
 				product_adv = #{productAdv,jdbcType=LONGVARCHAR},
@@ -433,78 +438,66 @@
 		</set>
 		where product_code = #{productCode,jdbcType=VARCHAR}
 	</update>
-	
-	<!-- 可以扩展if中的查询条件 - Yangcl  -->
-	<select id="getListBySellerCode" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcProductinfo">
-		SELECT 
-			  p.product_code AS productCode, 
-			  p.product_shortname AS productShortname, 
-			  p.max_sell_price AS maxSellPrice,
-			  p.min_sell_price AS minSellPrice,
-			  p.product_name AS productName,
-			  p.cost_price AS costPrice,
-			  d.description_info AS descriptionInfo,
-			  p.update_time AS updateTime  
+
+	<!-- 可以扩展if中的查询条件 - Yangcl -->
+	<select id="getListBySellerCode" resultMap="BaseResultMap"
+		parameterType="com.hjy.entity.product.PcProductinfo">
+		SELECT
+		p.product_code AS productCode,
+		p.product_shortname
+		AS productShortname,
+		p.max_sell_price AS maxSellPrice,
+		p.min_sell_price
+		AS minSellPrice,
+		p.product_name AS productName,
+		p.cost_price AS
+		costPrice,
+		d.description_info AS descriptionInfo,
+		p.update_time AS
+		updateTime
 		FROM
-		  	  productcenter.pc_productinfo p  LEFT JOIN productcenter.pc_productdescription d  ON p.product_code = d.product_code 
-		WHERE 
-		      p.product_code_old = #{productCodeOld , jdbcType=VARCHAR} 
-		      AND 
-		      p.seller_code = #{sellerCode , jdbcType=VARCHAR}
+		productcenter.pc_productinfo p LEFT JOIN
+		productcenter.pc_productdescription d ON p.product_code =
+		d.product_code
+		WHERE
+		p.product_code_old = #{productCodeOld ,
+		jdbcType=VARCHAR}
+		AND
+		p.seller_code = #{sellerCode , jdbcType=VARCHAR}
 	</select>
-	
-	
-	<select id="getListByOldProductCode" resultMap="BaseResultMap" parameterType="java.util.List">
+
+
+	<select id="getListByOldProductCode" resultMap="BaseResultMap"
+		parameterType="java.util.List">
 		select
-					* from productcenter.pc_productinfo
-		where 
-			product_status = '4497153900060002'
-    		and 
-    			product_code_old in 
-    			<foreach  item="item" index="index" collection="list"  open="(" close=")" separator="," >
-				          #{item}
-				</foreach>  
-	</select>
-	
-	<update id="updateByOldProductCode" parameterType="java.util.List">
-		update 
-			productcenter.pc_productinfo 
-		set
-		  	product_status = '4497153900060003', 
-		  	flag_sale = 0 
+		* from productcenter.pc_productinfo
 		where
-			small_seller_code='SF03KJT' 
-		and 
-			seller_code='SI2003'
+		product_status =
+		'4497153900060002'
 		and
-		 	product_code_old in 
-			<foreach  item="item" index="index" collection="list"  open="(" close=")" separator="," >
-			          #{item}
-			</foreach>  
+		product_code_old in
+		<foreach item="item" index="index" collection="list" open="("
+			close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
+
+	<update id="updateByOldProductCode" parameterType="java.util.List">
+		update
+		productcenter.pc_productinfo
+		set
+		product_status =
+		'4497153900060003',
+		flag_sale = 0
+		where
+		small_seller_code='SF03KJT'
+		and
+		seller_code='SI2003'
+		and
+		product_code_old in
+		<foreach item="item" index="index" collection="list" open="("
+			close=")" separator=",">
+			#{item}
+		</foreach>
 	</update>
-	
 </mapper>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
