@@ -2,18 +2,37 @@ package com.hjy.selleradapter.kjt.model;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.hjy.annotation.Inject;
+import com.hjy.common.DateUtil;
+import com.hjy.entity.OcOrderKjtDetail;
+import com.hjy.entity.OcOrderKjtList;
+import com.hjy.entity.log.LcOrderstatus;
+import com.hjy.entity.log.LcReturnMoneyStatus;
+import com.hjy.entity.member.McAuthenticationInfo;
+import com.hjy.entity.member.McLoginInfo;
+import com.hjy.entity.order.OcOrderaddress;
+import com.hjy.entity.order.OcOrderinfo;
+import com.hjy.entity.order.OcReturnMoney;
 import com.hjy.factory.UserFactory;
+import com.hjy.helper.WebHelper;
 import com.hjy.model.RsyncResult;
 import com.hjy.selleradapter.kjt.RsyncKjt;
 import com.hjy.selleradapter.kjt.config.RsyncConfigOrderSoCreate;
 import com.hjy.selleradapter.kjt.request.RsyncRequestOrderSoCreate;
 import com.hjy.selleradapter.kjt.response.RsyncResponseOrderSoCreate;
+import com.hjy.selleradapter.kjt.response.RsyncResponseOrderSoCreate.Data;
+import com.hjy.service.IOcOrderKjtDetailService;
 import com.hjy.service.IOcOrderKjtListService;
+import com.hjy.service.log.ILcOrderstatusService;
+import com.hjy.service.log.ILcReturnMoneyStatusService;
+import com.hjy.service.member.IMcAuthenticationInfoService;
+import com.hjy.service.member.IMcLoginInfoService;
+import com.hjy.service.order.IOcOrderadressService;
+import com.hjy.service.order.IOcOrderinfoService;
+import com.hjy.service.order.IOcReturnMoneyService;
 
 /**
  * 创建订单
@@ -25,7 +44,24 @@ public class OrderSoCreate
 		extends RsyncKjt<RsyncConfigOrderSoCreate, RsyncRequestOrderSoCreate, RsyncResponseOrderSoCreate> {
 
 	@Inject
-	private IOcOrderKjtListService ocOrderKjtListService; 
+	private IOcOrderKjtListService ocOrderKjtListService;
+	@Inject
+	private IOcOrderadressService ocOrderadressService;
+	@Inject
+	private IOcOrderinfoService ocOrderinfoService;
+	@Inject
+	private IMcAuthenticationInfoService authenticationInfoService;
+	@Inject
+	private ILcOrderstatusService lcOrderstatusService;
+	@Inject
+	private IOcOrderKjtDetailService ocOrderKjtDetailService;
+	@Inject
+	private IOcReturnMoneyService ocReturnMoneyService;
+	@Inject
+	private IMcLoginInfoService mcLoginInfoService;
+	@Inject
+	private ILcReturnMoneyStatusService lcReturnMoneyStatusService;
+
 	private final static RsyncConfigOrderSoCreate RSYNC_CONFIG_ORDER_SO_CREATE = new RsyncConfigOrderSoCreate();
 	private RsyncRequestOrderSoCreate rsyncRequestOrderSoCreate = new RsyncRequestOrderSoCreate();
 
@@ -47,65 +83,76 @@ public class OrderSoCreate
 		String desc = tResponse.getDesc();
 
 		if (!"0".equals(tResponse.getCode())) {
-			DbUp.upTable("oc_order_kjt_list").dataUpdate(new MDataMap("order_code_seq", order_code, "rsync_desc", desc),
-					"rsync_desc", "order_code_seq");
-
+			// 根据序列订单号修改订单编号 2016-07-02 zhy
+			OcOrderKjtList kjtList = new OcOrderKjtList();
+			kjtList.setOrderCodeSeq(order_code);
+			kjtList.setRsyncDesc(desc);
+			ocOrderKjtListService.updateCodeByCodeSeq(kjtList);
 			// {"Code":"2","Desc":"您本月累计订单的数量超出了海关关于个人物品自用、合理数量的规定。请更换实名信息再购买！"}
 			if (StringUtils.startsWith(desc, "您本月累计订单的数量超出了海关关于个人物品自用")) {
 
-				String order_code_ori = (String) DbUp.upTable("oc_order_kjt_list").dataGet("order_code",
-						"order_code_seq=:order_code_seq", new MDataMap("order_code_seq", order_code));
-				DbUp.upTable("oc_order_kjt_list").dataUpdate(
-						new MDataMap("order_code_seq", order_code, "sostatus", "65", "local_status", ""),
-						"sostatus,local_status", "order_code_seq");
+				// 根据序列订单号查询订单编号2016-07-03 zhy
+				OcOrderKjtList kjtOrder = ocOrderKjtListService.findOrderListByCodeSeq(order_code);
+				String order_code_ori = kjtOrder.getOrderCode();
+				// 根据序列订单号编辑跨境通订单2016-07-03 zhy
+				kjtOrder.setSostatus("65");
+				kjtOrder.setLocalStatus("");
+				ocOrderKjtListService.updateCodeByCodeSeq(kjtOrder);
 				creatReturnMoney(order_code, order_code_ori);
 
-				MDataMap addressInfo = DbUp.upTable("oc_orderadress").oneWhere("auth_idcard_number", "",
-						"order_code=:order_code", "order_code", order_code_ori);
-				String auth_idcard_number = addressInfo.get("auth_idcard_number");
-				MDataMap orderInfo = DbUp.upTable("oc_orderinfo").oneWhere("buyer_code,order_status", "",
-						"order_code=:order_code", "order_code", order_code_ori);
-				String buyer_code = orderInfo.get("buyer_code");
-				String order_status = orderInfo.get("order_status");
+				// 根据order_code查询 订单地址发票表 2016-07-03 zhy
+				OcOrderaddress addressInfo = ocOrderadressService.findOrderAddressByOrderCode(order_code_ori);
+				String auth_idcard_number = addressInfo.getAuthIdcardNumber();
+				OcOrderinfo orderInfo = ocOrderinfoService.findOrderInfoByOrderCode(order_code_ori);
+				String buyer_code = orderInfo.getBuyerCode();
+				String order_status = orderInfo.getOrderStatus();
 
-				DbUp.upTable("mc_authenticationInfo").dataUpdate(new MDataMap("member_code", buyer_code,
-						"idcard_number", auth_idcard_number, "customs_status", "1"), "customs_status",
-						"member_code,idcard_number");
+				// 根据member_code和idcard_number修改customs_status 2016-07-03 zhy
+				McAuthenticationInfo authenticationInfo = new McAuthenticationInfo();
+				authenticationInfo.setMemberCode(buyer_code);
+				authenticationInfo.setIdcardNumber(auth_idcard_number);
+				authenticationInfo.setCustomsStatus(1);
+				authenticationInfoService.updateCustomsStatus(authenticationInfo);
 
-				List<Map<String, Object>> klist = DbUp.upTable("oc_order_kjt_list").dataSqlList(
-						"SELECT rsync_desc from oc_order_kjt_list where order_code=:order_code GROUP BY rsync_desc",
-						new MDataMap("order_code", order_code_ori));
+				// 根据订单编号查询订单集合 2016-07-03 zhy
+				List<OcOrderKjtList> klist = ocOrderKjtListService.findListByOrderCode(order_code_ori);
 				if (klist.size() == 1 && !"4497153900010006".equals(order_status)) {
 					// 更新订单状态
-					DbUp.upTable("oc_orderinfo").dataUpdate(
-							new MDataMap("order_status", "4497153900010006", "order_code", order_code_ori),
-							"order_status", "order_code");
-					DbUp.upTable("lc_orderstatus").insert("code", order_code_ori, "info", "跨境通订单同步失败", "create_time",
-							DateUtil.getSysDateTimeString(), "create_user", "system", "old_status", order_status,
-							"now_status", "4497153900010006");
+					OcOrderinfo ocOrderinfo = new OcOrderinfo();
+					ocOrderinfo.setOrderStatus("4497153900010006");
+					ocOrderinfo.setOrderCode(order_code_ori);
+					ocOrderinfoService.updateSelective(ocOrderinfo);
+					// 添加订单状态日志表2016-07-03 zhy
+					LcOrderstatus lcOrderstatus = new LcOrderstatus();
+					lcOrderstatus.setCode(order_code_ori);
+					lcOrderstatus.setInfo("跨境通订单同步失败");
+					lcOrderstatus.setCreateTime(DateUtil.getSysDateTimeString());
+					lcOrderstatus.setCreateUser("system");
+					lcOrderstatus.setOldStatus(order_status);
+					lcOrderstatus.setNowStatus("4497153900010006");
+					lcOrderstatusService.insertSelective(lcOrderstatus);
+
 				}
 			}
 
-			rsyncResult.setResultCode(918519135);
-			rsyncResult.setResultMessage(tResponse.getDesc());
+			rsyncResult.setCode(918519135);
+			rsyncResult.setMessage(tResponse.getDesc());
 			return rsyncResult;
 		}
 
 		Data data = tResponse.getData();
 
-		String out_order_code = String.valueOf(data.getSOSysNo());
-		String ProductAmount = String.valueOf(data.getProductAmount());
-		String TaxAmount = String.valueOf(data.getTaxAmount());
-		String ShippingAmount = String.valueOf(data.getShippingAmount());
-
-		// 更新订单表
-		DbUp.upTable("oc_order_kjt_list").dataUpdate(
-				new MDataMap("order_code_seq", order_code, "order_code_out", out_order_code, "product_amount",
-						ProductAmount, "tax_amount", TaxAmount, "shipping_amount", ShippingAmount, "update_time",
-						DateUtil.getSysDateTimeString(), "rsync_desc", desc, "sostatus", "0"),
-				"order_code_out,product_amount,tax_amount,shipping_amount,update_time,rsync_desc,sostatus",
-				"order_code_seq");
-
+		// 更新订单表 2016-07-03 zhy
+		OcOrderKjtList updateKjtOrder = new OcOrderKjtList();
+		updateKjtOrder.setOrderCodeSeq(order_code);
+		updateKjtOrder.setOrderCodeOut(String.valueOf(data.getSOSysNo()));
+		updateKjtOrder.setProductAmount(data.getProductAmount());
+		updateKjtOrder.setTaxAmount(data.getTaxAmount());
+		updateKjtOrder.setShippingAmount(data.getShippingAmount());
+		updateKjtOrder.setUpdateTime(DateUtil.getSysDateTimeString());
+		updateKjtOrder.setRsyncDesc(desc);
+		updateKjtOrder.setSostatus("0");
+		ocOrderKjtListService.updateCodeByCodeSeq(updateKjtOrder);
 		responseSu = true;
 		return rsyncResult;
 	}
@@ -127,87 +174,53 @@ public class OrderSoCreate
 
 		BigDecimal expected_return_group_money = BigDecimal.ZERO;
 		BigDecimal expected_return_money = BigDecimal.ZERO;
-
-		List<MDataMap> failDetails = DbUp.upTable("oc_order_kjt_detail").queryAll("", "",
-				"order_code_seq=:order_code_seq", new MDataMap("order_code_seq", order_code_seq));
-		for (MDataMap mDataMap : failDetails) {
-			String sku_code = mDataMap.get("sku_code");
-			BigDecimal sku_num = new BigDecimal(mDataMap.get("sku_num"));
-			MDataMap detailInfo = DbUp.upTable("oc_orderdetail").one("order_code", order_code, "sku_code", sku_code);
-			BigDecimal sku_price = new BigDecimal(detailInfo.get("sku_price"));
-			BigDecimal group_price = new BigDecimal(detailInfo.get("group_price"));
-
+		List<OcOrderKjtDetail> failDetails = ocOrderKjtDetailService.findOrderDetailByCodeSeq(order_code_seq);
+		for (OcOrderKjtDetail detailInfo : failDetails) {
+			String sku_code = detailInfo.getSkuCode();
+			BigDecimal sku_num = new BigDecimal(detailInfo.getSkuNum());
+			BigDecimal sku_price = detailInfo.getSkuPrice();
+			// 没有group_price字段 2016-07-03 zhy
+			BigDecimal group_price = BigDecimal.ZERO;
 			expected_return_money = expected_return_money.add(sku_num.multiply(sku_price));
 			expected_return_group_money = expected_return_group_money.add(sku_num.multiply(group_price));
 		}
 
-		MDataMap orderInfo = DbUp.upTable("oc_orderinfo").one("order_code", order_code);
-
-		String money_no = WebHelper.upCode("RTM");
+		// 根据订单编号查询订单信息 2016-07-03 zhy
+		OcOrderinfo orderInfo = ocOrderinfoService.findOrderInfoByOrderCode(order_code);
+		String money_no = WebHelper.getInstance().genUniqueCode("RTM");
 		if (expected_return_money.compareTo(BigDecimal.ZERO) > 0) {
-			// 生成退款单
-			MDataMap map = new MDataMap();
-			map.put("return_money_code", money_no);
-			map.put("return_goods_code", "");
-			map.put("buyer_code", orderInfo.get("buyer_code"));
-			map.put("seller_code", orderInfo.get("seller_code"));
-			map.put("small_seller_code", orderInfo.get("small_seller_code"));
-			map.put("contacts", "");// 联系人
-			map.put("status", "4497153900040003");
-			map.put("return_money", expected_return_money.toString());
-			map.put("mobile", (String) DbUp.upTable("mc_login_info").dataGet("login_name", "member_code=:member_code",
-					new MDataMap("member_code", orderInfo.get("buyer_code"))));
-			map.put("create_time", DateUtil.getSysDateTimeString());
-			map.put("poundage", "0");
-			map.put("order_code", order_code);
-			map.put("pay_method", "449716200001");
-			map.put("online_money", expected_return_money.toString());
-			DbUp.upTable("oc_return_money").dataInsert(map);
-
-			// 创建流水日志
-			MDataMap logMap = new MDataMap();
-			logMap.put("return_money_no", money_no);
-			logMap.put("info", "跨境通订单失败，直接生成退款单");
-			logMap.put("create_time", DateUtil.getSysDateTimeString());
+			// 生成退款单2016-07-03 zhy
+			OcReturnMoney ocReturnMoney = new OcReturnMoney();
+			ocReturnMoney.setReturnMoneyCode(money_no);
+			ocReturnMoney.setReturnGoodsCode(orderInfo.getBuyerCode());
+			ocReturnMoney.setSellerCode(orderInfo.getSellerCode());
+			ocReturnMoney.setSmallSellerCode(orderInfo.getSmallSellerCode());
+			ocReturnMoney.setContacts("");
+			ocReturnMoney.setStatus("4497153900040003");
+			ocReturnMoney.setReturnMoney(expected_return_money);
+			// 查询手机号2016-07-03 zhy
+			McLoginInfo mcLoginInfo = mcLoginInfoService.findLoginInfoByMemberCode(orderInfo.getBuyerCode());
+			ocReturnMoney.setMobile(mcLoginInfo.getLoginName());
+			ocReturnMoney.setCreateTime(DateUtil.getSysDateTimeString());
+			ocReturnMoney.setPoundage(BigDecimal.valueOf(0));
+			ocReturnMoney.setOrderCode(order_code);
+			ocReturnMoney.setPayMethod("449716200001");
+			ocReturnMoney.setOnlineMoney(expected_return_money);
+			ocReturnMoneyService.insertSelective(ocReturnMoney);
+			// 创建流水日志 2016-07-03 zhy
 			String create_user = "";
 			try {
 				create_user = UserFactory.INSTANCE.create().getLoginName();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			logMap.put("create_user", create_user);
-			logMap.put("status", map.get("status"));
-			DbUp.upTable("lc_return_money_status").dataInsert(logMap);
+			LcReturnMoneyStatus lcReturnMoneyStatus = new LcReturnMoneyStatus();
+			lcReturnMoneyStatus.setReturnMoneyNo(money_no);
+			lcReturnMoneyStatus.setInfo("");
+			lcReturnMoneyStatus.setCreateTime(DateUtil.getSysDateTimeString());
+			lcReturnMoneyStatus.setCreateUser(create_user);
+			lcReturnMoneyStatus.setStatus(ocReturnMoney.getStatus());
+			lcReturnMoneyStatusService.insertSelective(lcReturnMoneyStatus);
 		}
-
-		// 自动退还微公社余额
-		if (expected_return_group_money.compareTo(BigDecimal.ZERO) > 0) {
-
-			// 退返微公社部分
-			GroupRefundInput groupRefundInput = new GroupRefundInput();
-			// groupRefundInput.setTradeCode(money_no);
-			groupRefundInput.setTradeCode(DbUp.upTable("oc_order_pay")
-					.one("order_code", order_code, "pay_type", "449746280009").get("pay_sequenceid"));
-			groupRefundInput.setMemberCode(orderInfo.get("buyer_code"));
-			groupRefundInput.setRefundMoney(expected_return_group_money.toString());
-			groupRefundInput.setOrderCode(order_code);
-			groupRefundInput.setRefundTime(DateUtil.getSysDateTimeString());
-			groupRefundInput.setRemark("跨境通自动退还微公社余额");
-			groupRefundInput.setBusinessTradeCode(money_no);// 一个流水值退一次
-			// new GroupPayService().groupRefundSome(groupRefundInput,
-			// orderInfo.get("seller_code"));
-
-			ApiCallSupport<GroupRefundInput, GroupRefundResult> apiCallSupport = new ApiCallSupport<GroupRefundInput, GroupRefundResult>();
-			GroupRefundResult refundResult = null;
-			try {
-				refundResult = apiCallSupport.doCallApi(bConfig("xmassystem.group_pay_url"),
-						bConfig("xmassystem.group_pay_refund_face"), bConfig("xmassystem.group_pay_key"),
-						bConfig("xmassystem.group_pay_pass"), groupRefundInput, new GroupRefundResult());
-			} catch (Exception e) {
-				// 此处暂时流程，退款失败，不影响总流程
-				e.printStackTrace();
-			}
-		}
-
 	}
 }

@@ -18,7 +18,7 @@ import com.hjy.service.order.IOcOrderadressService;
  * 时间: 2016年6月28日 下午5:48:56
  */
 @Service
-public class OcOrderadressServiceImpl extends BaseServiceImpl<OcOrderaddress, Integer>
+public class OcOrderaddressServiceImpl extends BaseServiceImpl<OcOrderaddress, Integer>
 		implements IOcOrderadressService {
 
 	@Resource

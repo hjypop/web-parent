@@ -38,7 +38,7 @@ public interface IOcOrderKjtListDao extends BaseDao<OcOrderKjtList, Integer> {
 	 */
 	OcOrderKjtList findOrderByOutCode(String orderCodeOut);
 
-	public List<OcOrderKjtList> findListByOrderCode(String orderCode);
+	List<OcOrderKjtList> findListByOrderCode(String orderCode);
 
 	/**
 	 * 
@@ -59,5 +59,13 @@ public interface IOcOrderKjtListDao extends BaseDao<OcOrderKjtList, Integer> {
 	 * @return
 	 */
 	int updateCodeByCodeSeq(OcOrderKjtList entity);
+
+	/**
+	 * 根据序列订单号查询订单信息 2016-07-03 zhy
+	 * 
+	 * @param orderCodeSeq
+	 * @return
+	 */
+	OcOrderKjtList findOrderListByCodeSeq(String orderCodeSeq);
 
 }
