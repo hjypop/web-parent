@@ -4,18 +4,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.hjy.annotation.Inject;
 import com.hjy.base.BaseClass;
 import com.hjy.constant.WebConst;
+import com.hjy.entity.zapdata.ZaRolemenu;
+import com.hjy.entity.zapdata.ZaUserinfo;
+import com.hjy.entity.zapdata.ZaUsermenu;
+import com.hjy.entity.zapdata.ZaUserrole;
 import com.hjy.helper.LogHelper;
 import com.hjy.helper.WebSessionHelper;
 import com.hjy.iface.IBaseInstance;
 import com.hjy.model.MDataMap;
 import com.hjy.model.MUserInfo;
+import com.hjy.service.zapdata.IZaRolemenuService;
+import com.hjy.service.zapdata.IZaUserinfoService;
+import com.hjy.service.zapdata.IZaUsermenuService;
+import com.hjy.service.zapdata.IZaUserroleService;
 
+@Component
 public class UserFactory extends BaseClass implements IBaseInstance {
 	public static final UserFactory INSTANCE = new UserFactory();
+
+	@Autowired
+	private IZaUserinfoService zaUserinfoService;
+	@Autowired
+	private IZaUserroleService zaUserroleService;
+	@Autowired
+	private IZaRolemenuService zaRolemenuService;
+	@Autowired
+	private IZaUsermenuService zaUsermenuService;
 
 	/**
 	 * 获取用户信息
@@ -79,8 +101,8 @@ public class UserFactory extends BaseClass implements IBaseInstance {
 		// 提供无效cookie时要求重新登录
 		String sCookieUser = WebSessionHelper.create().upCookie(WebConst.CONST_WEB_SESSION_USER);
 		if (StringUtils.isNotEmpty(sCookieUser)) {
-			MDataMap mUserMap = DbUp.upTable("za_userinfo").one("cookie_user", sCookieUser);
-			if (mUserMap == null) {
+			ZaUserinfo user = zaUserinfoService.findUserInfoByCookie(sCookieUser);
+			if (user == null) {
 				bFlagLogin = false;
 			}
 		}
@@ -108,9 +130,10 @@ public class UserFactory extends BaseClass implements IBaseInstance {
 			mLoginUserInfo.setTraderCode(mUserData.get("trader_code"));
 			mLoginUserInfo.setPassWordUpdateTime(mUserData.get("password_update_time"));
 			ArrayList<String> aRoleList = new ArrayList<String>();
-			for (MDataMap mDataMap : DbUp.upTable("za_userrole").queryByWhere("user_code",
-					mLoginUserInfo.getUserCode())) {
-				aRoleList.add(mDataMap.get("role_code"));
+			// 根据用户编号查询用户角色信息 2016-07-04 zhy
+			List<ZaUserrole> roleList = zaUserroleService.findRoleByUserCode(mLoginUserInfo.getUserCode());
+			for (ZaUserrole role : roleList) {
+				aRoleList.add(role.getRoleCode());
 			}
 
 			mLoginUserInfo.setUserRole(StringUtils.join(aRoleList, WebConst.CONST_SPLIT_LINE));
@@ -121,21 +144,16 @@ public class UserFactory extends BaseClass implements IBaseInstance {
 			if (aRoleList.size() > 0) {
 
 				List<String> listMenuCode = new ArrayList<String>();
-
-				for (MDataMap mDataMap : DbUp.upTable("za_rolemenu").queryAll("", "",
-						"role_code in ('" + StringUtils.join(aRoleList, "','") + "')", null)) {
-
-					listMenuCode.add(mDataMap.get("menu_code"));
-
-					mMenuMap.put(mDataMap.get("menu_code"), mDataMap.get("menu_code"));
-
+				List<ZaRolemenu> roleMenus = zaRolemenuService.findMenuByRoleCode(aRoleList);
+				for (ZaRolemenu menu : roleMenus) {
+					listMenuCode.add(menu.getMenuCode());
+					mMenuMap.put(menu.getMenuCode(), menu.getMenuCode());
 				}
 
 			}
-
-			for (MDataMap mDataMap : DbUp.upTable("za_usermenu").queryByWhere("user_code",
-					mLoginUserInfo.getUserCode())) {
-				mMenuMap.put(mDataMap.get("menu_code"), mDataMap.get("menu_code"));
+			List<ZaUsermenu> userMenus = zaUsermenuService.findMenuByUserCode(mLoginUserInfo.getUserCode());
+			for (ZaUsermenu menu : userMenus) {
+				mMenuMap.put(menu.getMenuCode(), menu.getMenuCode());
 			}
 
 			mLoginUserInfo.setUserMenu(StringUtils.join(mMenuMap.keySet(), WebConst.CONST_SPLIT_LINE));

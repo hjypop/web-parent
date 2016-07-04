@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.zapdata.IZaUserroleDao">
+	<resultMap id="BaseResultMap" type="com.hjy.entity.zapdata.ZaUserrole">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="uid" property="uid" jdbcType="CHAR" />
+		<result column="user_code" property="userCode" jdbcType="VARCHAR" />
+		<result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 根据用户编号查询用户角色信息 2016-07-04 zhy -->
+	<select id="findRoleByUserCode" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		SELECT
+		zid,
+		uid,
+		user_code,
+		role_code
+		FROM
+		zapdata.za_userrole
+		<where>
+			cookie_user = #{cookieUser,jdbcType=VARCHAR}
+		</where>
+	</select>
+</mapper>

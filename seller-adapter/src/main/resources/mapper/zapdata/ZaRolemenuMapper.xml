@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.zapdata.IZaRolemenuDao">
+	<resultMap id="BaseResultMap" type="com.hjy.entity.zapdata.ZaRolemenu">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="uid" property="uid" jdbcType="CHAR" />
+		<result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+		<result column="menu_code" property="menuCode" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 根据角色编号查询角色菜单表 2016-07-04 zhy -->
+	<select id="findMenuByRoleCode" parameterType="list" resultMap="BaseResultMap">
+		SELECT
+		zid,
+		uid,
+		role_code,
+		menu_code
+		FROM
+		zapdata.za_rolemenu
+		<where>
+			<foreach item="item" index="index" collection="list" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+	</select>
+</mapper>
