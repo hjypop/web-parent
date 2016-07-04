@@ -40,7 +40,7 @@ public class UserFactory extends BaseClass implements IBaseInstance {
 	private IZaUsermenuService zaUsermenuService;
 
 	/**
-	 * 获取用户信息
+	 * 获取用户信息 | properties配置信息核对完成
 	 * 
 	 * @return
 	 */
@@ -166,8 +166,8 @@ public class UserFactory extends BaseClass implements IBaseInstance {
 
 			// 插入日志信息
 			String sIp = WebSessionHelper.create().upIpaddress();
-			WebLogFactory.INSTANCE.addLog("467723120001", "system_login",
-					getInfo(969912002, mLoginUserInfo.getUserCode(), mLoginUserInfo.getLoginName(), sIp));
+			WebLogFactory.INSTANCE.addLog("467723120001" , "system_login",
+					getInfo(200002001 , mLoginUserInfo.getUserCode(), mLoginUserInfo.getLoginName(), sIp));
 
 			LogHelper.addLog("manage_login", mLoginUserInfo);
 
