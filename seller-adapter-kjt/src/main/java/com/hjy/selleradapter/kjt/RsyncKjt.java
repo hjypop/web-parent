@@ -39,7 +39,7 @@ import com.hjy.service.ILcRsyncKjtLogService;
 import com.hjy.support.WebClientSupport;
 
 /**
- * 同步跨境通接口的基类
+ * 同步跨境通接口的基类 | properties配置信息核对完成
  * 
  * @author srnpr
  * 
@@ -76,8 +76,8 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		MDataMap dataMap = new MDataMap();
 		dataMap.put("method", upConfig().getRsyncTarget());
 		dataMap.put("format", "json");
-		dataMap.put("version", getConfig("groupcenter.rsync_kjt_version"));
-		dataMap.put("appid", getConfig("groupcenter.rsync_kjt_appid"));
+		dataMap.put("version", getConfig("seller_adapter_kjt.rsync_kjt_version"));
+		dataMap.put("appid", getConfig("seller_adapter_kjt.rsync_kjt_appid"));
 		dataMap.put("timestamp", DateUtil.getSysDateTimeString(DateUtil.sdfDateTimeTamp));
 		dataMap.put("nonce", String.valueOf(new Random().nextInt(10000000)));
 		dataMap.put("data", requestStr);
@@ -98,7 +98,7 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 			str.append(nameString + "&");
 		}
 		dataMap.put("sign", HexUtil.toHexString(MD5Util.md5(
-				str.substring(0, str.toString().length() - 1) + "&" + getConfig("groupcenter.rsync_kjt_password"))));
+				str.substring(0, str.toString().length() - 1) + "&" + getConfig("seller_adapter_kjt.rsync_kjt_password"))));
 		return dataMap;
 	}
 
@@ -108,7 +108,7 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 	 * @return
 	 */
 	private String upRequestUrl() {
-		return getConfig("groupcenter.rsync_kjt_url");
+		return getConfig("seller_adapter_kjt.rsync_kjt_url"); 
 	}
 
 	/**
@@ -177,9 +177,9 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		} catch (Exception e) {
 			e.printStackTrace();
 			// 如果失败更新错误日志信息
-			MDataMap mErrorMap = new MDataMap();
-			mErrorMap.initKeyValues("code", sCode, "flag_success", "0", "process_time", FormatHelper.upDateTime(),
-					"error_expection", e.getMessage());
+//			MDataMap mErrorMap = new MDataMap();
+//			mErrorMap.initKeyValues("code", sCode, "flag_success", "0", "process_time", FormatHelper.upDateTime(),
+//					"error_expection", e.getMessage());
 			LcRsyncKjtLog log = new LcRsyncKjtLog();
 			log.setCode(sCode);
 			log.setFlagSuccess(0);

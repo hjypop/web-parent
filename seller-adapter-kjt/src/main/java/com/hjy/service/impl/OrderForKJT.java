@@ -57,7 +57,7 @@ import com.hjy.selleradapter.kjt.request.RsyncRequestOrderSoCreate;
 import com.hjy.support.MailSupport;
 
 /**
- * 跨境通订单
+ * 跨境通订单 | properties配置信息核对完成
  * 
  * @author jlin
  *
@@ -435,7 +435,7 @@ public class OrderForKJT extends BaseClass {
 		// 组装报文
 		RsyncRequestOrderSoCreate requestOrderSoCreate = orderSoCreate.upRsyncRequest();
 
-		requestOrderSoCreate.setSaleChannelSysNo(Long.valueOf(getConfig("groupcenter.rsync_kjt_SaleChannelSysNo")));
+		requestOrderSoCreate.setSaleChannelSysNo(Long.valueOf(getConfig("seller_adapter_kjt.rsync_kjt_SaleChannelSysNo")));
 		requestOrderSoCreate.setMerchantOrderID(order.getOrderCode());
 		requestOrderSoCreate.setServerType(getServerType(orderDetail0.getProductCode())); // 直邮商品
 																							// S01
@@ -479,7 +479,7 @@ public class OrderForKJT extends BaseClass {
 		soShippingInfo.setSenderCountry("");
 		soShippingInfo.setReceiveAreaName(getAreaName(orderAddress.getAreaCode()));
 
-		String kjt_shipTypeID = getConfig("groupcenter.kjt_shipTypeID");
+		String kjt_shipTypeID = getConfig("seller_adapter_kjt.kjt_shipTypeID");
 		soShippingInfo.setShipTypeID("-1".equals(kjt_shipTypeID) ? "" : kjt_shipTypeID);
 
 		requestOrderSoCreate.setShippingInfo(soShippingInfo);
@@ -795,9 +795,9 @@ public class OrderForKJT extends BaseClass {
 
 	private void sendMailForAuth() {
 
-		String receives[] = getConfig("groupcenter.kjt_auth_sendMail_receives").split(",");
-		String title = getConfig("groupcenter.kjt_auth_sendMail_title");
-		String content = getConfig("groupcenter.kjt_auth_sendMail_content");
+		String receives[] = getConfig("seller_adapter_kjt.kjt_auth_sendMail_receives").split(",");
+		String title = getConfig("seller_adapter_kjt.kjt_auth_sendMail_title");
+		String content = getConfig("seller_adapter_kjt.kjt_auth_sendMail_content");
 
 		for (String receive : receives) {
 			if (StringUtils.isNotBlank(receive)) {

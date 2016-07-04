@@ -36,7 +36,7 @@ import com.hjy.selleradapter.service.IProductService;
 import com.hjy.selleradapter.service.impl.ProductServiceImpl;
 
 /**
- * 根据商品编号获取商品信息
+ * 根据商品编号获取商品信息 | properties配置信息核对完成
  * 
  * @author xiegj
  * 
@@ -93,7 +93,7 @@ public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductByI
 						result.getResultList().add(mResult.getMessage());
 					}
 				}
-				result.setProcessData(getInfo(918501102, result.getProcessNum(), iSuccessSum, result.getProcessNum() - iSuccessSum));
+				result.setProcessData(getInfo(100001102, result.getProcessNum(), iSuccessSum, result.getProcessNum() - iSuccessSum));
 			}
 		}
 
@@ -115,8 +115,6 @@ public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductByI
 			PcProductinfo productinfo=new PcProductinfo();
 			String productId = info.getProductID();
 			
-//			List<Map<String, Object>> list =  DbUp.upTable("pc_productinfo"). dataSqlList("SELECT p.product_code,p.product_shortname,p.max_sell_price,p.min_sell_price,p.product_name,p.cost_price,d.description_info,p.update_time FROM pc_productinfo p LEFT JOIN pc_productdescription d on p.product_code=d.product_code where p.product_code_old=:product_code_old and p.seller_code=:seller_code",  
-//					new MDataMap("product_code_old",productId,"seller_code",MemberConst.MANAGE_CODE_HOMEHAS));
 			PcProductinfo entity = new PcProductinfo();
 			entity.setProductCodeOld(productId);
 			entity.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS); 
@@ -137,7 +135,7 @@ public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductByI
 			}else {
 				productinfo = productService.getProduct(list.get(0).getProductCode());
 				
-				String now=DateUtil.getSysDateTimeString();
+				String now = DateUtil.getSysDateTimeString();
 				String cost = list.get(0).getCostPrice().toString();
 				String p1 = info.getPrice().setScale(2,BigDecimal.ROUND_HALF_UP).toString();//同步过来的商品价格
 				//修改商品表
@@ -156,11 +154,11 @@ public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductByI
 				productinfo.getPcProductinfoExt().setProductTradeType(String.valueOf(info.getProductTradeType()));
 				productinfo.getPcProductinfoExt().setProductStoreType(String.valueOf(info.getProductEntryInfo().getProductStoreType()));
 				productinfo.getPcProductinfoExt().setKjtSellerCode(info.getStoreSysNo());
-				productinfo.setTaxRate(info.getProductEntryInfo().getTariffRate());//更新税率
+				productinfo.setTaxRate(info.getProductEntryInfo().getTariffRate()); // 更新税率
 				productService.UpdateProductTx(productinfo, new StringBuffer(), "jobsystem",  new ProductChangeFlag());
 			}
 		} catch (Exception e) {
-			result.inErrorMessage(918519034, info.toString());
+			result.inErrorMessage(100009034 , info.toString());
 			e.printStackTrace();
 		}
 
@@ -175,7 +173,7 @@ public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductByI
 	* @date 2015-7-14 下午3:48:00
 	* @throws 
 	*/
-	public void setNewProductInfo(PcProductinfo productinfo, RsyncModelGetKjtProduct info){
+	public void setNewProductInfo(PcProductinfo productinfo , RsyncModelGetKjtProduct info){
 		String productName = info.getProductName().replaceAll("</?[^>]+>", "");//过滤html标签
 		productinfo.setProductCode(WebHelper.getInstance().genUniqueCode(RsyncGetKjtProductById.ProductHead));
 		String uid=UUID.randomUUID().toString().replace("-", "");
@@ -192,7 +190,7 @@ public class RsyncGetKjtProductById extends RsyncKjt<RsyncConfigGetKjtProductByI
 		productinfo.setMarketPrice(info.getPrice());
 		String manageCode = MemberConst.MANAGE_CODE_HOMEHAS;
 		productinfo.setSellerCode(manageCode);
-		productinfo.setSmallSellerCode(getConfig("familyhas.seller_code_KJT"));
+		productinfo.setSmallSellerCode(getConfig("seller_adapter_kjt.seller_code_KJT"));
 		productinfo.setProductStatus("4497153900060003");//商品下架
 		productinfo.setValidate_flag("Y");//新增字段，是否是虚拟商品
 		productinfo.setTaxRate(info.getProductEntryInfo().getTariffRate());

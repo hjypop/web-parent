@@ -35,13 +35,12 @@ import com.hjy.service.order.IOcOrderinfoService;
 import com.hjy.service.order.IOcReturnMoneyService;
 
 /**
- * 创建订单
+ * 创建订单 | properties配置信息核对完成
  * 
  * @author jlin
  *
  */
-public class OrderSoCreate
-		extends RsyncKjt<RsyncConfigOrderSoCreate, RsyncRequestOrderSoCreate, RsyncResponseOrderSoCreate> {
+public class OrderSoCreate extends RsyncKjt<RsyncConfigOrderSoCreate, RsyncRequestOrderSoCreate, RsyncResponseOrderSoCreate> {
 
 	@Inject
 	private IOcOrderKjtListService ocOrderKjtListService;
@@ -135,7 +134,7 @@ public class OrderSoCreate
 				}
 			}
 
-			rsyncResult.setCode(918519135);
+			rsyncResult.setCode(100009135);
 			rsyncResult.setMessage(tResponse.getDesc());
 			return rsyncResult;
 		}
@@ -171,7 +170,6 @@ public class OrderSoCreate
 
 	// 此处不牵扯运费的问题
 	private void creatReturnMoney(String order_code_seq, String order_code) {
-
 		BigDecimal expected_return_group_money = BigDecimal.ZERO;
 		BigDecimal expected_return_money = BigDecimal.ZERO;
 		List<OcOrderKjtDetail> failDetails = ocOrderKjtDetailService.findOrderDetailByCodeSeq(order_code_seq);

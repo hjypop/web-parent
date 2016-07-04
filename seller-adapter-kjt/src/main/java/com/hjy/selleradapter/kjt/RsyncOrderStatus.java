@@ -38,7 +38,7 @@ import com.hjy.service.order.IOcReturnMoneyService;
 import com.hjy.support.MailSupport;
 
 /**
- * alias TraceOrder 类: RsyncOrderStatus <br>
+ * alias TraceOrder 类: RsyncOrderStatus <br>      | properties配置信息核对完成
  * 描述: 同步订单状态 <br>
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月27日 下午4:50:30
@@ -84,7 +84,7 @@ public class RsyncOrderStatus
 		RsyncResult rsyncResult = new RsyncResult();
 
 		if (!"0".equals(tResponse.getCode())) {
-			rsyncResult.setCode(918519135);
+			rsyncResult.setCode(100009135);
 			rsyncResult.setMessage(tResponse.getDesc());
 			return rsyncResult;
 		}
@@ -179,9 +179,9 @@ public class RsyncOrderStatus
 	}
 
 	private void sendMail(String order_code_seq, String order_code, String order_code_out, int sostatus) {
-		String receives[] = getConfig("groupcenter.kjt_orderstata_sendMail_receives").split(",");
-		String title = getConfig("groupcenter.kjt_orderstata_sendMail_title");
-		String content = getConfig("groupcenter.kjt_orderstata_sendMail_content");
+		String receives[] = getConfig("seller_adapter_kjt.kjt_orderstata_sendMail_receives").split(",");
+		String title = getConfig("seller_adapter_kjt.kjt_orderstata_sendMail_title");
+		String content = getConfig("seller_adapter_kjt.kjt_orderstata_sendMail_content");
 		for (String receive : receives) {
 			if (StringUtils.isNotBlank(receive)) {
 				MailSupport.INSTANCE.sendMail(receive,

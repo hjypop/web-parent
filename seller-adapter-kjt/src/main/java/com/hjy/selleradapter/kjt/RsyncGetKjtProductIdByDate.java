@@ -23,7 +23,7 @@ import com.hjy.support.MailSupport;
 
 
 /**
- * 获取时间段内信息变化的商品ID并查询详细信息入库
+ * 获取时间段内信息变化的商品ID并查询详细信息入库 | properties配置信息核对完成
  * 
  * @author ligj
  * 
@@ -48,8 +48,8 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 		RsyncDateCheck rsyncDateCheck = upDateCheck(upConfig());
 		request.setChangedDateBegin(rsyncDateCheck.getStartDate());
 		request.setChangedDateEnd(rsyncDateCheck.getEndDate());
-		request.setSaleChannelSysNo(getConfig("groupcenter.rsync_kjt_SaleChannelSysNo"));
-		request.setLimitRows(getConfig("groupcenter.rsync_kjt_limit_rows"));//默认足够大的条数1百万
+		request.setSaleChannelSysNo(getConfig("seller_adapter_kjt.rsync_kjt_SaleChannelSysNo"));
+		request.setLimitRows(getConfig("seller_adapter_kjt.rsync_kjt_limit_rows"));//默认足够大的条数1百万
 		return request;
 	}
 
@@ -142,7 +142,7 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 						e.printStackTrace();
 					}
 				}
-				result.setProcessData(getInfo(918501102 , result.getProcessNum() , iSuccessSum , result.getProcessNum() - iSuccessSum));
+				result.setProcessData(getInfo(100001102 , result.getProcessNum() , iSuccessSum , result.getProcessNum() - iSuccessSum));
 			}
 		}
 		// 如果操作都成功 则设置状态保存数据为同步结束时间 以方便下一轮调用
@@ -171,7 +171,7 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 		try {
 			RsyncGetKjtProductById aa = new RsyncGetKjtProductById();
 			aa.upRsyncRequest().setProductIDs(productIds);
-			aa.upRsyncRequest().setSaleChannelSysNo(getConfig("groupcenter.rsync_kjt_SaleChannelSysNo"));
+			aa.upRsyncRequest().setSaleChannelSysNo(getConfig("seller_adapter_kjt.rsync_kjt_SaleChannelSysNo"));
 			aa.doRsync();
 		} catch (Exception e) {
 			result.inErrorMessage(918519034, StringUtils.join(productIds, ","));
@@ -192,9 +192,9 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 	*/
 	private void sendMail(String pCodes1,String pCodes2,String pName){
 		
-		String receives[]= getConfig("groupcenter.kjt_dowProduct_sendMail_receives").split(",");
-		String title= getConfig("groupcenter.kjt_dowProduct_title");
-		String content= getConfig("groupcenter.kjt_dowProduct_content");
+		String receives[]= getConfig("seller_adapter_kjt.kjt_dowProduct_sendMail_receives").split(",");
+		String title= getConfig("seller_adapter_kjt.kjt_dowProduct_title");
+		String content= getConfig("seller_adapter_kjt.kjt_dowProduct_content");
 		
 		for (String receive : receives) {
 			if(StringUtils.isNotBlank(receive)){

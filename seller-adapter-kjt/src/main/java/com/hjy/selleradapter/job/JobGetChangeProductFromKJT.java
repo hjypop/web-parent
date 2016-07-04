@@ -6,7 +6,7 @@ import com.hjy.helper.WebHelper;
 import com.hjy.quartz.job.RootJob;
 import com.hjy.selleradapter.kjt.RsyncGetKjtProductIdByDate;
 /**
- * @descriptions 从跨境通查询信息变化的商品并入库
+ * @descriptions 从跨境通查询信息变化的商品并入库 | properties配置信息核对完成
  * 
  * @date 2016年6月24日下午3:37:36
  * @author Yangcl

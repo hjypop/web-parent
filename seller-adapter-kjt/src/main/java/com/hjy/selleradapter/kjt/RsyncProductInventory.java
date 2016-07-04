@@ -23,7 +23,7 @@ import com.hjy.service.system.IScStoreService;
 import com.hjy.service.system.IScStoreSkunumService;
 
 /**
- * alias RsyncGetKjtProductChannelInventoryById<br>
+ * alias RsyncGetKjtProductChannelInventoryById<br>     | properties配置信息核对完成
  * 类: RsyncProductInventory <br>
  * 描述: 商品分销渠道库存批量获取 <br>
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
@@ -86,8 +86,7 @@ public class RsyncProductInventory
 						result.getResultList().add(mResult.getMessage());
 					}
 				}
-				result.setProcessData(
-						getInfo(918501102, result.getProcessNum(), iSuccessSum, result.getProcessNum() - iSuccessSum));
+				result.setProcessData(getInfo(100001102, result.getProcessNum(), iSuccessSum, result.getProcessNum() - iSuccessSum));
 			}
 		}
 		// 如果操作都成功 则设置状态保存数据为同步结束时间 以方便下一轮调用
@@ -151,7 +150,7 @@ public class RsyncProductInventory
 				pjs.onChangeForProductChangeAll(product_code);
 			}
 		} catch (Exception e) {
-			result.inErrorMessage(918519034, info.toString());
+			result.inErrorMessage(100009034, info.toString());
 			e.printStackTrace();
 		}
 		return result;

@@ -35,10 +35,11 @@ import com.hjy.model.ProductSkuInfo;
 import com.hjy.selleradapter.service.IProductService;
 import com.hjy.selleradapter.service.ITxProductService;
 
+// properties配置信息核对完成
 public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProductService {
 
 	@Inject
-	private ITxProductService txs; // TxProductServiceImpl txs = BeansHelper.upBean("bean_com_cmall_productcenter_txservice_TxProductService");
+	private ITxProductService txs; 
 	@Inject
 	private IPcProductflowDao pcpFlowdao;
 	@Inject
@@ -71,8 +72,8 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 			txs.insertProduct(pc, rr, manageCode);
 		} catch (Exception e) {
 			e.printStackTrace();
-			rr.setCode(941901049);
-			rr.setMessage(getInfo(941901049, e.getMessage()));
+			rr.setCode(100001049);
+			rr.setMessage(getInfo(100001049, e.getMessage()));
 		}
 		try {
 			// 校验输入的数据合法性
@@ -237,8 +238,8 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 			txs.updateProduct(pc, rr, manageCode,pcf);
 		} catch (Exception e) {
 			e.printStackTrace();
-			rr.setCode(941901049);
-			rr.setMessage(getInfo(941901049, e.getMessage()));
+			rr.setCode(100001049);
+			rr.setMessage(getInfo(100001049, e.getMessage()));
 		}
 		error.append(rr.getMessage());
 		return rr.getCode();

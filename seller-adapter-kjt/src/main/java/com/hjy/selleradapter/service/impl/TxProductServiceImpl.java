@@ -43,7 +43,7 @@ import com.hjy.model.ProductSkuInfo;
 import com.hjy.selleradapter.service.ITxProductService;
 
 /**
- * @descriptions 这个类的原名称：TxProductService.java
+ * @descriptions 这个类的原名称：TxProductService.java  | properties配置信息核对完成
  * 
  * @date 2016年6月28日上午9:46:57
  * @author Yangcl
