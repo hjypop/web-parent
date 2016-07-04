@@ -14,7 +14,7 @@ import com.hjy.quartz.support.JobSupport;
 import com.hjy.service.IJobService;
 import com.hjy.system.init.RootInit;
 
-
+// properties配置信息核对完成
 public class JobInit extends RootInit {
 	
 	@Inject
@@ -33,7 +33,7 @@ public class JobInit extends RootInit {
 				try {
 					IBaseJob iJob = (IBaseJob) ClassUtils.getClass(sj.getJobClass()).newInstance();
 					iJob.doExecute(null);
-					getLogger().logInfo(970212017, sj.getJobTitle());   // TODO 970212017 $$$$$$$$$$$$$$$$$$$$$$$$$$
+					getLogger().logInfo(300000004, sj.getJobTitle());  
 				} catch (Exception e) {
 					flag = false;
 					e.printStackTrace();
@@ -58,7 +58,7 @@ public class JobInit extends RootInit {
 				}
 				
 				JobSupport.getInstance().addJob(mJobInfo);
-				getLogger().logInfo(970212016 , sj.getJobTitle() , sj.getJobTriger() ); // TODO 970212016 $$$$$$$$$$$$$$$$$$$$$$$$$$
+				getLogger().logInfo(300000005 , sj.getJobTitle() , sj.getJobTriger() );  
 			}
 		}
 		return flag;     

@@ -19,7 +19,7 @@ import com.hjy.pojo.entity.system.JobExectimer;
 import com.hjy.quartz.model.ConfigJobExec;
 import com.hjy.quartz.model.JobResult;
 import com.hjy.service.IJobService;
-
+// properties配置信息核对完成
 public abstract class RootJobForExec extends RootJob {
 	
 	@Inject
@@ -44,8 +44,8 @@ public abstract class RootJobForExec extends RootJob {
 					LogHelper.addLog("job_exec", iResult);
 				}catch(Exception e){
 					JobResult rootResult = new JobResult();
-					rootResult.setCode(969905039);           // 执行任务失败：info.zapweb.9699.properties line51
-					rootResult.setMessage(getInfo(969905039) + e.getMessage());
+					rootResult.setCode(300000002);           // 执行任务失败：info.zapweb.9699.properties line51
+					rootResult.setMessage(getInfo(300000002) + e.getMessage());
 					e.printStackTrace();
 				}
 				if (iResult.getCode() != 1) {
@@ -86,61 +86,31 @@ public abstract class RootJobForExec extends RootJob {
 	public abstract ConfigJobExec getConfig();
 
 	
-	/**
-	 * @deprecated TODO 重写的方法测试通过后 此处删除
-	 * @date 2016年6月22日下午3:41:00
-	 * @author Yangcl 
-	 * @version 1.0.0.1
-	 */
-	public void doExecute22222222222222222222vSsa(JobExecutionContext context) {
-		ConfigJobExec configJobExec = getConfig();
-		String sNowString = FormatHelper.upDateTime();
-
-		//za_exectimer -> job_exectimer
-		//#JobService#
-		// 取出所有的待执行的内容
-//		List<MDataMap> list = DbUp.upTable("za_exectimer").queryAll( "", "create_time", "exec_time<:nowtime and flag_success=0 and exec_number<:exec_number and exec_type=:exec_type",
-//				new MDataMap( "nowtime", sNowString, "exec_type", configJobExec.getExecType(), "exec_number", String.valueOf(configJobExec.getMaxExecNumber())));
-		List<MDataMap> list = null;
-		for (MDataMap mDataMap : list) {
-			String sExecCode = mDataMap.get("exec_code");
-			String sExecInfo = mDataMap.get("exec_info");
-			String sLockKey = WebHelper.getInstance().addLock(configJobExec.getExecJobLock(), sExecCode, sExecInfo);
-
-			if (StringUtils.isNotEmpty(sLockKey)) {
-				IBaseResult iResult = null;
-				try {
-					iResult = execByInfo(mDataMap.get("exec_info").trim());
-					LogHelper.addLog("job_exec", iResult);
-				} catch (Exception e) {
-					JobResult rootResult = new JobResult();
-					e.printStackTrace();
-					rootResult.setCode(969905039);
-					rootResult.setMessage(getInfo(969905039) + e.getMessage());
-				}
-				if (iResult.getCode() != 1) {
-					// 当已执行次数等于该数字时 发送报警邮件 一条记录只发送一次
-					if (configJobExec.getNoticeOnce() > 0
-							&& Integer.valueOf(mDataMap.get("exec_number")) == configJobExec
-									.getNoticeOnce()) {
-//						String sErrorNotice = bConfig("zapweb.mail_notice")
-//								.trim();
-//						if (StringUtils.isNotBlank(sErrorNotice)) {
-//
-//							MailSupport.INSTANCE.sendMail(sErrorNotice,
-//									bInfo(969912014, sExecCode + sExecInfo),
-//									iResult.getResultMessage());
-//						}
-					}
-				}
-				// za_exectimer -> job_exectimer
-				// #JobService#
-//				DbUp.upTable("za_exectimer").dataUpdate( new MDataMap("begin_time", sNowString, "end_time", FormatHelper.upDateTime(), "flag_success", iResult.getCode() == 1 ? "1" : "0",
-//								"remark", mDataMap.get("remark") + "," + GsonHelper.toJson(iResult),  "exec_code", sExecCode, "exec_number", String.valueOf(Integer.valueOf(mDataMap.get("exec_number")) + 1)),
-//								"begin_time,end_time,flag_success,remark,exec_number", "exec_code");
-				WebHelper.getInstance().unLock(sLockKey);
-			}
-		}
-
-	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -22,7 +22,7 @@ import com.hjy.quartz.model.MJobInfo;
 import com.hjy.quartz.model.MLogJob;
 import com.hjy.service.IJobService;
 import com.hjy.system.TopConst;
-
+// properties配置信息核对完成 
 public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob {
 
 	@Inject
@@ -66,7 +66,7 @@ public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob 
 				sEndTime = new Date();
 			}
 		} catch (Exception e) {
-			getLogger().logError(967905003, this.getClass().getName());      // 967905003=定时任务{0}执行失败  info.zapcom.9679.properties line5
+			getLogger().logError(300000003 , this.getClass().getName());     
 			WebHelper.getInstance().errorMessage(mJobInfo.getJobName(), "jobexecerror", 9, "rootjobforlock", mJobInfo.getJobClass(), e);
 			e.printStackTrace();
 		}
@@ -87,80 +87,6 @@ public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob 
 		}
 	}
 	
-	
-	
-	/**
-	 * @deprecated
-	 * @descriptions 
-	 * 
-	 * @param context
-	 * @throws JobExecutionException
-	 * @date 2016年6月22日下午6:25:59
-	 * @author Yangcl 
-	 * @version 1.0.0.1
-	 */
-	public void execute222222(JobExecutionContext context) throws JobExecutionException {
-		String sLockKey = "";
-		boolean bFlagExec = true;
-		String sBeginTime = FormatHelper.upDateTime();
-		String sNextTime = "";
-		String sEndTime = "";
-
-		MJobInfo mJobInfo = new MJobInfo();
-		try {
-			if (context != null && context.getMergedJobDataMap() != null && context.getMergedJobDataMap().containsKey( TopConst.CONST_JOB_START + "status")) {
-
-				if (context.getNextFireTime() != null) {
-					sNextTime = DateHelper.formatDate(context.getNextFireTime());
-				}
-
-				mJobInfo = (MJobInfo) context.getMergedJobDataMap().get(TopConst.CONST_JOB_START + "status");
-
-				// 判断如果记日志
-				if (mJobInfo.getExtendTypeLog() == 1) {
-					MLogJob mLogJob = new MLogJob();
-					mLogJob.setNextExecTime(sNextTime);
-					mLogJob.setJobInfo(mJobInfo);
-					LogHelper.addLog("run_job", mLogJob);
-				}
-
-				// 判断如果加锁 则开始加锁处理
-				if (mJobInfo.getExtendLockTimer() > 0) {
-					sLockKey = WebHelper.getInstance().addLock(mJobInfo.getExtendLockTimer(), mJobInfo.getJobName());
-					if (StringUtils.isBlank(sLockKey)) {
-						bFlagExec = false;
-					}
-				}
-			}
-
-			if (bFlagExec) {
-				doExecute(context);
-				sEndTime = FormatHelper.upDateTime();
-			}
-		} catch (Exception e) {
-			getLogger().logError(967905003, this.getClass().getName());   
-			WebHelper.getInstance().errorMessage(mJobInfo.getJobName(), "jobexecerror", 9, "rootjobforlock", mJobInfo.getJobClass(), e);
-			e.printStackTrace();
-		}
-
-		// 如果key不为空 则直接解锁
-		if (StringUtils.isNotBlank(sLockKey)) {
-			WebHelper.getInstance().unLock(sLockKey);
-		}
-
-		// 开始更新执行日志
-		if (mJobInfo != null && StringUtils.isNotBlank(mJobInfo.getJobName())) {
-
-			MDataMap mUpdateMap = new MDataMap();
-			mUpdateMap.initKeyValues("uid", mJobInfo.getJobName(), "begin_time",
-					sBeginTime, "end_time", sEndTime, "next_time", sNextTime);
-
-			//za_job -> sys_job
-			//#jobservice#
-//			DbUp.upTable("za_job").dataUpdate(mUpdateMap, "begin_time,end_time,next_time", "uid");
-
-		}
-	}
 
 }
 

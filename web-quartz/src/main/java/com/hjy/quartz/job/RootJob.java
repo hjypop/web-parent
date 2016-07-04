@@ -12,7 +12,7 @@ import com.hjy.quartz.model.MLogJob;
 import com.hjy.system.TopConst;
 
 /**
- * 根任务 所有任务接口需要调用该基类
+ * 根任务 所有任务接口需要调用该基类 | properties配置信息核对完成
  * 
  * @author HJY
  * 
@@ -53,7 +53,7 @@ public abstract class RootJob extends RootJobForLock implements Job, IBaseJob {
 			}
 			doExecute(context);
 		} catch (Exception e) {
-			getLogger().logError(967905003, this.getClass().getName());
+			getLogger().logError(300000001, this.getClass().getName());
 			e.printStackTrace();
 		}
 
