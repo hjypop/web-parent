@@ -96,7 +96,7 @@
 		desc , zid asc
 	</select>
 
-	<delete id="deleteByParam" parameterType="com.hjy.model.PcProductproperty">
+	<delete id="deleteByParam" parameterType="com.hjy.entity.product.PcProductproperty">
 		delete
 		from productcenter.pc_productproperty
 		where
