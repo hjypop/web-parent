@@ -24,7 +24,7 @@ public class JobForOrderSoCreate extends RootJobForExec {
 		}
 		OrderForKJT forKJT = new OrderForKJT();
 		if (!forKJT.rsyncOrder(sInfo)) {
-			mWebResult.inErrorMessage(918519135);
+			mWebResult.inErrorMessage(100009135);
 		}
 		
 		return mWebResult;
