@@ -8,12 +8,12 @@
 		<result column="user_name" property="userName" jdbcType="VARCHAR" />
 		<result column="user_password" property="userPassword"
 			jdbcType="VARCHAR" />
-		<result column="flag_enable" property="flagEnable" jdbcType="Integer" />
+		<result column="flag_enable" property="flagEnable" jdbcType="INTEGER" />
 		<result column="email_address" property="emailAddress"
 			jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
 		<result column="failed_time" property="failedTime" jdbcType="VARCHAR" />
-		<result column="failed_count" property="failedCount" jdbcType="Integer" />
+		<result column="failed_count" property="failedCount" jdbcType="INTEGER" />
 		<result column="cookie_user" property="cookieUser" jdbcType="VARCHAR" />
 		<result column="manage_code" property="manageCode" jdbcType="VARCHAR" />
 		<result column="login_time" property="loginTime" jdbcType="VARCHAR" />
