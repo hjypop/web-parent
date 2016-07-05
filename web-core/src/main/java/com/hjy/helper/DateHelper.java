@@ -200,18 +200,18 @@ public class DateHelper {
 		int timeEle = 0;
 
 		switch (timeType) {
-		case Calendar.DAY_OF_MONTH:
-			timeEle = calendar.get(Calendar.DAY_OF_MONTH);
-			break;
-		case Calendar.MONTH:
-			timeEle = calendar.get(Calendar.MONTH) + 1;
-			break;
-		case Calendar.YEAR:
-			timeEle = calendar.get(Calendar.YEAR);
-			break;
-		default:
-			timeEle = -1;
-			break;
+			case Calendar.DAY_OF_MONTH:
+				timeEle = calendar.get(Calendar.DAY_OF_MONTH);
+				break;
+			case Calendar.MONTH:
+				timeEle = calendar.get(Calendar.MONTH) + 1;
+				break;
+			case Calendar.YEAR:
+				timeEle = calendar.get(Calendar.YEAR);
+				break;
+			default:
+				timeEle = -1;
+				break;
 		}
 
 		return timeEle;

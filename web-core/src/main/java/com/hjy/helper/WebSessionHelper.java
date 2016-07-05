@@ -86,8 +86,8 @@ public class WebSessionHelper{ // implements IBaseHelper, IBaseCreate
 	public MUserInfo upSessionUser() {
 		
 		String sCookieUser = WebSessionHelper.create().upCookie(WebConst.CONST_WEB_SESSION_USER);
-		String userStr=KvUp.upDefault().get(WebConst.CONST_WEB_SESSION_KEY+WebConst.CONST_WEB_SESSION_USER+"-"+sCookieUser);
-		
+		String userStr = "";
+//		String userStr=KvUp.upDefault().get(WebConst.CONST_WEB_SESSION_KEY+WebConst.CONST_WEB_SESSION_USER+"-"+sCookieUser);
 		MUserInfo mUserInfo = null;
 		if (StringUtils.isNotBlank(userStr)) {
 			

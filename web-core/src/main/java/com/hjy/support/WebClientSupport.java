@@ -49,31 +49,22 @@ public class WebClientSupport extends BaseClass {
 	 * @return
 	 */
 	public String upRequest(String sUrl, String sPost) throws Exception {
-
 		HttpEntity httpEntity = null;
-
 		try {
 			httpEntity = new StringEntity(sPost);
 		} catch (UnsupportedEncodingException e) {
-
 			e.printStackTrace();
 		}
-
 		return doRequest(sUrl, httpEntity);
-
 	}
 
-	public static String upHttpsPost(WebClientRequest webClientRequest)
-			throws NoSuchAlgorithmException, KeyStoreException,
-			KeyManagementException, CertificateException, IOException {
+	public static String upHttpsPost(WebClientRequest webClientRequest) 
+			throws NoSuchAlgorithmException, KeyStoreException, 	KeyManagementException, CertificateException, IOException {
 		String sReturn = "";
 
 		KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-		FileInputStream instream = new FileInputStream(new File(
-				webClientRequest.getFilePath()));
-
+		FileInputStream instream = new FileInputStream(new File(webClientRequest.getFilePath()));
 		trustStore.load(instream, webClientRequest.getPassword().toCharArray());
-
 		HttpClientBuilder cb = HttpClientBuilder.create();
 		SSLContextBuilder sslcb = new SSLContextBuilder();
 		sslcb.loadTrustMaterial(trustStore, new TrustSelfSignedStrategy());
@@ -81,40 +72,30 @@ public class WebClientSupport extends BaseClass {
 		CloseableHttpClient httpClient = cb.build();
 
 		HttpPost httppost = new HttpPost(webClientRequest.getUrl());
-
 		httppost.setEntity(webClientRequest.getHttpEntity());
 
 		if (StringUtils.isNotEmpty(webClientRequest.getConentType())) {
-
 			httppost.setHeader("Content-Type", webClientRequest.getConentType());
 		}
 
 		// 设置成短链接模式 关闭keep-alve
 		httppost.setHeader("Connection", "close");
-
 		CloseableHttpResponse response = null;
 		try {
 			response = httpClient.execute(httppost);
-
 			HttpEntity resEntity = response.getEntity();
-
 			if (resEntity != null) {
-
-				sReturn = EntityUtils.toString(resEntity,
-						TopConst.CONST_BASE_ENCODING);
-
+				sReturn = EntityUtils.toString(resEntity, TopConst.CONST_BASE_ENCODING);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			sReturn = e.getMessage();
-
 		} finally {
 			response.close();
 			httpClient.close();
 		}
 
 		try {
-
 			// CTO电话通知让sleep200毫秒 2015-07-29 14:40修改
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
@@ -132,20 +113,13 @@ public class WebClientSupport extends BaseClass {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String upPost(String sUrl, MDataMap mDataMap)
-			throws Exception {
-
+	public static String upPost(String sUrl, MDataMap mDataMap) throws Exception {
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-
 		// nvps.add(new BasicNameValuePair("charset",));
-
 		for (String sKey : mDataMap.keySet()) {
 			nvps.add(new BasicNameValuePair(sKey, mDataMap.get(sKey)));
 		}
-
-		HttpEntity httpEntity = new UrlEncodedFormEntity(nvps,
-				TopConst.CONST_BASE_ENCODING);
-
+		HttpEntity httpEntity = new UrlEncodedFormEntity(nvps , TopConst.CONST_BASE_ENCODING);
 		//return poolRequest(sUrl, httpEntity);
 		return  WebClientSupport.create().doRequest(sUrl, httpEntity);
 	}
@@ -160,22 +134,17 @@ public class WebClientSupport extends BaseClass {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String upPost(String sUrl, MDataMap mDataMap,
-			MDataMap headerDataMap) throws Exception {
+	public static String upPost(String sUrl, MDataMap mDataMap , MDataMap headerDataMap) throws Exception {
 
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-
 		// nvps.add(new BasicNameValuePair("charset",));
-
 		for (String sKey : mDataMap.keySet()) {
 			nvps.add(new BasicNameValuePair(sKey, mDataMap.get(sKey)));
 		}
 
-		HttpEntity httpEntity = new UrlEncodedFormEntity(nvps,
-				TopConst.CONST_BASE_ENCODING);
+		HttpEntity httpEntity = new UrlEncodedFormEntity(nvps , TopConst.CONST_BASE_ENCODING);
 
 		return poolRequest(sUrl, httpEntity, headerDataMap);
-
 	}
 
 	static PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = null;
@@ -189,46 +158,31 @@ public class WebClientSupport extends BaseClass {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static String poolRequest(String sUrl, HttpEntity httpEntity)
-			throws ClientProtocolException, IOException {
+	public static String poolRequest(String sUrl, HttpEntity httpEntity) throws ClientProtocolException, IOException {
 
 		String sReturnString = "";
-
 		if (poolingHttpClientConnectionManager == null) {
-
 			poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
-
 			// Increase max total connection to 200
 			poolingHttpClientConnectionManager.setMaxTotal(200);
 			// Increase default max connection per route to 20
 			poolingHttpClientConnectionManager.setDefaultMaxPerRoute(20);
-
 		}
 
-		CloseableHttpClient httpClient = HttpClients.custom()
-				.setConnectionManager(poolingHttpClientConnectionManager)
-				.build();
+		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(poolingHttpClientConnectionManager).build();
 
 		HttpPost httppost = new HttpPost(sUrl);
 		httppost.setEntity(httpEntity);
-
 		CloseableHttpResponse response = httpClient.execute(httppost);
-
 		try {
 			HttpEntity resEntity = response.getEntity();
-
 			if (resEntity != null) {
-
-				sReturnString = EntityUtils.toString(resEntity,
-						TopConst.CONST_BASE_ENCODING);
-
+				sReturnString = EntityUtils.toString(resEntity , TopConst.CONST_BASE_ENCODING);
 			}
 		} finally {
 			response.close();
 		}
-
 		return sReturnString;
-
 	}
 
 	/**
@@ -242,8 +196,7 @@ public class WebClientSupport extends BaseClass {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static String poolRequest(String sUrl, HttpEntity httpEntity,
-			MDataMap headerDataMap) throws ClientProtocolException, IOException {
+	public static String poolRequest(String sUrl, HttpEntity httpEntity, MDataMap headerDataMap) throws ClientProtocolException, IOException {
 
 		String sReturnString = "";
 

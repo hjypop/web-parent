@@ -2,12 +2,7 @@ package com.hjy.jms;
 
 import com.hjy.model.MDataMap;
 
-//import com.cmall.systemcenter.enumer.JmsNameEnumer;
-//import com.srnpr.zapcom.basemodel.MDataMap;
-//import com.srnpr.zapcom.basesupport.WebClientSupport;
-//import com.srnpr.zapcom.topdo.TopUp;
-//import com.srnpr.zapzero.enumer.EJmsMessageType;
-//import com.srnpr.zapzero.support.JmsSupport;
+
 
 public class ProductJmsSupport {
 	

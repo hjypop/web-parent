@@ -60,22 +60,22 @@ public class UserFactory extends BaseClass implements IBaseInstance {
 			return mUserInfo;
 		}
 
-		String userStr = KvUp.upDefault()
-				.get(WebConst.CONST_WEB_SESSION_KEY + WebConst.CONST_WEB_SESSION_USER + "-" + sCookieUser);
-
-		if (StringUtils.isNotBlank(userStr)) {
-			mUserInfo = JSON.parseObject(userStr, MUserInfo.class);
-		} else {
-			if (StringUtils.isNotEmpty(sCookieUser)) {
-				MDataMap mUserMap = null;// DbUp.upTable("za_userinfo").one("cookie_user",
-											// sCookieUser);
-
-				if (mUserMap != null) {
-					mUserInfo = inUserInfo(mUserMap);
-				}
-
-			}
-		}
+//		String userStr = KvUp.upDefault()
+//				.get(WebConst.CONST_WEB_SESSION_KEY + WebConst.CONST_WEB_SESSION_USER + "-" + sCookieUser);
+//
+//		if (StringUtils.isNotBlank(userStr)) {
+//			mUserInfo = JSON.parseObject(userStr, MUserInfo.class);
+//		} else {
+//			if (StringUtils.isNotEmpty(sCookieUser)) {
+//				MDataMap mUserMap = null;// DbUp.upTable("za_userinfo").one("cookie_user",
+//											// sCookieUser);
+//
+//				if (mUserMap != null) {
+//					mUserInfo = inUserInfo(mUserMap);
+//				}
+//
+//			}
+//		}
 		return mUserInfo;
 
 	}
@@ -93,9 +93,9 @@ public class UserFactory extends BaseClass implements IBaseInstance {
 
 		if (mUserInfo != null && mUserInfo.getFlagLogin() == 1) {
 			bFlagLogin = true;
-			KvUp.upDefault().setex(
-					WebConst.CONST_WEB_SESSION_KEY + WebConst.CONST_WEB_SESSION_USER + "-" + mUserInfo.getCookieUser(),
-					20 * 60, JSON.toJSONString(mUserInfo));
+//			KvUp.upDefault().setex(
+//					WebConst.CONST_WEB_SESSION_KEY + WebConst.CONST_WEB_SESSION_USER + "-" + mUserInfo.getCookieUser(),
+//					20 * 60, JSON.toJSONString(mUserInfo));
 		}
 
 		// 提供无效cookie时要求重新登录
@@ -161,8 +161,8 @@ public class UserFactory extends BaseClass implements IBaseInstance {
 			// mLoginUserInfo.setUserMenu(userMenu)
 			WebSessionHelper.create().inSession(WebConst.CONST_WEB_SESSION_USER, mLoginUserInfo);
 
-			KvUp.upDefault().setex(WebConst.CONST_WEB_SESSION_KEY + WebConst.CONST_WEB_SESSION_USER + "-"
-					+ mLoginUserInfo.getCookieUser(), 20 * 60, JSON.toJSONString(mLoginUserInfo));
+//			KvUp.upDefault().setex(WebConst.CONST_WEB_SESSION_KEY + WebConst.CONST_WEB_SESSION_USER + "-"
+//					+ mLoginUserInfo.getCookieUser(), 20 * 60, JSON.toJSONString(mLoginUserInfo));
 
 			// 插入日志信息
 			String sIp = WebSessionHelper.create().upIpaddress();

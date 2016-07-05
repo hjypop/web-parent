@@ -30,8 +30,7 @@ public class LoadProperties extends BaseClass {
 	public MStringMap loadMap(String sDir) {
 
 		@SuppressWarnings({ "unchecked" })
-		Collection<File> files = FileUtils.listFiles((new File(sDir)),
-				new String[] { "properties" }, true);
+		Collection<File> files = FileUtils.listFiles((new File(sDir)), new String[] { "properties" }, true);
 
 		return loadMapFromFiles(files);
 

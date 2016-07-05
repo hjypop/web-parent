@@ -15,7 +15,7 @@ import com.hjy.iface.IBaseInstance;
 import com.hjy.iface.IJmsListener;
 import com.hjy.model.MDataMap;
 
-
+// properties配置信息核对完成
 public class JmsSupport extends BaseClass implements IBaseInstance {
 
 	private final static JmsSupport jmsSupport = new JmsSupport();
@@ -59,8 +59,8 @@ public class JmsSupport extends BaseClass implements IBaseInstance {
 				session.close();
 
 			} catch (JMSException e) {
-				bLogError(970205031, sTypeName, sMsg);
-				WebHelper.getInstance().errorMessage(sTypeName, "jmserror", 1, "com.srnpr.zapzero.support.JmsSupport.sendToTopic", sTypeName + WebConst.CONST_SPLIT_LINE + sMsg, e);
+				bLogError(967905004, sTypeName, sMsg);
+				WebHelper.getInstance().errorMessage(sTypeName, "jmserror", 1, "com.hjy.jms.JmsSupport.sendToTopic", sTypeName + WebConst.CONST_SPLIT_LINE + sMsg, e);
 				e.printStackTrace();
 			}
 		}
@@ -106,8 +106,8 @@ public class JmsSupport extends BaseClass implements IBaseInstance {
 			}
 			consumer.setMessageListener(listener);
 		} catch (JMSException e) {
-			bLogError(970205032, sTypeName, sSubName);
-			WebHelper.getInstance().errorMessage(sTypeName, "jmserror", 1, "com.srnpr.zapzero.support.JmsSupport.addTopicLisense" , 
+			bLogError(967905005	, sTypeName, sSubName);
+			WebHelper.getInstance().errorMessage(sTypeName, "jmserror", 1, "com.hjy.jms.JmsSupport.addTopicLisense" , 
 					sTypeName + WebConst.CONST_SPLIT_LINE + sSubName, e);
 			e.printStackTrace();
 		}

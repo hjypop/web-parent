@@ -17,6 +17,7 @@ import com.hjy.pojo.entity.system.SendLog;
 import com.hjy.system.SysWorkDir;
 import com.hjy.system.TopConst;
 
+// properties配置信息核对完成
 public class LogSupport extends BaseClass {
 
 	private static LogSupport instance = null;
@@ -61,7 +62,7 @@ public class LogSupport extends BaseClass {
 			logInfo.setServer(serverCode);
 			logCache.inElement(sUuid, logInfo);
 		} else {
-			getLogger().logDebug(967912030);
+			getLogger().logDebug(967905006);
 			bReturn = false;
 		}
 		return bReturn;
@@ -74,9 +75,7 @@ public class LogSupport extends BaseClass {
 	 */
 	public List<LogInfo> upLogListAndRemove(int iNumber) {
 		List<LogInfo> logList = new ArrayList<LogInfo>();
-
 		List<String> listKeys = logCache.getKeys();
-
 		for (int i = 0; i < Math.min(iNumber, listKeys.size()); i++) {
 			logList.add(logCache.getValueAndRemove(listKeys.get(i)));
 		}
@@ -95,10 +94,32 @@ public class LogSupport extends BaseClass {
 				WebClientSupport.upPost(TopConst.CONST_LOG_ADDRESS,
 						new MDataMap("api_input", GsonHelper.toJson(sendLog)));
 			} catch (Exception e) {
-				getLogger().logError(967912031, e.getMessage());
+				getLogger().logError(967905007 , e.getMessage());
 				e.printStackTrace();
 			}
 		}
 		return true;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -17,7 +17,7 @@ import com.hjy.system.TopConst;
 
 /**
  * 
- * 类: MailSupport <br>
+ * 类: MailSupport <br> properties配置信息核对完成
  * 描述: 发送邮件 <br>
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月27日 下午3:29:02
@@ -42,7 +42,7 @@ public class MailSupport extends BaseClass implements IBaseInstance {
 		JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
 
 		// 设定mail server
-		senderImpl.setHost(getConfig("zapcom.mail_host"));
+		senderImpl.setHost(getConfig("webcore.mail_host"));
 		// 建立邮件消息,发送简单邮件和html邮件的区别
 		MimeMessage mailMessage = senderImpl.createMimeMessage();
 		// 注意这里的boolean,等于真的时候才能嵌套图片，在构建MimeMessageHelper时候，所给定的值是true表示启用，
@@ -54,7 +54,7 @@ public class MailSupport extends BaseClass implements IBaseInstance {
 			// 设置收件人，寄件人
 			messageHelper.setTo(StringUtils.split(StringUtils.replace(sReceive, " ", ""), ","));
 
-			messageHelper.setFrom(getConfig("zapcom.mail_name"));
+			messageHelper.setFrom(getConfig("webcore.mail_name"));
 			messageHelper.setSubject(sTitle);
 			// true 表示启动HTML格式的邮件
 			messageHelper.setText(sContent, true);
@@ -72,8 +72,8 @@ public class MailSupport extends BaseClass implements IBaseInstance {
 
 			e.printStackTrace();
 		}
-		senderImpl.setUsername(getConfig("zapcom.mail_name")); // 根据自己的情况,设置username
-		senderImpl.setPassword(getConfig("zapcom.mail_pass")); // 根据自己的情况,
+		senderImpl.setUsername(getConfig("webcore.mail_name")); // 根据自己的情况,设置username
+		senderImpl.setPassword(getConfig("webcore.mail_pass")); // 根据自己的情况,
 																// 设置password
 		Properties prop = new Properties();
 		prop.put("mail.smtp.auth", "true"); // 将这个参数设为true，让服务器进行认证,认证用户名和密码是否正确

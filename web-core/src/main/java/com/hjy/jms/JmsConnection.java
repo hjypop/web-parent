@@ -33,10 +33,10 @@ public class JmsConnection extends BaseClass {
 	 * @return
 	 */
 	private ActiveMQConnectionFactory getFactory() {
-		String url = getConfig("zapzero.jms_server_conn");
+		String url = getConfig("webcore.jms_server_conn");
 		ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory();
-		activeMQConnectionFactory.setUserName(getConfig("zapzero.jms_server_name"));
-		activeMQConnectionFactory.setPassword(getConfig("zapzero.jms_server_pass"));
+		activeMQConnectionFactory.setUserName(getConfig("webcore.jms_server_name"));
+		activeMQConnectionFactory.setPassword(getConfig("webcore.jms_server_pass"));
 		activeMQConnectionFactory.setBrokerURL(url);
 
 		return activeMQConnectionFactory;
