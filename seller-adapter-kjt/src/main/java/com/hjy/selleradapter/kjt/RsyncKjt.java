@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -138,6 +139,7 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 					"request_data", sRequest, "request_time", FormatHelper.upDateTime());
 			// 插入日志记录表
 			LcRsyncKjtLog log = new LcRsyncKjtLog();
+			log.setUid(UUID.randomUUID().toString().replace("-", ""));
 			log.setCode(sCode);
 			log.setRsyncTarget(upConfig().getRsyncTarget());
 			log.setRsyncUrl(sUrl);

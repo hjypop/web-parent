@@ -5,6 +5,9 @@
 		useGeneratedKeys="true" keyProperty="zid">
 		INSERT INTO logcenter.lc_rsync_kjt_log
 		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="uid != null and uid != ''">
+				`uid`,
+			</if>
 			<if test="code != null and code != ''">
 				`code`,
 			</if>
@@ -49,6 +52,9 @@
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="uid != null and uid != ''">
+				#{uid,jdbcType=VARCHAR},
+			</if>
 			<if test="code != null and code != ''">
 				#{code,jdbcType=VARCHAR},
 			</if>
