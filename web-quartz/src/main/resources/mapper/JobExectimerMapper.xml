@@ -186,11 +186,15 @@
 		</set>
 		where exec_code = #{execCode , jdbcType=INTEGER}
 	</update>
-	<select id="findList" resultMap="BaseResultMap">
+	<!-- 根据查询条件查询定时执行表数据集合 2016-07-06 zhy -->
+	<select id="findList" resultMap="BaseResultMap"
+		parameterType="com.hjy.pojo.entity.system.JobExectimer">
 		select * from job_exectimer
-			<where>
-				exec_time = #{createTime,jdbcType=TIMESTAMP}
-				AND exec_type = #{execType,jdbcType=VARCHAR}
-			</where>
+		<where>
+			flag_success = 0
+			AND exec_time &lt; #{createTime,jdbcType=TIMESTAMP}
+			AND exec_type = #{execType,jdbcType=VARCHAR}
+			AND exec_number &lt; #{execNumber,jdbcType=INTEGER}
+		</where>
 	</select>
 </mapper>

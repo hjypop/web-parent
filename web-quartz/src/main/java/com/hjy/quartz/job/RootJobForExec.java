@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
 
-import com.hjy.annotation.Inject;
 import com.hjy.helper.GsonHelper;
 import com.hjy.helper.LogHelper;
 import com.hjy.helper.WebHelper;

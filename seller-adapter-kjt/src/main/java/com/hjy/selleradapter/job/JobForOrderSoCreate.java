@@ -1,11 +1,9 @@
 package com.hjy.selleradapter.job;
 
-import com.hjy.annotation.Inject;
 import com.hjy.iface.IBaseResult;
 import com.hjy.model.MWebResult;
 import com.hjy.quartz.job.RootJobForExec;
 import com.hjy.quartz.model.ConfigJobExec;
-import com.hjy.service.IJobService;
 import com.hjy.service.impl.OrderForKJT;
 
 /**
