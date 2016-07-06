@@ -1,4 +1,4 @@
-package com.hjy.selleradapter.service.impl;
+package com.hjy.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -34,8 +34,8 @@ import com.hjy.iface.IFlowFunc;
 import com.hjy.jms.ProductJmsSupport;
 import com.hjy.model.MDataMap;
 import com.hjy.model.ProductSkuInfo;
-import com.hjy.selleradapter.service.IProductService;
-import com.hjy.selleradapter.service.ITxProductService;
+import com.hjy.service.IProductService;
+import com.hjy.service.ITxProductService;
 
 // properties配置信息核对完成
 @Service

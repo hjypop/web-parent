@@ -29,7 +29,7 @@ import com.hjy.selleradapter.kjt.config.RsyncConfigGetKjtProductById;
 import com.hjy.selleradapter.kjt.model.RsyncModelGetKjtProduct;
 import com.hjy.selleradapter.kjt.request.RsyncRequestGetKjtProductById;
 import com.hjy.selleradapter.kjt.response.RsyncResponseGetKjtProductById;
-import com.hjy.selleradapter.service.IProductService;
+import com.hjy.service.IProductService;
 
 /**
  * 根据商品编号获取商品信息 | properties配置信息核对完成

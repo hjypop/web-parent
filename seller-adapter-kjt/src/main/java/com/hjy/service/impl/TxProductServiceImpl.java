@@ -1,4 +1,4 @@
-package com.hjy.selleradapter.service.impl;
+package com.hjy.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ import com.hjy.entity.user.UcSellercategoryProductRelation;
 import com.hjy.helper.JsonHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.model.ProductSkuInfo;
-import com.hjy.selleradapter.service.ITxProductService;
+import com.hjy.service.ITxProductService;
 
 /**
  * @descriptions 这个类的原名称：TxProductService.java  | properties配置信息核对完成

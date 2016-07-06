@@ -1,4 +1,4 @@
-package com.hjy.selleradapter.service;
+package com.hjy.service;
 
 import com.hjy.api.RootResult;
 import com.hjy.entity.product.PcProductinfo;
