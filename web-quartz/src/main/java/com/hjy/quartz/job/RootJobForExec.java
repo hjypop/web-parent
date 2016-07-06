@@ -14,13 +14,9 @@ import com.hjy.iface.IBaseResult;
 import com.hjy.pojo.entity.system.JobExectimer;
 import com.hjy.quartz.model.ConfigJobExec;
 import com.hjy.quartz.model.JobResult;
-import com.hjy.service.IJobService;
 
 // properties配置信息核对完成
 public abstract class RootJobForExec extends RootJob {
-
-	@Inject
-	public IJobService jobService;
 
 	public void doExecute(JobExecutionContext context) {
 		ConfigJobExec configJobExec = getConfig();

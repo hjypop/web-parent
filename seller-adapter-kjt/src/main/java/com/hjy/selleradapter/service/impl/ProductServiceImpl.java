@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.hjy.annotation.Inject;
 import com.hjy.api.RootResult;
 import com.hjy.base.BaseClass;
@@ -36,10 +38,11 @@ import com.hjy.selleradapter.service.IProductService;
 import com.hjy.selleradapter.service.ITxProductService;
 
 // properties配置信息核对完成
+@Service
 public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProductService {
 
 	@Inject
-	private ITxProductService txs; 
+	private ITxProductService txs;
 	@Inject
 	private IPcProductflowDao pcpFlowdao;
 	@Inject
@@ -51,20 +54,17 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 	@Inject
 	private IPcProductpicDao pcProductpicDao;
 	@Inject
-	private IPcProductpropertyDao pcProductpropertyDao;  
+	private IPcProductpropertyDao pcProductpropertyDao;
 	@Inject
 	private IPcSkuinfoDao pcSkuinfoDao;
 	@Inject
 	private IPcBrandinfoDao pcBrandinfoDao;
-	
+
 	@Inject
 	private IPcProductinfoExtDao pcProductinfoExtDao;
-	
-	@Inject
-	private IUcSellercategoryProductRelationDao ucSellercategoryProductRelationDao; 
-	
-	
 
+	@Inject
+	private IUcSellercategoryProductRelationDao ucSellercategoryProductRelationDao;
 
 	public int AddProductTx(PcProductinfo pc, StringBuffer error, String manageCode) {
 		RootResult rr = new RootResult();
@@ -114,29 +114,29 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 	public PcProductinfo getProduct(String productCode) {
 		try {
 			PcProductinfo product = new PcProductinfo();
-			if(productCode.trim().length() == 32){
-				product.setUid(productCode); 
-			}else{
-				product.setProductCode(productCode); 
+			if (productCode.trim().length() == 32) {
+				product.setUid(productCode);
+			} else {
+				product.setProductCode(productCode);
 			}
 			product = pcProductInfoDao.findByType(product);
 
-			if (product == null){
+			if (product == null) {
 				return null;
-			}else {
+			} else {
 				productCode = product.getProductCode();
 
 				PcProductcategoryRel ppcr = new PcProductcategoryRel();
 				ppcr.setProductCode(productCode);
-				ppcr.setFlagMain(Long.valueOf("1")); 
+				ppcr.setFlagMain(Long.valueOf("1"));
 				ppcr = pcProductcategoryRelDao.findByType(ppcr);
 				// 取得商品分类信息
 				PcCategoryinfo category = new PcCategoryinfo();
 				if (ppcr != null) {
-					category.setCategoryCode( ppcr.getCategoryCode());  
+					category.setCategoryCode(ppcr.getCategoryCode());
 				}
 				product.setCategory(category);
-				
+
 				PcProductdescription description = new PcProductdescription();
 				description.setProductCode(productCode);
 				description = pcProductdescriptionDao.findByType(description);
@@ -146,29 +146,27 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 
 				// 图片
 				PcProductpic pic = new PcProductpic();
-				pic.setProductCode(productCode); 
+				pic.setProductCode(productCode);
 				List<PcProductpic> pcPicList = pcProductpicDao.findListBySkuNull(pic);
 				if (pcPicList != null)
 					product.setPcPicList(pcPicList);
 
-				
 				// 取得商品属性信息
 				PcProductproperty property = new PcProductproperty();
-				property.setProductCode(productCode); 
-				List<PcProductproperty> pcProductpropertyList = pcProductpropertyDao.findListByProductCode(property); 
+				property.setProductCode(productCode);
+				List<PcProductproperty> pcProductpropertyList = pcProductpropertyDao.findListByProductCode(property);
 				if (pcProductpropertyList != null)
 					product.setPcProductpropertyList(pcProductpropertyList);
 
-				
 				// 取得商品的sku信息
 				PcSkuinfo skuInfo = new PcSkuinfo();
-				skuInfo.setProductCode(productCode); 
+				skuInfo.setProductCode(productCode);
 				List<PcSkuinfo> skuInfoList = pcSkuinfoDao.findList(skuInfo);
 				if (skuInfoList != null && skuInfoList.size() > 0) {
-					List <ProductSkuInfo> productSkuInfoList = new ArrayList<ProductSkuInfo>();
-					for(PcSkuinfo sku : skuInfoList){
+					List<ProductSkuInfo> productSkuInfoList = new ArrayList<ProductSkuInfo>();
+					for (PcSkuinfo sku : skuInfoList) {
 						ProductSkuInfo info = new ProductSkuInfo();
-						info.setUid(sku.getUid()); 
+						info.setUid(sku.getUid());
 						info.setSkuCode(sku.getSkuCode());
 						info.setSkuCodeOld(sku.getSkuCodeOld());
 						info.setProductCode(sku.getProductCode());
@@ -177,7 +175,7 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 						info.setCostPrice(sku.getCostPrice());
 						info.setStockNum(Integer.valueOf(sku.getStockNum().toString()));
 						info.setSkuKey(sku.getSkuKey());
-//						info.setSkuValue("");// 数据库无此字段
+						// info.setSkuValue("");// 数据库无此字段
 						info.setSkuKeyvalue(sku.getSkuKeyvalue());
 						info.setSkuPicUrl(sku.getSkuPicurl());
 						info.setSkuName(sku.getSkuName());
@@ -192,16 +190,16 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 						info.setFlagEnable(sku.getFlagEnable().toString());
 						info.setBarcode(sku.getBarcode());
 						info.setMiniOrder(sku.getMiniOrder());
-//						info.setScStoreSkunumList();// 数据库无此字段
-//						info.setValidateFlag("");// 数据库无此字段
-//						info.setSmallSellerCode("");// 数据库无此字段
+						// info.setScStoreSkunumList();// 数据库无此字段
+						// info.setValidateFlag("");// 数据库无此字段
+						// info.setSmallSellerCode("");// 数据库无此字段
 						productSkuInfoList.add(info);
 					}
 					product.setProductSkuInfoList(productSkuInfoList);
 				}
 
 				PcBrandinfo brandInfo = new PcBrandinfo();
-				brandInfo.setBrandCode(product.getBrandCode()); 
+				brandInfo.setBrandCode(product.getBrandCode());
 				brandInfo = pcBrandinfoDao.findByType(brandInfo);
 				if (brandInfo != null) {
 					product.setBrandName(brandInfo.getBrandName());
@@ -209,17 +207,17 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 
 				// 商品的扩展属性
 				PcProductinfoExt pExt = new PcProductinfoExt();
-				pExt.setProductCode(productCode); 
+				pExt.setProductCode(productCode);
 				pExt = pcProductinfoExtDao.findByType(pExt);
 				if (pExt != null) {
 					product.setPcProductinfoExt(pExt);
 				}
-				
+
 				// 商品虚类
 				UcSellercategoryProductRelation spr = new UcSellercategoryProductRelation();
-				spr.setProductCode(productCode); 
+				spr.setProductCode(productCode);
 				List<UcSellercategoryProductRelation> sprList = ucSellercategoryProductRelationDao.findList(spr);
-				if(sprList == null ){
+				if (sprList == null) {
 					sprList = new ArrayList<UcSellercategoryProductRelation>();
 				}
 				product.setUsprList(sprList);
@@ -231,11 +229,11 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 		}
 
 	}
-	
-	public int UpdateProductTx(PcProductinfo pc,StringBuffer error,String manageCode,ProductChangeFlag pcf){
-		RootResult rr= new RootResult();
+
+	public int UpdateProductTx(PcProductinfo pc, StringBuffer error, String manageCode, ProductChangeFlag pcf) {
+		RootResult rr = new RootResult();
 		try {
-			txs.updateProduct(pc, rr, manageCode,pcf);
+			txs.updateProduct(pc, rr, manageCode, pcf);
 		} catch (Exception e) {
 			e.printStackTrace();
 			rr.setCode(100001049);
@@ -261,18 +259,7 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 
 	@Override
 	public List<PcProductinfo> getListBySellerCode(PcProductinfo entity) {
-		return pcProductInfoDao.getListBySellerCode(entity); 
+		return pcProductInfoDao.getListBySellerCode(entity);
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-

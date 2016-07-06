@@ -17,7 +17,6 @@ import com.hjy.selleradapter.kjt.config.RsyncConfigGetKjtProductIdByDate;
 import com.hjy.selleradapter.kjt.model.RsyncModelGetKjtChangeProduct;
 import com.hjy.selleradapter.kjt.request.RsyncRequestGetKjtProductIdByDate;
 import com.hjy.selleradapter.kjt.response.RsyncResponseGetKjtProductIdByDate;
-import com.hjy.service.ILcRsyncKjtLogService;
 import com.hjy.support.MailSupport;
 
 /**
@@ -28,8 +27,6 @@ import com.hjy.support.MailSupport;
  */
 public class RsyncGetKjtProductIdByDate extends
 		RsyncKjt<RsyncConfigGetKjtProductIdByDate, RsyncRequestGetKjtProductIdByDate, RsyncResponseGetKjtProductIdByDate> {
-	@Inject
-	private ILcRsyncKjtLogService lcRsyncKjtLogService;
 	@Inject
 	private IPcProductinfoDao productinfoDao;
 

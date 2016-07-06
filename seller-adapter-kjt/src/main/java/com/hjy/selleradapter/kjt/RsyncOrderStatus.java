@@ -26,7 +26,6 @@ import com.hjy.selleradapter.kjt.config.RsyncConfigOrderStatus;
 import com.hjy.selleradapter.kjt.request.RsyncRequestOrderStatus;
 import com.hjy.selleradapter.kjt.response.RsyncResponseOrderStatus;
 import com.hjy.selleradapter.kjt.response.RsyncResponseOrderStatus.SoOrder;
-import com.hjy.service.ILcRsyncKjtLogService;
 import com.hjy.service.IOcOrderKjtDetailService;
 import com.hjy.service.IOcOrderKjtListService;
 import com.hjy.service.log.ILcOrderstatusService;
@@ -47,8 +46,6 @@ import com.hjy.support.MailSupport;
 public class RsyncOrderStatus
 		extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrderStatus, RsyncResponseOrderStatus> {
 
-	@Inject
-	private ILcRsyncKjtLogService lcRsyncKjtLogService;
 	@Inject
 	private IOcOrderKjtListService ocOrderKjtListService;
 	@Inject

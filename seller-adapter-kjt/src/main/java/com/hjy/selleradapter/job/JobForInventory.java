@@ -24,7 +24,6 @@ import com.hjy.service.product.IPcProductinfoServivce;
  * 时间: 2016年6月27日 下午5:27:16
  */
 public class JobForInventory extends RootJob {
-	@Inject
 	private IPcProductinfoServivce service;
 
 	@Override

@@ -16,8 +16,8 @@ import java.util.Random;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.http.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hjy.annotation.Inject;
 import com.hjy.base.BaseClass;
 import com.hjy.common.DateUtil;
 import com.hjy.common.bill.HexUtil;
@@ -50,7 +50,7 @@ import com.hjy.support.WebClientSupport;
 public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IRsyncRequest, TResponse extends IRsyncResponse>
 		extends BaseClass implements IRsyncDo<TConfig, TRequest, TResponse> {
 
-	@Autowired
+	@Inject
 	private ILcRsyncKjtLogService lcRsyncKjtLogService;
 	private TResponse processResult = null;
 
