@@ -169,7 +169,7 @@
 				end_time = #{endTime,jdbcType=CHAR},
 			</if>
 			<if test="execTime != null">
-				exec_time = #{createTime,jdbcType=TIMESTAMP},
+				exec_time = #{execTime,jdbcType=TIMESTAMP},
 			</if>
 			<if test="flagSuccess != null">
 				flag_success = #{flagSuccess,jdbcType=INTEGER},
@@ -192,7 +192,7 @@
 		select * from job_exectimer
 		<where>
 			flag_success = 0
-			AND exec_time &lt; #{createTime,jdbcType=TIMESTAMP}
+			AND exec_time &lt; #{execTime,jdbcType=TIMESTAMP}
 			AND exec_type = #{execType,jdbcType=VARCHAR}
 			AND exec_number &lt; #{execNumber,jdbcType=INTEGER}
 		</where>
