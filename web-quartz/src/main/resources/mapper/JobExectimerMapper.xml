@@ -8,9 +8,9 @@
 		<result column="exec_code" property="execCode" jdbcType="VARCHAR" />
 		<result column="exec_type" property="execType" jdbcType="VARCHAR" />
 		<result column="exec_info" property="execInfo" jdbcType="VARCHAR" />
-		<result column="begin_time" property="beginTime" jdbcType="CHAR" />
-		<result column="end_time" property="endTime" jdbcType="CHAR" />
-		<result column="exec_time" property="execTime" jdbcType="CHAR" />
+		<result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="exec_time" property="execTime" jdbcType="TIMESTAMP" />
 		<result column="flag_success" property="flagSuccess" jdbcType="INTEGER" />
 		<result column="remark" property="remark" jdbcType="LONGVARCHAR" />
 		<result column="exec_number" property="execNumber" jdbcType="INTEGER" />
