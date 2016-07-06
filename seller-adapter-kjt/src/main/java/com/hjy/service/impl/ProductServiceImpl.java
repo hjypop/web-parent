@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
 import com.hjy.annotation.Inject;
@@ -41,29 +43,29 @@ import com.hjy.service.ITxProductService;
 @Service
 public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProductService {
 
-	@Inject
+	@Resource
 	private ITxProductService txs;
-	@Inject
+	@Resource
 	private IPcProductflowDao pcpFlowdao;
-	@Inject
+	@Resource
 	private IPcProductinfoDao pcProductInfoDao;
-	@Inject
+	@Resource
 	private IPcProductcategoryRelDao pcProductcategoryRelDao;
-	@Inject
+	@Resource
 	private IPcProductdescriptionDao pcProductdescriptionDao;
-	@Inject
+	@Resource
 	private IPcProductpicDao pcProductpicDao;
-	@Inject
+	@Resource
 	private IPcProductpropertyDao pcProductpropertyDao;
-	@Inject
+	@Resource
 	private IPcSkuinfoDao pcSkuinfoDao;
-	@Inject
+	@Resource
 	private IPcBrandinfoDao pcBrandinfoDao;
 
-	@Inject
+	@Resource
 	private IPcProductinfoExtDao pcProductinfoExtDao;
 
-	@Inject
+	@Resource
 	private IUcSellercategoryProductRelationDao ucSellercategoryProductRelationDao;
 
 	public int AddProductTx(PcProductinfo pc, StringBuffer error, String manageCode) {
