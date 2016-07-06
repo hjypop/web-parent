@@ -16,9 +16,6 @@ import com.hjy.service.impl.OrderForKJT;
  */
 public class JobForOrderSoCreate extends RootJobForExec {
 
-	@Inject
-	public IJobService jobService;
-
 	@Override
 	public IBaseResult execByInfo(String sInfo) {
 

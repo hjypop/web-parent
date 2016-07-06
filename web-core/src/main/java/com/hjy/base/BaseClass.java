@@ -21,11 +21,11 @@ public abstract class BaseClass {
 	public static BaseLog logger = new BaseLog();
 
 	public BaseClass() {
-		inject();
+		inject(this.getClass());
 	}
 
-	public void inject() {
-		Field[] fields = this.getClass().getDeclaredFields();
+	public void inject(Class<?> clazz) {
+		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(Inject.class)) {
 				Inject inject = field.getAnnotation(Inject.class);
@@ -49,6 +49,9 @@ public abstract class BaseClass {
 				}
 			}
 		}
+		Class<?> parentClazz = clazz.getSuperclass();
+		if(parentClazz != null)
+			inject(parentClazz);
 	}
 
 	public BaseLog getLogger() {
