@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hjy.dao.IJobExectimerDao">
-	
+
 	<resultMap id="BaseResultMap" type="com.hjy.pojo.entity.system.JobExectimer">
 		<id column="zid" property="zid" jdbcType="INTEGER" />
 		<result column="uid" property="uid" jdbcType="CHAR" />
@@ -16,15 +16,16 @@
 		<result column="exec_number" property="execNumber" jdbcType="INTEGER" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 	</resultMap>
-	
+
 	<select id="find" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select * from job_exectimer where zid = #{id,jdbcType=INTEGER}
 	</select>
-	
+
 	<delete id="deleteById" parameterType="java.lang.Integer">
-		delete from job_exectimer where zid = #{id , jdbcType=INTEGER}
+		delete from job_exectimer
+		where zid = #{id , jdbcType=INTEGER}
 	</delete>
-	
+
 
 	<insert id="insertSelective" parameterType="com.hjy.pojo.entity.system.JobExectimer">
 		insert into job_exectimer
@@ -105,7 +106,7 @@
 			</if>
 		</trim>
 	</insert>
-	
+
 	<update id="updateSelective" parameterType="com.hjy.pojo.entity.system.JobExectimer">
 		update job_exectimer
 		<set>
@@ -145,7 +146,7 @@
 		</set>
 		where zid = #{zid,jdbcType=INTEGER}
 	</update>
-	
+
 	<update id="updateSelectiveByExecCode" parameterType="com.hjy.pojo.entity.system.JobExectimer">
 		update job_exectimer
 		<set>
@@ -168,7 +169,7 @@
 				end_time = #{endTime,jdbcType=CHAR},
 			</if>
 			<if test="execTime != null">
-				exec_time = #{execTime,jdbcType=CHAR},
+				exec_time = #{createTime,jdbcType=TIMESTAMP},
 			</if>
 			<if test="flagSuccess != null">
 				flag_success = #{flagSuccess,jdbcType=INTEGER},
@@ -185,41 +186,15 @@
 		</set>
 		where exec_code = #{execCode , jdbcType=INTEGER}
 	</update>
-	
+	<!-- 根据查询条件查询定时执行表数据集合 2016-07-06 zhy -->
+	<select id="findList" resultMap="BaseResultMap"
+		parameterType="com.hjy.pojo.entity.system.JobExectimer">
+		select * from job_exectimer
+		<where>
+			flag_success = 0
+			AND exec_time &lt; #{createTime,jdbcType=TIMESTAMP}
+			AND exec_type = #{execType,jdbcType=VARCHAR}
+			AND exec_number &lt; #{execNumber,jdbcType=INTEGER}
+		</where>
+	</select>
 </mapper>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

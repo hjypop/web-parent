@@ -4,7 +4,6 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
 
-import com.hjy.annotation.Inject;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.helper.WebHelper;
 import com.hjy.quartz.job.RootJob;
@@ -24,7 +23,6 @@ import com.hjy.service.product.IPcProductinfoServivce;
  * 时间: 2016年6月27日 下午5:27:16
  */
 public class JobForInventory extends RootJob {
-	@Inject
 	private IPcProductinfoServivce service;
 
 	@Override

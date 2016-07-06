@@ -30,7 +30,6 @@ import com.hjy.selleradapter.kjt.model.RsyncModelGetKjtProduct;
 import com.hjy.selleradapter.kjt.request.RsyncRequestGetKjtProductById;
 import com.hjy.selleradapter.kjt.response.RsyncResponseGetKjtProductById;
 import com.hjy.selleradapter.service.IProductService;
-import com.hjy.service.ILcRsyncKjtLogService;
 
 /**
  * 根据商品编号获取商品信息 | properties配置信息核对完成
@@ -40,8 +39,6 @@ import com.hjy.service.ILcRsyncKjtLogService;
  */
 public class RsyncGetKjtProductById
 		extends RsyncKjt<RsyncConfigGetKjtProductById, RsyncRequestGetKjtProductById, RsyncResponseGetKjtProductById> {
-	@Inject
-	private ILcRsyncKjtLogService lcRsyncKjtLogService;
 	@Inject
 	private IProductService productService;
 	@Inject

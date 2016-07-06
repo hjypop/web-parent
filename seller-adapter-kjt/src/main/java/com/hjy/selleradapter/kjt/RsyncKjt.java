@@ -16,7 +16,6 @@ import java.util.Random;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.http.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hjy.annotation.Inject;
 import com.hjy.base.BaseClass;
