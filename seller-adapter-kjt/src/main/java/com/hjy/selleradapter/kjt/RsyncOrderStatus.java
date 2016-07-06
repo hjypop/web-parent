@@ -26,6 +26,7 @@ import com.hjy.selleradapter.kjt.config.RsyncConfigOrderStatus;
 import com.hjy.selleradapter.kjt.request.RsyncRequestOrderStatus;
 import com.hjy.selleradapter.kjt.response.RsyncResponseOrderStatus;
 import com.hjy.selleradapter.kjt.response.RsyncResponseOrderStatus.SoOrder;
+import com.hjy.service.ILcRsyncKjtLogService;
 import com.hjy.service.IOcOrderKjtDetailService;
 import com.hjy.service.IOcOrderKjtListService;
 import com.hjy.service.log.ILcOrderstatusService;
@@ -38,14 +39,16 @@ import com.hjy.service.order.IOcReturnMoneyService;
 import com.hjy.support.MailSupport;
 
 /**
- * alias TraceOrder 类: RsyncOrderStatus <br>      | properties配置信息核对完成
- * 描述: 同步订单状态 <br>
+ * alias TraceOrder 类: RsyncOrderStatus <br>
+ * | properties配置信息核对完成 描述: 同步订单状态 <br>
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月27日 下午4:50:30
  */
 public class RsyncOrderStatus
 		extends RsyncKjt<RsyncConfigOrderStatus, RsyncRequestOrderStatus, RsyncResponseOrderStatus> {
 
+	@Inject
+	private ILcRsyncKjtLogService lcRsyncKjtLogService;
 	@Inject
 	private IOcOrderKjtListService ocOrderKjtListService;
 	@Inject
@@ -64,7 +67,7 @@ public class RsyncOrderStatus
 	private IOcReturnMoneyService ocReturnMoneyService;
 	@Inject
 	private ILcReturnMoneyStatusService lcReturnMoneyStatusService;
-
+	
 	private final static RsyncConfigOrderStatus RSYNC_CONFIG_TRACE_ORDER = new RsyncConfigOrderStatus();
 	private RsyncRequestOrderStatus rsyncRequestTraceOrder = new RsyncRequestOrderStatus();
 

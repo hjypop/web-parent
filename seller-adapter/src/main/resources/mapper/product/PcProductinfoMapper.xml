@@ -46,7 +46,7 @@
 	</resultMap>
 
 	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcProductinfo">
-		insert into pc_productinfo
+		insert into productcenter.pc_productinfo
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
 				zid,
@@ -287,7 +287,7 @@
 		SELECT
 		product_code_old
 		FROM
-		pc_productinfo
+		productcenter.pc_productinfo
 		<where>
 			seller_code = #{sellerCode,jdbcType=VARCHAR}
 			AND

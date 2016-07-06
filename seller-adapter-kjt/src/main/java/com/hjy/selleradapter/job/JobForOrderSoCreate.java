@@ -1,21 +1,27 @@
 package com.hjy.selleradapter.job;
 
+import com.hjy.annotation.Inject;
 import com.hjy.iface.IBaseResult;
 import com.hjy.model.MWebResult;
 import com.hjy.quartz.job.RootJobForExec;
 import com.hjy.quartz.model.ConfigJobExec;
+import com.hjy.service.IJobService;
 import com.hjy.service.impl.OrderForKJT;
 
 /**
  * 异步定时生成发货单
+ * 
  * @author jlin
  *
  */
 public class JobForOrderSoCreate extends RootJobForExec {
 
+	@Inject
+	public IJobService jobService;
+
 	@Override
 	public IBaseResult execByInfo(String sInfo) {
-		
+
 		MWebResult mWebResult = new MWebResult();
 		try {
 			Thread.sleep(1000);
@@ -26,13 +32,12 @@ public class JobForOrderSoCreate extends RootJobForExec {
 		if (!forKJT.rsyncOrder(sInfo)) {
 			mWebResult.inErrorMessage(100009135);
 		}
-		
+
 		return mWebResult;
 	}
 
-	
-	
 	private static ConfigJobExec config = new ConfigJobExec();
+
 	@Override
 	public ConfigJobExec getConfig() {
 		config.setExecType("449746990003");

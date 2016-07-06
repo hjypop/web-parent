@@ -16,8 +16,8 @@ import java.util.Random;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.http.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.hjy.annotation.Inject;
 import com.hjy.base.BaseClass;
 import com.hjy.common.DateUtil;
 import com.hjy.common.bill.HexUtil;
@@ -50,7 +50,7 @@ import com.hjy.support.WebClientSupport;
 public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IRsyncRequest, TResponse extends IRsyncResponse>
 		extends BaseClass implements IRsyncDo<TConfig, TRequest, TResponse> {
 
-	@Inject
+	@Autowired
 	private ILcRsyncKjtLogService lcRsyncKjtLogService;
 	private TResponse processResult = null;
 
@@ -97,8 +97,8 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		for (String nameString : list) {
 			str.append(nameString + "&");
 		}
-		dataMap.put("sign", HexUtil.toHexString(MD5Util.md5(
-				str.substring(0, str.toString().length() - 1) + "&" + getConfig("seller_adapter_kjt.rsync_kjt_password"))));
+		dataMap.put("sign", HexUtil.toHexString(MD5Util.md5(str.substring(0, str.toString().length() - 1) + "&"
+				+ getConfig("seller_adapter_kjt.rsync_kjt_password"))));
 		return dataMap;
 	}
 
@@ -108,7 +108,7 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 	 * @return
 	 */
 	private String upRequestUrl() {
-		return getConfig("seller_adapter_kjt.rsync_kjt_url"); 
+		return getConfig("seller_adapter_kjt.rsync_kjt_url");
 	}
 
 	/**
@@ -177,9 +177,6 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		} catch (Exception e) {
 			e.printStackTrace();
 			// 如果失败更新错误日志信息
-//			MDataMap mErrorMap = new MDataMap();
-//			mErrorMap.initKeyValues("code", sCode, "flag_success", "0", "process_time", FormatHelper.upDateTime(),
-//					"error_expection", e.getMessage());
 			LcRsyncKjtLog log = new LcRsyncKjtLog();
 			log.setCode(sCode);
 			log.setFlagSuccess(0);

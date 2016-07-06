@@ -16,6 +16,7 @@ import com.hjy.selleradapter.kjt.config.RsyncConfigInventory;
 import com.hjy.selleradapter.kjt.request.RsyncRequestInventory;
 import com.hjy.selleradapter.kjt.response.RsyncResponseInventory;
 import com.hjy.selleradapter.kjt.response.RsyncResponseInventory.Data;
+import com.hjy.service.ILcRsyncKjtLogService;
 import com.hjy.service.product.IPcProductinfoExtService;
 import com.hjy.service.product.IPcProductinfoServivce;
 import com.hjy.service.product.IPcSkuinfoService;
@@ -32,7 +33,8 @@ import com.hjy.service.system.IScStoreSkunumService;
 public class RsyncProductInventory
 		extends RsyncKjt<RsyncConfigInventory, RsyncRequestInventory, RsyncResponseInventory> {
 	final static RsyncConfigInventory CONFIG_GET_TV_BY_ID = new RsyncConfigInventory();
-
+	@Inject
+	private ILcRsyncKjtLogService lcRsyncKjtLogService;
 	@Inject
 	private IPcProductinfoServivce productInfoService;
 	@Inject
