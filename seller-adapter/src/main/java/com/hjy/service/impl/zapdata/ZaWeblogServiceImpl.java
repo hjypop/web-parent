@@ -1,9 +1,7 @@
 package com.hjy.service.impl.zapdata;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hjy.dao.zapdata.IZaWeblogDao;
 import com.hjy.entity.zapdata.ZaWeblog;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.zapdata.IZaWeblogService;
@@ -18,6 +16,4 @@ import com.hjy.service.zapdata.IZaWeblogService;
 @Service
 public class ZaWeblogServiceImpl extends BaseServiceImpl<ZaWeblog, Integer> implements IZaWeblogService {
 
-	@Autowired
-	private IZaWeblogDao dao;
 }

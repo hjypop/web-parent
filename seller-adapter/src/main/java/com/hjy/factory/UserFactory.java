@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
 import com.hjy.annotation.Inject;
 import com.hjy.base.BaseClass;
 import com.hjy.constant.WebConst;
@@ -16,6 +12,8 @@ import com.hjy.entity.zapdata.ZaRolemenu;
 import com.hjy.entity.zapdata.ZaUserinfo;
 import com.hjy.entity.zapdata.ZaUsermenu;
 import com.hjy.entity.zapdata.ZaUserrole;
+import com.hjy.entity.zapdata.ZaWeblog;
+import com.hjy.helper.FormatHelper;
 import com.hjy.helper.LogHelper;
 import com.hjy.helper.WebSessionHelper;
 import com.hjy.iface.IBaseInstance;
@@ -25,19 +23,21 @@ import com.hjy.service.zapdata.IZaRolemenuService;
 import com.hjy.service.zapdata.IZaUserinfoService;
 import com.hjy.service.zapdata.IZaUsermenuService;
 import com.hjy.service.zapdata.IZaUserroleService;
+import com.hjy.service.zapdata.IZaWeblogService;
 
-@Component
 public class UserFactory extends BaseClass implements IBaseInstance {
 	public static final UserFactory INSTANCE = new UserFactory();
 
-	@Autowired
+	@Inject
 	private IZaUserinfoService zaUserinfoService;
-	@Autowired
+	@Inject
 	private IZaUserroleService zaUserroleService;
-	@Autowired
+	@Inject
 	private IZaRolemenuService zaRolemenuService;
-	@Autowired
+	@Inject
 	private IZaUsermenuService zaUsermenuService;
+	@Inject
+	private IZaWeblogService zaWeblogService;
 
 	/**
 	 * 获取用户信息 | properties配置信息核对完成
@@ -60,22 +60,24 @@ public class UserFactory extends BaseClass implements IBaseInstance {
 			return mUserInfo;
 		}
 
-//		String userStr = KvUp.upDefault()
-//				.get(WebConst.CONST_WEB_SESSION_KEY + WebConst.CONST_WEB_SESSION_USER + "-" + sCookieUser);
-//
-//		if (StringUtils.isNotBlank(userStr)) {
-//			mUserInfo = JSON.parseObject(userStr, MUserInfo.class);
-//		} else {
-//			if (StringUtils.isNotEmpty(sCookieUser)) {
-//				MDataMap mUserMap = null;// DbUp.upTable("za_userinfo").one("cookie_user",
-//											// sCookieUser);
-//
-//				if (mUserMap != null) {
-//					mUserInfo = inUserInfo(mUserMap);
-//				}
-//
-//			}
-//		}
+		// String userStr = KvUp.upDefault()
+		// .get(WebConst.CONST_WEB_SESSION_KEY + WebConst.CONST_WEB_SESSION_USER
+		// + "-" + sCookieUser);
+		//
+		// if (StringUtils.isNotBlank(userStr)) {
+		// mUserInfo = JSON.parseObject(userStr, MUserInfo.class);
+		// } else {
+		// if (StringUtils.isNotEmpty(sCookieUser)) {
+		// MDataMap mUserMap = null;//
+		// DbUp.upTable("za_userinfo").one("cookie_user",
+		// // sCookieUser);
+		//
+		// if (mUserMap != null) {
+		// mUserInfo = inUserInfo(mUserMap);
+		// }
+		//
+		// }
+		// }
 		return mUserInfo;
 
 	}
@@ -93,9 +95,10 @@ public class UserFactory extends BaseClass implements IBaseInstance {
 
 		if (mUserInfo != null && mUserInfo.getFlagLogin() == 1) {
 			bFlagLogin = true;
-//			KvUp.upDefault().setex(
-//					WebConst.CONST_WEB_SESSION_KEY + WebConst.CONST_WEB_SESSION_USER + "-" + mUserInfo.getCookieUser(),
-//					20 * 60, JSON.toJSONString(mUserInfo));
+			// KvUp.upDefault().setex(
+			// WebConst.CONST_WEB_SESSION_KEY + WebConst.CONST_WEB_SESSION_USER
+			// + "-" + mUserInfo.getCookieUser(),
+			// 20 * 60, JSON.toJSONString(mUserInfo));
 		}
 
 		// 提供无效cookie时要求重新登录
@@ -161,13 +164,19 @@ public class UserFactory extends BaseClass implements IBaseInstance {
 			// mLoginUserInfo.setUserMenu(userMenu)
 			WebSessionHelper.create().inSession(WebConst.CONST_WEB_SESSION_USER, mLoginUserInfo);
 
-//			KvUp.upDefault().setex(WebConst.CONST_WEB_SESSION_KEY + WebConst.CONST_WEB_SESSION_USER + "-"
-//					+ mLoginUserInfo.getCookieUser(), 20 * 60, JSON.toJSONString(mLoginUserInfo));
+			// KvUp.upDefault().setex(WebConst.CONST_WEB_SESSION_KEY +
+			// WebConst.CONST_WEB_SESSION_USER + "-"
+			// + mLoginUserInfo.getCookieUser(), 20 * 60,
+			// JSON.toJSONString(mLoginUserInfo));
 
 			// 插入日志信息
 			String sIp = WebSessionHelper.create().upIpaddress();
-			WebLogFactory.INSTANCE.addLog("467723120001" , "system_login",
-					getInfo(200002001 , mLoginUserInfo.getUserCode(), mLoginUserInfo.getLoginName(), sIp));
+			ZaWeblog weblog = new ZaWeblog();
+			weblog.setLogType("467723120001");
+			weblog.setLogTitle("system_login");
+			weblog.setLogContent(getInfo(200002001, mLoginUserInfo.getUserCode(), mLoginUserInfo.getLoginName(), sIp));
+			weblog.setCreateTime(FormatHelper.upDateTime());
+			zaWeblogService.insertSelective(weblog);
 
 			LogHelper.addLog("manage_login", mLoginUserInfo);
 
