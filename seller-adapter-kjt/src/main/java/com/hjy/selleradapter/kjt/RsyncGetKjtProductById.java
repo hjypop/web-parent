@@ -11,16 +11,13 @@ import com.hjy.annotation.Inject;
 import com.hjy.common.DateUtil;
 import com.hjy.common.product.SkuCommon;
 import com.hjy.constant.MemberConst;
-import com.hjy.dao.product.IPcProductflowDao;
 import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductflow;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.product.PcProductinfoExt;
 import com.hjy.entity.product.ProductChangeFlag;
-import com.hjy.helper.JsonHelper;
 import com.hjy.helper.PlusHelperNotice;
 import com.hjy.helper.WebHelper;
-import com.hjy.model.MUserInfo;
 import com.hjy.model.MWebResult;
 import com.hjy.model.ProductSkuInfo;
 import com.hjy.model.RsyncDateCheck;
@@ -41,9 +38,8 @@ public class RsyncGetKjtProductById
 		extends RsyncKjt<RsyncConfigGetKjtProductById, RsyncRequestGetKjtProductById, RsyncResponseGetKjtProductById> {
 	@Inject
 	private IProductService productService;
-	@Inject
-	private IPcProductflowDao pcpFlowdao;
 
+	
 	final static RsyncConfigGetKjtProductById CONFIG_GET_TV_BY_ID = new RsyncConfigGetKjtProductById();
 	private static String ProductHead = "8016";
 	private static String SKUHead = "8019";
@@ -242,48 +238,6 @@ public class RsyncGetKjtProductById
 		productinfo.setPcProductinfoExt(pcProductinfoExt);
 	}
 
-	/**
-	 * @Description:插入商品历史流水信息 TODO @param productinfo 商品信息实体 @param
-	 *                         productCode @author 张海生 @date 2015-8-7
-	 *                         下午4:18:28 @return void @throws
-	 */
-	public void saveHistoryFlow22222222(PcProductinfo productinfo, String productCode) {
-		// 设置商品历史流水信息
-		MUserInfo userInfo = null;
-		String userCode = "";
-		// if (UserFactory.INSTANCE != null) {
-		// try {
-		// userInfo = UserFactory.INSTANCE.create();
-		// } catch (Exception e) {
-		// // TODO: handle exception
-		// }
-		// if (userInfo != null) {
-		// userCode = userInfo.getUserCode();
-		// }
-		// }
-		// MDataMap mUserMap = DbUp.upTable("za_userinfo").one("cookie_user",
-		// sCookieUser);
-		// if (mUserMap != null) {
-		// mUserInfo = inUserInfo(mUserMap);
-		// }
-
-		String createTime = DateUtil.getSysDateTimeString();
-		PcProductflow ppf = new PcProductflow();
-
-		ppf.setCreateTime(createTime);
-		ppf.setCreator(userCode);
-		ppf.setFlowCode(WebHelper.getInstance().genUniqueCode(ProductFlowHead));
-		ppf.setFlowStatus(SkuCommon.ProUpaOr);
-		ppf.setProductCode(productCode);
-		ppf.setUid(UUID.randomUUID().toString().replace("-", ""));
-		ppf.setUpdateTime(createTime);
-		ppf.setUpdator(userCode);
-
-		JsonHelper<PcProductinfo> pHelper = new JsonHelper<PcProductinfo>();
-		ppf.setProductJson(pHelper.ObjToString(productinfo));
-
-		pcpFlowdao.insertSelective(ppf);
-	}
 
 	public RsyncResponseGetKjtProductById upResponseObject() {
 
