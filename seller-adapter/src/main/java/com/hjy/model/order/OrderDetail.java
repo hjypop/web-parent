@@ -24,7 +24,7 @@ import com.hjy.base.BaseClass;
 * @version    
 *    
 */
-public class OrderDetail extends BaseClass implements Serializable{
+public class OrderDetail  implements Serializable{
 	
 	
 	/**
@@ -68,7 +68,7 @@ public class OrderDetail extends BaseClass implements Serializable{
 	/**
 	 * 商品的主图url
 	 */
-	private String productPicUrl = "";
+	private String productPicurl = "";
 	
 	private String detailCode ="";
 	
@@ -158,11 +158,11 @@ public class OrderDetail extends BaseClass implements Serializable{
 	}
 
 	public String getProductPicUrl() {
-		return productPicUrl;
+		return productPicurl;
 	}
 
-	public void setProductPicUrl(String productPicUrl) {
-		this.productPicUrl = productPicUrl;
+	public void setProductPicUrl(String productPicurl) {
+		this.productPicurl = productPicurl;
 	}
 
 	public String getOrderCode() {

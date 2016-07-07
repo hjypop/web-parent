@@ -24,6 +24,6 @@ public interface IOcOrderinfoDao extends BaseDao<OcOrderinfo, Integer>{
 	 */
 	OcOrderinfo findOrderInfoByOrderCode(String orderCode);
 
-	public int countByOrderCode(OcOrderinfo entity); 
+	public Integer countByOrderCode(OcOrderinfo entity); 
 	
 }

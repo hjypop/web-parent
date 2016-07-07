@@ -1,5 +1,6 @@
 package com.hjy.entity.order;
 
+import java.math.BigDecimal;
 
 /**   
 *    
@@ -54,11 +55,71 @@ public class OcOrderPay  {
      */
     private String payRemark  = ""  ;
     
+    private String createTime = "";
+    
+    
+    private String phpCode = "";
+    
+    private BigDecimal payedAllFee = new BigDecimal(0.00);
+    
+    private BigDecimal payedFee = new BigDecimal(0.00);
+    
+    private Integer status = 0;
+    
+    private String payCode = "";
     
     
     
     
-    public Integer getZid() {
+    public String getPhpCode() {
+		return phpCode;
+	}
+
+	public void setPhpCode(String phpCode) {
+		this.phpCode = phpCode;
+	}
+
+	public BigDecimal getPayedAllFee() {
+		return payedAllFee;
+	}
+
+	public void setPayedAllFee(BigDecimal payedAllFee) {
+		this.payedAllFee = payedAllFee;
+	}
+
+	public BigDecimal getPayedFee() {
+		return payedFee;
+	}
+
+	public void setPayedFee(BigDecimal payedFee) {
+		this.payedFee = payedFee;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getPayCode() {
+		return payCode;
+	}
+
+	public void setPayCode(String payCode) {
+		this.payCode = payCode;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public Integer getZid() {
 		return zid;
 	}
 

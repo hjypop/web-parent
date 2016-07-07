@@ -18,6 +18,11 @@
 			<artifactId>seller-adapter-kjt</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.huijiayou</groupId>
+			<name>web-sample</name>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>sample</finalName>

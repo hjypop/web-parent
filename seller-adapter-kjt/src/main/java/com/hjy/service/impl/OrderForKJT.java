@@ -174,11 +174,13 @@ public class OrderForKJT extends BaseClass {
 		List<OrderDetail> detailList = order.getProductList();
 
 		// 此处更新商品的价格为 成本价
-		for (OrderDetail orderDetail : detailList) {
+		for(int i = 0 ; i < detailList.size() ; i ++){
 			PcProductinfo info = new PcProductinfo();
-			info.setProductCode(orderDetail.getProductCode());
+			info.setProductCode(detailList.get(i).getProductCode());
 			PcProductinfo product = pcProductinfoDao.findByType(info);
-			orderDetail.setCostPrice(product.getCostPrice() == null ? BigDecimal.ZERO : product.getCostPrice());
+			if(product != null){
+				detailList.get(i).setCostPrice(product.getCostPrice() == null ? BigDecimal.ZERO : product.getCostPrice());
+			}
 		}
 
 		// 拆单1 按商品拆单
@@ -187,6 +189,9 @@ public class OrderForKJT extends BaseClass {
 			PcProductinfoExt extInfo = new PcProductinfoExt();
 			extInfo.setProductCode(orderDetail.getProductCode());
 			PcProductinfoExt productExt = pcProductinfoExtDao.findByType(extInfo);
+			if(productExt == null){
+				continue;
+			}
 			StringBuffer theKey = new StringBuffer();
 			theKey.append(productExt).append("_").append(productExt.getDlrId()).append("_")
 					.append(productExt.getProductStoreType()).append("_").append(productExt.getKjtSellerCode())
@@ -400,9 +405,15 @@ public class OrderForKJT extends BaseClass {
 			for (int i = 0; i < list.size(); i++) {
 				OcOrderShipments entity = new OcOrderShipments();
 				entity.setOrderCode(orderCode);
-				entity.setWaybill(list.get(i).getWaybill());
+				if(list.get(i).getWaybill() != null){
+					entity.setWaybill(list.get(i).getWaybill());
+				}
 				entity = ocOrderShipmentsDao.findByType(entity);
-				list.get(i).setLogisticseName(entity.getLogisticseName());
+				if(entity != null){
+					list.get(i).setLogisticseName(entity.getLogisticseName());
+				}else{
+					list.get(i).setLogisticseName("");
+				}
 			}
 		}
 		return list;
@@ -418,8 +429,8 @@ public class OrderForKJT extends BaseClass {
 		OcOrderinfo entity = new OcOrderinfo();
 		entity.setOrderCode(order.getAddress().getOrderCode());
 		entity.setOrderStatus("4497153900010002");
-		int count = ocOrderinfoDao.countByOrderCode(entity);
-		if (count < 1) {
+		Integer count = ocOrderinfoDao.countByOrderCode(entity);
+		if (count == null || count < 1) {
 			return true;
 		}
 
@@ -590,8 +601,13 @@ public class OrderForKJT extends BaseClass {
 	 * @return
 	 */
 	private int getWarehouseID(String store_code) {
-		if (StringUtils.isNotBlank(store_code)) {
-			return Integer.valueOf(store_code.substring(0, store_code.indexOf("_")));
+		try{
+			if (StringUtils.isNotBlank(store_code)) {
+				return Integer.valueOf(store_code.substring(0, store_code.indexOf("_")));
+			}
+		}catch(NumberFormatException e){
+			e.printStackTrace();
+			return -1;
 		}
 		return -1;
 	}
@@ -677,9 +693,13 @@ public class OrderForKJT extends BaseClass {
 				PcProductinfo entity = new PcProductinfo();
 				entity.setProductCode(product_code);
 				entity = pcProductinfoDao.findByType(entity);
-
-				sku.setCostPrice(entity.getCostPrice());
-				sku.setTaxRate(entity.getTaxRate());
+				if(entity != null){
+					sku.setCostPrice(entity.getCostPrice());
+					sku.setTaxRate(entity.getTaxRate());
+				}else{
+					sku.setCostPrice(new BigDecimal(0.00));
+					sku.setTaxRate(new BigDecimal(0.00));
+				}
 			}
 
 			// 根据完税价每单不超过2000的规则拆单
