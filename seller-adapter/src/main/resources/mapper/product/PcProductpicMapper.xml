@@ -45,7 +45,7 @@
 	</sql>
 
 	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcProductpic">
-		insert into pc_productpic
+		insert into productcenter.pc_productpic
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
 				zid,
@@ -99,7 +99,7 @@
 	</select>
 
 	<delete id="deleteByExample" parameterType="com.hjy.entity.product.PcProductpicExample">
-		delete from pc_productpic
+		delete from productcenter.pc_productpic
 		<if test="_parameter != null">
 			<include refid="Example_Where_Clause" />
 		</if>

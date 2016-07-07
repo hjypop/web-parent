@@ -80,6 +80,9 @@ public class PcProductinfo extends BaseModel {
 	 * 主图的Url
 	 */
 	private String mainPicUrl = "";
+	
+	private String mainpicUrl = "";
+	
 	/**
 	 * 供应商名称
 	 */
@@ -179,7 +182,7 @@ public class PcProductinfo extends BaseModel {
 	 */
 	private String brandName = "";
 
-	private String validate_flag;
+	private String validateFlag;
 
 	/**
 	 * 第三方商户编号
@@ -209,7 +212,7 @@ public class PcProductinfo extends BaseModel {
 	/**
 	 * 广告图的Url
 	 */
-	private String adPicUrl = "";
+	private String adpicUrl = "";
 	/**
 	 * 商品广告
 	 */
@@ -260,6 +263,14 @@ public class PcProductinfo extends BaseModel {
 
 	public String getSaleScopeDid() {
 		return saleScopeDid;
+	}
+
+	public String getMainpicUrl() {
+		return mainpicUrl;
+	}
+
+	public void setMainpicUrl(String mainpicUrl) {
+		this.mainpicUrl = mainpicUrl;
 	}
 
 	public void setSaleScopeDid(String saleScopeDid) {
@@ -523,11 +534,11 @@ public class PcProductinfo extends BaseModel {
 	}
 
 	public String getValidate_flag() {
-		return validate_flag;
+		return validateFlag;
 	}
 
-	public void setValidate_flag(String validate_flag) {
-		this.validate_flag = validate_flag;
+	public void setValidate_flag(String validateFlag) {
+		this.validateFlag = validateFlag;
 	}
 
 	public PcProductinfoExt getPcProductinfoExt() {
@@ -579,11 +590,11 @@ public class PcProductinfo extends BaseModel {
 	}
 
 	public String getAdPicUrl() {
-		return adPicUrl;
+		return adpicUrl;
 	}
 
-	public void setAdPicUrl(String adPicUrl) {
-		this.adPicUrl = adPicUrl;
+	public void setAdPicUrl(String adpicUrl) {
+		this.adpicUrl = adpicUrl;
 	}
 
 	public int getStock() {

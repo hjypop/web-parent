@@ -18,7 +18,7 @@
 	</resultMap>
 
 	<insert id="insertSelective" parameterType="com.hjy.entity.log.LcStockchange">
-		insert into lc_stockchange
+		insert into logcenter.lc_stockchange
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
 				zid,

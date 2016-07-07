@@ -12,7 +12,7 @@
 	</resultMap>
 	
 	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcProductdescription">
-		insert into pc_productdescription
+		insert into productcenter.pc_productdescription
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
 				zid,

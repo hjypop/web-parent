@@ -13,18 +13,18 @@
 		select
 			*
 		from 
-			sc_tmp
+			systemcenter.sc_tmp
 		where 
 			zid = #{zid,jdbcType=INTEGER}
 	</select>
 	
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-		delete from sc_tmp
+		delete from systemcenter.sc_tmp
 		where zid = #{zid,jdbcType=INTEGER}
 	</delete>
 
 	<insert id="insertSelective" parameterType="com.hjy.entity.system.ScTmp">
-		insert into sc_tmp
+		insert into systemcenter.sc_tmp
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
 				zid,
@@ -56,7 +56,7 @@
 	</insert>
 	
 	<update id="updateSelective" parameterType="com.hjy.entity.system.ScTmp">
-		update sc_tmp
+		update systemcenter.sc_tmp
 		<set>
 			<if test="uid != null">
 				uid = #{uid,jdbcType=CHAR},
@@ -75,7 +75,7 @@
 		select
 			*
 		from 
-			sc_tmp
+			systemcenter.sc_tmp
 		where 
 			1 = 1
 			<if test="code != null">

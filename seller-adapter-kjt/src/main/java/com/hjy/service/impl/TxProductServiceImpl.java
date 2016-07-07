@@ -238,13 +238,19 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 			ppe.setPoffer(pc.getPcProductinfoExt().getPoffer());
 
 			Integer fictitious = pc.getPcProductinfoExt().getFictitiousSales();
-			if (StringUtils.isBlank(fictitious.toString())) {
+			if (fictitious == null ||StringUtils.isBlank(fictitious.toString())) {
 				fictitious = 0;
 			}
 			ppe.setFictitiousSales(fictitious);
-			String grossProfit = pc.getPcProductinfoExt().getGrossProfit().toString();
+			String grossProfit ="";
+			if(null != pc.getPcProductinfoExt().getGrossProfit()){
+				grossProfit = pc.getPcProductinfoExt().getGrossProfit().toString();
+			}
 			ppe.setGrossProfit(Long.parseLong((StringUtils.isBlank(grossProfit) ? "0" : grossProfit)));
-			String accmrng = pc.getPcProductinfoExt().getAccmRng().toString();
+			String accmrng = "";
+			if(null != pc.getPcProductinfoExt().getAccmRng()){
+				accmrng = pc.getPcProductinfoExt().getAccmRng().toString();
+			}
 			ppe.setAccmRng(Double.parseDouble(StringUtils.isBlank(accmrng) ? "0" : accmrng));
 
 			ppe.setMdId(pc.getPcProductinfoExt().getMdId());

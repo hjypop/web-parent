@@ -31,7 +31,7 @@
 
 	  
 	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcSkuinfo">
-		insert into pc_skuinfo
+		insert into productcenter.pc_skuinfo
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
 				zid,

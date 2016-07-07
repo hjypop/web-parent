@@ -32,7 +32,7 @@
 	</resultMap>
 
 	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcProductinfoExt">
-		insert into pc_productinfo_ext
+		insert into productcenter.pc_productinfo_ext
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
 				zid,

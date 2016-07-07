@@ -180,11 +180,14 @@ public class RsyncGetKjtProductById
 		productinfo.setMaxSellPrice(info.getPrice());
 		productinfo.setMinSellPrice(info.getPrice());
 		productinfo.setCostPrice(info.getPrice());
-		productinfo.setMainPicUrl(info.getDefaultImage());
+		productinfo.setMainpicUrl(info.getDefaultImage());
 		productinfo.setMarketPrice(info.getPrice());
 		String manageCode = MemberConst.MANAGE_CODE_HOMEHAS;
 		productinfo.setSellerCode(manageCode);
+		
+		// TODO 线上配置文件没有seller_code_KJT 
 		productinfo.setSmallSellerCode(getConfig("seller_adapter_kjt.seller_code_KJT"));
+		
 		productinfo.setProductStatus("4497153900060003");// 商品下架
 		productinfo.setValidate_flag("Y");// 新增字段，是否是虚拟商品
 		productinfo.setTaxRate(info.getProductEntryInfo().getTariffRate());

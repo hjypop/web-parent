@@ -12,7 +12,7 @@
 	</resultMap>
 	
 	<insert id="insertSelective" parameterType="com.hjy.entity.user.UcSellercategoryProductRelation">
-		insert into uc_sellercategory_product_relation
+		insert into usercenter.uc_sellercategory_product_relation
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
 				zid,
