@@ -133,10 +133,6 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 			JsonHelper<IRsyncRequest> requestJsonHelper = new JsonHelper<IRsyncRequest>();
 			String sRequest = requestJsonHelper.ObjToString(tRequest);
 
-			MDataMap mInsertMap = new MDataMap();
-			// 插入日志表调用的日志记录
-			mInsertMap.initKeyValues("code", sCode, "rsync_target", upConfig().getRsyncTarget(), "rsync_url", sUrl,
-					"request_data", sRequest, "request_time", FormatHelper.upDateTime());
 			// 插入日志记录表
 			LcRsyncKjtLog log = new LcRsyncKjtLog();
 			log.setUid(UUID.randomUUID().toString().replace("-", ""));
