@@ -20,7 +20,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.huijiayou</groupId>
-			<name>web-sample</name>
+			<artifactId>web-sample</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

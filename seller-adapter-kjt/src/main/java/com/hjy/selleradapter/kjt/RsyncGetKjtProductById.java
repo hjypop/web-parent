@@ -130,6 +130,9 @@ public class RsyncGetKjtProductById
 				result.setMessage(error.toString());
 			} else {
 				productinfo = productService.getProduct(list.get(0).getProductCode());
+				if(null == productinfo){
+					throw new RuntimeException("productService.getProduct(list.get(0).getProductCode());   返回空，此处抛出");
+				}
 
 				String now = DateUtil.getSysDateTimeString();
 				String cost = list.get(0).getCostPrice().toString();
