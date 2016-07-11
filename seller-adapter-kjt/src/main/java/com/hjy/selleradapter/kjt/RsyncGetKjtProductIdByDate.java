@@ -25,8 +25,7 @@ import com.hjy.support.MailSupport;
  * @author ligj
  * 
  */
-public class RsyncGetKjtProductIdByDate extends
-		RsyncKjt<RsyncConfigGetKjtProductIdByDate, RsyncRequestGetKjtProductIdByDate, RsyncResponseGetKjtProductIdByDate> {
+public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProductIdByDate, RsyncRequestGetKjtProductIdByDate, RsyncResponseGetKjtProductIdByDate> {
 	@Inject
 	private IPcProductinfoDao productinfoDao;
 

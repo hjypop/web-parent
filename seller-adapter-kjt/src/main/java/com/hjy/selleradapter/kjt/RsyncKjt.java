@@ -129,7 +129,7 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		String sCode = WebHelper.getInstance().genUniqueCode("KCRL");
 		try {
 			String sUrl = upRequestUrl();
-			TRequest tRequest = upRsyncRequest();
+			TRequest tRequest = upRsyncRequest();				// IRsyncDo 接口方法，由子类来实现
 			JsonHelper<IRsyncRequest> requestJsonHelper = new JsonHelper<IRsyncRequest>();
 			String sRequest = requestJsonHelper.ObjToString(tRequest);
 
@@ -158,7 +158,7 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 			tResponse = responseJsonHelper.GsonFromJson(sResponseString, tResponse);
 
 			processResult = tResponse;
-			RsyncResult rsyncResult = doProcess(tRequest, tResponse);
+			RsyncResult rsyncResult = doProcess(tRequest, tResponse);				// IRsyncDo 接口方法，由子类来实现
 
 			// 更新处理完成时间
 			log.setProcessTime(FormatHelper.upDateTime());
@@ -186,10 +186,15 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 	}
 
 	/**
-	 * 获取日期的检查计算结果 该方法仅适用于传入的是时间范围的跨境通接口函数 会自动调整输入输出参数
+	 * @descriptions 获取日期的检查计算结果 该方法仅适用于传入的是时间范围的跨境通接口函数 会自动调整输入输出参数
+	 * 
+	 * 子类使用
 	 * 
 	 * @param iRsyncDateCheck
 	 * @return
+	 * @date 2016年7月8日下午4:14:07
+	 * @author Yangcl 
+	 * @version 1.0.0.1
 	 */
 	public RsyncDateCheck upDateCheck(IRsyncDateCheck iRsyncDateCheck) {
 		RsyncDateCheck rsyncDateCheck = new RsyncDateCheck();
@@ -218,7 +223,7 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 	}
 
 	/**
-	 * 获取调用接口之后的结果
+	 * 获取调用接口之后的结果 | 这个方法没有用过啊啊啊啊啊啊 - Yangcl
 	 * 
 	 * @return
 	 */
