@@ -95,7 +95,7 @@
 		</where>
 	</update>
 	
-	<select id="countByOrderCode" parameterType="com.hjy.entity.order.OcOrderinfo" resultMap="BaseResultMap">
+	<select id="countByOrderCode" parameterType="com.hjy.entity.order.OcOrderinfo" resultType="java.lang.Integer">
 		select
 			count(*)
 		from
