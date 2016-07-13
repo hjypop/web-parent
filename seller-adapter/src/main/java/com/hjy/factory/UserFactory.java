@@ -2,6 +2,7 @@ package com.hjy.factory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -172,6 +173,7 @@ public class UserFactory extends BaseClass implements IBaseInstance {
 			// 插入日志信息
 			String sIp = WebSessionHelper.create().upIpaddress();
 			ZaWeblog weblog = new ZaWeblog();
+			weblog.setUid(UUID.randomUUID().toString().replace("-", ""));
 			weblog.setLogType("467723120001");
 			weblog.setLogTitle("system_login");
 			weblog.setLogContent(getInfo(200002001, mLoginUserInfo.getUserCode(), mLoginUserInfo.getLoginName(), sIp));

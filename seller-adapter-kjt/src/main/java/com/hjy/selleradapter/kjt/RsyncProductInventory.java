@@ -1,6 +1,7 @@
 package com.hjy.selleradapter.kjt;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import com.hjy.annotation.Inject;
 import com.hjy.constant.MemberConst;
@@ -23,8 +24,8 @@ import com.hjy.service.system.IScStoreService;
 import com.hjy.service.system.IScStoreSkunumService;
 
 /**
- * alias RsyncGetKjtProductChannelInventoryById<br>     | properties配置信息核对完成
- * 类: RsyncProductInventory <br>
+ * alias RsyncGetKjtProductChannelInventoryById<br>
+ * | properties配置信息核对完成 类: RsyncProductInventory <br>
  * 描述: 商品分销渠道库存批量获取 <br>
  * 作者: 张海宇 zhanghaiyu@huijiayou.cn<br>
  * 时间: 2016年6月27日 下午5:29:53
@@ -85,7 +86,8 @@ public class RsyncProductInventory
 						result.getResultList().add(mResult.getMessage());
 					}
 				}
-				result.setProcessData(getInfo(100001102, result.getProcessNum(), iSuccessSum, result.getProcessNum() - iSuccessSum));
+				result.setProcessData(
+						getInfo(100001102, result.getProcessNum(), iSuccessSum, result.getProcessNum() - iSuccessSum));
 			}
 		}
 		// 如果操作都成功 则设置状态保存数据为同步结束时间 以方便下一轮调用
@@ -112,6 +114,7 @@ public class RsyncProductInventory
 				String sku_code = skuInfoService.findSkuCodeByProductCode(product_code);
 				// 根据查询条件查询ScStoreSkunum对象
 				ScStoreSkunum scStoreSkunum = new ScStoreSkunum();
+				scStoreSkunum.setUid(UUID.randomUUID().toString().replace("-", ""));
 				scStoreSkunum.setStoreCode(wareGouse);
 				scStoreSkunum.setSkuCode(sku_code);
 				scStoreSkunum.setStockNum(Long.valueOf(onlineQty));
@@ -125,6 +128,7 @@ public class RsyncProductInventory
 					int storeCount = scStoreService.findScStoreIsExists(wareGouse);
 					if (storeCount == 0) {
 						ScStore scStore = new ScStore();
+						scStore.setUid(UUID.randomUUID().toString().replace("-", ""));
 						scStore.setAppCode(MemberConst.MANAGE_CODE_HOMEHAS);
 						scStore.setAppName("惠家有");
 						scStore.setStoreName("跨境通");
@@ -154,6 +158,7 @@ public class RsyncProductInventory
 		}
 		return result;
 	}
+
 	public RsyncResponseInventory upResponseObject() {
 		return new RsyncResponseInventory();
 	}
