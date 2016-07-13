@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.SerializationUtils;
@@ -125,6 +126,7 @@ public class OrderForKJT extends BaseClass {
 				String now = DateUtil.getSysDateTimeString();
 
 				OcOrderKjtList okl = new OcOrderKjtList();
+				okl.setUid(UUID.randomUUID().toString().replace("-", ""));
 				okl.setOrderCodeSeq(order.getOrderCode());
 				okl.setOrderCode(order_code);
 				okl.setCreateTime(now);
@@ -132,6 +134,7 @@ public class OrderForKJT extends BaseClass {
 				ocOrderKjtListDao.insertSelective(okl);
 
 				OcOrderKjtListData okld = new OcOrderKjtListData();
+				okld.setUid(UUID.randomUUID().toString().replace("-", ""));
 				okld.setOrderCodeSeq(order.getOrderCode());
 				okld.setRequestClazz(JSON.toJSONString(order));
 				ocOrderKjtListDataDao.insertSelective(okld);
@@ -139,6 +142,7 @@ public class OrderForKJT extends BaseClass {
 				List<OrderDetail> details = order.getProductList();
 				for (OrderDetail orderDetail : details) {
 					OcOrderKjtDetail okd = new OcOrderKjtDetail();
+					okd.setUid(UUID.randomUUID().toString().replace("-", ""));
 					okd.setOrderCode(order_code);
 					okd.setOrderCodeSeq(order.getOrderCode());
 					okd.setProductCode(orderDetail.getProductCode());

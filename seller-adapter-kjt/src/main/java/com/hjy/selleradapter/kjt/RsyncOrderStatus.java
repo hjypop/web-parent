@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -64,7 +65,7 @@ public class RsyncOrderStatus
 	private IOcReturnMoneyService ocReturnMoneyService;
 	@Inject
 	private ILcReturnMoneyStatusService lcReturnMoneyStatusService;
-	
+
 	private final static RsyncConfigOrderStatus RSYNC_CONFIG_TRACE_ORDER = new RsyncConfigOrderStatus();
 	private RsyncRequestOrderStatus rsyncRequestTraceOrder = new RsyncRequestOrderStatus();
 
@@ -154,6 +155,7 @@ public class RsyncOrderStatus
 					ocOrderinfoService.updateSelective(ocOrderInfo);
 					// 添加订单状态日志表记录
 					LcOrderstatus lcOrderstatus = new LcOrderstatus();
+					lcOrderstatus.setUid(UUID.randomUUID().toString().replace("-", ""));
 					lcOrderstatus.setCode(order_code);
 					lcOrderstatus.setCreateTime(DateUtil.getSysDateTimeString());
 					lcOrderstatus.setCreateUser("system");
@@ -231,6 +233,7 @@ public class RsyncOrderStatus
 			McLoginInfo mli = mcLoginInfoService.findLoginInfoByMemberCode(order.getBuyerCode());
 			// 生成退款单
 			OcReturnMoney orm = new OcReturnMoney();
+			orm.setUid(UUID.randomUUID().toString().replace("-", ""));
 			orm.setReturnMoneyCode(money_no);
 			orm.setReturnGoodsCode("");
 			orm.setBuyerCode(order.getBuyerCode());
@@ -254,6 +257,7 @@ public class RsyncOrderStatus
 				e.printStackTrace();
 			}
 			LcReturnMoneyStatus lrms = new LcReturnMoneyStatus();
+			lrms.setUid(UUID.randomUUID().toString().replace("-", ""));
 			lrms.setReturnMoneyNo(money_no);
 			lrms.setInfo("跨境通订单失败，直接生成退款单");
 			lrms.setCreateTime(DateUtil.getSysDateTimeString());

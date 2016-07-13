@@ -34,8 +34,8 @@ public class JobForOrderStatus extends RootJob {
 				idList.add(Long.valueOf(order_code_out));
 				if ((i != 0 && (i + 1) % 20 == 0) || (list.size() - 1 == i)) {
 					RsyncOrderStatus traceOrder = new RsyncOrderStatus();
-					// traceOrder.upRsyncRequest().setSalesChannelSysNo(Long.valueOf(getConfig("groupcenter.rsync_kjt_SaleChannelSysNo")));
-					traceOrder.upRsyncRequest().setSalesChannelSysNo(Long.valueOf(72));
+					//渠道号
+					traceOrder.upRsyncRequest().setSalesChannelSysNo(Long.valueOf(getConfig("seller_adapter_kjt.kjt_SaleChannelSysNo")));
 					traceOrder.upRsyncRequest().setOrderIds(idList);
 					traceOrder.doRsync();
 					idList.clear();
