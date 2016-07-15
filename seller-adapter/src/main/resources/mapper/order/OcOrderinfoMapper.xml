@@ -39,7 +39,8 @@
 	</resultMap>
 
 	<!-- 根据订单编号查询订单信息 2016-06-28 zhy -->
-	<select id="findOrderInfoByOrderCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+	<select id="findOrderInfoByOrderCode" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
 		SELECT
 		zid,
 		uid,
@@ -83,27 +84,30 @@
 	<update id="updateSelective" parameterType="com.hjy.entity.order.OcOrderinfo">
 		UPDATE ordercenter.oc_orderinfo
 		<set>
-			<if test="orderStatus != null and orderStatus != ''">
-				order_status = #{orderStatus,jdbcType=VARCHAR}
-			</if>
-			<if test="updateTime != null and updateTime != ''">
-				update_time = #{updateTime,jdbcType=VARCHAR}
-			</if>
+			<trim suffixOverrides=",">
+				<if test="orderStatus != null and orderStatus != ''">
+					order_status = #{orderStatus,jdbcType=VARCHAR},
+				</if>
+				<if test="updateTime != null and updateTime != ''">
+					update_time = #{updateTime,jdbcType=VARCHAR},
+				</if>
+			</trim>
 		</set>
 		<where>
 			order_code = #{orderCode,jdbcType=VARCHAR}
 		</where>
 	</update>
-	
-	<select id="countByOrderCode" parameterType="com.hjy.entity.order.OcOrderinfo" resultType="java.lang.Integer">
+
+	<select id="countByOrderCode" parameterType="com.hjy.entity.order.OcOrderinfo"
+		resultType="java.lang.Integer">
 		select
-			count(*)
+		count(*)
 		from
-			ordercenter.oc_orderinfo
+		ordercenter.oc_orderinfo
 		where
-			order_code = #{orderCode,jdbcType=VARCHAR}
+		order_code = #{orderCode,jdbcType=VARCHAR}
 		and
-			order_status = #{orderStatus,jdbcType=VARCHAR}
+		order_status = #{orderStatus,jdbcType=VARCHAR}
 	</select>
 </mapper>
 
