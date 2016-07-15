@@ -151,6 +151,7 @@ public class OrderSoCreate extends RsyncKjt<RsyncConfigOrderSoCreate, RsyncReque
 		updateKjtOrder.setUpdateTime(DateUtil.getSysDateTimeString());
 		updateKjtOrder.setRsyncDesc(desc);
 		updateKjtOrder.setSostatus("0");
+		updateKjtOrder.setLocalStatus("4497153900010002"); 
 		ocOrderKjtListService.updateCodeByCodeSeq(updateKjtOrder);
 		responseSu = true;
 		return rsyncResult;
