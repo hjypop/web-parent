@@ -191,27 +191,47 @@
 		select * from ordercenter.oc_order_kjt_list where order_code
 		= #{orderCode,jdbcType=VARCHAR}
 	</select>
+	
 	<!-- 根据序列订单号修改订单信息 2016-07-02 zhy -->
 	<update id="updateCodeByCodeSeq" parameterType="com.hjy.entity.OcOrderKjtList">
 		UPDATE ordercenter.oc_order_kjt_list
 		<set>
+			<if test="orderCodeSeq != null and orderCodeSeq != ''">
+				order_code_seq = #{orderCodeSeq,jdbcType=VARCHAR},
+			</if>
 			<if test="orderCode!=null and orderCode != ''">
 				order_code = #{orderCode,jdbcType=VARCHAR},
 			</if>
-			<if test="rsyncDesc != null and rsyncDesc != ''">
-				rsync_desc = #{rsyncDesc,jdbcType=VARCHAR},
+			<if test="orderCodeOut != null and orderCodeOut != ''">
+				order_code_out = #{orderCodeOut,jdbcType=VARCHAR},
+			</if>
+			<if test="productAmount != null">
+				product_amount = #{productAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="taxAmount != null">
+				tax_amount = #{taxAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="shippingAmount != null">
+				shipping_amount = #{shippingAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time = #{updateTime,jdbcType=VARCHAR},
 			</if>
 			<if test="sostatus != null and sostatus != ''">
 				sostatus = #{sostatus,jdbcType=VARCHAR},
 			</if>
-			<if test="sostatus != null and sostatus != ''">
-				local_status = #{localStatus,jdbcType=VARCHAR}
+			<if test="localStatus != null and localStatus != ''">
+				local_status = #{localStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="rsyncDesc != null and rsyncDesc != ''">
+				rsync_desc = #{rsyncDesc,jdbcType=VARCHAR},
 			</if>
 		</set>
 		<where>
 			order_code_seq = #{orderCodeSeq,jdbcType=VARCHAR}
 		</where>
 	</update>
+	
 	<!-- 根据序列订单号查询订单信息 2016-07-03 zhy -->
 	<select id="findOrderListByCodeSeq" parameterType="java.lang.String" resultMap="BaseResultMap">
 		SELECT

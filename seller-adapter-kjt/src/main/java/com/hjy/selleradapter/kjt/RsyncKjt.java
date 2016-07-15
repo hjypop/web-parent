@@ -2,7 +2,6 @@ package com.hjy.selleradapter.kjt;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -89,12 +88,9 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		for (Iterator<String> iter = dataMap.keySet().iterator(); iter.hasNext();) {
 			String name = iter.next();
 			String value = dataMap.get(name);
-			if (name.equals("data")) {
-				String strTest = "";
+			if (name.equals("data")) { 
 				try {
-					value = URLEncoder.encode(requestStr , "UTF-8");
-					strTest = URLDecoder.decode(value,"UTF-8");
-					System.out.println(strTest);
+					value = URLEncoder.encode(requestStr , "UTF-8"); 
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
