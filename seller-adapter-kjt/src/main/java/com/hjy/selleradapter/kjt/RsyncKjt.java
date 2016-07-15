@@ -1,6 +1,8 @@
 package com.hjy.selleradapter.kjt;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -17,6 +19,7 @@ import java.util.UUID;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.http.ParseException;
+
 
 import com.hjy.annotation.Inject;
 import com.hjy.base.BaseClass;
@@ -86,11 +89,16 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		for (Iterator<String> iter = dataMap.keySet().iterator(); iter.hasNext();) {
 			String name = iter.next();
 			String value = dataMap.get(name);
-
 			if (name.equals("data")) {
-				value = URLEncoder.encode(requestStr);
+				String strTest = "";
+				try {
+					value = URLEncoder.encode(requestStr , "UTF-8");
+					strTest = URLDecoder.decode(value,"UTF-8");
+					System.out.println(strTest);
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 			}
-
 			list.add(name + "=" + value);
 		}
 		Collections.sort(list); // 对List内容进行排序
@@ -98,10 +106,12 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		for (String nameString : list) {
 			str.append(nameString + "&");
 		}
-		dataMap.put("sign", HexUtil.toHexString(MD5Util.md5(str.substring(0, str.toString().length() - 1) + "&"
-				+ getConfig("seller_adapter_kjt.rsync_kjt_password"))));
+		String appSecret = getConfig("seller_adapter_kjt.rsync_kjt_password");
+		String param_ = str.substring(0, str.toString().length() - 1);
+		dataMap.put("sign", HexUtil.toHexString(MD5Util.md5(param_ + "&" + appSecret)));
 		return dataMap;
 	}
+
 
 	/**
 	 * 获取请求的url
@@ -129,7 +139,7 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 		String sCode = WebHelper.getInstance().genUniqueCode("KCRL");
 		try {
 			String sUrl = upRequestUrl();
-			TRequest tRequest = upRsyncRequest();				// IRsyncDo 接口方法，由子类来实现
+			TRequest tRequest = upRsyncRequest(); // IRsyncDo 接口方法，由子类来实现
 			JsonHelper<IRsyncRequest> requestJsonHelper = new JsonHelper<IRsyncRequest>();
 			String sRequest = requestJsonHelper.ObjToString(tRequest);
 
@@ -158,7 +168,8 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 			tResponse = responseJsonHelper.GsonFromJson(sResponseString, tResponse);
 
 			processResult = tResponse;
-			RsyncResult rsyncResult = doProcess(tRequest, tResponse);				// IRsyncDo 接口方法，由子类来实现
+			RsyncResult rsyncResult = doProcess(tRequest, tResponse); // IRsyncDo
+																		// 接口方法，由子类来实现
 
 			// 更新处理完成时间
 			log.setProcessTime(FormatHelper.upDateTime());
@@ -188,12 +199,12 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 	/**
 	 * @descriptions 获取日期的检查计算结果 该方法仅适用于传入的是时间范围的跨境通接口函数 会自动调整输入输出参数
 	 * 
-	 * 子类使用
+	 *               子类使用
 	 * 
 	 * @param iRsyncDateCheck
 	 * @return
 	 * @date 2016年7月8日下午4:14:07
-	 * @author Yangcl 
+	 * @author Yangcl
 	 * @version 1.0.0.1
 	 */
 	public RsyncDateCheck upDateCheck(IRsyncDateCheck iRsyncDateCheck) {
@@ -230,5 +241,6 @@ public abstract class RsyncKjt<TConfig extends IRsyncConfig, TRequest extends IR
 	public TResponse upProcessResult() {
 		return processResult;
 	}
+
 
 }
