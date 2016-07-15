@@ -24,7 +24,7 @@ import com.hjy.service.product.IPcProductinfoServivce;
  * 时间: 2016年6月27日 下午5:27:16
  */
 public class JobForInventory extends RootJob {
-	
+
 	@Inject
 	private IPcProductinfoServivce service;
 
@@ -59,7 +59,7 @@ public class JobForInventory extends RootJob {
 					RsyncProductInventory rsyncChannel = new RsyncProductInventory();
 					rsyncChannel.upRsyncRequest().setProductIDs(product_ids);
 					rsyncChannel.upRsyncRequest()
-							.setSaleChannelSysNo(getConfig("groupcenter.rsync_kjt_SaleChannelSysNo"));
+							.setSaleChannelSysNo(getConfig("seller_adapter_kjt.rsync_kjt_SaleChannelSysNo"));
 					rsyncChannel.doRsync();
 				} else {
 					i--;

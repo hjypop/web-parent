@@ -72,31 +72,35 @@
 	<update id="updateSelective" parameterType="com.hjy.entity.system.ScStoreSkunum">
 		update systemcenter.sc_store_skunum
 		<set>
-			<if test="storeCode != null and  storeCode != ''">
-				store_code = #{storeCode,jdbcType=VARCHAR}
-			</if>
-			<if test="skuCode != null and  skuCode != ''">
-				sku_code = #{skuCode,jdbcType=VARCHAR}
-			</if>
-			<if test="batchCode != null and  batchCode != ''">
-				batch_code = #{batchCode,jdbcType=VARCHAR}
-			</if>
-			<if test="stockNum != null">
-				stock_num = #{stockNum,jdbcType=DECIMAL}
-			</if>
+			<trim suffixOverrides=",">
+				<if test="storeCode != null and  storeCode != ''">
+					store_code = #{storeCode,jdbcType=VARCHAR},
+				</if>
+				<if test="skuCode != null and  skuCode != ''">
+					sku_code = #{skuCode,jdbcType=VARCHAR},
+				</if>
+				<if test="batchCode != null and  batchCode != ''">
+					batch_code = #{batchCode,jdbcType=VARCHAR},
+				</if>
+				<if test="stockNum != null">
+					stock_num = #{stockNum,jdbcType=DECIMAL},
+				</if>
+			</trim>
 		</set>
 		<where>
 			zid = #{zid,jdbcType=INTEGER}
 		</where>
 	</update>
-	
-	<!-- 可以扩展if中的查询条件 - Yangcl  --> 
-	<select id="findByType" resultMap="BaseResultMap" parameterType="com.hjy.entity.system.ScStoreSkunum">
+
+	<!-- 可以扩展if中的查询条件 - Yangcl -->
+	<select id="findByType" resultMap="BaseResultMap"
+		parameterType="com.hjy.entity.system.ScStoreSkunum">
 		select
-					* from systemcenter.sc_store_skunum
-		where  sku_code = #{skuCode , jdbcType=VARCHAR}
+		* from systemcenter.sc_store_skunum
+		where sku_code = #{skuCode ,
+		jdbcType=VARCHAR}
 	</select>
-	
+
 	<update id="updateSelectiveByUuid" parameterType="com.hjy.entity.system.ScStoreSkunum">
 		update systemcenter.sc_store_skunum
 		<set>
