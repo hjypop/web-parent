@@ -93,9 +93,9 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 						}
 						this.sendMail(StringUtils.join(pCode1, ","), StringUtils.join(pCode2, ","),
 								StringUtils.join(pName, ","));// 发送下架商品的邮件
-						MDataMap upMap = new MDataMap();
-						upMap.put("product_status", RsyncGetKjtProductIdByDate.downStatus);// 下架
-						upMap.put("flag_sale", "0");// 是否可售
+//						MDataMap upMap = new MDataMap();
+//						upMap.put("product_status", RsyncGetKjtProductIdByDate.downStatus);// 下架
+//						upMap.put("flag_sale", "0");// 是否可售
 
 						if (pCode1 != null && pCode1.size() > 0) {
 							productinfoDao.updateByOldProductCode(pCode1);// 商品下架
@@ -119,8 +119,7 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 						}
 					}
 					if (changeProductCodeList != null && changeProductCodeList.size() > 0) {
-						MWebResult mResult = saveProductData(
-								(String[]) changeProductCodeList.toArray(new String[changeProductCodeList.size()]));
+						MWebResult mResult = saveProductData((String[]) changeProductCodeList.toArray(new String[changeProductCodeList.size()]));
 						// 如果成功则将成功计数加1
 						if (mResult.upFlagTrue()) {
 							iSuccessSum += 5;

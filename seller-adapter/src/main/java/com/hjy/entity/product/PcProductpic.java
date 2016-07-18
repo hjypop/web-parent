@@ -25,6 +25,11 @@ public class PcProductpic extends BaseModel {
 	 * 商品的skuCode
 	 */
 	private String skuCode = "";
+	
+	
+	private String productCodeOld = "";
+	
+	
 
 	public String getSkuCode() {
 		return skuCode;
@@ -49,4 +54,26 @@ public class PcProductpic extends BaseModel {
 	public String getPicUrl() {
 		return this.picUrl;
 	}
+
+	public String getProductCodeOld() {
+		return productCodeOld;
+	}
+
+	public void setProductCodeOld(String productCodeOld) {
+		this.productCodeOld = productCodeOld;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
