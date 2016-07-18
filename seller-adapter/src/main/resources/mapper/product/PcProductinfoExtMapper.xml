@@ -204,76 +204,76 @@
 	<update id="updateSelectiveByProductCode" parameterType="com.hjy.entity.product.PcProductinfoExt">
 		update productcenter.pc_productinfo_ext
 		<set>
-			<if test="record.zid != null">
-				zid = #{record.zid,jdbcType=INTEGER},
+			<if test="zid != null">
+				zid = #{zid,jdbcType=INTEGER},
 			</if>
-			<if test="record.uid != null">
-				uid = #{record.uid,jdbcType=CHAR},
+			<if test="uid != null">
+				uid = #{uid,jdbcType=CHAR},
 			</if>
-			<if test="record.productCodeOld != null">
-				product_code_old = #{record.productCodeOld,jdbcType=VARCHAR},
+			<if test="productCodeOld != null">
+				product_code_old = #{productCodeOld,jdbcType=VARCHAR},
 			</if>
-			<if test="record.productCode != null">
-				product_code = #{record.productCode,jdbcType=VARCHAR},
+			<if test="productCode != null">
+				product_code = #{productCode,jdbcType=VARCHAR},
 			</if>
-			<if test="record.prchType != null">
-				prch_type = #{record.prchType,jdbcType=VARCHAR},
+			<if test="prchType != null">
+				prch_type = #{prchType,jdbcType=VARCHAR},
 			</if>
-			<if test="record.dlrId != null">
-				dlr_id = #{record.dlrId,jdbcType=VARCHAR},
+			<if test="dlrId != null">
+				dlr_id = #{dlrId,jdbcType=VARCHAR},
 			</if>
-			<if test="record.dlrNm != null">
-				dlr_nm = #{record.dlrNm,jdbcType=VARCHAR},
+			<if test="dlrNm != null">
+				dlr_nm = #{dlrNm,jdbcType=VARCHAR},
 			</if>
-			<if test="record.oaSiteNo != null">
-				oa_site_no = #{record.oaSiteNo,jdbcType=VARCHAR},
+			<if test="oaSiteNo != null">
+				oa_site_no = #{oaSiteNo,jdbcType=VARCHAR},
 			</if>
-			<if test="record.grossProfit != null">
-				gross_profit = #{record.grossProfit,jdbcType=DECIMAL},
+			<if test="grossProfit != null">
+				gross_profit = #{grossProfit,jdbcType=DECIMAL},
 			</if>
-			<if test="record.accmRng != null">
-				accm_rng = #{record.accmRng,jdbcType=DOUBLE},
+			<if test="accmRng != null">
+				accm_rng = #{accmRng,jdbcType=DOUBLE},
 			</if>
-			<if test="record.validateFlag != null">
-				validate_flag = #{record.validateFlag,jdbcType=VARCHAR},
+			<if test="validateFlag != null">
+				validate_flag = #{validateFlag,jdbcType=VARCHAR},
 			</if>
-			<if test="record.fictitiousSales != null">
-				fictitious_sales = #{record.fictitiousSales,jdbcType=INTEGER},
+			<if test="fictitiousSales != null">
+				fictitious_sales = #{fictitiousSales,jdbcType=INTEGER},
 			</if>
-			<if test="record.poffer != null">
-				poffer = #{record.poffer,jdbcType=VARCHAR},
+			<if test="poffer != null">
+				poffer = #{poffer,jdbcType=VARCHAR},
 			</if>
-			<if test="record.mdId != null">
-				md_id = #{record.mdId,jdbcType=VARCHAR},
+			<if test="mdId != null">
+				md_id = #{mdId,jdbcType=VARCHAR},
 			</if>
-			<if test="record.mdNm != null">
-				md_nm = #{record.mdNm,jdbcType=VARCHAR},
+			<if test="mdNm != null">
+				md_nm = #{mdNm,jdbcType=VARCHAR},
 			</if>
-			<if test="record.productTradeType != null">
+			<if test="productTradeType != null">
 				product_trade_type =
-				#{record.productTradeType,jdbcType=VARCHAR},
+				#{productTradeType,jdbcType=VARCHAR},
 			</if>
-			<if test="record.productStoreType != null">
-				product_store_type = #{record.productStoreType,jdbcType=VARCHAR},
+			<if test="productStoreType != null">
+				product_store_type = #{productStoreType,jdbcType=VARCHAR},
 			</if>
-			<if test="record.settlementType != null">
+			<if test="settlementType != null">
 				settlement_type =
-				#{record.settlementType,jdbcType=VARCHAR},
+				#{settlementType,jdbcType=VARCHAR},
 			</if>
-			<if test="record.purchaseType != null">
-				purchase_type = #{record.purchaseType,jdbcType=VARCHAR},
+			<if test="purchaseType != null">
+				purchase_type = #{purchaseType,jdbcType=VARCHAR},
 			</if>
-			<if test="record.ldGoodId != null">
-				ld_good_id = #{record.ldGoodId,jdbcType=VARCHAR},
+			<if test="ldGoodId != null">
+				ld_good_id = #{ldGoodId,jdbcType=VARCHAR},
 			</if>
-			<if test="record.picMaterialUrl != null">
-				pic_material_url = #{record.picMaterialUrl,jdbcType=VARCHAR},
+			<if test="picMaterialUrl != null">
+				pic_material_url = #{picMaterialUrl,jdbcType=VARCHAR},
 			</if>
-			<if test="record.picMaterialUpload != null">
-				pic_material_upload = #{record.picMaterialUpload,jdbcType=VARCHAR},
+			<if test="picMaterialUpload != null">
+				pic_material_upload = #{picMaterialUpload,jdbcType=VARCHAR},
 			</if>
-			<if test="record.kjtSellerCode != null">
-				kjt_seller_code = #{record.kjtSellerCode,jdbcType=VARCHAR},
+			<if test="kjtSellerCode != null">
+				kjt_seller_code = #{kjtSellerCode,jdbcType=VARCHAR},
 			</if>
 		</set>
 		<where>

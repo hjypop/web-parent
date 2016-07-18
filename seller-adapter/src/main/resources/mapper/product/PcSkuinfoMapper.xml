@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hjy.dao.product.IPcSkuinfoDao">
 
-	<resultMap id="BaseResultMap" type="com.hjy.entity.product.PcProductinfo">
+	<resultMap id="BaseResultMap" type="com.hjy.entity.product.PcSkuinfo">
 		<id column="zid" jdbcType="INTEGER" property="zid" />
 		<result column="uid" jdbcType="CHAR" property="uid" />
 		<result column="sku_code_old" jdbcType="VARCHAR" property="skuCodeOld" />
@@ -17,7 +17,8 @@
 		<result column="sku_picurl" jdbcType="VARCHAR" property="skuPicurl" />
 		<result column="sell_productcode" jdbcType="VARCHAR" property="sellProductcode" />
 		<result column="seller_code" jdbcType="VARCHAR" property="sellerCode" />
-		<result column="security_stock_num" jdbcType="DECIMAL" property="securityStockNum" />
+		<result column="security_stock_num" jdbcType="DECIMAL"
+			property="securityStockNum" />
 		<result column="product_code_old" jdbcType="VARCHAR" property="productCodeOld" />
 		<result column="qrcode_link" jdbcType="VARCHAR" property="qrcodeLink" />
 		<result column="sell_count" jdbcType="INTEGER" property="sellCount" />
@@ -29,7 +30,7 @@
 		<result column="sku_adv" jdbcType="LONGVARCHAR" property="skuAdv" />
 	</resultMap>
 
-	  
+
 	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcSkuinfo">
 		insert into productcenter.pc_skuinfo
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -181,7 +182,7 @@
 			</if>
 		</trim>
 	</insert>
-	
+
 	<select id="findSkuCodeByProductCode" parameterType="java.lang.String"
 		resultType="java.lang.String">
 		SELECT
@@ -192,17 +193,18 @@
 			product_code = #{productCode,jdbcType=VARCHAR}
 		</where>
 	</select>
-	
-	<!-- 可以扩展if中的查询条件 - Yangcl  -->
-	<select id="findList" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcSkuinfo">
+
+	<!-- 可以扩展if中的查询条件 - Yangcl -->
+	<select id="findList" resultMap="BaseResultMap"
+		parameterType="com.hjy.entity.product.PcSkuinfo">
 		select
-					* from productcenter.pc_skuinfo
-		where 1=1 
+		* from productcenter.pc_skuinfo
+		where 1=1
 		<if test="productCode != null ">
 			and product_code = #{productCode , jdbcType=VARCHAR}
 		</if>
 	</select>
-	
+
 	<update id="updateSelectiveByProductCode" parameterType="com.hjy.entity.product.PcSkuinfo">
 		update productcenter.pc_skuinfo
 		<set>
@@ -246,7 +248,8 @@
 				seller_code = #{sellerCode,jdbcType=VARCHAR},
 			</if>
 			<if test="securityStockNum != null">
-				security_stock_num = #{securityStockNum,jdbcType=DECIMAL},
+				security_stock_num =
+				#{securityStockNum,jdbcType=DECIMAL},
 			</if>
 			<if test="productCodeOld != null">
 				product_code_old = #{productCodeOld,jdbcType=VARCHAR},
@@ -276,9 +279,9 @@
 				sku_adv = #{skuAdv,jdbcType=LONGVARCHAR},
 			</if>
 		</set>
-		where product_code = #{productCode,jdbcType=VARCHAR} 
+		where product_code = #{productCode,jdbcType=VARCHAR}
 	</update>
-	
+
 	<update id="updateSelectiveBySkuCode" parameterType="com.hjy.entity.product.PcSkuinfo">
 		update productcenter.pc_skuinfo
 		<set>
@@ -322,7 +325,8 @@
 				seller_code = #{sellerCode,jdbcType=VARCHAR},
 			</if>
 			<if test="securityStockNum != null">
-				security_stock_num = #{securityStockNum,jdbcType=DECIMAL},
+				security_stock_num =
+				#{securityStockNum,jdbcType=DECIMAL},
 			</if>
 			<if test="productCodeOld != null">
 				product_code_old = #{productCodeOld,jdbcType=VARCHAR},
@@ -354,7 +358,7 @@
 		</set>
 		where sku_code = #{skuCode,jdbcType=VARCHAR}
 	</update>
-	
+
 </mapper>
 
 
