@@ -227,6 +227,7 @@ public class ProductServiceImpl extends BaseClass implements IFlowFunc, IProduct
 
 			return product;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 

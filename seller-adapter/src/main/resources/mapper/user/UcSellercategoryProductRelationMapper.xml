@@ -2,15 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.hjy.dao.user.IUcSellercategoryProductRelationDao">
-	
-	<resultMap id="BaseResultMap" type="com.hjy.entity.user.UcSellercategoryProductRelation">
+
+	<resultMap id="BaseResultMap"
+		type="com.hjy.entity.user.UcSellercategoryProductRelation">
 		<id column="zid" property="zid" jdbcType="INTEGER" />
 		<result column="uid" property="uid" jdbcType="CHAR" />
 		<result column="product_code" property="productCode" jdbcType="VARCHAR" />
-		<result column="category_code" property="categoryCode" jdbcType="VARCHAR" />
+		<result column="category_code" property="categoryCode"
+			jdbcType="VARCHAR" />
 		<result column="seller_code" property="sellerCode" jdbcType="VARCHAR" />
 	</resultMap>
-	
+
 	<insert id="insertSelective" parameterType="com.hjy.entity.user.UcSellercategoryProductRelation">
 		insert into usercenter.uc_sellercategory_product_relation
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -48,22 +50,23 @@
 			</if>
 		</trim>
 	</insert>
-	
-	<select id="findList" resultMap="BaseResultMap" parameterType="com.hjy.entity.user.UcSellercategoryProductRelation">
+
+	<select id="findList" resultMap="BaseResultMap"
+		parameterType="com.hjy.entity.user.UcSellercategoryProductRelation">
 		select
-					* from usercenter.uc_sellercategory_product_relation
-		where 1=1 
-		<if test="brandCode != null">
+		* from usercenter.uc_sellercategory_product_relation
+		where 1=1
+		<if test="productCode != null">
 			and product_code = #{productCode , jdbcType=VARCHAR}
 		</if>
 	</select>
-	
+
 	<delete id="deleteByProductCode" parameterType="com.hjy.entity.user.UcSellercategoryProductRelation">
-    	delete 
-    		from usercenter.uc_sellercategory_product_relation
-    	where 
-    		product_code = #{productCode , jdbcType=VARCHAR} 
-  	</delete>
+		delete
+		from usercenter.uc_sellercategory_product_relation
+		where
+		product_code = #{productCode , jdbcType=VARCHAR}
+	</delete>
 </mapper>
 
 
