@@ -131,6 +131,10 @@ public class OrderForKJT extends BaseClass {
 				okl.setOrderCode(order_code);
 				okl.setCreateTime(now);
 				okl.setUpdateTime(now);
+//				okl.setOrderCodeOut(order.getOrderCo);          Order 中无此字段
+//				okl.setProductAmount(order.getProd);				 Order 中无此字段
+//				okl.setTaxAmount(order.getTa);							 Order 中无此字段
+//				okl.setShippingAmount(order.getSh);				 Order 中无此字段
 				ocOrderKjtListDao.insertSelective(okl);
 
 				OcOrderKjtListData okld = new OcOrderKjtListData();
@@ -429,10 +433,26 @@ public class OrderForKJT extends BaseClass {
 	 * @param order
 	 */
 	public boolean rsyncOrder(Order order) {
+		try {
+			Thread.sleep(1000);    // 防止调用过快 
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		// 判断订单状态 //领导强制添加：即使发货单写一半，也不再同步订单到跨境通
 		OcOrderinfo entity = new OcOrderinfo();
 		entity.setOrderCode(order.getAddress().getOrderCode());
 		entity.setOrderStatus("4497153900010002");
+		/**
+		 * 根据 systemcenter.sc_define 表中的定义，串号意义如下：
+		 * 4497153900010001 下单成功-未付款
+		 * 4497153900010002 下单成功-未发货
+		 * 4497153900010003 已发货
+		 * 4497153900010004 已收货
+		 * 4497153900010005 交易成功
+		 * 4497153900010006 交易失败
+		 * 4497153900010007 交易无效
+		 */
 		Integer count = ocOrderinfoDao.countByOrderCode(entity);
 		if (count == null || count < 1) {
 			return true;
@@ -532,7 +552,7 @@ public class OrderForKJT extends BaseClass {
 			SOItemInfo soItemInfo = new SOItemInfo();
 			PcProductinfo info = new PcProductinfo();
 			info.setProductCode(orderDetail.getProductCode());
-			;
+			
 			PcProductinfo product = pcProductinfoDao.findByType(info);
 			soItemInfo.setProductID(product.getProductCodeOld());
 			soItemInfo.setQuantity(orderDetail.getSkuNum());
@@ -707,8 +727,8 @@ public class OrderForKJT extends BaseClass {
 			}
 
 			// 根据完税价每单不超过2000的规则拆单
-			tprice = tprice.add(sku.getCostPrice());
-			if (tprice.compareTo(maxCostPrice) > 0) {
+			tprice = tprice.add(sku.getCostPrice()); 
+			if (tprice.compareTo(maxCostPrice) > 0) {      // if(tprice.compareTo(maxCostPrice) > 0)
 				tprice = sku.getCostPrice();
 				skus = new HashMap<String, OrderDetail>();
 				list.add(skus);

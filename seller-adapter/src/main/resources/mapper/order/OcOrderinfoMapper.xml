@@ -98,16 +98,15 @@
 		</where>
 	</update>
 
-	<select id="countByOrderCode" parameterType="com.hjy.entity.order.OcOrderinfo"
-		resultType="java.lang.Integer">
+	<select id="countByOrderCode" parameterType="com.hjy.entity.order.OcOrderinfo" resultType="java.lang.Integer">
 		select
-		count(*)
+			count(*)
 		from
-		ordercenter.oc_orderinfo
+			ordercenter.oc_orderinfo
 		where
-		order_code = #{orderCode,jdbcType=VARCHAR}
+			order_code = #{orderCode , jdbcType=VARCHAR}
 		and
-		order_status = #{orderStatus,jdbcType=VARCHAR}
+			order_status = #{orderStatus , jdbcType=VARCHAR}
 	</select>
 </mapper>
 
