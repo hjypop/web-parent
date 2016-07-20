@@ -121,6 +121,7 @@ public class RsyncProductInventory
 				// 判断scStoreSkunum对象是否存在，如果存在更新对象的stock_num库存数
 				if (scStoreSkunumService.findScStoreSkunumByParams(scStoreSkunum) != null) {
 					scStoreSkunum = scStoreSkunumService.findScStoreSkunumByParams(scStoreSkunum);
+					scStoreSkunum.setStockNum(Long.valueOf(onlineQty));
 					// 更新库存数stock_num
 					scStoreSkunumService.updateSelective(scStoreSkunum);
 				} else {
