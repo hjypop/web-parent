@@ -118,9 +118,9 @@ public class RsyncProductInventory
 				scStoreSkunum.setStoreCode(wareGouse);
 				scStoreSkunum.setSkuCode(sku_code);
 				scStoreSkunum.setStockNum(Long.valueOf(onlineQty));
-				scStoreSkunum = scStoreSkunumService.findScStoreSkunumByParams(scStoreSkunum);
 				// 判断scStoreSkunum对象是否存在，如果存在更新对象的stock_num库存数
-				if (scStoreSkunum != null) {
+				if (scStoreSkunumService.findScStoreSkunumByParams(scStoreSkunum) != null) {
+					scStoreSkunum = scStoreSkunumService.findScStoreSkunumByParams(scStoreSkunum);
 					// 更新库存数stock_num
 					scStoreSkunumService.updateSelective(scStoreSkunum);
 				} else {

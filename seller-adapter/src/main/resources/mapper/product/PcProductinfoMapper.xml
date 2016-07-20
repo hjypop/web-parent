@@ -300,6 +300,7 @@
 		select product_code from productcenter.pc_productinfo
 		<where>
 			product_code_old=#{productCodeOld,jdbcType=VARCHAR}
+			AND seller_code='SI2003'
 		</where>
 		ORDER BY zid DESC
 	</select>
