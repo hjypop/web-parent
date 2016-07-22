@@ -80,4 +80,9 @@ public class OcOrderKjtListServiceImpl extends BaseServiceImpl<OcOrderKjtList, I
 	public List<OcOrderKjtList> findListByOrderCode(String orderCode) {
 		return dao.findListByOrderCode(orderCode);
 	}
+
+	@Override
+	public int updateSelectiveByCodeOut(OcOrderKjtList entity) {
+		return dao.updateSelectiveByCodeOut(entity);
+	}
 }

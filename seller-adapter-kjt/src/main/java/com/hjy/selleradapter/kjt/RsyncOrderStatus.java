@@ -107,10 +107,10 @@ public class RsyncOrderStatus
 					OcOrderKjtList editOrder = new OcOrderKjtList();
 					editOrder.setSostatus(String.valueOf(sostatus));
 					editOrder.setLocalStatus(orderStatusMapper(sostatus));
-					editOrder.setOrderCode(order_code);
+					editOrder.setOrderCodeOut(order_code_out);
 					editOrder.setUpdateTime(DateUtil.getSysDateTimeString());
-					// 根据订单编号更新订单
-					ocOrderKjtListService.updateSelective(editOrder);
+					// 根据跨境通订单编号更新订单
+					ocOrderKjtListService.updateSelectiveByCodeOut(editOrder);
 					if (sostatus == 65 || sostatus == 42) {
 						OcOrderaddress address = ocOrderadressService.findOrderAddressByOrderCode(order_code);
 						String auth_idcard_number = address.getAuthIdcardNumber();

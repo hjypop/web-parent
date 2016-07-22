@@ -72,4 +72,12 @@ public interface IOcOrderKjtListService extends IBaseService<OcOrderKjtList, Int
 	 * @return
 	 */
 	List<OcOrderKjtList> findListByOrderCode(String orderCode);
+
+	/**
+	 * 根据外部订单号修改数据信息 2016-07-22 zhy
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	int updateSelectiveByCodeOut(OcOrderKjtList entity);
 }

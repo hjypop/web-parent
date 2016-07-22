@@ -68,4 +68,12 @@ public interface IOcOrderKjtListDao extends BaseDao<OcOrderKjtList, Integer> {
 	 */
 	OcOrderKjtList findOrderListByCodeSeq(String orderCodeSeq);
 
+	/**
+	 * 根据外部订单号修改数据信息 2016-07-22 zhy
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	int updateSelectiveByCodeOut(OcOrderKjtList entity);
+
 }
