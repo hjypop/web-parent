@@ -13,7 +13,7 @@ import com.hjy.redis.srnpr.RedisFactory;
  */
 public class RedisLaunch {
 	
-	public static RedisFactory upFactory(ERedisSchema enum_) {
+	public static RedisFactory setFactory(ERedisSchema enum_) {
 		return new RedisFactory("xs-" + enum_.toString() + "-");
 	}
 	
