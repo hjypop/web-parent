@@ -1,7 +1,7 @@
 package com.hjy.redis.srnpr;
 
 import com.hjy.base.BaseClass;
-import com.hjy.redis.srnpr.iface.IRedisSrnprCall;
+import com.hjy.redis.srnpr.iface.IRedisCall;
 
 /**
  * @descriptions 
@@ -22,7 +22,7 @@ public class RedisInit extends BaseClass{
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */
-	public static IRedisSrnprCall getDefault() {
+	public static IRedisCall getDefault() {
 		return SET_CONFIG.getValue("default");
 	}
 	
@@ -35,7 +35,7 @@ public class RedisInit extends BaseClass{
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */
-	public static IRedisSrnprCall getOtherConfig() {
+	public static IRedisCall getOtherConfig() {
 		return SET_CONFIG.getValue("other");
 	}
 }

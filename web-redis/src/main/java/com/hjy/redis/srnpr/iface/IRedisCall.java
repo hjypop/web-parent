@@ -10,7 +10,7 @@ import com.hjy.model.MDataMap;
  * @author Yangcl
  * @version 1.0.1
  */
-public interface IRedisSrnprCall {
+public interface IRedisCall {
 	/**
 	 * 将哈希表 key 中的域 field 的值设为 value 。
 	 * 

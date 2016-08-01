@@ -6,7 +6,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 
 import com.hjy.model.MDataMap;
-import com.hjy.redis.srnpr.iface.IRedisSrnprCall;
+import com.hjy.redis.srnpr.iface.IRedisCall;
 
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
@@ -20,12 +20,12 @@ import redis.clients.jedis.JedisCommands;
  * @author Yangcl
  * @version 1.0.1
  */
-public class RedisSrnprCall implements IRedisSrnprCall {
+public class RedisCall implements IRedisCall {
 	
 	private JedisCommands commands = null;
 	
 	
-	public RedisSrnprCall(String sUrl){
+	public RedisCall(String sUrl){
 		if (StringUtils.contains(sUrl, ",")) {
 			// Jedis Cluster will attempt to discover cluster nodes automatically
 			Set<HostAndPort> jedisClusterNodes = new HashSet<HostAndPort>();

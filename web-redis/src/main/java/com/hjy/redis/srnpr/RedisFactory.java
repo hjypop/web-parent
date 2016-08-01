@@ -1,7 +1,7 @@
 package com.hjy.redis.srnpr;
 
 import com.hjy.model.MDataMap;
-import com.hjy.redis.srnpr.iface.IRedisSrnprCall;
+import com.hjy.redis.srnpr.iface.IRedisCall;
 import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 /**
@@ -14,7 +14,7 @@ import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
  * @author Yangcl
  * @version 1.0.1
  */
-public class RedisFactory implements IRedisSrnprCall {
+public class RedisFactory implements IRedisCall {
 
 	private String baseKey = "";
 
