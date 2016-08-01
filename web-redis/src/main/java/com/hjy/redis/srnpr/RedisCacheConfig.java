@@ -1,7 +1,6 @@
-package com.hjy.redis.core;
+package com.hjy.redis.srnpr;
 
 import com.hjy.cache.RootCache;
-import com.hjy.redis.srnpr.RedisInit;
 import com.hjy.redis.srnpr.iface.IRedisSrnprCall;
 
 /**
@@ -12,7 +11,7 @@ import com.hjy.redis.srnpr.iface.IRedisSrnprCall;
  * @author Yangcl
  * @version 1.0.1
  */
-public class RedisCache extends RootCache<String, IRedisSrnprCall> {
+public class RedisCacheConfig extends RootCache<String, IRedisSrnprCall> {
 
 	@Override
 	public void refresh() {
@@ -21,7 +20,7 @@ public class RedisCache extends RootCache<String, IRedisSrnprCall> {
 	@Override
 	public IRedisSrnprCall getOne(String k) {
 		String redisUrls = getConfig("web-redis.kv_url_" + k);
-		return new RedisInit(redisUrls);
+		return new RedisSrnprCall(redisUrls);
 	}
 
 }

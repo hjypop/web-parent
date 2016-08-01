@@ -1,7 +1,15 @@
 package com.hjy.redis.srnpr;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.hjy.model.MDataMap;
 import com.hjy.redis.srnpr.iface.IRedisSrnprCall;
+
+import redis.clients.jedis.HostAndPort;
+import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisCommands;
 
 /**
@@ -15,6 +23,25 @@ import redis.clients.jedis.JedisCommands;
 public class RedisSrnprCall implements IRedisSrnprCall {
 	
 	private JedisCommands commands = null;
+	
+	
+	public RedisSrnprCall(String sUrl){
+		if (StringUtils.contains(sUrl, ",")) {
+			// Jedis Cluster will attempt to discover cluster nodes automatically
+			Set<HostAndPort> jedisClusterNodes = new HashSet<HostAndPort>();
+			for (String s : StringUtils.split(sUrl, ",")) {
+				String[] sHost = StringUtils.split(s, ":");
+				jedisClusterNodes.add(new HostAndPort(sHost[0], Integer.valueOf(sHost[1])));
+			}
+
+			JedisCluster jc = new JedisCluster(jedisClusterNodes);
+			this.setCommonds(jc);
+		}
+	}
+	
+	
+	
+	
 
 	public JedisCommands getCommonds() {
 		return commands;
