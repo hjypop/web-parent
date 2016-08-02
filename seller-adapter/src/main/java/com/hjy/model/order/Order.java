@@ -7,7 +7,7 @@ import com.hjy.annotation.ZapcomApi;
 import com.hjy.entity.order.OcOrderActivity;
 import com.hjy.entity.order.OcOrderPay;
 import com.hjy.entity.order.OcOrderShipments;
-import com.hjy.entity.user.UcSellerInfo;
+import com.hjy.entity.user.UcSellerinfo;
 
 
 /**   
@@ -208,7 +208,7 @@ public class Order {
 	 * 卖家信息
 	 */
 	@ZapcomApi(value="卖家信息")
-	private UcSellerInfo sellerInfo = null;
+	private UcSellerinfo sellerInfo = null;
 	
 	
 	/**
@@ -317,11 +317,11 @@ public class Order {
 		this.ocorderShipments = ocorderShipments;
 	}
 
-	public UcSellerInfo getSellerInfo() {
+	public UcSellerinfo getSellerInfo() {
 		return sellerInfo;
 	}
 
-	public void setSellerInfo(UcSellerInfo sellerInfo) {
+	public void setSellerInfo(UcSellerinfo sellerInfo) {
 		this.sellerInfo = sellerInfo;
 	}
 
