@@ -40,24 +40,32 @@ public class ProductServiceImpl implements IProductService {
 			if (requestProduct.getProductInfos() != null && requestProduct.getProductInfos().size() > 0) {
 				ResponseAddProduct result = verifyProduct(requestProduct.getProductInfos());
 				if (result.getCode() == 0) {
-					String productCode = WebHelper.getInstance().genUniqueCode(ProductHead);
-					String sellerCode = "";
-					/**
-					 * 批量添加商品
-					 */
-					List<PcProductinfo> productInfoList = getPcProdcutInfoList(requestProduct.getProductInfos(),
-							productCode, sellerCode);
-					productInfoDao.batchInsert(productInfoList);
-					/**
-					 * 批量添加sku
-					 */
-					List<PcSkuinfo> skuInfoList = null;
-					skuInfoDao.batchInsert(skuInfoList);
-					/**
-					 * 批量添加库存信息
-					 */
-					List<ScStoreSkunum> storeList = getScStoreSkunumList(skuInfoList);
-					scStoreSkunumDao.batchInsert(storeList);
+					try {
+						WebHelper.getInstance().addLock(10, "openapi-test-addproduct");
+						String productCode = WebHelper.getInstance().genUniqueCode(ProductHead);
+						String sellerCode = "";
+						/**
+						 * 批量添加商品
+						 */
+						List<PcProductinfo> productInfoList = getPcProdcutInfoList(requestProduct.getProductInfos(),
+								productCode, sellerCode);
+						productInfoDao.batchInsert(productInfoList);
+						/**
+						 * 批量添加sku
+						 */
+						List<PcSkuinfo> skuInfoList = getPcSkuInfoList(requestProduct.getProductInfos(), productCode,
+								sellerCode);
+						skuInfoDao.batchInsert(skuInfoList);
+						/**
+						 * 批量添加库存信息
+						 */
+						List<ScStoreSkunum> storeList = getScStoreSkunumList(skuInfoList);
+						scStoreSkunumDao.batchInsert(storeList);
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						
+					}
 				}
 			}
 		}
@@ -190,21 +198,26 @@ public class ProductServiceImpl implements IProductService {
 	 * @param sellerCode
 	 * @return
 	 */
-	private static List<PcSkuinfo> getPcSkuInfoList(List<PcSkuInfo> infos, String productCode, String sellerCode) {
+	private static List<PcSkuinfo> getPcSkuInfoList(List<ProductInfo> infos, String productCode, String sellerCode) {
 		List<PcSkuinfo> list = new ArrayList<PcSkuinfo>();
 		if (infos != null && infos.size() > 0) {
-			for (PcSkuInfo info : infos) {
-				PcSkuinfo sku = new PcSkuinfo();
-				sku.setUid(WebHelper.getInstance().genUuid());
-				sku.setSkuCode(WebHelper.getInstance().genUniqueCode(SKUHead));
-				sku.setSellerCode(sellerCode);
-				sku.setSellPrice(info.getSellPrice());
-				sku.setStockNum(info.getStockNum());
-				sku.setSkuPicurl(info.getSkuPicUrl());
-				sku.setSkuName(info.getSkuName());
-				sku.setSkuAdv(info.getSkuAdv());
-				sku.setMiniOrder(info.getMiniOrder());
-				list.add(sku);
+			for (ProductInfo product : infos) {
+				if (product.getSkuInfoList() != null && product.getSkuInfoList().size() > 0) {
+					for (PcSkuInfo info : product.getSkuInfoList()) {
+						PcSkuinfo sku = new PcSkuinfo();
+						sku.setUid(WebHelper.getInstance().genUuid());
+						sku.setProductCode(productCode);
+						sku.setSkuCode(WebHelper.getInstance().genUniqueCode(SKUHead));
+						sku.setSellerCode(sellerCode);
+						sku.setSellPrice(info.getSellPrice());
+						sku.setStockNum(info.getStockNum());
+						sku.setSkuPicurl(info.getSkuPicUrl());
+						sku.setSkuName(info.getSkuName());
+						sku.setSkuAdv(info.getSkuAdv());
+						sku.setMiniOrder(info.getMiniOrder());
+						list.add(sku);
+					}
+				}
 			}
 		}
 		return list;
