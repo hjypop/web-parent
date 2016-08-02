@@ -1,7 +1,5 @@
 package com.hjy.request;
 
-import com.hjy.base.IApiRequest;
-
 /**
  * @descriptions 请求基类。
  * 
@@ -14,5 +12,5 @@ import com.hjy.base.IApiRequest;
  * @version 1.0.1
  */
 public class ApiRequest {
-	
+
 }
