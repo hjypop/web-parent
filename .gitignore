@@ -29,5 +29,8 @@
 /seller-adapter-kjt/.settings/
 /seller-adapter-kjt/.project
 /seller-adapter-kjt/.classpath
-
+/seller-open-api/target/
+/seller-open-api/.settings/
+/seller-open-api/.project
+/seller-open-api/.classpath
 
