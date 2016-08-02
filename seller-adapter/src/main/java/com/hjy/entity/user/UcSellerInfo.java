@@ -14,7 +14,7 @@ public class UcSellerInfo extends BaseModel{
 	/**
 	 * 卖家编号
 	 */
-	private String sellerCode ;
+	private String sellerCode ; 
 	/**
 	 * 卖家名称
 	 */
