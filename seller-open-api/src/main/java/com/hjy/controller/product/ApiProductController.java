@@ -9,7 +9,7 @@ import com.hjy.response.ResponseAddProduct;
 import com.hjy.service.product.IApiProductService;
 
 @Controller
-@RequestMapping("/openapi/product/")
+@RequestMapping("openapi/product/")
 public class ApiProductController {
 
 	@Autowired
@@ -22,7 +22,7 @@ public class ApiProductController {
 
 	@RequestMapping("addProduct")
 	@ResponseBody
-	public ResponseAddProduct addProduct(String product) {
-		return service.addProduct(product);
+	public ResponseAddProduct addProduct(String request) {
+		return service.addProduct(request);
 	}
 }
