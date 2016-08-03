@@ -1,4 +1,4 @@
-package com.hjy.service;
+package com.hjy.service.api.product;
 
 import com.hjy.response.ResponseAddProduct;
 

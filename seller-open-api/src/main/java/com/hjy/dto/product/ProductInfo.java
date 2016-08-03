@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hjy.base.IApiRequest;
-import com.hjy.entity.product.PcProductdescription;
 
 public class ProductInfo implements IApiRequest {
+	/**
+	 * 商品编码
+	 */
+	private String productCode = "";
 	/**
 	 * 商品名称
 	 */
@@ -29,9 +32,13 @@ public class ProductInfo implements IApiRequest {
 	 */
 	private BigDecimal productWeight = new BigDecimal(0.00);
 	/**
-	 * 销售价
+	 * 成本价
 	 */
-	private BigDecimal sellPrice = new BigDecimal(0.00);
+	private BigDecimal costPrice = new BigDecimal(0.00);
+	/**
+	 * 市场价
+	 */
+	private BigDecimal marketPrice = new BigDecimal(0.00);
 	/**
 	 * 主图的Url
 	 */
@@ -48,7 +55,7 @@ public class ProductInfo implements IApiRequest {
 	/**
 	 * 商品描述信息
 	 */
-	private PcProductdescription description = new PcProductdescription();
+	private Productdescription description = new Productdescription();
 	/**
 	 * 商品图片信息
 	 */
@@ -61,6 +68,56 @@ public class ProductInfo implements IApiRequest {
 	 * 商品的Sku列表的属性信息
 	 */
 	private List<PcSkuInfo> skuInfoList = new ArrayList<PcSkuInfo>();
+
+	/**
+	 * 广告图的Url
+	 */
+	private String adpicUrl = "";
+	/**
+	 * 商品广告
+	 */
+	private String productAdv = "";
+	/**
+	 * 保质期
+	 */
+	private int expiryDate = 0;
+
+	/**
+	 * 保质期单位 4497471600290001:天，4497471600290002:月,4497471600290003:年
+	 */
+	private String expiryUnit = "";
+
+	public int getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(int expiryDate) {
+		this.expiryDate = expiryDate;
+	}
+
+	public String getExpiryUnit() {
+		return expiryUnit;
+	}
+
+	public void setExpiryUnit(String expiryUnit) {
+		this.expiryUnit = expiryUnit;
+	}
+
+	public String getAdpicUrl() {
+		return adpicUrl;
+	}
+
+	public void setAdpicUrl(String adpicUrl) {
+		this.adpicUrl = adpicUrl;
+	}
+
+	public String getProductAdv() {
+		return productAdv;
+	}
+
+	public void setProductAdv(String productAdv) {
+		this.productAdv = productAdv;
+	}
 
 	public String getProductName() {
 		return productName;
@@ -102,12 +159,12 @@ public class ProductInfo implements IApiRequest {
 		this.productWeight = productWeight;
 	}
 
-	public BigDecimal getSellPrice() {
-		return sellPrice;
+	public BigDecimal getCostPrice() {
+		return costPrice;
 	}
 
-	public void setSellPrice(BigDecimal sellPrice) {
-		this.sellPrice = sellPrice;
+	public void setCostPrice(BigDecimal costPrice) {
+		this.costPrice = costPrice;
 	}
 
 	public String getMainPicUrl() {
@@ -134,11 +191,11 @@ public class ProductInfo implements IApiRequest {
 		this.productVolumeItem = productVolumeItem;
 	}
 
-	public PcProductdescription getDescription() {
+	public Productdescription getDescription() {
 		return description;
 	}
 
-	public void setDescription(PcProductdescription description) {
+	public void setDescription(Productdescription description) {
 		this.description = description;
 	}
 
@@ -164,6 +221,22 @@ public class ProductInfo implements IApiRequest {
 
 	public void setSkuInfoList(List<PcSkuInfo> skuInfoList) {
 		this.skuInfoList = skuInfoList;
+	}
+
+	public String getProductCode() {
+		return productCode;
+	}
+
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
+	}
+
+	public BigDecimal getMarketPrice() {
+		return marketPrice;
+	}
+
+	public void setMarketPrice(BigDecimal marketPrice) {
+		this.marketPrice = marketPrice;
 	}
 
 }
