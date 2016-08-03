@@ -1,4 +1,4 @@
-package com.hjy.service.impl.api.product;
+package com.hjy.service.impl.product;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -25,11 +25,11 @@ import com.hjy.entity.system.ScStoreSkunum;
 import com.hjy.helper.WebHelper;
 import com.hjy.request.RequestProduct;
 import com.hjy.response.ResponseAddProduct;
-import com.hjy.service.api.product.IProductService;
 import com.hjy.service.impl.BaseServiceImpl;
+import com.hjy.service.product.IApiProductService;
 
 @Service
-public class ProductServiceImpl extends BaseServiceImpl<PcProductinfo, Integer> implements IProductService {
+public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Integer> implements IApiProductService {
 	public static String ProductHead = "8016";
 	public static String SKUHead = "8019";
 	@Autowired

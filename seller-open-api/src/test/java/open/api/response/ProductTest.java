@@ -17,14 +17,14 @@ import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
 import com.hjy.dto.product.Productdescription;
 import com.hjy.request.RequestProduct;
-import com.hjy.service.api.product.IProductService;
+import com.hjy.service.product.IApiProductService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/applicationContext.xml", "classpath:/mybatis-config.xml" })
 public class ProductTest {
 
 	@Autowired
-	private IProductService service;
+	private IApiProductService service;
 
 	@Test
 	public void addProduct() {

@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hjy.response.ResponseAddProduct;
-import com.hjy.service.api.product.IProductService;
+import com.hjy.service.product.IApiProductService;
 
 @Controller
 @RequestMapping("/openapi/product/")
 public class ProductController {
 
 	@Autowired
-	private IProductService service;
+	private IApiProductService service;
 
 	@RequestMapping("test_index")
 	public String testTest() {
