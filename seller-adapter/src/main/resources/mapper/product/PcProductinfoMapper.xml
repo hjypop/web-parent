@@ -300,7 +300,8 @@
 		select product_code from productcenter.pc_productinfo
 		<where>
 			product_code_old=#{productCodeOld,jdbcType=VARCHAR}
-			AND seller_code='SI2003'
+			AND
+			seller_code='SI2003'
 		</where>
 		ORDER BY zid DESC
 	</select>
@@ -501,4 +502,57 @@
 			#{item}
 		</foreach>
 	</update>
+	<insert id="batchInsert" parameterType="list">
+		INSERT INTO productcenter.pc_productinfo (
+		uid,
+		product_code,
+		product_code_old,
+		product_code_copy,
+		product_name,
+		product_shortname,
+		seller_code,
+		small_seller_code,
+		product_weight,
+		cost_price,
+		market_price,
+		mainpic_url,
+		product_volume_item,
+		product_volume,
+		product_adv,
+		adpic_url,
+		expiry_date,
+		expiry_unit,
+		create_time,
+		update_time,
+		labels,
+		min_sell_price,
+		max_sell_price
+		)
+		VALUES
+		<foreach item="item" index="index" collection="list" open="("
+			close=")" separator=",">
+			#{item.uid,jdbcType=VARCHAR},
+			#{item.productCode,jdbcType=VARCHAR},
+			#{item.productCodeOld,jdbcType=VARCHAR},
+			#{item.productName,jdbcType=VARCHAR},
+			#{item.productShortname,jdbcType=VARCHAR},
+			#{item.sellerCode,jdbcType=VARCHAR},
+			#{item.smallSellerCode,jdbcType=VARCHAR},
+			#{item.productWeight,jdbcType=DECIMAL},
+			#{item.costPrice,jdbcType=VARCHAR},
+			#{item.marketPrice,jdbcType=DECIMAL},
+			#{item.mainpicUrl,jdbcType=VARCHAR},
+			#{item.productVolumeItem,jdbcType=VARCHAR},
+			#{item.productVolume,jdbcType=DECIMAL},
+			#{item.productAdv,jdbcType=VARCHAR},
+			#{item.adpicUrl,jdbcType=VARCHAR},
+			#{item.expiryDate,jdbcType=VARCHAR},
+			#{item.expiryUnit,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=VARCHAR},
+			#{item.updateTime,jdbcType=VARCHAR},
+			#{item.labels,jdbcType=VARCHAR},
+			#{item.minSellPrice,jdbcType=DECIMAL},
+			#{item.maxSellPrice,jdbcType=DECIMAL}
+		</foreach>
+	</insert>
 </mapper>

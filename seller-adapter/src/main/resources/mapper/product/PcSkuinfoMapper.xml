@@ -182,7 +182,10 @@
 			</if>
 		</trim>
 	</insert>
-
+	<!-- 批量添加sku -->
+	<insert id="batchInsert" parameterType="list">
+		
+	</insert>
 	<select id="findSkuCodeByProductCode" parameterType="java.lang.String"
 		resultType="java.lang.String">
 		SELECT
@@ -358,58 +361,4 @@
 		</set>
 		where sku_code = #{skuCode,jdbcType=VARCHAR}
 	</update>
-
 </mapper>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
