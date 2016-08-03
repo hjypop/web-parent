@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.service.order.IApiOcOrderInfoService;
 
 
 /**
@@ -21,8 +22,8 @@ import com.alibaba.fastjson.JSONObject;
 public class ApiOrderInfoController {
 	private static Logger logger=Logger.getLogger(ApiOrderInfoController.class);
 	
-//	@Autowired
-//	private IOcOrderinfoService orderInfoService;
+	@Autowired
+	private IApiOcOrderInfoService apiOrderInfoService;
 	
 	
 	/**
@@ -36,7 +37,7 @@ public class ApiOrderInfoController {
 	@RequestMapping(value = "list", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject getOrderInfo(String json){
-		return null;
+		return apiOrderInfoService.getOrderInfoByJson(json); 
 	}
 	
 	

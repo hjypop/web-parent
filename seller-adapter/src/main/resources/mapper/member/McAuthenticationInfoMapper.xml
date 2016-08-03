@@ -203,7 +203,7 @@
 		where 
 			surmoney >= #{surmoney , jdbcType=DECIMAL}
 		order by 
-			surmoney desc
+			surmoney desc limit 1
 	</select>
 	
 	<update id="updateSurmoneyByAuthCode" parameterType="com.hjy.entity.member.McAuthenticationInfo">

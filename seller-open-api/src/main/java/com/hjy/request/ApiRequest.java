@@ -12,5 +12,21 @@ package com.hjy.request;
  * @version 1.0.1
  */
 public class ApiRequest {
-
+	private String sign;
+	private String createTime; 	// 请求创建时间
+	
+	public String getSign() {
+		return sign;
+	}
+	public void setSign(String sign) {
+		this.sign = sign;
+	}
+	
+	public String getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+	
 }
