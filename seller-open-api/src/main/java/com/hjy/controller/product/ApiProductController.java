@@ -1,4 +1,4 @@
-package com.hjy.controller;
+package com.hjy.controller.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,7 +10,7 @@ import com.hjy.service.product.IApiProductService;
 
 @Controller
 @RequestMapping("/openapi/product/")
-public class ProductController {
+public class ApiProductController {
 
 	@Autowired
 	private IApiProductService service;

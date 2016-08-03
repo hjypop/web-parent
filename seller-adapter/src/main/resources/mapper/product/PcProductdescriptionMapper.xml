@@ -5,12 +5,14 @@
 		<id column="zid" jdbcType="INTEGER" property="zid" />
 		<result column="uid" jdbcType="CHAR" property="uid" />
 		<result column="product_code" jdbcType="VARCHAR" property="productCode" />
-		
-		<result column="description_info" jdbcType="LONGVARCHAR" property="descriptionInfo" />
-		<result column="description_pic" jdbcType="LONGVARCHAR" property="descriptionPic" />
+
+		<result column="description_info" jdbcType="LONGVARCHAR"
+			property="descriptionInfo" />
+		<result column="description_pic" jdbcType="LONGVARCHAR"
+			property="descriptionPic" />
 		<result column="keyword" jdbcType="LONGVARCHAR" property="keyword" />
 	</resultMap>
-	
+
 	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcProductdescription">
 		insert into productcenter.pc_productdescription
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -54,11 +56,12 @@
 			</if>
 		</trim>
 	</insert>
-	
-	<!-- 可以扩展if中的查询条件 - Yangcl  -->
-	<select id="findByType" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcProductdescription">
+
+	<!-- 可以扩展if中的查询条件 - Yangcl -->
+	<select id="findByType" resultMap="BaseResultMap"
+		parameterType="com.hjy.entity.product.PcProductdescription">
 		select
-					* from productcenter.pc_productdescription
+		* from productcenter.pc_productdescription
 		where 1=1
 		<if test="uid != null">
 			and uid = #{uid , jdbcType=VARCHAR}
@@ -67,13 +70,35 @@
 			and product_code = #{productCode , jdbcType=VARCHAR}
 		</if>
 	</select>
-	
+
 	<delete id="deleteByProductCode" parameterType="com.hjy.entity.product.PcProductdescription">
-    	delete 
-    		from productcenter.pc_productdescription
-    	where 
-    		product_code = #{productCode , jdbcType=VARCHAR} 
-  	</delete>
+		delete
+		from
+		productcenter.pc_productdescription
+		where
+		product_code = #{productCode ,
+		jdbcType=VARCHAR}
+	</delete>
+	<insert id="batchInsert" parameterType="list">
+		INSERT INTO productcenter.pc_productdescription (
+		uid,
+		product_code,
+		description_info,
+		description_pic,
+		keyword
+		)
+		VALUES
+		<foreach item="item" index="index" collection="list"
+			separator=",">
+			(
+			#{item.uid,jdbcType=VARCHAR},
+			#{item.productCode,jdbcType=VARCHAR},
+			#{item.descriptionInfo,jdbcType=VARCHAR},
+			#{item.descriptionPic,jdbcType=VARCHAR},
+			#{item.keyword,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
 </mapper>
 
 

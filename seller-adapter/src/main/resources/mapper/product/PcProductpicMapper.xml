@@ -88,7 +88,8 @@
 		</trim>
 	</insert>
 
-	<select id="findListBySkuNull" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcProductpic">
+	<select id="findListBySkuNull" resultMap="BaseResultMap"
+		parameterType="com.hjy.entity.product.PcProductpic">
 		select
 		* from productcenter.pc_productpic
 		where 1=1
@@ -104,6 +105,24 @@
 			<include refid="Example_Where_Clause" />
 		</if>
 	</delete>
+	<insert id="batchInsert" parameterType="list">
+		INSERT INTO productcenter.pc_productpic (
+		uid,
+		product_code,
+		pic_url,
+		product_code_old
+		)
+		VALUES
+		<foreach item="item" index="index" collection="list"
+			separator=",">
+			(
+			#{item.uid,jdbcType=VARCHAR},
+			#{item.productCode,jdbcType=VARCHAR},
+			#{item.picUrl,jdbcType=VARCHAR},
+			#{item.productCodeOld,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
 </mapper>
 
 

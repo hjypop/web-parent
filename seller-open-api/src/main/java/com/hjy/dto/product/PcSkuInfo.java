@@ -3,6 +3,11 @@ package com.hjy.dto.product;
 import java.math.BigDecimal;
 
 public class PcSkuInfo {
+
+	/**
+	 * sku编码
+	 */
+	private String skuCode;
 	/**
 	 * 销售价
 	 */
@@ -27,6 +32,32 @@ public class PcSkuInfo {
 	 * 最小购买数
 	 */
 	private Integer miniOrder = 1;
+
+	/**
+	 * 二维码图片链接
+	 */
+	private String qrcodeLink = "";
+
+	/**
+	 * 安全库存
+	 */
+	private long securityStockNum = 0;
+
+	public long getSecurityStockNum() {
+		return securityStockNum;
+	}
+
+	public void setSecurityStockNum(long securityStockNum) {
+		this.securityStockNum = securityStockNum;
+	}
+
+	public String getQrcodeLink() {
+		return qrcodeLink;
+	}
+
+	public void setQrcodeLink(String qrcodeLink) {
+		this.qrcodeLink = qrcodeLink;
+	}
 
 	public BigDecimal getSellPrice() {
 		return sellPrice;
@@ -74,6 +105,14 @@ public class PcSkuInfo {
 
 	public void setStockNum(long stockNum) {
 		this.stockNum = stockNum;
+	}
+
+	public String getSkuCode() {
+		return skuCode;
+	}
+
+	public void setSkuCode(String skuCode) {
+		this.skuCode = skuCode;
 	}
 
 }

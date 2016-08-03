@@ -182,10 +182,6 @@
 			</if>
 		</trim>
 	</insert>
-	<!-- 批量添加sku -->
-	<insert id="batchInsert" parameterType="list">
-		
-	</insert>
 	<select id="findSkuCodeByProductCode" parameterType="java.lang.String"
 		resultType="java.lang.String">
 		SELECT
@@ -361,4 +357,48 @@
 		</set>
 		where sku_code = #{skuCode,jdbcType=VARCHAR}
 	</update>
+	<insert id="batchInsert" parameterType="list">
+		INSERT INTO productcenter.pc_skuinfo (
+		uid,
+		product_code,
+		product_code_old,
+		sell_productcode,
+		sku_code,
+		sku_code_old,
+		sku_name,
+		sku_picurl,
+		sku_adv,
+		seller_code,
+		sell_price,
+		market_price,
+		cost_price,
+		security_stock_num,
+		stock_num,
+		qrcode_link,
+		mini_order
+		)
+		VALUES
+		<foreach item="item" index="index" collection="list"
+			separator=",">
+			(
+			#{item.uid,jdbcType=VARCHAR},
+			#{item.productCode,jdbcType=VARCHAR},
+			#{item.productCodeOld,jdbcType=VARCHAR},
+			#{item.sellProductcode,jdbcType=VARCHAR},
+			#{item.skuCode,jdbcType=VARCHAR},
+			#{item.skuCodeOld,jdbcType=VARCHAR},
+			#{item.skuName,jdbcType=VARCHAR},
+			#{item.skuPicurl,jdbcType=VARCHAR},
+			#{item.skuAdv,jdbcType=VARCHAR},
+			#{item.sellerCode,jdbcType=VARCHAR},
+			#{item.sellPrice,jdbcType=DECIMAL},
+			#{item.marketPrice,jdbcType=DECIMAL},
+			#{item.costPrice,jdbcType=DECIMAL},
+			#{item.securityStockNum,jdbcType=DECIMAL},
+			#{item.stockNum,jdbcType=DECIMAL},
+			#{item.qrcodeLink,jdbcType=VARCHAR},
+			#{item.miniOrder,jdbcType=INTEGER}
+			)
+		</foreach>
+	</insert>
 </mapper>
