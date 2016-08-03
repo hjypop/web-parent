@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.base.BaseClass;
 import com.hjy.dao.BaseDao;
 import com.hjy.service.IBaseService;
 
@@ -19,13 +20,13 @@ import com.hjy.service.IBaseService;
  * @author Yangcl
  * @version 1.0.1
  */
-//@Service("baseService")  abstract
-public class BaseServiceImpl<T, PK extends Serializable> implements IBaseService<T, PK> {
-	
+// @Service("baseService") abstract
+public class BaseServiceImpl<T, PK extends Serializable> extends BaseClass implements IBaseService<T, PK> {
+
 	public static Logger logger = Logger.getLogger(BaseServiceImpl.class);
-	
+
 	@Autowired
-	public BaseDao<T,PK> baseDao;
+	public BaseDao<T, PK> baseDao;
 
 	@Override
 	public Integer insertSelective(T entity) {
@@ -48,7 +49,7 @@ public class BaseServiceImpl<T, PK extends Serializable> implements IBaseService
 	@Override
 	public Integer batchInsert(List<T> list) {
 		// TODO Auto-generated method stub
-		return baseDao.batchInsert(list); 
+		return baseDao.batchInsert(list);
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class BaseServiceImpl<T, PK extends Serializable> implements IBaseService
 	@Override
 	public Integer batchDelete(List<Integer> list) {
 		// TODO Auto-generated method stub
-		return baseDao.batchDelete(list); 
+		return baseDao.batchDelete(list);
 	}
 
 	@Override
@@ -94,14 +95,14 @@ public class BaseServiceImpl<T, PK extends Serializable> implements IBaseService
 	}
 
 	@Override
-	public JSONObject jsonList(T entity) { 
+	public JSONObject jsonList(T entity) {
 		JSONObject result = new JSONObject();
 		List<T> list = baseDao.findList(entity);
-		if(list != null && list.size() > 0){
-			result.put("status" , "success");
-			result.put("list" , list);
+		if (list != null && list.size() > 0) {
+			result.put("status", "success");
+			result.put("list", list);
 			return result;
-		}else{
+		} else {
 			result.put("status", "error");
 			result.put("msg", "结果集为空");
 			return result;
@@ -138,16 +139,3 @@ public class BaseServiceImpl<T, PK extends Serializable> implements IBaseService
 		return baseDao.selectMaxId();
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
- 

@@ -529,11 +529,13 @@
 		max_sell_price
 		)
 		VALUES
-		<foreach item="item" index="index" collection="list" open="("
-			close=")" separator=",">
+		<foreach item="item" index="index" collection="list"
+			separator=",">
+			(
 			#{item.uid,jdbcType=VARCHAR},
 			#{item.productCode,jdbcType=VARCHAR},
 			#{item.productCodeOld,jdbcType=VARCHAR},
+			#{item.productCodeCopy,jdbcType=VARCHAR},
 			#{item.productName,jdbcType=VARCHAR},
 			#{item.productShortname,jdbcType=VARCHAR},
 			#{item.sellerCode,jdbcType=VARCHAR},
@@ -553,6 +555,7 @@
 			#{item.labels,jdbcType=VARCHAR},
 			#{item.minSellPrice,jdbcType=DECIMAL},
 			#{item.maxSellPrice,jdbcType=DECIMAL}
+			)
 		</foreach>
 	</insert>
 </mapper>

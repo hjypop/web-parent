@@ -4,8 +4,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -32,27 +33,28 @@ import com.hjy.service.product.IApiProductService;
 public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Integer> implements IApiProductService {
 	public static String ProductHead = "8016";
 	public static String SKUHead = "8019";
-	@Autowired
+	@Resource
 	private IPcProductinfoDao productInfoDao;
-	@Autowired
+	@Resource
 	private IPcProductdescriptionDao productdescription;
-	@Autowired
+	@Resource
 	private IPcProductpicDao pcProductpic;
-	@Autowired
+	@Resource
 	private IPcSkuinfoDao skuInfoDao;
-	@Autowired
+	@Resource
 	private IScStoreSkunumDao scStoreSkunumDao;
 
 	@Override
 	public ResponseAddProduct addProduct(String product) {
+		ResponseAddProduct response = new ResponseAddProduct();
 		RequestProduct requestProduct = JSON.toJavaObject(JSON.parseObject(product), RequestProduct.class);
 		if (requestProduct != null) {
 			if (requestProduct.getProductInfos() != null && requestProduct.getProductInfos().size() > 0) {
-				ResponseAddProduct result = verifyProduct(requestProduct.getProductInfos());
-				if (result.getCode() == 0) {
+				response = verifyProduct(requestProduct.getProductInfos());
+				if (response.getCode() == 0) {
 					try {
-						//WebHelper.getInstance().addLock(10, "openapi-test-addproduct");
-						String productCode = "80169999999999";//WebHelper.getInstance().genUniqueCode(ProductHead);
+						WebHelper.getInstance().addLock(10, "openapi-test-addproduct");
+						String productCode = WebHelper.getInstance().genUniqueCode(ProductHead);
 						String sellerCode = "";
 						/**
 						 * 批量添加商品
@@ -65,24 +67,32 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 						 */
 						List<PcProductdescription> pcProductdescriptionList = getPcProductdescriptionList(
 								requestProduct.getProductInfos(), productCode);
-						productdescription.batchInsert(pcProductdescriptionList);
+						if (pcProductdescriptionList != null && pcProductdescriptionList.size() > 0) {
+							productdescription.batchInsert(pcProductdescriptionList);
+						}
 						/**
 						 * 批量添加商品图片
 						 */
 						List<PcProductpic> productpicList = getPcProductpicList(requestProduct.getProductInfos(),
 								productCode);
-						pcProductpic.batchInsert(productpicList);
+						if (productpicList != null && productpicList.size() > 0) {
+							pcProductpic.batchInsert(productpicList);
+						}
 						/**
 						 * 批量添加sku
 						 */
 						List<PcSkuinfo> skuInfoList = getPcSkuInfoList(requestProduct.getProductInfos(), productCode,
 								sellerCode);
-						skuInfoDao.batchInsert(skuInfoList);
+						if (skuInfoList != null && skuInfoList.size() > 0) {
+							skuInfoDao.batchInsert(skuInfoList);
+						}
 						/**
 						 * 批量添加库存信息
 						 */
 						List<ScStoreSkunum> storeList = getScStoreSkunumList(skuInfoList);
-						scStoreSkunumDao.batchInsert(storeList);
+						if (storeList != null && storeList.size() > 0) {
+							scStoreSkunumDao.batchInsert(storeList);
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					} finally {
@@ -91,7 +101,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				}
 			}
 		}
-		return null;
+		return response;
 	}
 
 	/**
@@ -242,6 +252,17 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		return list;
 	}
 
+	/**
+	 * 
+	 * 方法: getPcProductpicList <br>
+	 * 描述: 商品图片数据集合 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月3日 下午1:52:05
+	 * 
+	 * @param infos
+	 * @param productCode
+	 * @return
+	 */
 	private static List<PcProductpic> getPcProductpicList(List<ProductInfo> infos, String productCode) {
 		List<PcProductpic> list = new ArrayList<PcProductpic>();
 		if (infos != null && infos.size() > 0) {
@@ -252,6 +273,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 						ppic.setUid(WebHelper.getInstance().genUuid());
 						ppic.setPicUrl(pic);
 						ppic.setProductCode(productCode);
+						ppic.setProductCodeOld(productCode);
 						list.add(ppic);
 					}
 				}
@@ -281,14 +303,19 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 						PcSkuinfo sku = new PcSkuinfo();
 						sku.setUid(WebHelper.getInstance().genUuid());
 						sku.setProductCode(productCode);
-						//sku.setSkuCode(WebHelper.getInstance().genUniqueCode(SKUHead));
-						sku.setSkuCode("80199999999999");;
+						sku.setProductCodeOld(product.getProductCode());
+						sku.setSellProductcode(product.getProductCode());
+						sku.setSkuCode(WebHelper.getInstance().genUniqueCode(SKUHead));
+						sku.setSkuCodeOld(info.getSkuCode());
+						sku.setSkuName(info.getSkuName());
+						sku.setSkuPicurl(info.getSkuPicUrl());
+						sku.setSkuAdv(info.getSkuAdv());
 						sku.setSellerCode(sellerCode);
 						sku.setSellPrice(info.getSellPrice());
+						sku.setMarketPrice(product.getMarketPrice());
+						sku.setCostPrice(product.getCostPrice());
+						sku.setSecurityStockNum(info.getSecurityStockNum());
 						sku.setStockNum(info.getStockNum());
-						sku.setSkuPicurl(info.getSkuPicUrl());
-						sku.setSkuName(info.getSkuName());
-						sku.setSkuAdv(info.getSkuAdv());
 						sku.setMiniOrder(info.getMiniOrder());
 						list.add(sku);
 					}
@@ -308,6 +335,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				store.setStockNum(sku.getStockNum());
 				store.setStoreCode("");
 				store.setBatchCode("");
+				list.add(store);
 			}
 		}
 		return list;

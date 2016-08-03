@@ -97,7 +97,8 @@
 		parameterType="com.hjy.entity.system.ScStoreSkunum">
 		select
 		* from systemcenter.sc_store_skunum
-		where sku_code = #{skuCode ,
+		where sku_code
+		= #{skuCode ,
 		jdbcType=VARCHAR}
 	</select>
 
@@ -121,35 +122,24 @@
 			uid = #{uid,jdbcType=INTEGER}
 		</where>
 	</update>
+	<insert id="batchInsert" parameterType="list">
+		INSERT INTO systemcenter.sc_store_skunum (
+		uid,
+		store_code,
+		sku_code,
+		batch_code,
+		stock_num
+		)
+		VALUES
+		<foreach item="item" index="index" collection="list"
+			separator=",">
+			(
+			#{item.uid,jdbcType=VARCHAR},
+			#{item.storeCode,jdbcType=VARCHAR},
+			#{item.skuCode,jdbcType=VARCHAR},
+			#{item.batchCode,jdbcType=VARCHAR},
+			#{item.stockNum,jdbcType=DECIMAL}
+			)
+		</foreach>
+	</insert>
 </mapper>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

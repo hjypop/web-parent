@@ -11,6 +11,11 @@ public class Productdescription {
 	 */
 	private String descriptionPic = "";
 
+	/**
+	 * 关键字
+	 */
+	private String keyword = "";
+
 	public String getDescriptionInfo() {
 		return descriptionInfo;
 	}
@@ -25,6 +30,14 @@ public class Productdescription {
 
 	public void setDescriptionPic(String descriptionPic) {
 		this.descriptionPic = descriptionPic;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 
 }
