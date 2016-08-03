@@ -19,7 +19,7 @@ public class ResponseSample {
 	@Test
 	public void responseMsgTest(){
 		ApiResponse<DataTest> mr = new ApiResponse<DataTest>();
-		mr.setCode("0");
+		mr.setCode(0);
 		mr.setDesc("SUCCESS");
 		DataTest dt = new DataTest();
 		dt.setMsgss("data test msg");
