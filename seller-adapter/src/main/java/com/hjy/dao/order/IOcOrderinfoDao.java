@@ -2,6 +2,8 @@ package com.hjy.dao.order;
 
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.order.OcOrderinfo;
+import com.hjy.request.data.OrderInfoRequest;
+import com.hjy.response.data.OrderInfoResponse;
 
 /**
  * 
@@ -26,7 +28,7 @@ public interface IOcOrderinfoDao extends BaseDao<OcOrderinfo, Integer>{
 
 	public Integer countByOrderCode(OcOrderinfo entity); 
 	
-//	public OrderInfoResponse getOpenApiOrderinfoList(OrderInfoRequest dto);
+	public OrderInfoResponse getOpenApiOrderinfoList(OrderInfoRequest dto);
 	
 	
 }
