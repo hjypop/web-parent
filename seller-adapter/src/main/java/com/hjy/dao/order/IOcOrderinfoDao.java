@@ -26,4 +26,24 @@ public interface IOcOrderinfoDao extends BaseDao<OcOrderinfo, Integer>{
 
 	public Integer countByOrderCode(OcOrderinfo entity); 
 	
+//	public OrderInfoResponse getOpenApiOrderinfoList(OrderInfoRequest dto);
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

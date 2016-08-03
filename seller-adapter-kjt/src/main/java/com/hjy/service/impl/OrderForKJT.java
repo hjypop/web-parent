@@ -659,6 +659,11 @@ public class OrderForKJT extends BaseClass {
 		McAuthenticationInfo entity = new McAuthenticationInfo();
 		entity.setSurmoney(order_price);
 		entity = mcAuthenticationInfoDao.findByOrderPrice(entity);
+		
+//		private AuthenticationInfo getAuth(BigDecimal order_price){
+//			MDataMap dataMap = DbUp.upTable("mc_authenticationInfo").
+//					oneWhere("", "surmoney desc", "surmoney>=:order_price", "order_price",String.valueOf(order_price));
+			
 		if (entity != null) {
 			McAuthenticationInfo entity_ = new McAuthenticationInfo();
 			entity_.setSurmoney(order_price);
