@@ -1,12 +1,14 @@
 package com.hjy.controller;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.pojo.entity.login.UserInfo;
+import com.hjy.service.order.IOcOrderinfoService;
 
 
 /**
@@ -21,6 +23,9 @@ import com.hjy.pojo.entity.login.UserInfo;
 public class ApiOrderInfoController {
 	private static Logger logger=Logger.getLogger(ApiOrderInfoController.class);
 	
+	@Autowired
+	private IOcOrderinfoService orderInfoService;
+	
 	
 	/**
 	 * @descriptions 根据传入的json串查询订单信息
@@ -32,7 +37,7 @@ public class ApiOrderInfoController {
 	 */
 	@RequestMapping(value = "list", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
-	public JSONObject editInfo(String json){
+	public JSONObject getOrderInfo(String json){
 		return null;
 	}
 	
