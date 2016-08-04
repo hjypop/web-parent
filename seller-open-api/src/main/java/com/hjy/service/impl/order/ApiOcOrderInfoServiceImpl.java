@@ -33,13 +33,14 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	@Override
 	public JSONObject getOrderInfoByJson(String json) {
 		JSONObject result = new JSONObject();
-		ApiResponse<OrderInfoResponse> ar = new ApiResponse<OrderInfoResponse>(); 
+		OrderInfoResponse info = new OrderInfoResponse(); 
+		
 		// 解析请求数据
 		OrderInfoRequest request = JSON.parseObject(json, OrderInfoRequest.class);
 		if(StringUtils.isBlank(request.getSellerCode())){
-			ar.setCode(14);
-			ar.setDesc("请求参数seller code不得为空"); 
-			result.put("error-response", ar);
+			info.setCode(14);
+			info.setDesc("请求参数seller code不得为空"); 
+			result.put("error-response", info);
 			return result;
 		}
 		

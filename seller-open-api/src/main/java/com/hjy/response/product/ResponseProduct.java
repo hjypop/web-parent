@@ -10,6 +10,6 @@ import com.hjy.response.ApiResponse;
  * 作者: zhy<br>
  * 时间: 2016年8月4日 上午9:32:22
  */
-public class ResponseProduct extends ApiResponse<IApiResponse> {
+public class ResponseProduct extends ApiResponse{
 
 }

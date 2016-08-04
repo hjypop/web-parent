@@ -1,5 +1,7 @@
 package com.hjy.dao.order;
 
+import java.util.List;
+
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.request.data.OrderInfoRequest;
@@ -28,7 +30,15 @@ public interface IOcOrderinfoDao extends BaseDao<OcOrderinfo, Integer>{
 
 	public Integer countByOrderCode(OcOrderinfo entity); 
 	
-	public OrderInfoResponse getOpenApiOrderinfoList(OrderInfoRequest dto);
+	/**
+	 * @descriptions 根据small_seller_code返回订单详细信息列表。seller-open-api项目中使用
+	 * 
+	 * @param dto 
+	 * @date 2016年8月4日下午3:12:57
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public List<OrderInfoResponse> getOpenApiOrderinfoList(OrderInfoRequest dto);
 	
 	
 }

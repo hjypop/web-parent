@@ -16,21 +16,21 @@ public class ResponseSample {
 	 */
 	@Test
 	public void responseMsgTest() {
-		ApiResponse<DataTest> mr = new ApiResponse<DataTest>();
-		mr.setCode(0);
-		mr.setDesc("SUCCESS");
-		DataTest dt = new DataTest();
-		dt.setMsgss("data test msg");
-		dt.setName("data test name");
-		dt.setPwdss("123456");
-		mr.setData(dt);
+//		ApiResponse<DataTest> mr = new ApiResponse<DataTest>();
+//		mr.setCode(0);
+//		mr.setDesc("SUCCESS");
+//		DataTest dt = new DataTest();
+//		dt.setMsgss("data test msg");
+//		dt.setName("data test name");
+//		dt.setPwdss("123456");
+//		mr.setData(dt);
+//
+//		String string_ = JSON.toJSONString(mr);
+//
+//		@SuppressWarnings("unchecked")
+//		ApiResponse<DataTest> object = JSON.parseObject(string_, ApiResponse.class);
 
-		String string_ = JSON.toJSONString(mr);
-
-		@SuppressWarnings("unchecked")
-		ApiResponse<DataTest> object = JSON.parseObject(string_, ApiResponse.class);
-
-		System.out.println(string_);
-		System.out.println(object.getDesc());
+//		System.out.println(string_);
+//		System.out.println(object.getDesc());
 	}
 }
