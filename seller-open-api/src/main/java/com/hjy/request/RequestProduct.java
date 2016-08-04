@@ -1,34 +1,24 @@
 package com.hjy.request;
 
-import java.util.List;
-
 import com.hjy.dto.product.ProductInfo;
 
+/**
+ * 
+ * 类: RequestProduct <br>
+ * 描述: 商品请求报文 <br>
+ * 作者: zhy<br>
+ * 时间: 2016年8月4日 上午9:33:45
+ */
 public class RequestProduct extends ApiRequest {
 
-	/**
-	 * 商品总数
-	 */
-	private int total;
-	/**
-	 * 商品集合
-	 */
-	private List<ProductInfo> productInfos;
+	private ProductInfo product;
 
-	public int getTotal() {
-		return total;
+	public ProductInfo getProduct() {
+		return product;
 	}
 
-	public void setTotal(int total) {
-		this.total = total;
-	}
-
-	public List<ProductInfo> getProductInfos() {
-		return productInfos;
-	}
-
-	public void setProductInfos(List<ProductInfo> productInfos) {
-		this.productInfos = productInfos;
+	public void setProduct(ProductInfo product) {
+		this.product = product;
 	}
 
 }

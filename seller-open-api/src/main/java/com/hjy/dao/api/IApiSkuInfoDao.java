@@ -4,6 +4,13 @@ import java.util.List;
 
 import com.hjy.entity.product.PcSkuinfo;
 
+/**
+ * 
+ * 类: IApiSkuInfoDao <br>
+ * 描述: openapi单独使用的sku数据库访问接口 <br>
+ * 作者: zhy<br>
+ * 时间: 2016年8月4日 上午9:19:14
+ */
 public interface IApiSkuInfoDao {
 	/**
 	 * 

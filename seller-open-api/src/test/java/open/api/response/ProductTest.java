@@ -16,7 +16,7 @@ import com.hjy.base.BaseTest;
 import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
 import com.hjy.dto.product.Productdescription;
-import com.hjy.request.RequestProduct;
+import com.hjy.request.RequestProducts;
 import com.hjy.service.product.IApiProductService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -73,7 +73,7 @@ public class ProductTest extends BaseTest {
 		product.setSkuInfoList(skuList);
 		List<ProductInfo> productList = new ArrayList<ProductInfo>();
 		productList.add(product);
-		RequestProduct request = new RequestProduct();
+		RequestProducts request = new RequestProducts();
 		request.setProductInfos(productList);
 		request.setTotal(productList.size());
 		JSONObject obj = (JSONObject) JSON.toJSON(request);

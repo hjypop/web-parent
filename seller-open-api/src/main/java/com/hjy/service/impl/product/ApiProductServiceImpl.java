@@ -14,9 +14,7 @@ import com.hjy.common.DateUtil;
 import com.hjy.dao.api.IApiProductInfoDao;
 import com.hjy.dao.api.IApiSkuInfoDao;
 import com.hjy.dao.product.IPcProductdescriptionDao;
-import com.hjy.dao.product.IPcProductinfoDao;
 import com.hjy.dao.product.IPcProductpicDao;
-import com.hjy.dao.product.IPcSkuinfoDao;
 import com.hjy.dao.system.IScStoreSkunumDao;
 import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
@@ -27,10 +25,18 @@ import com.hjy.entity.product.PcSkuinfo;
 import com.hjy.entity.system.ScStoreSkunum;
 import com.hjy.helper.WebHelper;
 import com.hjy.request.RequestProduct;
-import com.hjy.response.ResponseAddProduct;
+import com.hjy.request.RequestProducts;
+import com.hjy.response.product.ResponseProduct;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.product.IApiProductService;
 
+/**
+ * 
+ * 类: ApiProductServiceImpl <br>
+ * 描述: openapi商品业务处理接口实现类 <br>
+ * 作者: zhy<br>
+ * 时间: 2016年8月4日 上午9:20:07
+ */
 @Service
 public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Integer> implements IApiProductService {
 	public static String ProductHead = "8016";
@@ -46,58 +52,38 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	@Resource
 	private IScStoreSkunumDao scStoreSkunumDao;
 
+	/**
+	 * 
+	 * 方法: addProduct <br>
+	 * 描述: TODO
+	 * 
+	 * @param product
+	 * @return
+	 * @see com.hjy.service.product.IApiProductService#addProduct(java.lang.String)
+	 */
 	@Override
-	public ResponseAddProduct addProduct(String product) {
-		ResponseAddProduct response = new ResponseAddProduct();
-		response.setCode(0);
-		response.setDesc(getInfo(0));
+	public ResponseProduct addProduct(String product) {
+		ResponseProduct response = new ResponseProduct();
 		if (product != null && !"".equals(product)) {
 			try {
 				RequestProduct requestProduct = JSON.toJavaObject(JSON.parseObject(product), RequestProduct.class);
 				if (requestProduct != null) {
-					if (requestProduct.getProductInfos() != null && requestProduct.getProductInfos().size() > 0) {
-						response = verifyProduct(requestProduct.getProductInfos());
+					if (requestProduct.getProduct() != null) {
+						List<ProductInfo> productList = new ArrayList<ProductInfo>();
+						productList.add(requestProduct.getProduct());
+						response = verifyProduct(productList);
 						if (response.getCode() == 0) {
-							WebHelper.getInstance().addLock(10, "openapi-test-addproduct");
-							String productCode = WebHelper.getInstance().genUniqueCode(ProductHead);
-							String sellerCode = "";
-							/**
-							 * 批量添加商品
-							 */
-							List<PcProductinfo> productInfoList = getPcProdcutInfoList(requestProduct.getProductInfos(),
-									productCode, sellerCode);
-							productInfoDao.batchInsert(productInfoList);
-							/**
-							 * 批量添加商品描述
-							 */
-							List<PcProductdescription> pcProductdescriptionList = getPcProductdescriptionList(
-									requestProduct.getProductInfos(), productCode);
-							if (pcProductdescriptionList != null && pcProductdescriptionList.size() > 0) {
-								productdescription.batchInsert(pcProductdescriptionList);
+							// 执行添加商品方法
+							if (addProduct(productList)) {
+								response.setCode(0);
+								response.setDesc(getInfo(0));
+							} else {
+								response.setCode(10);
+								response.setDesc(getInfo(10));
 							}
-							/**
-							 * 批量添加商品图片
-							 */
-							List<PcProductpic> productpicList = getPcProductpicList(requestProduct.getProductInfos(),
-									productCode);
-							if (productpicList != null && productpicList.size() > 0) {
-								pcProductpic.batchInsert(productpicList);
-							}
-							/**
-							 * 批量添加sku
-							 */
-							List<PcSkuinfo> skuInfoList = getPcSkuInfoList(requestProduct.getProductInfos(),
-									productCode, sellerCode);
-							if (skuInfoList != null && skuInfoList.size() > 0) {
-								skuInfoDao.batchInsert(skuInfoList);
-							}
-							/**
-							 * 批量添加库存信息
-							 */
-							List<ScStoreSkunum> storeList = getScStoreSkunumList(skuInfoList);
-							if (storeList != null && storeList.size() > 0) {
-								scStoreSkunumDao.batchInsert(storeList);
-							}
+						} else {
+							response.setCode(10);
+							response.setDesc(getInfo(10));
 						}
 					} else {
 						response.setCode(10);
@@ -113,9 +99,265 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				response.setDesc(getInfo(10));
 			}
 		} else {
-			response.setCode(1);
+			response.setCode(10);
+			response.setDesc(getInfo(10));
 		}
 		return response;
+	}
+
+	/**
+	 * 
+	 * 方法: editProduct <br>
+	 * 描述: TODO
+	 * 
+	 * @param product
+	 * @return
+	 * @see com.hjy.service.product.IApiProductService#editProduct(java.lang.String)
+	 */
+	@Override
+	public ResponseProduct editProduct(String product) {
+		ResponseProduct response = new ResponseProduct();
+		try {
+			if (product != null && !"".equals(product)) {
+				RequestProduct requestProduct = JSON.toJavaObject(JSON.parseObject(product), RequestProduct.class);
+				if (requestProduct != null) {
+					if (requestProduct.getProduct() != null) {
+						List<ProductInfo> productList = new ArrayList<ProductInfo>();
+						productList.add(requestProduct.getProduct());
+						// 执行编辑商品
+						if (editProduct(productList)) {
+							response.setCode(0);
+							response.setDesc(getInfo(0));
+						} else {
+							response.setCode(10);
+							response.setDesc(getInfo(10));
+						}
+					} else {
+						response.setCode(10);
+						response.setDesc(getInfo(10));
+					}
+				} else {
+					response.setCode(10);
+					response.setDesc(getInfo(10));
+				}
+			} else {
+				response.setCode(10);
+				response.setDesc(getInfo(10));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+
+	/**
+	 * 
+	 * 方法: syncProductList <br>
+	 * 描述: TODO
+	 * 
+	 * @param products
+	 * @return
+	 * @see com.hjy.service.product.IApiProductService#syncProductList(java.lang.String)
+	 */
+	@Override
+	public ResponseProduct syncProductList(String products) {
+		ResponseProduct response = new ResponseProduct();
+		if (products != null && !"".equals(products)) {
+			try {
+				RequestProducts requestProduct = JSON.toJavaObject(JSON.parseObject(products), RequestProducts.class);
+				if (requestProduct != null) {
+					if (requestProduct.getProductInfos() != null && requestProduct.getProductInfos().size() > 0) {
+						response = verifyProduct(requestProduct.getProductInfos());
+						if (response.getCode() == 0) {
+							/**
+							 * 遍历商品集合，根据操作类型区分是添加还是编辑，根据类型进行不同的操作
+							 */
+							List<ProductInfo> addList = new ArrayList<ProductInfo>();
+							List<ProductInfo> editList = new ArrayList<ProductInfo>();
+							for (int i = 0; i < requestProduct.getProductInfos().size(); i++) {
+								ProductInfo info = requestProduct.getProductInfos().get(i);
+								if (info.getOperate() == 0) {
+									addList.add(info);
+								} else if (info.getOperate() == 1) {
+									editList.add(info);
+								}
+								// 执行添加操作
+								addProduct(addList);
+								// 执行编辑操作
+								editProduct(addList);
+								// 返回处理结果
+								response.setCode(0);
+								response.setDesc(getInfo(0));
+							}
+						} else {
+							response.setCode(10);
+							response.setDesc(getInfo(10));
+						}
+					} else {
+						response.setCode(10);
+						response.setDesc(getInfo(10));
+					}
+				} else {
+					response.setCode(10);
+					response.setDesc(getInfo(10));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				response.setCode(10);
+				response.setDesc(getInfo(10));
+			}
+		} else {
+			response.setCode(10);
+			response.setDesc(getInfo(10));
+		}
+		return response;
+	}
+
+	/**
+	 * 
+	 * 方法: addProduct <br>
+	 * 描述: 添加商品公共方法 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月4日 下午2:07:17
+	 * 
+	 * @param producsts
+	 * @return
+	 */
+	private boolean addProduct(List<ProductInfo> producsts) {
+		boolean flag = false;
+		try {
+			WebHelper.getInstance().addLock(10, "openapi-test-addproduct");
+			String productCode = WebHelper.getInstance().genUniqueCode(ProductHead);
+			String sellerCode = "";
+			/**
+			 * 批量添加商品
+			 */
+			List<PcProductinfo> productInfoList = getPcProdcutInfoList(producsts, productCode, sellerCode);
+			productInfoDao.batchInsert(productInfoList);
+			/**
+			 * 批量添加商品描述
+			 */
+			List<PcProductdescription> pcProductdescriptionList = getPcProductdescriptionList(producsts, productCode);
+			if (pcProductdescriptionList != null && pcProductdescriptionList.size() > 0) {
+				productdescription.batchInsert(pcProductdescriptionList);
+			}
+			/**
+			 * 批量添加商品图片
+			 */
+			List<PcProductpic> productpicList = getPcProductpicList(producsts, productCode);
+			if (productpicList != null && productpicList.size() > 0) {
+				pcProductpic.batchInsert(productpicList);
+			}
+			/**
+			 * 批量添加sku
+			 */
+			List<PcSkuinfo> skuInfoList = getPcSkuInfoList(producsts, productCode, sellerCode);
+			if (skuInfoList != null && skuInfoList.size() > 0) {
+				skuInfoDao.batchInsert(skuInfoList);
+			}
+			/**
+			 * 批量添加库存信息
+			 */
+			List<ScStoreSkunum> storeList = getScStoreSkunumList(skuInfoList);
+			if (storeList != null && storeList.size() > 0) {
+				scStoreSkunumDao.batchInsert(storeList);
+			}
+			flag = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return flag;
+	}
+
+	/**
+	 * 
+	 * 方法: editProduct <br>
+	 * 描述: 编辑商品公共方法 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月4日 下午2:08:03
+	 * 
+	 * @param producsts
+	 * @return
+	 */
+	private boolean editProduct(List<ProductInfo> producsts) {
+		boolean flag = false;
+		try {
+			String sellerCode = "";
+			List<PcProductinfo> productInfoList = getPcProdcutInfoList(producsts, null, sellerCode);
+			/**
+			 * 商品描述集合
+			 */
+			List<PcProductdescription> productDescriptionList = new ArrayList<PcProductdescription>();
+			/**
+			 * 商品图片集合
+			 */
+			List<PcProductpic> productPicList = new ArrayList<PcProductpic>();
+			/**
+			 * 商品sku集合
+			 */
+			List<PcSkuinfo> skuInfoList = new ArrayList<PcSkuinfo>();
+			/**
+			 * 批量编辑商品
+			 */
+			if (productInfoList != null && productInfoList.size() > 0) {
+				for (PcProductinfo info : productInfoList) {
+					productInfoDao.updateProductByProductCodeOld(info);
+					/**
+					 * 获取商品描述
+					 */
+					List<PcProductdescription> descriptions = getPcProductdescriptionList(producsts,
+							info.getProductCode());
+					productDescriptionList.addAll(descriptions);
+					/**
+					 * 获取商品图片
+					 */
+					List<PcProductpic> pics = getPcProductpicList(producsts, info.getProductCode());
+					productPicList.addAll(pics);
+					/**
+					 * 获取sku
+					 */
+					List<PcSkuinfo> skus = getPcSkuInfoList(producsts, info.getProductCode(), sellerCode);
+					skuInfoList.addAll(skus);
+				}
+			}
+			/**
+			 * sku库存集合
+			 */
+			List<ScStoreSkunum> skuStoreList = getScStoreSkunumList(skuInfoList);
+			/**
+			 * 批量编辑商品描述
+			 */
+			if (productDescriptionList.size() > 0) {
+				for (PcProductdescription desc : productDescriptionList) {
+					productdescription.updateSelective(desc);
+				}
+			}
+			/**
+			 * 批量编辑商品图片
+			 */
+			if (productPicList.size() > 0) {
+				for (PcProductpic pic : productPicList) {
+					pcProductpic.updateSelective(pic);
+				}
+			}
+			/**
+			 * 批量编辑sku
+			 */
+			for (PcSkuinfo pcSkuinfo : skuInfoList) {
+				skuInfoDao.updateSkuBySkuCodeOld(pcSkuinfo);
+			}
+			/**
+			 * 批量编辑库存信息
+			 */
+			for (ScStoreSkunum store : skuStoreList) {
+				scStoreSkunumDao.updateSelective(store);
+			}
+			flag = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return flag;
 	}
 
 	/**
@@ -128,8 +370,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @param product
 	 * @return
 	 */
-	public ResponseAddProduct verifyProduct(List<ProductInfo> productList) {
-		ResponseAddProduct response = new ResponseAddProduct();
+	private ResponseProduct verifyProduct(List<ProductInfo> productList) {
+		ResponseProduct response = new ResponseProduct();
 		for (int i = 0; i < productList.size(); i++) {
 			ProductInfo product = productList.get(i);
 			if (product == null) {
@@ -147,7 +389,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				response.setDesc(getInfo(13));
 				break;
 			} else {
-				// 验证商品编号是否存在
+				// 验证商品编号是否存在 暂时不考虑
 			}
 			if (product.getSkuInfoList() == null || product.getSkuInfoList().size() == 0) {
 				response.setCode(14);
@@ -257,6 +499,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				if (product.getDescription() != null) {
 					PcProductdescription description = new PcProductdescription();
 					description.setUid(WebHelper.getInstance().genUuid());
+					description.setProductCode(productCode);
 					description.setDescriptionInfo(product.getDescription().getDescriptionInfo());
 					description.setDescriptionPic(product.getDescription().getDescriptionPic());
 					list.add(description);
@@ -339,6 +582,16 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		return list;
 	}
 
+	/**
+	 * 
+	 * 方法: getScStoreSkunumList <br>
+	 * 描述: 获取sku库存列表集合 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月4日 上午9:47:54
+	 * 
+	 * @param infos
+	 * @return
+	 */
 	private static List<ScStoreSkunum> getScStoreSkunumList(List<PcSkuinfo> infos) {
 		List<ScStoreSkunum> list = new ArrayList<ScStoreSkunum>();
 		if (infos != null && infos.size() > 0) {

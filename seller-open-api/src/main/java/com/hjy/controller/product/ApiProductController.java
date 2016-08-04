@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hjy.response.ResponseAddProduct;
+import com.hjy.response.product.ResponseProduct;
 import com.hjy.service.product.IApiProductService;
 
 @Controller
@@ -22,7 +22,7 @@ public class ApiProductController {
 
 	@RequestMapping("addProduct")
 	@ResponseBody
-	public ResponseAddProduct addProduct(String request) {
+	public ResponseProduct addProduct(String request) {
 		return service.addProduct(request);
 	}
 }

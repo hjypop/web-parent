@@ -7,7 +7,7 @@ import com.hjy.entity.product.PcProductinfo;
 /**
  * 
  * 类: IProductDao <br>
- * 描述: openapi商品专用数据库访问接口 <br>
+ * 描述: openapi单独使用的商品数据库访问接口 <br>
  * 作者: zhy<br>
  * 时间: 2016年8月4日 上午7:07:22
  */

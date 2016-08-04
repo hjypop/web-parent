@@ -87,6 +87,19 @@ public class ProductInfo implements IApiRequest {
 	 */
 	private String expiryUnit = "";
 
+	/**
+	 * 操作类型 0为添加，1为编辑
+	 */
+	private Integer operate;
+
+	public Integer getOperate() {
+		return operate;
+	}
+
+	public void setOperate(Integer operate) {
+		this.operate = operate;
+	}
+
 	public int getExpiryDate() {
 		return expiryDate;
 	}
