@@ -77,7 +77,7 @@ public class ProductTest extends BaseTest {
 		request.setProductInfos(productList);
 		request.setTotal(productList.size());
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
-		 System.out.println(obj.toJSONString());
-//		service.addProduct(obj.toJSONString());
+		System.out.println(obj.toJSONString());
+		service.addProduct(obj.toJSONString());
 	}
 }
