@@ -60,22 +60,55 @@
 	<update id="updateProductByProductCodeOld" parameterType="com.hjy.entity.product.PcProductinfo">
 		update productcenter.pc_productinfo
 		<set>
-			product_name = #{productName,jdbcType=VARCHAR},
-			product_shortname = #{productShortname,jdbcType=VARCHAR},
-			product_weight = #{productWeight,jdbcType=DECIMAL},
-			cost_price = #{costPrice,jdbcType=DECIMAL},
-			market_price = #{marketPrice,jdbcType=DECIMAL},
-			mainpic_url = #{mainpicUrl,jdbcType=VARCHAR},
-			product_volume_item =#{productVolumeItem,jdbcType=VARCHAR},
-			product_volume = #{productVolume,jdbcType=DECIMAL},
-			product_adv = #{productAdv,jdbcType=LONGVARCHAR},
-			labels = #{labels,jdbcType=VARCHAR},
-			adpic_url = #{adpicUrl,jdbcType=VARCHAR},
-			expiry_date = #{expiryDate,jdbcType=INTEGER},
-			expiry_unit = #{expiryUnit,jdbcType=VARCHAR},
-			update_time = #{updateTime,jdbcType=CHAR},
-			min_sell_price = #{minSellPrice,jdbcType=DECIMAL},
-			max_sell_price = #{maxSellPrice,jdbcType=DECIMAL},
+			<if test="productName != null and productName != '' ">
+				product_name = #{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="productShortname != null and productShortname != '' ">
+				product_shortname = #{productShortname,jdbcType=VARCHAR},
+			</if>
+			<if test="productWeight != null ">
+				product_weight = #{productWeight,jdbcType=DECIMAL},
+			</if>
+			<if test="costPrice != null">
+				cost_price = #{costPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="marketPrice != null">
+				market_price = #{marketPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="mainpicUrl != null and mainpicUrl != '' ">
+				mainpic_url = #{mainpicUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="productVolumeItem != null and productVolumeItem != '' ">
+				product_volume_item
+				=#{productVolumeItem,jdbcType=VARCHAR},
+			</if>
+			<if test="productVolume != null ">
+				product_volume = #{productVolume,jdbcType=DECIMAL},
+			</if>
+			<if test="productAdv != null and productAdv != '' ">
+				product_adv = #{productAdv,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="labels != null and labels != '' ">
+				labels = #{labels,jdbcType=VARCHAR},
+			</if>
+			<if test="adpicUrl != null and adpicUrl != '' ">
+				adpic_url = #{adpicUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="expiryDate != null ">
+				expiry_date = #{expiryDate,jdbcType=INTEGER},
+			</if>
+			<if test="expiryUnit != null and expiryUnit != '' ">
+				expiry_unit = #{expiryUnit,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null and updateTime != '' ">
+				update_time = #{updateTime,jdbcType=CHAR},
+			</if>
+			<if test="minSellPrice != null ">
+				min_sell_price = #{minSellPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="maxSellPrice != null">
+				max_sell_price = #{maxSellPrice,jdbcType=DECIMAL},
+			</if>
 		</set>
 		where product_code_old = #{productCodeOld,jdbcType=VARCHAR}
 	</update>

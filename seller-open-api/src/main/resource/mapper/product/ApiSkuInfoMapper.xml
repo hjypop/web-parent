@@ -48,19 +48,49 @@
 	<update id="updateSkuInfoBySkuCodeOld" parameterType="com.hjy.entity.product.PcSkuinfo">
 		UPDATE productcenter.pc_skuinfo
 		<set>
-			sku_name=#{skuName,jdbcType=VARCHAR},
-			sku_picurl=#{skuPicurl,jdbcType=VARCHAR},
-			sku_adv=#{skuAdv,jdbcType=VARCHAR},
-			sell_price=#{sellPrice,jdbcType=DECIMAL},
-			market_price=#{marketPrice,jdbcType=DECIMAL},
-			cost_price=#{costPrice,jdbcType=DECIMAL},
-			security_stock_num=#{securityStockNum,jdbcType=DECIMAL},
-			stock_num=#{stockNum,jdbcType=DECIMAL},
-			qrcode_link=#{qrcodeLink,jdbcType=VARCHAR},
+			<if test="skuName != null and skuName != '' ">
+				sku_name=#{skuName,jdbcType=VARCHAR},
+			</if>
+			<if test="skuPicurl != null and skuPicurl != '' ">
+				sku_picurl=#{skuPicurl,jdbcType=VARCHAR},
+			</if>
+			<if test="skuAdv != null and skuAdv != '' ">
+				sku_adv=#{skuAdv,jdbcType=VARCHAR},
+			</if>
+			<if test="sellPrice != null">
+				sell_price=#{sellPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="marketPrice != null">
+				market_price=#{marketPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="costPrice != null">
+				cost_price=#{costPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="securityStockNum != null">
+				security_stock_num=#{securityStockNum,jdbcType=DECIMAL},
+			</if>
+			<if test="stockNum != null">
+				stock_num=#{stockNum,jdbcType=DECIMAL},
+			</if>
+			<if test="qrcodeLink != null and qrcodeLink != '' ">
+				qrcode_link=#{qrcodeLink,jdbcType=VARCHAR},
+			</if>
 			mini_order=#{miniOrder,jdbcType=INTEGER}
 		</set>
 		<where>
 			sku_code_old = #{skuCodeOld,jdbcType=VARCHAR}
 		</where>
 	</update>
+	<!-- 根据外部商品编号查询商品sku列表 2016-08-04 zhy -->
+	<select id="findSkuInfoListByProductCodeOld" parameterType="list"
+		resultType="com.hjy.entity.product.PcSkuinfo">
+		select sku_code,stock_num from productcenter.pc_skuinfo
+		<where>
+			product_code_old in
+			<foreach open="(" close=")" item="item" index="index"
+				collection="list" separator=",">
+				#{item}
+			</foreach>
+		</where>
+	</select>
 </mapper>

@@ -5,9 +5,14 @@ import java.math.BigDecimal;
 public class PcSkuInfo {
 
 	/**
-	 * sku编码
+	 * 外部sku编码
 	 */
 	private String skuCode;
+
+	/**
+	 * 外部商品编号
+	 */
+	private String productCode;
 	/**
 	 * 销售价
 	 */
@@ -15,7 +20,7 @@ public class PcSkuInfo {
 	/**
 	 * 库存数
 	 */
-	private long stockNum = 0;
+	private long stockNum;
 	/**
 	 * 商品的Sku的图片信息
 	 */
@@ -27,21 +32,21 @@ public class PcSkuInfo {
 	/**
 	 * 广告语
 	 */
-	private String skuAdv = "";
+	private String skuAdv;
 	/**
 	 * 最小购买数
 	 */
-	private Integer miniOrder = 1;
+	private Integer miniOrder;
 
 	/**
 	 * 二维码图片链接
 	 */
-	private String qrcodeLink = "";
+	private String qrcodeLink;
 
 	/**
 	 * 安全库存
 	 */
-	private long securityStockNum = 0;
+	private long securityStockNum;
 
 	public long getSecurityStockNum() {
 		return securityStockNum;
@@ -113,6 +118,14 @@ public class PcSkuInfo {
 
 	public void setSkuCode(String skuCode) {
 		this.skuCode = skuCode;
+	}
+
+	public String getProductCode() {
+		return productCode;
+	}
+
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
 	}
 
 }

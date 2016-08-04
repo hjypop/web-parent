@@ -1,7 +1,6 @@
 package com.hjy.dto.product;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.hjy.base.IApiRequest;
@@ -10,82 +9,82 @@ public class ProductInfo implements IApiRequest {
 	/**
 	 * 商品编码
 	 */
-	private String productCode = "";
+	private String productCode;
 	/**
 	 * 商品名称
 	 */
-	private String productName = "";
+	private String productName;
 	/**
 	 * 商品简称
 	 */
-	private String productShortname = "";
+	private String productShortname;
 	/**
 	 * 卖家编号
 	 */
-	private String sellerCode = "";
+	private String sellerCode;
 	/**
 	 * 品牌编号
 	 */
-	private String brandCode = "";
+	private String brandCode;
 	/**
 	 * 商品重量
 	 */
-	private BigDecimal productWeight = new BigDecimal(0.00);
+	private BigDecimal productWeight;
 	/**
 	 * 成本价
 	 */
-	private BigDecimal costPrice = new BigDecimal(0.00);
+	private BigDecimal costPrice;
 	/**
 	 * 市场价
 	 */
-	private BigDecimal marketPrice = new BigDecimal(0.00);
+	private BigDecimal marketPrice;
 	/**
 	 * 主图的Url
 	 */
-	private String mainPicUrl = "";
+	private String mainPicUrl;
 	/**
 	 * 标签值 ，用逗号分开
 	 */
-	private String labels = "";
+	private String labels;
 	/**
 	 * 长 宽 高 ，用逗号隔开
 	 */
-	private String productVolumeItem = "";
+	private String productVolumeItem;
 
 	/**
 	 * 商品描述信息
 	 */
-	private Productdescription description = new Productdescription();
+	private Productdescription description;
 	/**
 	 * 商品图片信息
 	 */
-	private List<String> pcPicList = new ArrayList<String>();
+	private List<String> pcPicList;
 	/**
 	 * 商品体积
 	 */
-	private BigDecimal productVolume = new BigDecimal(0.00);
+	private BigDecimal productVolume;
 	/**
 	 * 商品的Sku列表的属性信息
 	 */
-	private List<PcSkuInfo> skuInfoList = new ArrayList<PcSkuInfo>();
+	private List<PcSkuInfo> skuInfoList;
 
 	/**
 	 * 广告图的Url
 	 */
-	private String adpicUrl = "";
+	private String adpicUrl;
 	/**
 	 * 商品广告
 	 */
-	private String productAdv = "";
+	private String productAdv;
 	/**
 	 * 保质期
 	 */
-	private int expiryDate = 0;
+	private int expiryDate;
 
 	/**
 	 * 保质期单位 4497471600290001:天，4497471600290002:月,4497471600290003:年
 	 */
-	private String expiryUnit = "";
+	private String expiryUnit;
 
 	/**
 	 * 操作类型 0为添加，1为编辑
