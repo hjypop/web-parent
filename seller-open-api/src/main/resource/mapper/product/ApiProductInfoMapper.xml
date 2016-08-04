@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.api.IApiProductDao">
+	<insert id="batchInsert" parameterType="list">
+		INSERT INTO productcenter.pc_productinfo (
+		uid,
+		product_code,
+		product_code_old,
+		product_code_copy,
+		product_name,
+		product_shortname,
+		seller_code,
+		small_seller_code,
+		product_weight,
+		cost_price,
+		market_price,
+		mainpic_url,
+		product_volume_item,
+		product_volume,
+		product_adv,
+		adpic_url,
+		expiry_date,
+		expiry_unit,
+		create_time,
+		update_time,
+		labels,
+		min_sell_price,
+		max_sell_price
+		)
+		VALUES
+		<foreach item="item" index="index" collection="list"
+			separator=",">
+			(
+			#{item.uid,jdbcType=VARCHAR},
+			#{item.productCode,jdbcType=VARCHAR},
+			#{item.productCodeOld,jdbcType=VARCHAR},
+			#{item.productCodeCopy,jdbcType=VARCHAR},
+			#{item.productName,jdbcType=VARCHAR},
+			#{item.productShortname,jdbcType=VARCHAR},
+			#{item.sellerCode,jdbcType=VARCHAR},
+			#{item.smallSellerCode,jdbcType=VARCHAR},
+			#{item.productWeight,jdbcType=DECIMAL},
+			#{item.costPrice,jdbcType=VARCHAR},
+			#{item.marketPrice,jdbcType=DECIMAL},
+			#{item.mainpicUrl,jdbcType=VARCHAR},
+			#{item.productVolumeItem,jdbcType=VARCHAR},
+			#{item.productVolume,jdbcType=DECIMAL},
+			#{item.productAdv,jdbcType=VARCHAR},
+			#{item.adpicUrl,jdbcType=VARCHAR},
+			#{item.expiryDate,jdbcType=VARCHAR},
+			#{item.expiryUnit,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=VARCHAR},
+			#{item.updateTime,jdbcType=VARCHAR},
+			#{item.labels,jdbcType=VARCHAR},
+			#{item.minSellPrice,jdbcType=DECIMAL},
+			#{item.maxSellPrice,jdbcType=DECIMAL}
+			)
+		</foreach>
+	</insert>
+	<update id="updateProductByProductCodeOld" parameterType="com.hjy.entity.product.PcProductinfo">
+		update productcenter.pc_productinfo
+		<set>
+			product_name = #{productName,jdbcType=VARCHAR},
+			product_shortname = #{productShortname,jdbcType=VARCHAR},
+			product_weight = #{productWeight,jdbcType=DECIMAL},
+			cost_price = #{costPrice,jdbcType=DECIMAL},
+			market_price = #{marketPrice,jdbcType=DECIMAL},
+			mainpic_url = #{mainpicUrl,jdbcType=VARCHAR},
+			product_volume_item =#{productVolumeItem,jdbcType=VARCHAR},
+			product_volume = #{productVolume,jdbcType=DECIMAL},
+			product_adv = #{productAdv,jdbcType=LONGVARCHAR},
+			labels = #{labels,jdbcType=VARCHAR},
+			adpic_url = #{adpicUrl,jdbcType=VARCHAR},
+			expiry_date = #{expiryDate,jdbcType=INTEGER},
+			expiry_unit = #{expiryUnit,jdbcType=VARCHAR},
+			update_time = #{updateTime,jdbcType=CHAR},
+			min_sell_price = #{minSellPrice,jdbcType=DECIMAL},
+			max_sell_price = #{maxSellPrice,jdbcType=DECIMAL},
+		</set>
+		where product_code_old = #{productCodeOld,jdbcType=VARCHAR}
+	</update>
+</mapper>

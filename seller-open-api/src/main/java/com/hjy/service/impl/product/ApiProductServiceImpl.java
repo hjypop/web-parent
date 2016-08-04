@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.hjy.common.DateUtil;
+import com.hjy.dao.api.IApiProductInfoDao;
+import com.hjy.dao.api.IApiSkuInfoDao;
 import com.hjy.dao.product.IPcProductdescriptionDao;
 import com.hjy.dao.product.IPcProductinfoDao;
 import com.hjy.dao.product.IPcProductpicDao;
@@ -34,13 +36,13 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	public static String ProductHead = "8016";
 	public static String SKUHead = "8019";
 	@Resource
-	private IPcProductinfoDao productInfoDao;
+	private IApiProductInfoDao productInfoDao;
 	@Resource
 	private IPcProductdescriptionDao productdescription;
 	@Resource
 	private IPcProductpicDao pcProductpic;
 	@Resource
-	private IPcSkuinfoDao skuInfoDao;
+	private IApiSkuInfoDao skuInfoDao;
 	@Resource
 	private IScStoreSkunumDao scStoreSkunumDao;
 
