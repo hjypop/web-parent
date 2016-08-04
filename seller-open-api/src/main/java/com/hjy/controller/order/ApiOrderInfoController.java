@@ -6,7 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.request.data.OrderInfoRequest;
 import com.hjy.service.order.IApiOcOrderInfoService;
 
 
@@ -37,6 +39,11 @@ public class ApiOrderInfoController {
 	@RequestMapping(value = "list", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject getOrderInfo(String json){
+//		OrderInfoRequest  ooo = new OrderInfoRequest();
+//		ooo.setSellerCode("SF03150617100010");
+//		json = JSON.toJSONString(ooo);
+		
+		
 		return apiOrderInfoService.getOrderInfoByJson(json); 
 	}
 	

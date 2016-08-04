@@ -2,8 +2,6 @@ package com.hjy.response.data;
 
 import java.math.BigDecimal;
 
-import com.hjy.base.IApiResponse;
-import com.hjy.response.ApiResponse;
 
 /**
  * @descriptions 订单查询所响应的实体类
@@ -12,7 +10,7 @@ import com.hjy.response.ApiResponse;
  * @author Yangcl
  * @version 1.0.1
  */
-public class OrderInfoResponse extends ApiResponse{
+public class OrderInfoResponse {
 	private String orderCode;
 	private BigDecimal productMoney;
 	private BigDecimal transportMoney;

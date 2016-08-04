@@ -1,5 +1,7 @@
 package com.hjy.service.impl.order;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,7 +12,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.request.data.OrderInfoRequest;
-import com.hjy.response.ApiResponse;
 import com.hjy.response.data.OrderInfoResponse;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.order.IApiOcOrderInfoService;
@@ -33,25 +34,26 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	@Override
 	public JSONObject getOrderInfoByJson(String json) {
 		JSONObject result = new JSONObject();
-		OrderInfoResponse info = new OrderInfoResponse(); 
-		
 		// 解析请求数据
 		OrderInfoRequest request = JSON.parseObject(json, OrderInfoRequest.class);
 		if(StringUtils.isBlank(request.getSellerCode())){
-			info.setCode(14);
-			info.setDesc("请求参数seller code不得为空"); 
-			result.put("error-response", info);
+			result.put("code", 14);
+			result.put("desc", "请求参数seller code不得为空");
 			return result;
 		}
+		String sellerCode = request.getSellerCode();
+		// TODO 关联查询商家code是否存在
+//		if(count == 0){
+//			result.put("code", 3);
+//			result.put("desc", "错误的商家编号，无API访问权限");
+//			return result;
+//		}
 		
-		
-		
-		
-		
-		
-		
-		
-		return null;
+		List<OrderInfoResponse> list = dao.getOpenApiOrderinfoList(request);
+		result.put("code", 0);
+		result.put("desc", "请求成功");
+		result.put("data", list);
+		return result; 
 	} 
 	
 }
