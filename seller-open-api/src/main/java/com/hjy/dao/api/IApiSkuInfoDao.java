@@ -34,5 +34,17 @@ public interface IApiSkuInfoDao {
 	 * @param entity
 	 * @return
 	 */
-	int updateSkuBySkuCodeOld(PcSkuinfo entity);
+	int updateSkuInfoBySkuCodeOld(PcSkuinfo entity);
+
+	/**
+	 * 
+	 * 方法: findSkuInfoListByProductCodeOld <br>
+	 * 描述: 根据外部商品编号查询sku列表 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月4日 下午4:25:03
+	 * 
+	 * @param productCodeOlds
+	 * @return
+	 */
+	List<PcSkuinfo> findSkuInfoListByProductCodeOld(List<String> productCodeOlds);
 }

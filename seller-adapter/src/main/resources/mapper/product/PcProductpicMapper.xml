@@ -123,6 +123,15 @@
 			)
 		</foreach>
 	</insert>
+	<update id="updateSelective" parameterType="com.hjy.entity.product.PcProductpic">
+		UPDATE productcenter.pc_productpic
+		<set>
+			pic_url = #{picUrl,jdbcType=VARCHAR}
+		</set>
+		<where>
+			product_code = #{productCode,jdbcType=VARCHAR}
+		</where>
+	</update>
 </mapper>
 
 

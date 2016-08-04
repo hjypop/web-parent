@@ -17,6 +17,7 @@ import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
 import com.hjy.dto.product.Productdescription;
 import com.hjy.request.RequestProducts;
+import com.hjy.response.product.ResponseProduct;
 import com.hjy.service.product.IApiProductService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -39,6 +40,7 @@ public class ProductTest extends BaseTest {
 		product.setProductVolumeItem("10,10,10");
 		product.setProductVolume(BigDecimal.ONE);
 		product.setBrandCode("10002");
+		product.setOperate(0);
 		/**
 		 * 描述
 		 */
@@ -78,6 +80,7 @@ public class ProductTest extends BaseTest {
 		request.setTotal(productList.size());
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-		service.addProduct(obj.toJSONString());
+		ResponseProduct response = service.syncProductList(obj.toJSONString());
+		System.out.println(JSON.toJSON(response));
 	}
 }

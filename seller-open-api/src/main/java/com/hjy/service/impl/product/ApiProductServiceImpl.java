@@ -216,6 +216,128 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 
 	/**
 	 * 
+	 * 方法: syncProductPrice <br>
+	 * 描述: TODO
+	 * 
+	 * @param products
+	 *            要修改价格的product列表
+	 * @return
+	 * @see com.hjy.service.product.IApiProductService#syncProductPrice(java.lang.String)
+	 */
+	@Override
+	public ResponseProduct syncProductPrice(String products) {
+		ResponseProduct response = new ResponseProduct();
+		try {
+			if (products != null && !"".equals(products)) {
+				RequestProducts requestProducts = JSON.toJavaObject(JSON.parseObject(products), RequestProducts.class);
+				if (requestProducts != null) {
+					List<ProductInfo> productList = requestProducts.getProductInfos();
+					if (productList != null && productList.size() > 0) {
+						String sellerCode = "";
+						/**
+						 * 编辑商品的最小售价和最大售价
+						 */
+						List<PcProductinfo> productInfos = getPcProdcutInfoList(productList, null, sellerCode);
+						if (productInfos != null && productInfos.size() > 0) {
+							for (PcProductinfo pcProductinfo : productInfos) {
+								productInfoDao.updateProductByProductCodeOld(pcProductinfo);
+							}
+						}
+						/**
+						 * 编辑sku的售价
+						 */
+						List<PcSkuinfo> skuInfos = getPcSkuInfoList(productList, null, sellerCode);
+						if (skuInfos != null && skuInfos.size() > 0) {
+							for (PcSkuinfo pcSkuinfo : skuInfos) {
+								skuInfoDao.updateSkuInfoBySkuCodeOld(pcSkuinfo);
+							}
+						}
+						response.setCode(0);
+						response.setDesc(getInfo(0));
+					} else {
+						response.setCode(10);
+						response.setDesc(getInfo(10));
+					}
+				} else {
+					response.setCode(10);
+					response.setDesc(getInfo(10));
+				}
+			} else {
+				response.setCode(10);
+				response.setDesc(getInfo(10));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setCode(10);
+			response.setDesc(getInfo(10));
+		}
+		return response;
+	}
+
+	/**
+	 * 
+	 * 方法: syncSkuStore <br>
+	 * 描述: TODO
+	 * 
+	 * @param products
+	 * @return
+	 * @see com.hjy.service.product.IApiProductService#syncSkuStore(java.lang.String)
+	 */
+	@Override
+	public ResponseProduct syncSkuStore(String products) {
+		ResponseProduct response = new ResponseProduct();
+		try {
+			RequestProducts requestProducts = JSON.toJavaObject(JSON.parseObject(products), RequestProducts.class);
+			if (requestProducts != null) {
+				List<ProductInfo> productList = requestProducts.getProductInfos();
+				if (productList != null && productList.size() > 0) {
+					String sellerCode = "";
+					List<String> productCodes = new ArrayList<String>();
+					List<PcSkuInfo> skuInfos = new ArrayList<PcSkuInfo>();
+					for (ProductInfo info : productList) {
+						productCodes.add(info.getProductCode());
+						skuInfos.addAll(info.getSkuInfoList());
+					}
+					/**
+					 * 修改pc_skuinfo表中的库存信息
+					 */
+					for (PcSkuInfo info : skuInfos) {
+						PcSkuinfo sku = new PcSkuinfo();
+						sku.setSkuCodeOld(info.getSkuCode());
+						sku.setStockNum(info.getStockNum());
+						skuInfoDao.updateSkuInfoBySkuCodeOld(sku);
+					}
+					/**
+					 * 根据外部订单编号查询pc_skuinfo数据
+					 * 将pc_skuinfo已修改库存同步到sc_store_skunum的库存信息
+					 */
+					List<PcSkuinfo> skuinfoList = skuInfoDao.findSkuInfoListByProductCodeOld(productCodes);
+					if (skuinfoList != null && skuinfoList.size() > 0) {
+						for (PcSkuinfo sku : skuinfoList) {
+							ScStoreSkunum skunum = new ScStoreSkunum();
+							skunum.setSkuCode(sku.getSkuCode());
+							skunum.setStockNum(sku.getStockNum());
+							scStoreSkunumDao.updateSelectiveBySkuCode(skunum);
+						}
+					}
+				} else {
+					response.setCode(10);
+					response.setDesc(getInfo(10));
+				}
+			} else {
+				response.setCode(10);
+				response.setDesc(getInfo(10));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setCode(10);
+			response.setDesc(getInfo(10));
+		}
+		return response;
+	}
+
+	/**
+	 * 
 	 * 方法: addProduct <br>
 	 * 描述: 添加商品公共方法 <br>
 	 * 作者: zhy<br>
@@ -345,7 +467,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			 * 批量编辑sku
 			 */
 			for (PcSkuinfo pcSkuinfo : skuInfoList) {
-				skuInfoDao.updateSkuBySkuCodeOld(pcSkuinfo);
+				skuInfoDao.updateSkuInfoBySkuCodeOld(pcSkuinfo);
 			}
 			/**
 			 * 批量编辑库存信息

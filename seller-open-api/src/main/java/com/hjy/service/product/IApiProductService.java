@@ -47,4 +47,28 @@ public interface IApiProductService {
 	 * @return
 	 */
 	ResponseProduct syncProductList(String products);
+
+	/**
+	 * 
+	 * 方法: syncProductPrice <br>
+	 * 描述: 同步商品sku价格 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月4日 下午2:42:59
+	 * 
+	 * @param products
+	 * @return
+	 */
+	ResponseProduct syncProductPrice(String products);
+
+	/**
+	 * 
+	 * 方法: syncSkuStore <br>
+	 * 描述: 同步商品sku库存 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月4日 下午2:42:29
+	 * 
+	 * @param products
+	 * @return
+	 */
+	ResponseProduct syncSkuStore(String products);
 }

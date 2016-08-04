@@ -24,5 +24,17 @@ public interface IScStoreSkunumDao extends BaseDao<ScStoreSkunum, Integer> {
 	 */
 	ScStoreSkunum findScStoreSkunumByParams(ScStoreSkunum param);
 
-	int updateSelectiveByUuid(ScStoreSkunum sssModel); 
+	int updateSelectiveByUuid(ScStoreSkunum sssModel);
+
+	/**
+	 * 
+	 * 方法: updateSelectiveBySkuCode <br>
+	 * 描述: 根据sku编码修改库存 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月4日 下午4:23:57
+	 * 
+	 * @param sssModel
+	 * @return
+	 */
+	int updateSelectiveBySkuCode(ScStoreSkunum sssModel);
 }

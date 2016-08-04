@@ -76,8 +76,8 @@
 		from
 		productcenter.pc_productdescription
 		where
-		product_code = #{productCode ,
-		jdbcType=VARCHAR}
+		product_code =
+		#{productCode,jdbcType=VARCHAR}
 	</delete>
 	<insert id="batchInsert" parameterType="list">
 		INSERT INTO productcenter.pc_productdescription (
@@ -99,6 +99,24 @@
 			)
 		</foreach>
 	</insert>
+	<update id="updateSelective" parameterType="com.hjy.entity.product.PcProductdescription">
+		UPDATE productcenter.pc_productdescription
+		<set>
+			<if test="descriptionInfo != null">
+				description_info =
+				#{descriptionInfo,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="descriptionPic != null">
+				description_pic = #{descriptionPic,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="keyword != null">
+				keyword = #{keyword,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		<where>
+			product_code = #{productCode,jdbcType=VARCHAR}
+		</where>
+	</update>
 </mapper>
 
 

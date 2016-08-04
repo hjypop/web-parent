@@ -142,4 +142,21 @@
 			)
 		</foreach>
 	</insert>
+	<update id="updateSelectiveBySkuCode" parameterType="com.hjy.entity.system.ScStoreSkunum">
+		update systemcenter.sc_store_skunum
+		<set>
+			<if test="storeCode != null and  storeCode != ''">
+				store_code = #{storeCode,jdbcType=VARCHAR}
+			</if>
+			<if test="batchCode != null and  batchCode != ''">
+				batch_code = #{batchCode,jdbcType=VARCHAR}
+			</if>
+			<if test="stockNum != null">
+				stock_num = #{stockNum,jdbcType=DECIMAL}
+			</if>
+		</set>
+		<where>
+			sku_code = #{skuCode,jdbcType=VARCHAR}
+		</where>
+	</update>
 </mapper>
