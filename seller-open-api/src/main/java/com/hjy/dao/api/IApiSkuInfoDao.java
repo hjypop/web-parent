@@ -34,7 +34,7 @@ public interface IApiSkuInfoDao {
 	 * @param entity
 	 * @return
 	 */
-	int updateSkuBySkuCodeOld(PcSkuinfo entity);
+	int updateSkuInfoBySkuCodeOld(PcSkuinfo entity);
 
 	/**
 	 * 

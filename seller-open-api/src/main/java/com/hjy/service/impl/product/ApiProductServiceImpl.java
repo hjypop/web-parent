@@ -249,7 +249,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 						List<PcSkuinfo> skuInfos = getPcSkuInfoList(productList, null, sellerCode);
 						if (skuInfos != null && skuInfos.size() > 0) {
 							for (PcSkuinfo pcSkuinfo : skuInfos) {
-								skuInfoDao.updateSkuBySkuCodeOld(pcSkuinfo);
+								skuInfoDao.updateSkuInfoBySkuCodeOld(pcSkuinfo);
 							}
 						}
 						response.setCode(0);
@@ -305,7 +305,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 						PcSkuinfo sku = new PcSkuinfo();
 						sku.setSkuCodeOld(info.getSkuCode());
 						sku.setStockNum(info.getStockNum());
-						skuInfoDao.updateSkuBySkuCodeOld(sku);
+						skuInfoDao.updateSkuInfoBySkuCodeOld(sku);
 					}
 					/**
 					 * 根据外部订单编号查询pc_skuinfo数据
@@ -467,7 +467,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			 * 批量编辑sku
 			 */
 			for (PcSkuinfo pcSkuinfo : skuInfoList) {
-				skuInfoDao.updateSkuBySkuCodeOld(pcSkuinfo);
+				skuInfoDao.updateSkuInfoBySkuCodeOld(pcSkuinfo);
 			}
 			/**
 			 * 批量编辑库存信息
