@@ -39,8 +39,7 @@
 	</resultMap>
 
 	<!-- 根据订单编号查询订单信息 2016-06-28 zhy -->
-	<select id="findOrderInfoByOrderCode" parameterType="java.lang.String"
-		resultMap="BaseResultMap">
+	<select id="findOrderInfoByOrderCode" parameterType="java.lang.String" resultMap="BaseResultMap">
 		SELECT
 		zid,
 		uid,
@@ -164,6 +163,9 @@
 					 and info.order_code = #{orderCode , jdbcType=VARCHAR}
 				</if>
 	</select>
+	
+	
+ 
 </mapper>
 
 

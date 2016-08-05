@@ -12,11 +12,15 @@ import com.hjy.request.ApiRequest;
 public class OrderInfoRequest extends ApiRequest {
 	
 	private String orderCode; 		// 订单编号
+
+
 	/**
 	 * 4497153900010001 下单成功-未付款 
 	 * 4497153900010002 下单成功-未发货 
 	 * 4497153900010003 已发货      
-	 *    
+	 * 4497153900010004 已收货
+	 * 4497153900010005 交易成功	
+	 * 
 	 * 4497153900010006 交易失败 
 	 * 4497153900010007 交易无效
 	 */

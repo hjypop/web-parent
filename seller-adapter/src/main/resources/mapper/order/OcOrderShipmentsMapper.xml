@@ -204,6 +204,16 @@
 				and waybill = #{waybill,jdbcType=VARCHAR}
 			</if>
 	</select>
+
+	<!-- open api 批量插入订单对应物流信息 - Yangcl  -->
+	<insert id="apiBatchInsert" parameterType="java.util.List">
+		replace into ordercenter.oc_order_shipments( uid ,  order_code , logisticse_code , logisticse_name , waybill , creator , create_time , remark ) values
+		<foreach collection="list" item="item" index="index" separator=",">
+			( #{item.uid} , #{item.orderCode} , #{item.logisticseCode} , #{item.logisticseName} , #{item.waybill} , #{item.creator} , #{item.createTime} , #{item.remark}  )
+		</foreach>
+	</insert>
+	
+ 
 </mapper>
 
 

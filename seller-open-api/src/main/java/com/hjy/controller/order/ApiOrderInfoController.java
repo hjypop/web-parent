@@ -38,7 +38,7 @@ public class ApiOrderInfoController {
 	 */
 	@RequestMapping(value = "list", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
-	public JSONObject getOrderInfo(String json){
+	public JSONObject apiGetOrderInfo(String json){
 //		OrderInfoRequest  ooo = new OrderInfoRequest();
 //		ooo.setSellerCode("SF03150617100010");
 //		json = JSON.toJSONString(ooo);
@@ -47,7 +47,29 @@ public class ApiOrderInfoController {
 		return apiOrderInfoService.getOrderInfoByJson(json); 
 	}
 	
-	
+
+	/**
+	 * @descriptions 订单变更： 更新订单状态信息
+	 * 	包含效验对方传入错误的订单
+	 * 
+	 * @param info
+	 * @date 2016年8月3日上午10:23:53
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	@RequestMapping(value = "update_order_status", produces = { "application/json;charset=utf-8" })
+	@ResponseBody
+	public JSONObject apiUpdateOrderStatus(String json){
+		
+//		String status = list.get(i).getOrderStatus();
+//		if(this.validateOrderStatus(status)){
+//			result.put("code", 1);
+//			result.put("desc", "请求参数错误，数据存在无效的订单状态：" + status + " | 所在订单：" + list.get(i).getOrderCode());
+//			return result; 
+//		}
+		
+		return null;
+	}
 	
 }
 

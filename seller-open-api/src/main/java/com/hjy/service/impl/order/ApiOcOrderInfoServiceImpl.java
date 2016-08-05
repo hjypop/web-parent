@@ -56,6 +56,22 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 		return result; 
 	} 
 	
+	
+	/**
+	 * @descriptions 效验订单状态
+	 * 
+	 * @param status 
+	 * @date 2016年8月5日下午2:37:39
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	private boolean validateOrderStatus(String status){
+		boolean flag = true;
+		if(StringUtils.startsWith(status, "449715390001000") && StringUtils.endsWithAny(status, new String[] {"1" , "2" , "3" , "4" , "5" , "6" , "7" })){
+			flag = false;
+		}
+		return flag;
+	}
 }
 
 
