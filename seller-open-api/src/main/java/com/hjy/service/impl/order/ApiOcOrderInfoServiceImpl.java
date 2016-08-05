@@ -1,5 +1,7 @@
 package com.hjy.service.impl.order;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,13 +13,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.entity.order.OcOrderinfo;
+import com.hjy.helper.DateHelper;
 import com.hjy.request.data.OrderInfoRequest;
+import com.hjy.request.data.OrderInfoStatus;
+import com.hjy.request.data.OrderInfoStatusRequest;
 import com.hjy.response.data.OrderInfoResponse;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.order.IApiOcOrderInfoService;
 
 @Service("apiOcOrderInfoService")
 public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Integer> implements IApiOcOrderInfoService{
+	
+	private static Integer COUNT = 5000;      // 一次性批处理的数据数量
 
 	@Resource
 	private IOcOrderinfoDao dao;
@@ -35,7 +42,16 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	public JSONObject getOrderInfoByJson(String json) {
 		JSONObject result = new JSONObject();
 		// 解析请求数据
-		OrderInfoRequest request = JSON.parseObject(json, OrderInfoRequest.class);
+		OrderInfoRequest request = null;
+		try {
+			request = JSON.parseObject(json, OrderInfoRequest.class);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("desc", "请求参数错误，请求数据解析异常");
+			return result; 
+		}
+		
+		
 		if(StringUtils.isBlank(request.getSellerCode())){
 			result.put("code", 14);
 			result.put("desc", "请求参数seller code不得为空");
@@ -58,6 +74,81 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	
 	
 	/**
+	 * @descriptions 订单变更： 更新订单状态信息
+	 * 	包含效验对方传入错误的订单
+	 * 
+	 * @param info
+	 * @date 2016年8月3日上午10:23:53
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public JSONObject updateOrderStatus(String json) {
+		JSONObject result = new JSONObject();
+		// 解析请求数据
+		OrderInfoStatusRequest request = null;
+		try {
+			request = JSON.parseObject(json, OrderInfoStatusRequest.class);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("desc", "请求参数错误，请求数据解析异常");
+			return result;
+		}
+		String sellerCode = request.getSellerCode();
+		// TODO 关联查询商家code是否存在
+//		if(count == 0){
+//			result.put("code", 3);
+//			result.put("desc", "错误的商家编号，无API访问权限");
+//			return result;
+//		}
+		
+		List<OrderInfoStatus> list = request.getList();
+		if(list.size() > COUNT){
+			result.put("code", 1);
+			result.put("desc", "请求参数错误，数据不得超过" + COUNT + "条");
+			return result; 
+		}
+		if(list.size() == 0){
+			result.put("code", 1);
+			result.put("desc", "请求参数错误，数据不得为0条");
+			return result; 
+		}
+		
+		List<OrderInfoStatus> updateList = new ArrayList<OrderInfoStatus>();
+		List<OrderInfoStatus> exceptionStatusList = new ArrayList<OrderInfoStatus>();
+		for( int i = 0 ; i < list.size() ; i ++){
+			list.get(i).setUpdateTime(DateHelper.formatDate(new Date()));
+			String status = list.get(i).getOrderStatus();
+			if(!this.validateOrderStatus(status)){
+				updateList.add(list.get(i));
+			}else{
+				exceptionStatusList.add(list.get(i));
+			}
+		}
+		
+		int count = 0;
+		try {
+			for(OrderInfoStatus o : updateList){
+				dao.apiUpdateOrderinfoStatus(o);
+				// TODO 插入一条同步日志记录      zid   sellerCode  orderCode   orderStatus createTime   @@@@@@@@@@@@@@@@@@@@@@@@
+				count ++;
+			}
+		} catch (Exception e) {
+			// TODO 记录异常信息到数据库表 @@@@@@@@@@@@@@@@@@@@@@ 
+			result.put("code", 11);
+			result.put("desc", "平台内部错误，成功 " + count + " 条，失败 " + (updateList.size() - count) + " 条");
+			return result; 
+		}
+		
+		result.put("code", 0);
+		result.put("desc", "请求成功，已同步 " + updateList.size() + " 条订单状态记录");
+		if(exceptionStatusList.size() > 0){
+			result.put("订单状态非法记录", exceptionStatusList);
+		}
+		return result;
+	}
+	
+	
+	/**
 	 * @descriptions 效验订单状态
 	 * 
 	 * @param status 
@@ -72,6 +163,9 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 		}
 		return flag;
 	}
+
+
+	
 }
 
 

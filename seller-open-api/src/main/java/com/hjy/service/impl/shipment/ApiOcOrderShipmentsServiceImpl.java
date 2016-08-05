@@ -32,6 +32,8 @@ import com.hjy.service.shipment.IApiOcOrderShipmentsService;
 @Service("apiOcOrderShipmentsService")
 public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipments, Integer> implements IApiOcOrderShipmentsService{
 
+	private static Integer COUNT = 5000;      // 一次性批处理的数据数量
+	
 	@Resource
 	private IOcOrderShipmentsDao dao ;
 	
@@ -49,7 +51,16 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 	public JSONObject apiInsertShipments(String json) {
 		JSONObject result = new JSONObject();
 		// 解析请求数据
-		ShipmentRequest request = JSON.parseObject(json, ShipmentRequest.class);
+		ShipmentRequest request = null;
+		try {
+			request = JSON.parseObject(json, ShipmentRequest.class);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("desc", "请求参数错误，请求数据解析异常");
+			return result; 
+		}
+		
+		
 		if(StringUtils.isBlank(request.getSellerCode())){
 			result.put("code", 14);
 			result.put("desc", "请求参数seller code不得为空");
@@ -63,13 +74,19 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 //			return result;
 //		}
 		List<OrderShipment> list = request.getList();
-		if(list.size() > 5000){
+		if(list.size() > COUNT){
 			result.put("code", 1);
-			result.put("desc", "请求参数错误，数据不得超过5000条");
+			result.put("desc", "请求参数错误，数据不得超过" + COUNT + "条");
 			return result; 
 		}
+		if(list.size() == 0){
+			result.put("code", 1);
+			result.put("desc", "请求参数错误，数据不得为0条");
+			return result; 
+		}
+		
 		List<OrderShipment> correctList = new ArrayList<OrderShipment>(); // 保存合法的物流信息
-		List<String> exceptionOrderList = new ArrayList<String>();  // 异常的订单物流信息|关键字段不全，不做处理，返回给调用方
+		List<OrderShipment> exceptionOrderList = new ArrayList<OrderShipment>();  // 异常的订单物流信息|关键字段不全，不做处理，返回给调用方
 		for(int i = 0 ; i < list.size() ; i ++){
 			if(StringUtils.isNotBlank(list.get(i).getOrderCode()) && StringUtils.isNotBlank(list.get(i).getLogisticseCode()) && 
 					StringUtils.isNotBlank(list.get(i).getLogisticseName()) && StringUtils.isNotBlank(list.get(i).getWaybill())){
@@ -79,27 +96,29 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 				list.get(i).setCreateTime(DateHelper.formatDate(new Date())); 
 				correctList.add(list.get(i)); 
 			}else{
-				exceptionOrderList.add(list.get(i).toString()); 
+				exceptionOrderList.add(list.get(i)); 
 			}
 		}
 		List<OrderShipment> insertList = new ArrayList<OrderShipment>(); // 保存在我们库中的订单的物流信息，排除非法订单
-		List<String> otherOrderList = new ArrayList<String>();  // 非惠家有订单的物流信息，不做处理，返回给调用方
+		List<OrderShipment> otherOrderList = new ArrayList<OrderShipment>();  // 非惠家有订单的物流信息，不做处理，返回给调用方
 		// 效验订单，判断是否有不在我们库中的订单	 
 		for(OrderShipment o : correctList){
 			OcOrderinfo info = orderinfoDao.findOrderInfoByOrderCode(o.getOrderCode());
 			if(null == info){
-				otherOrderList.add(o.toString());
+				otherOrderList.add(o);
 			}else{
 				insertList.add(o);
 			}
 		}
 		
+		int count = 0;
 		try{  // 插入物流数据
 			dao.apiBatchInsert(insertList);
+			count ++;
 		}catch(Exception e){
 			// TODO 记录异常信息到数据库表 @@@@@@@@@@@@@@@@@@@@@@ 
 			result.put("code", 11);
-			result.put("desc", "平台内部错误");
+			result.put("desc", "平台内部错误，成功 " + count + " 条，失败 " + (insertList.size() - count) + " 条");
 			return result; 
 		}
 		result.put("code", 0);

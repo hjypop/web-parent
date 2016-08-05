@@ -10,14 +10,27 @@ package com.hjy.request.data;
 public class OrderInfoStatus {
 	private String orderCode;
 	private String orderStatus;
+	private String updateTime;
 	
 	
+	public OrderInfoStatus() { 
+	}
 	
 	public OrderInfoStatus(String orderCode, String orderStatus) {
 		super();
 		this.orderCode = orderCode;
 		this.orderStatus = orderStatus;
 	}
+	
+	
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
 	public String getOrderCode() {
 		return orderCode;
 	}

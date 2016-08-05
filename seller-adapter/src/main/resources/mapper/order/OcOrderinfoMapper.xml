@@ -165,7 +165,23 @@
 	</select>
 	
 	
- 
+ 	<!-- 根据订单编号更新订单信息表  open api 使用 - Yangcl -->
+	<update id="apiUpdateOrderinfoStatus" parameterType="com.hjy.request.data.OrderInfoStatus">
+		UPDATE ordercenter.oc_orderinfo
+		<set>
+			<trim suffixOverrides=",">
+				<if test="orderStatus != null and orderStatus != ''">
+					order_status = #{orderStatus , jdbcType=VARCHAR},
+				</if>
+				<if test="updateTime != null and updateTime != ''">
+					update_time = #{updateTime,jdbcType=VARCHAR},
+				</if>
+			</trim>
+		</set>
+		<where>
+			order_code = #{orderCode,jdbcType=VARCHAR}
+		</where>
+	</update>
 </mapper>
 
 

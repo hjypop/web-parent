@@ -25,7 +25,7 @@ public class ApiOrderInfoController {
 	private static Logger logger=Logger.getLogger(ApiOrderInfoController.class);
 	
 	@Autowired
-	private IApiOcOrderInfoService apiOrderInfoService;
+	private IApiOcOrderInfoService service;
 	
 	
 	/**
@@ -44,7 +44,7 @@ public class ApiOrderInfoController {
 //		json = JSON.toJSONString(ooo);
 		
 		
-		return apiOrderInfoService.getOrderInfoByJson(json); 
+		return service.getOrderInfoByJson(json); 
 	}
 	
 
@@ -61,14 +61,7 @@ public class ApiOrderInfoController {
 	@ResponseBody
 	public JSONObject apiUpdateOrderStatus(String json){
 		
-//		String status = list.get(i).getOrderStatus();
-//		if(this.validateOrderStatus(status)){
-//			result.put("code", 1);
-//			result.put("desc", "请求参数错误，数据存在无效的订单状态：" + status + " | 所在订单：" + list.get(i).getOrderCode());
-//			return result; 
-//		}
-		
-		return null;
+		return service.updateOrderStatus(json);
 	}
 	
 }

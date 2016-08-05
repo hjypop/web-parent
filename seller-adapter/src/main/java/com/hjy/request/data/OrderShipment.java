@@ -108,11 +108,6 @@ public class OrderShipment {
 		this.remark = remark;
 	}
 
-	@Override
-	public String toString() {
-		return "OrderShipment [orderCode=" + orderCode + ", logisticseCode=" + logisticseCode + ", logisticseName="
-				+ logisticseName + ", waybill=" + waybill + ", creator=" + creator + ", remark=" + remark + "]";
-	}
 	
 	
 }

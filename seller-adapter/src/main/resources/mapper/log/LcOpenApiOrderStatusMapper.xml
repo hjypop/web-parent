@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.log.ILcOpenApiOrderStatusDao">
+	
+	<resultMap id="BaseResultMap" type="com.hjy.entity.log.LcOpenApiOrderStatus">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="seller_code" property="sellerCode" jdbcType="VARCHAR" />
+		<result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+		<result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	
+ 
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+			*
+		from 
+			logcenter.lc_open_api_order_status
+		where 
+			zid = #{zid,jdbcType=INTEGER} 
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from logcenter.lc_open_api_order_status where zid = #{zid,jdbcType=INTEGER}
+	</delete>
+	
+	 
+	<insert id="insertSelective" parameterType="com.hjy.entity.log.LcOpenApiOrderStatus">
+		insert into logcenter.lc_open_api_order_status
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="sellerCode != null">
+				seller_code,
+			</if>
+			<if test="orderCode != null">
+				order_code,
+			</if>
+			<if test="orderStatus != null">
+				order_status,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="sellerCode != null">
+				#{sellerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCode != null">
+				#{orderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderStatus != null">
+				#{orderStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.hjy.entity.log.LcOpenApiOrderStatus">
+		update logcenter.lc_open_api_order_status
+		<set>
+			<if test="sellerCode != null">
+				seller_code = #{sellerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCode != null">
+				order_code = #{orderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderStatus != null">
+				order_status = #{orderStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where zid = #{zid,jdbcType=INTEGER}
+	</update>
+	 
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
