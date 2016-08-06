@@ -136,12 +136,12 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 				e = o;
 				dao.apiUpdateOrderinfoStatus(o);
 				// 插入一条同步日志记录      zid   sellerCode  orderCode   orderStatus createTime 
-				openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , o.getOrderCode() , o.getOrderStatus() , new Date() , "update success"));
+				openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , o.getOrderCode() , o.getOrderStatus() , 1 , new Date() , "update success"));
 				count ++;
 			}
 		} catch (Exception ex) {
 			String remark_ = "update exception : {" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
-			openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , e.getOrderCode() , e.getOrderStatus() , new Date() , remark_));
+			openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , e.getOrderCode() , e.getOrderStatus() , 2 , new Date() , remark_));
 			result.put("code", 11);
 			result.put("desc", "平台内部错误，成功 " + count + " 条，失败 " + (updateList.size() - count) + " 条");
 			return result; 

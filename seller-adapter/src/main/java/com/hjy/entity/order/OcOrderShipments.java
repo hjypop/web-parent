@@ -12,8 +12,13 @@ import com.hjy.base.BaseModel;
  * @version
  * 
  */
-public class OcOrderShipments extends BaseModel {
+public class OcOrderShipments {
 
+	private Integer zid=0;
+	
+	private String uid=null;
+
+	
 	/**
 	 * 订单编号
 	 */
@@ -58,6 +63,42 @@ public class OcOrderShipments extends BaseModel {
 	 * 发货说明
 	 */
 	private String remark = "";
+	
+	
+
+	public OcOrderShipments() {
+		super();
+	}
+
+	public OcOrderShipments(String uid, String orderCode, String logisticseCode, String logisticseName, String waybill,
+			String creator, String createTime, String remark) {
+		super();
+		this.uid = uid;
+		this.orderCode = orderCode;
+		this.logisticseCode = logisticseCode;
+		this.logisticseName = logisticseName;
+		this.waybill = waybill;
+		this.creator = creator;
+		this.createTime = createTime;
+		this.remark = remark;
+	}
+
+
+	public Integer getZid() {
+		return zid;
+	}
+
+	public void setZid(Integer zid) {
+		this.zid = zid;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
 
 	/* 跨境通运单号 */
 	private String order_code_seq = "";

@@ -7,6 +7,7 @@
 		<result column="seller_code" property="sellerCode" jdbcType="VARCHAR" />
 		<result column="order_code" property="orderCode" jdbcType="VARCHAR" />
 		<result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+		<result column="flag" property="flag" jdbcType="INTEGER" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="remark" property="remark" jdbcType="VARCHAR" />
 	</resultMap>
@@ -41,6 +42,9 @@
 			<if test="orderStatus != null">
 				order_status,
 			</if>
+			<if test="flag != null">
+				flag,
+			</if>
 			<if test="createTime != null">
 				create_time,
 			</if>
@@ -60,6 +64,9 @@
 			</if>
 			<if test="orderStatus != null">
 				#{orderStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="flag != null">
+				#{flag,jdbcType=INTEGER},
 			</if>
 			<if test="createTime != null">
 				#{createTime,jdbcType=TIMESTAMP},
@@ -81,6 +88,9 @@
 			</if>
 			<if test="orderStatus != null">
 				order_status = #{orderStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="flag != null">
+				flag = #{flag,jdbcType=INTEGER},
 			</if>
 			<if test="createTime != null">
 				create_time = #{createTime,jdbcType=TIMESTAMP},

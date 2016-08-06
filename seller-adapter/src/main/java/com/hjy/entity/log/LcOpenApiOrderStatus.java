@@ -10,6 +10,8 @@ public class LcOpenApiOrderStatus {
 	private String orderCode;
 
 	private String orderStatus;
+	
+	private Integer flag ; // 1 成功 2失败
 
 	private Date createTime;
 
@@ -21,10 +23,11 @@ public class LcOpenApiOrderStatus {
 	public LcOpenApiOrderStatus() {
 	}
 
-	public LcOpenApiOrderStatus(String sellerCode, String orderCode, String orderStatus, Date createTime, String remark) {
+	public LcOpenApiOrderStatus(String sellerCode, String orderCode, String orderStatus, Integer flag , Date createTime, String remark) {
 		this.sellerCode = sellerCode;
 		this.orderCode = orderCode;
 		this.orderStatus = orderStatus;
+		this.flag = flag;
 		this.createTime = createTime;
 		this.remark = remark;
 	}
@@ -59,6 +62,15 @@ public class LcOpenApiOrderStatus {
 
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus == null ? null : orderStatus.trim();
+	}
+
+	
+	public Integer getFlag() {
+		return flag;
+	}
+
+	public void setFlag(Integer flag) {
+		this.flag = flag;
 	}
 
 	public Date getCreateTime() {

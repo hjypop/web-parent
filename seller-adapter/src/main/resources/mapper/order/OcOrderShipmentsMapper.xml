@@ -34,7 +34,7 @@
 	</delete>
 	
 	<insert id="insertSelective" parameterType="com.hjy.entity.order.OcOrderShipments">
-		insert into ordercenter.oc_order_shipments
+		replace into ordercenter.oc_order_shipments
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
 				zid,

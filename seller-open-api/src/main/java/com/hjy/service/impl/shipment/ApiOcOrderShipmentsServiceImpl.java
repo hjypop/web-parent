@@ -112,9 +112,15 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 		}
 		
 		int count = 0;
+		OrderShipment ex = null;
 		try{  // 插入物流数据
-			dao.apiBatchInsert(insertList);
-			count ++;
+			for(OrderShipment s : insertList){
+				ex = s;
+				dao.insertSelective(new OcOrderShipments(s.getUid() , s.getOrderCode() , s.getLogisticseCode() , s.getLogisticseName() , s.getWaybill() , s.getCreator() , s.getCreateTime() , s.getRemark()));   
+				
+				count ++;
+			}
+			
 		}catch(Exception e){
 			// TODO 记录异常信息到数据库表 @@@@@@@@@@@@@@@@@@@@@@ 
 			result.put("code", 11);
