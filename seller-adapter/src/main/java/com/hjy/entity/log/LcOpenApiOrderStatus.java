@@ -15,6 +15,20 @@ public class LcOpenApiOrderStatus {
 
 	private String remark;
 
+	
+	
+	
+	public LcOpenApiOrderStatus() {
+	}
+
+	public LcOpenApiOrderStatus(String sellerCode, String orderCode, String orderStatus, Date createTime, String remark) {
+		this.sellerCode = sellerCode;
+		this.orderCode = orderCode;
+		this.orderStatus = orderStatus;
+		this.createTime = createTime;
+		this.remark = remark;
+	}
+
 	public Integer getZid() {
 		return zid;
 	}

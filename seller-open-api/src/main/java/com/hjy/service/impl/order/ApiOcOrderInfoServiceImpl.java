@@ -11,9 +11,12 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.dao.log.ILcOpenApiOrderStatusDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
+import com.hjy.entity.log.LcOpenApiOrderStatus;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.DateHelper;
+import com.hjy.helper.ExceptionHelpter;
 import com.hjy.request.data.OrderInfoRequest;
 import com.hjy.request.data.OrderInfoStatus;
 import com.hjy.request.data.OrderInfoStatusRequest;
@@ -29,6 +32,8 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	@Resource
 	private IOcOrderinfoDao dao;
 
+	@Resource
+	private ILcOpenApiOrderStatusDao openApiOrderStatusDao;
 	
 	/**
 	 * @descriptions 根据Json串查询订单信息|seller-open-api项目中使用
@@ -117,8 +122,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 		List<OrderInfoStatus> exceptionStatusList = new ArrayList<OrderInfoStatus>();
 		for( int i = 0 ; i < list.size() ; i ++){
 			list.get(i).setUpdateTime(DateHelper.formatDate(new Date()));
-			String status = list.get(i).getOrderStatus();
-			if(!this.validateOrderStatus(status)){
+			if(this.validateOrderStatus(list.get(i))){
 				updateList.add(list.get(i));
 			}else{
 				exceptionStatusList.add(list.get(i));
@@ -126,14 +130,18 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 		}
 		
 		int count = 0;
+		OrderInfoStatus e = null;
 		try {
 			for(OrderInfoStatus o : updateList){
+				e = o;
 				dao.apiUpdateOrderinfoStatus(o);
-				// TODO 插入一条同步日志记录      zid   sellerCode  orderCode   orderStatus createTime   @@@@@@@@@@@@@@@@@@@@@@@@
+				// 插入一条同步日志记录      zid   sellerCode  orderCode   orderStatus createTime 
+				openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , o.getOrderCode() , o.getOrderStatus() , new Date() , "update success"));
 				count ++;
 			}
-		} catch (Exception e) {
-			// TODO 记录异常信息到数据库表 @@@@@@@@@@@@@@@@@@@@@@ 
+		} catch (Exception ex) {
+			String remark_ = "update exception : {" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
+			openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , e.getOrderCode() , e.getOrderStatus() , new Date() , remark_));
 			result.put("code", 11);
 			result.put("desc", "平台内部错误，成功 " + count + " 条，失败 " + (updateList.size() - count) + " 条");
 			return result; 
@@ -156,10 +164,14 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */
-	private boolean validateOrderStatus(String status){
-		boolean flag = true;
+	private boolean validateOrderStatus(OrderInfoStatus info){
+		boolean flag = false;
+		if(StringUtils.isBlank(info.getOrderCode())){
+			return flag;
+		}
+		String status = info.getOrderStatus();
 		if(StringUtils.startsWith(status, "449715390001000") && StringUtils.endsWithAny(status, new String[] {"1" , "2" , "3" , "4" , "5" , "6" , "7" })){
-			flag = false;
+			flag = true;
 		}
 		return flag;
 	}
