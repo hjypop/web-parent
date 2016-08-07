@@ -9,10 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.entity.log.LcOpenApiOperation;
-import com.hjy.request.data.OrderInfoRequest;
 import com.hjy.service.operation.IApiLcOpenApiOperationService;
 import com.hjy.service.order.IApiOcOrderInfoService;
 
@@ -53,7 +51,7 @@ public class ApiOrderInfoController {
 		JSONObject result = service.getOrderInfoByJson(json);
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
-				result.getString("sellerCode")  , 
+				result.getString("sellerCode") == null ? "错误的数据请求": result.getString("sellerCode") , 
 				"list",
 				"com.hjy.controller.order.apiGetOrderInfo",
 				json,
@@ -78,7 +76,7 @@ public class ApiOrderInfoController {
 		JSONObject result = service.updateOrderStatus(json);
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
-				result.getString("sellerCode")  , 
+				result.getString("sellerCode") == null ? "错误的数据请求": result.getString("sellerCode") , 
 				"update_order_status",
 				"com.hjy.controller.order.apiUpdateOrderStatus",
 				json,
