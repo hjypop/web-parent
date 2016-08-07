@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.service.operation.IApiLcOpenApiOperationService;
 import com.hjy.service.shipment.IApiOcOrderShipmentsService;
 
 
@@ -24,6 +25,9 @@ public class ApiShipmentController {
 	
 	@Autowired
 	private IApiOcOrderShipmentsService service;
+	
+	@Autowired
+	private IApiLcOpenApiOperationService logService;
 	
 	/**
 	 * @descriptions 订单变更：根据传入的json串插入物流信息 

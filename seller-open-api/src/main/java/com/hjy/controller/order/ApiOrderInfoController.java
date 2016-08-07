@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.request.data.OrderInfoRequest;
+import com.hjy.service.operation.IApiLcOpenApiOperationService;
 import com.hjy.service.order.IApiOcOrderInfoService;
 
 
@@ -27,6 +28,8 @@ public class ApiOrderInfoController {
 	@Autowired
 	private IApiOcOrderInfoService service;
 	
+	@Autowired
+	private IApiLcOpenApiOperationService logService;
 	
 	/**
 	 * @descriptions 根据传入的json串查询订单信息
