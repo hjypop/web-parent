@@ -1,5 +1,8 @@
 package com.hjy.controller.order;
 
+import java.util.Date;
+import java.util.UUID;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.entity.log.LcOpenApiOperation;
 import com.hjy.request.data.OrderInfoRequest;
 import com.hjy.service.operation.IApiLcOpenApiOperationService;
 import com.hjy.service.order.IApiOcOrderInfoService;
@@ -46,8 +50,16 @@ public class ApiOrderInfoController {
 //		ooo.setSellerCode("SF03150617100010");
 //		json = JSON.toJSONString(ooo);
 		
-		
-		return service.getOrderInfoByJson(json); 
+		JSONObject result = service.getOrderInfoByJson(json);
+		// sellerCode apiName classUrl requestJson responseJson createTime remark
+		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
+				result.getString("sellerCode")  , 
+				"list",
+				"com.hjy.controller.order.apiGetOrderInfo",
+				json,
+				result.toJSONString(),
+				new Date(), "remark"));
+		return  result;
 	}
 	
 
@@ -63,8 +75,16 @@ public class ApiOrderInfoController {
 	@RequestMapping(value = "update_order_status", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject apiUpdateOrderStatus(String json){
-		
-		return service.updateOrderStatus(json);
+		JSONObject result = service.updateOrderStatus(json);
+		// sellerCode apiName classUrl requestJson responseJson createTime remark
+		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
+				result.getString("sellerCode")  , 
+				"update_order_status",
+				"com.hjy.controller.order.apiUpdateOrderStatus",
+				json,
+				result.toJSONString(),
+				new Date(), "remark"));
+		return result;
 	}
 	
 }

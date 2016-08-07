@@ -63,6 +63,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			return result;
 		}
 		String sellerCode = request.getSellerCode();
+		result.put("sellerCode", sellerCode);
 		// TODO 关联查询商家code是否存在
 //		if(count == 0){
 //			result.put("code", 3);
@@ -99,6 +100,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			return result;
 		}
 		String sellerCode = request.getSellerCode();
+		result.put("sellerCode", sellerCode);
 		// TODO 关联查询商家code是否存在
 //		if(count == 0){
 //			result.put("code", 3);

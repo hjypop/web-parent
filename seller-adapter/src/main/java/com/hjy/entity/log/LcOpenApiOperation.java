@@ -20,8 +20,32 @@ public class LcOpenApiOperation {
     private Date createTime;
 
     private String remark;
+    
+    
 
-    public Integer getZid() {
+    public LcOpenApiOperation() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+    
+    
+	public LcOpenApiOperation(String uid, String sellerCode, String apiName, String classUrl, String requestJson,
+			String responseJson, Date createTime, String remark) {
+		super();
+		this.uid = uid;
+		this.sellerCode = sellerCode;
+		this.apiName = apiName;
+		this.classUrl = classUrl;
+		this.requestJson = requestJson;
+		this.responseJson = responseJson;
+		this.createTime = createTime;
+		this.remark = remark;
+	}
+
+
+
+	public Integer getZid() {
         return zid;
     }
 

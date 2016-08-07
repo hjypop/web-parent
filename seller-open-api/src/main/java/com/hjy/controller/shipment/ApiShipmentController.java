@@ -1,5 +1,8 @@
 package com.hjy.controller.shipment;
 
+import java.util.Date;
+import java.util.UUID;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -7,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.entity.log.LcOpenApiOperation;
 import com.hjy.service.operation.IApiLcOpenApiOperationService;
 import com.hjy.service.shipment.IApiOcOrderShipmentsService;
 
@@ -41,8 +45,16 @@ public class ApiShipmentController {
 	@RequestMapping(value = "insert_shipments", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject apiInsertShipments(String json){
-		
-		return service.apiInsertShipments(json);
+		JSONObject result = service.apiInsertShipments(json);
+		// sellerCode apiName classUrl requestJson responseJson createTime remark
+		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
+				result.getString("sellerCode")  , 
+				"insert_shipments",
+				"com.hjy.controller.shipment.apiInsertShipments",
+				json,
+				result.toJSONString(),
+				new Date(), "remark"));
+		return result;
 	}
 	
 	
