@@ -140,10 +140,12 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 				count ++;
 			}
 		} catch (Exception ex) {
-			String remark_ = "update exception : {" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
+			String desc_ = "平台内部错误，成功 " + count + " 条，失败 " + (updateList.size() - count) + " 条";
+			logger.error("更新订单状态信息异常|" + desc_ , ex);  
+			String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
 			openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , e.getOrderCode() , e.getOrderStatus() , 2 , new Date() , remark_));
 			result.put("code", 11);
-			result.put("desc", "平台内部错误，成功 " + count + " 条，失败 " + (updateList.size() - count) + " 条");
+			result.put("desc", desc_);
 			return result; 
 		}
 		

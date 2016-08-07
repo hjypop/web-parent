@@ -8,15 +8,19 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.dao.log.ILcOpenApiShipmentStatusDao;
 import com.hjy.dao.order.IOcOrderShipmentsDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
+import com.hjy.entity.log.LcOpenApiShipmentStatus;
 import com.hjy.entity.order.OcOrderShipments;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.DateHelper;
+import com.hjy.helper.ExceptionHelpter;
 import com.hjy.request.data.OrderShipment;
 import com.hjy.request.data.ShipmentRequest;
 import com.hjy.service.impl.BaseServiceImpl;
@@ -39,6 +43,9 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 	
 	@Resource
 	private IOcOrderinfoDao orderinfoDao;
+	
+	@Resource
+	private ILcOpenApiShipmentStatusDao logShipmentStatusDao;
 	
 	/**
 	 * @descriptions 效验订单后插入物流信息
@@ -117,14 +124,18 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 			for(OrderShipment s : insertList){
 				ex = s;
 				dao.insertSelective(new OcOrderShipments(s.getUid() , s.getOrderCode() , s.getLogisticseCode() , s.getLogisticseName() , s.getWaybill() , s.getCreator() , s.getCreateTime() , s.getRemark()));   
-				
+				logShipmentStatusDao.insertSelective(new LcOpenApiShipmentStatus(ex.getUid() , sellerCode , ex.getOrderCode() , ex.getLogisticseName() , ex.getWaybill() , 1 , new Date() , "insert success"));
 				count ++;
 			}
 			
 		}catch(Exception e){
-			// TODO 记录异常信息到数据库表 @@@@@@@@@@@@@@@@@@@@@@ 
+			// 记录异常信息到数据库表  shipmentUid sellerCode orderCode logisticseName wayBill  flag createTime remark
+			String desc_ = "平台内部错误，成功 " + count + " 条，失败 " + (insertList.size() - count) + " 条";
+			logger.error("插入物流数据异常|" + desc_ , e); 
+			String remark_ = "{" + ExceptionHelpter.allExceptionInformation(e) + "}";
+			logShipmentStatusDao.insertSelective(new LcOpenApiShipmentStatus(ex.getUid() , sellerCode , ex.getOrderCode() , ex.getLogisticseName() , ex.getWaybill() , 2 , new Date() , remark_));
 			result.put("code", 11);
-			result.put("desc", "平台内部错误，成功 " + count + " 条，失败 " + (insertList.size() - count) + " 条");
+			result.put("desc", desc_);
 			return result; 
 		}
 		result.put("code", 0);
