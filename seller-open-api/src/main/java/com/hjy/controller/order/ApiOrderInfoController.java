@@ -47,7 +47,7 @@ public class ApiOrderInfoController {
 //		OrderInfoRequest  ooo = new OrderInfoRequest();
 //		ooo.setSellerCode("SF03150617100010");
 //		json = JSON.toJSONString(ooo);
-		
+		Date requestTime = new Date();
 		JSONObject result = service.getOrderInfoByJson(json);
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
@@ -56,7 +56,10 @@ public class ApiOrderInfoController {
 				"com.hjy.controller.order.apiGetOrderInfo",
 				json,
 				result.toJSONString(),
-				new Date(), "remark"));
+				new Date(), 
+				requestTime,
+				new Date(),
+				"remark"));
 		return  result;
 	}
 	
@@ -73,6 +76,7 @@ public class ApiOrderInfoController {
 	@RequestMapping(value = "update_order_status", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject apiUpdateOrderStatus(String json){
+		Date requestTime = new Date();
 		JSONObject result = service.updateOrderStatus(json);
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
@@ -81,7 +85,10 @@ public class ApiOrderInfoController {
 				"com.hjy.controller.order.apiUpdateOrderStatus",
 				json,
 				result.toJSONString(),
-				new Date(), "remark"));
+				new Date(), 
+				requestTime,
+				new Date(),
+				"remark"));
 		return result;
 	}
 	

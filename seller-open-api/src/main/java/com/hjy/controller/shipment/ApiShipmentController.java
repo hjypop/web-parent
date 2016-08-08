@@ -45,6 +45,7 @@ public class ApiShipmentController {
 	@RequestMapping(value = "insert_shipments", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject apiInsertShipments(String json){
+		Date requestTime = new Date();
 		JSONObject result = service.apiInsertShipments(json);
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
@@ -53,7 +54,10 @@ public class ApiShipmentController {
 				"com.hjy.controller.shipment.apiInsertShipments",
 				json,
 				result.toJSONString(),
-				new Date(), "remark"));
+				new Date(), 
+				requestTime,
+				new Date(),
+				"remark"));
 		return result;
 	}
 	

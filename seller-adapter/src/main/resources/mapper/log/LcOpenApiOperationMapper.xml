@@ -11,6 +11,8 @@
 		<result column="request_json" property="requestJson" jdbcType="LONGVARCHAR" />
 		<result column="response_json" property="responseJson" jdbcType="LONGVARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="request_time" property="requestTime" jdbcType="TIMESTAMP" />
+    	<result column="response_time" property="responseTime" jdbcType="TIMESTAMP" />
 		<result column="remark" property="remark" jdbcType="LONGVARCHAR" />
 	</resultMap>
 	
@@ -45,15 +47,21 @@
 			<if test="classUrl != null">
 				class_url,
 			</if>
-			<if test="createTime != null">
-				create_time,
-			</if>
 			<if test="requestJson != null">
 				request_json,
 			</if>
 			<if test="responseJson != null">
 				response_json,
 			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="requestTime != null" >
+	        	request_time,
+	        </if>
+      		<if test="responseTime != null" >
+        		response_time,
+      		</if>
 			<if test="remark != null">
 				remark,
 			</if>
@@ -74,15 +82,21 @@
 			<if test="classUrl != null">
 				#{classUrl,jdbcType=VARCHAR},
 			</if>
-			<if test="createTime != null">
-				#{createTime,jdbcType=TIMESTAMP},
-			</if>
 			<if test="requestJson != null">
 				#{requestJson,jdbcType=LONGVARCHAR},
 			</if>
 			<if test="responseJson != null">
 				#{responseJson,jdbcType=LONGVARCHAR},
 			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="requestTime != null" >
+        		#{requestTime,jdbcType=TIMESTAMP},
+      		</if>
+	      	<if test="responseTime != null" >
+	        	#{responseTime,jdbcType=TIMESTAMP},
+	      	</if>
 			<if test="remark != null">
 				#{remark,jdbcType=LONGVARCHAR},
 			</if>
@@ -104,15 +118,21 @@
 			<if test="classUrl != null">
 				class_url = #{classUrl,jdbcType=VARCHAR},
 			</if>
-			<if test="createTime != null">
-				create_time = #{createTime,jdbcType=TIMESTAMP},
-			</if>
 			<if test="requestJson != null">
 				request_json = #{requestJson,jdbcType=LONGVARCHAR},
 			</if>
 			<if test="responseJson != null">
 				response_json = #{responseJson,jdbcType=LONGVARCHAR},
 			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="requestTime != null" >
+        		request_time = #{requestTime,jdbcType=TIMESTAMP},
+      		</if>
+      		<if test="responseTime != null" >
+       		 	response_time = #{responseTime,jdbcType=TIMESTAMP},
+      		</if>
 			<if test="remark != null">
 				remark = #{remark,jdbcType=LONGVARCHAR},
 			</if>

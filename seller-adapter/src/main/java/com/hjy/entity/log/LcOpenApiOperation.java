@@ -19,6 +19,10 @@ public class LcOpenApiOperation {
     
     private Date createTime;
 
+    private Date requestTime;
+
+    private Date responseTime;
+    
     private String remark;
     
     
@@ -31,7 +35,7 @@ public class LcOpenApiOperation {
     
     
 	public LcOpenApiOperation(String uid, String sellerCode, String apiName, String classUrl, String requestJson,
-			String responseJson, Date createTime, String remark) {
+			String responseJson, Date createTime, Date requestTime, Date responseTime, String remark) {
 		super();
 		this.uid = uid;
 		this.sellerCode = sellerCode;
@@ -40,7 +44,33 @@ public class LcOpenApiOperation {
 		this.requestJson = requestJson;
 		this.responseJson = responseJson;
 		this.createTime = createTime;
+		this.requestTime = requestTime;
+		this.responseTime = responseTime;
 		this.remark = remark;
+	}
+
+
+
+	public Date getRequestTime() {
+		return requestTime;
+	}
+
+
+
+	public void setRequestTime(Date requestTime) {
+		this.requestTime = requestTime;
+	}
+
+
+
+	public Date getResponseTime() {
+		return responseTime;
+	}
+
+
+
+	public void setResponseTime(Date responseTime) {
+		this.responseTime = responseTime;
 	}
 
 
