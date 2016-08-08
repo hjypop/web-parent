@@ -17,12 +17,36 @@ public class ApiProductController {
 
 	@RequestMapping("test_index")
 	public String testTest() {
-		return "jsp/openapi/api_test";
+		return "jsp/openapi/api_product_test";
 	}
 
-	@RequestMapping("addProduct")
+	@RequestMapping(value = "addProduct")
 	@ResponseBody
 	public ResponseProduct addProduct(String request) {
 		return service.addProduct(request);
+	}
+
+	@RequestMapping("editProduct")
+	@ResponseBody
+	public ResponseProduct editProduct(String request) {
+		return service.editProduct(request);
+	}
+
+	@RequestMapping("batchProducts")
+	@ResponseBody
+	public ResponseProduct syncProductList(String request) {
+		return service.syncProductList(request);
+	}
+
+	@RequestMapping("batchProductsPrice")
+	@ResponseBody
+	public ResponseProduct syncProductPrice(String request) {
+		return service.syncProductPrice(request);
+	}
+
+	@RequestMapping("batchProductsSkuStore")
+	@ResponseBody
+	public ResponseProduct syncProductSkuStore(String request) {
+		return service.syncSkuStore(request);
 	}
 }

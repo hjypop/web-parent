@@ -86,8 +86,8 @@ public class ProductTest extends BaseTest {
 		request.setTotal(productList.size());
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-		ResponseProduct response = service.syncProductList(obj.toJSONString());
-		System.out.println(JSON.toJSON(response));
+		//ResponseProduct response = service.syncProductList(obj.toJSONString());
+		//System.out.println(JSON.toJSON(response));
 	}
 
 	public void addProduct() {
@@ -196,8 +196,8 @@ public class ProductTest extends BaseTest {
 		request.setSign("");
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-		ResponseProduct response = service.editProduct(obj.toJSONString());
-		System.out.println(JSON.toJSON(response));
+		//ResponseProduct response = service.editProduct(obj.toJSONString());
+		//System.out.println(JSON.toJSON(response));
 	}
 
 	public void syncProductPrice() {
@@ -218,8 +218,9 @@ public class ProductTest extends BaseTest {
 		products.add(product);
 		request.setProductInfos(products);
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
-		ResponseProduct response = service.syncProductPrice(obj.toJSONString());
-		System.out.println(JSON.toJSON(response));
+		System.out.println(obj.toJSONString());
+//		ResponseProduct response = service.syncProductPrice(obj.toJSONString());
+//		System.out.println(JSON.toJSON(response));
 	}
 
 	@Test
@@ -239,7 +240,8 @@ public class ProductTest extends BaseTest {
 		products.add(product);
 		request.setProductInfos(products);
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
-		ResponseProduct response = service.syncSkuStore(obj.toJSONString());
-		System.out.println(JSON.toJSON(response));
+		System.out.println(obj.toJSONString());
+//		ResponseProduct response = service.syncSkuStore(obj.toJSONString());
+//		System.out.println(JSON.toJSON(response));
 	}
 }
