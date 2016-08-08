@@ -7,7 +7,12 @@ import com.hjy.base.IApiRequest;
 
 public class ProductInfo implements IApiRequest {
 	/**
-	 * 商品编码
+	 * 外部商品编号
+	 */
+	private String productOutCode;
+
+	/**
+	 * 惠家有商品编号
 	 */
 	private String productCode;
 	/**
@@ -235,20 +240,28 @@ public class ProductInfo implements IApiRequest {
 		this.skuInfoList = skuInfoList;
 	}
 
-	public String getProductCode() {
-		return productCode;
-	}
-
-	public void setProductCode(String productCode) {
-		this.productCode = productCode;
-	}
-
 	public BigDecimal getMarketPrice() {
 		return marketPrice;
 	}
 
 	public void setMarketPrice(BigDecimal marketPrice) {
 		this.marketPrice = marketPrice;
+	}
+
+	public String getProductOutCode() {
+		return productOutCode;
+	}
+
+	public void setProductOutCode(String productOutCode) {
+		this.productOutCode = productOutCode;
+	}
+
+	public String getProductCode() {
+		return productCode;
+	}
+
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
 	}
 
 }

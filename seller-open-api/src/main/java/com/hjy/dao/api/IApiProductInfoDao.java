@@ -37,4 +37,28 @@ public interface IApiProductInfoDao {
 	 */
 	int updateProductByProductCodeOld(PcProductinfo entity);
 
+	/**
+	 * 
+	 * 方法: updateProductPrice <br>
+	 * 描述: 修改商品价格 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月8日 下午1:41:50
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	int updateProductPrice(PcProductinfo entity);
+
+	/**
+	 * 
+	 * 方法: findProductCodeByOutCode <br>
+	 * 描述: 根据外部商品编号查询惠家有商品编号 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月8日 上午10:07:09
+	 * 
+	 * @param productCodeOld
+	 * @return
+	 */
+	String findProductCodeByOutCode(String productCodeOld);
+
 }

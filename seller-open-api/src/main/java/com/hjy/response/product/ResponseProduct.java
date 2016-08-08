@@ -1,6 +1,5 @@
 package com.hjy.response.product;
 
-import com.hjy.base.IApiResponse;
 import com.hjy.response.ApiResponse;
 
 /**

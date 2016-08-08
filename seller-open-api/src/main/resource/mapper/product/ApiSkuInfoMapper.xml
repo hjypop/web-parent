@@ -81,10 +81,23 @@
 			sku_code_old = #{skuCodeOld,jdbcType=VARCHAR}
 		</where>
 	</update>
+	<!-- 修改价格 -->
+	<update id="updateSkuPrice" parameterType="com.hjy.entity.product.PcSkuinfo">
+		UPDATE productcenter.pc_skuinfo
+		<set>
+			sell_price=#{sellPrice,jdbcType=DECIMAL},
+			market_price=#{marketPrice,jdbcType=DECIMAL},
+			cost_price=#{costPrice,jdbcType=DECIMAL},
+		</set>
+		<where>
+			sku_code_old = #{skuCodeOld,jdbcType=VARCHAR}
+		</where>
+	</update>
 	<!-- 根据外部商品编号查询商品sku列表 2016-08-04 zhy -->
 	<select id="findSkuInfoListByProductCodeOld" parameterType="list"
 		resultType="com.hjy.entity.product.PcSkuinfo">
-		select sku_code,stock_num from productcenter.pc_skuinfo
+		select sku_code AS skuCode,stock_num AS stockNum from
+		productcenter.pc_skuinfo
 		<where>
 			product_code_old in
 			<foreach open="(" close=")" item="item" index="index"
@@ -93,4 +106,14 @@
 			</foreach>
 		</where>
 	</select>
+	<!-- 修改sku库存 -->
+	<update id="updateSkuStore" parameterType="com.hjy.entity.product.PcSkuinfo">
+		UPDATE productcenter.pc_skuinfo
+		<set>
+			stock_num=#{stockNum,jdbcType=DECIMAL}
+		</set>
+		<where>
+			sku_code_old = #{skuCodeOld,jdbcType=VARCHAR}
+		</where>
+	</update>
 </mapper>

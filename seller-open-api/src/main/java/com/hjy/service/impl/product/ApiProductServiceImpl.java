@@ -70,6 +70,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				if (requestProduct != null) {
 					if (requestProduct.getProduct() != null) {
 						List<ProductInfo> productList = new ArrayList<ProductInfo>();
+						requestProduct.getProduct().setOperate(0);
+						requestProduct.getProduct().setProductCode(WebHelper.getInstance().genUniqueCode(ProductHead));
 						productList.add(requestProduct.getProduct());
 						response = verifyProduct(productList);
 						if (response.getCode() == 0) {
@@ -123,7 +125,14 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				if (requestProduct != null) {
 					if (requestProduct.getProduct() != null) {
 						List<ProductInfo> productList = new ArrayList<ProductInfo>();
+						requestProduct.getProduct().setOperate(1);
 						productList.add(requestProduct.getProduct());
+						for (ProductInfo productInfo : productList) {
+							// 根据外部商品编号查询惠家有商品编号
+							String productCode = productInfoDao
+									.findProductCodeByOutCode(productInfo.getProductOutCode());
+							productInfo.setProductCode(productCode);
+						}
 						// 执行编辑商品
 						if (editProduct(productList)) {
 							response.setCode(0);
@@ -170,6 +179,16 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					if (requestProduct.getProductInfos() != null && requestProduct.getProductInfos().size() > 0) {
 						response = verifyProduct(requestProduct.getProductInfos());
 						if (response.getCode() == 0) {
+							for (ProductInfo info : requestProduct.getProductInfos()) {
+								if (info.getOperate() == 1) {
+									// 根据外部商品编号查询惠家有商品编号
+									String productCode = productInfoDao
+											.findProductCodeByOutCode(info.getProductOutCode());
+									info.setProductCode(productCode);
+								} else {
+									info.setProductCode(WebHelper.getInstance().genUniqueCode(ProductHead));
+								}
+							}
 							/**
 							 * 遍历商品集合，根据操作类型区分是添加还是编辑，根据类型进行不同的操作
 							 */
@@ -182,17 +201,14 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 								} else if (info.getOperate() == 1) {
 									editList.add(info);
 								}
-								// 执行添加操作
-								addProduct(addList);
-								// 执行编辑操作
-								editProduct(addList);
-								// 返回处理结果
-								response.setCode(0);
-								response.setDesc(getInfo(0));
 							}
-						} else {
-							response.setCode(10);
-							response.setDesc(getInfo(10));
+							// 执行添加操作
+							addProduct(addList);
+							// 执行编辑操作
+							editProduct(editList);
+							// 返回处理结果
+							response.setCode(0);
+							response.setDesc(getInfo(0));
 						}
 					} else {
 						response.setCode(10);
@@ -234,22 +250,27 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					List<ProductInfo> productList = requestProducts.getProductInfos();
 					if (productList != null && productList.size() > 0) {
 						String sellerCode = "";
+						for (ProductInfo info : productList) {
+							// 根据外部商品编号查询惠家有商品编号
+							String productCode = productInfoDao.findProductCodeByOutCode(info.getProductOutCode());
+							info.setProductCode(productCode);
+						}
 						/**
 						 * 编辑商品的最小售价和最大售价
 						 */
-						List<PcProductinfo> productInfos = getPcProdcutInfoList(productList, null, sellerCode);
+						List<PcProductinfo> productInfos = getPcProdcutInfoList(productList, sellerCode);
 						if (productInfos != null && productInfos.size() > 0) {
 							for (PcProductinfo pcProductinfo : productInfos) {
-								productInfoDao.updateProductByProductCodeOld(pcProductinfo);
+								productInfoDao.updateProductPrice(pcProductinfo);
 							}
 						}
 						/**
 						 * 编辑sku的售价
 						 */
-						List<PcSkuinfo> skuInfos = getPcSkuInfoList(productList, null, sellerCode);
+						List<PcSkuinfo> skuInfos = getPcSkuInfoList(productList, sellerCode);
 						if (skuInfos != null && skuInfos.size() > 0) {
 							for (PcSkuinfo pcSkuinfo : skuInfos) {
-								skuInfoDao.updateSkuInfoBySkuCodeOld(pcSkuinfo);
+								skuInfoDao.updateSkuPrice(pcSkuinfo);
 							}
 						}
 						response.setCode(0);
@@ -291,11 +312,10 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			if (requestProducts != null) {
 				List<ProductInfo> productList = requestProducts.getProductInfos();
 				if (productList != null && productList.size() > 0) {
-					String sellerCode = "";
 					List<String> productCodes = new ArrayList<String>();
 					List<PcSkuInfo> skuInfos = new ArrayList<PcSkuInfo>();
 					for (ProductInfo info : productList) {
-						productCodes.add(info.getProductCode());
+						productCodes.add(info.getProductOutCode());
 						skuInfos.addAll(info.getSkuInfoList());
 					}
 					/**
@@ -305,7 +325,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 						PcSkuinfo sku = new PcSkuinfo();
 						sku.setSkuCodeOld(info.getSkuCode());
 						sku.setStockNum(info.getStockNum());
-						skuInfoDao.updateSkuInfoBySkuCodeOld(sku);
+						skuInfoDao.updateSkuStore(sku);
 					}
 					/**
 					 * 根据外部订单编号查询pc_skuinfo数据
@@ -320,6 +340,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 							scStoreSkunumDao.updateSelectiveBySkuCode(skunum);
 						}
 					}
+					response.setCode(0);
+					response.setDesc(getInfo(0));
 				} else {
 					response.setCode(10);
 					response.setDesc(getInfo(10));
@@ -350,31 +372,30 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		boolean flag = false;
 		try {
 			WebHelper.getInstance().addLock(10, "openapi-test-addproduct");
-			String productCode = WebHelper.getInstance().genUniqueCode(ProductHead);
 			String sellerCode = "";
 			/**
 			 * 批量添加商品
 			 */
-			List<PcProductinfo> productInfoList = getPcProdcutInfoList(producsts, productCode, sellerCode);
+			List<PcProductinfo> productInfoList = getPcProdcutInfoList(producsts, sellerCode);
 			productInfoDao.batchInsert(productInfoList);
 			/**
 			 * 批量添加商品描述
 			 */
-			List<PcProductdescription> pcProductdescriptionList = getPcProductdescriptionList(producsts, productCode);
+			List<PcProductdescription> pcProductdescriptionList = getPcProductdescriptionList(producsts);
 			if (pcProductdescriptionList != null && pcProductdescriptionList.size() > 0) {
 				productdescription.batchInsert(pcProductdescriptionList);
 			}
 			/**
 			 * 批量添加商品图片
 			 */
-			List<PcProductpic> productpicList = getPcProductpicList(producsts, productCode);
+			List<PcProductpic> productpicList = getPcProductpicList(producsts);
 			if (productpicList != null && productpicList.size() > 0) {
 				pcProductpic.batchInsert(productpicList);
 			}
 			/**
 			 * 批量添加sku
 			 */
-			List<PcSkuinfo> skuInfoList = getPcSkuInfoList(producsts, productCode, sellerCode);
+			List<PcSkuinfo> skuInfoList = getPcSkuInfoList(producsts, sellerCode);
 			if (skuInfoList != null && skuInfoList.size() > 0) {
 				skuInfoDao.batchInsert(skuInfoList);
 			}
@@ -406,7 +427,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		boolean flag = false;
 		try {
 			String sellerCode = "";
-			List<PcProductinfo> productInfoList = getPcProdcutInfoList(producsts, null, sellerCode);
+			List<PcProductinfo> productInfoList = getPcProdcutInfoList(producsts, sellerCode);
 			/**
 			 * 商品描述集合
 			 */
@@ -428,18 +449,17 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					/**
 					 * 获取商品描述
 					 */
-					List<PcProductdescription> descriptions = getPcProductdescriptionList(producsts,
-							info.getProductCode());
+					List<PcProductdescription> descriptions = getPcProductdescriptionList(producsts);
 					productDescriptionList.addAll(descriptions);
 					/**
 					 * 获取商品图片
 					 */
-					List<PcProductpic> pics = getPcProductpicList(producsts, info.getProductCode());
+					List<PcProductpic> pics = getPcProductpicList(producsts);
 					productPicList.addAll(pics);
 					/**
 					 * 获取sku
 					 */
-					List<PcSkuinfo> skus = getPcSkuInfoList(producsts, info.getProductCode(), sellerCode);
+					List<PcSkuinfo> skus = getPcSkuInfoList(producsts, sellerCode);
 					skuInfoList.addAll(skus);
 				}
 			}
@@ -473,7 +493,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			 * 批量编辑库存信息
 			 */
 			for (ScStoreSkunum store : skuStoreList) {
-				scStoreSkunumDao.updateSelective(store);
+				scStoreSkunumDao.updateSelectiveBySkuCode(store);
 			}
 			flag = true;
 		} catch (Exception e) {
@@ -547,17 +567,16 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @param sellerCode
 	 * @return
 	 */
-	private static List<PcProductinfo> getPcProdcutInfoList(List<ProductInfo> infos, String productCode,
-			String sellerCode) {
+	private static List<PcProductinfo> getPcProdcutInfoList(List<ProductInfo> infos, String sellerCode) {
 		List<PcProductinfo> list = new ArrayList<PcProductinfo>();
 		if (infos != null && infos.size() > 0) {
 			for (ProductInfo info : infos) {
 				if (info != null) {
 					PcProductinfo product = new PcProductinfo();
 					product.setUid(WebHelper.getInstance().genUuid());
-					product.setProductCode(productCode);
-					product.setProductCodeOld(info.getProductCode());
-					product.setProductCodeCopy(info.getProductCode());
+					product.setProductCode(info.getProductCode());
+					product.setProductCodeOld(info.getProductOutCode());
+					product.setProductCodeCopy(info.getProductOutCode());
 					product.setProductName(info.getProductName());
 					product.setProductShortname(info.getProductShortname());
 					product.setSellerCode("SI2003");
@@ -614,14 +633,14 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @param productCode
 	 * @return
 	 */
-	private static List<PcProductdescription> getPcProductdescriptionList(List<ProductInfo> infos, String productCode) {
+	private static List<PcProductdescription> getPcProductdescriptionList(List<ProductInfo> infos) {
 		List<PcProductdescription> list = new ArrayList<PcProductdescription>();
 		if (infos != null && infos.size() > 0) {
 			for (ProductInfo product : infos) {
 				if (product.getDescription() != null) {
 					PcProductdescription description = new PcProductdescription();
 					description.setUid(WebHelper.getInstance().genUuid());
-					description.setProductCode(productCode);
+					description.setProductCode(product.getProductCode());
 					description.setDescriptionInfo(product.getDescription().getDescriptionInfo());
 					description.setDescriptionPic(product.getDescription().getDescriptionPic());
 					list.add(description);
@@ -642,7 +661,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @param productCode
 	 * @return
 	 */
-	private static List<PcProductpic> getPcProductpicList(List<ProductInfo> infos, String productCode) {
+	private static List<PcProductpic> getPcProductpicList(List<ProductInfo> infos) {
 		List<PcProductpic> list = new ArrayList<PcProductpic>();
 		if (infos != null && infos.size() > 0) {
 			for (ProductInfo product : infos) {
@@ -651,8 +670,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 						PcProductpic ppic = new PcProductpic();
 						ppic.setUid(WebHelper.getInstance().genUuid());
 						ppic.setPicUrl(pic);
-						ppic.setProductCode(productCode);
-						ppic.setProductCodeOld(productCode);
+						ppic.setProductCode(product.getProductCode());
+						ppic.setProductCodeOld(product.getProductOutCode());
 						list.add(ppic);
 					}
 				}
@@ -673,7 +692,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @param sellerCode
 	 * @return
 	 */
-	private static List<PcSkuinfo> getPcSkuInfoList(List<ProductInfo> infos, String productCode, String sellerCode) {
+	private static List<PcSkuinfo> getPcSkuInfoList(List<ProductInfo> infos, String sellerCode) {
 		List<PcSkuinfo> list = new ArrayList<PcSkuinfo>();
 		if (infos != null && infos.size() > 0) {
 			for (ProductInfo product : infos) {
@@ -681,18 +700,18 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					for (PcSkuInfo info : product.getSkuInfoList()) {
 						PcSkuinfo sku = new PcSkuinfo();
 						sku.setUid(WebHelper.getInstance().genUuid());
-						sku.setProductCode(productCode);
-						sku.setProductCodeOld(product.getProductCode());
-						sku.setSellProductcode(product.getProductCode());
 						sku.setSkuCode(WebHelper.getInstance().genUniqueCode(SKUHead));
+						sku.setProductCode(product.getProductCode());
+						sku.setProductCodeOld(product.getProductOutCode());
+						sku.setSellProductcode(product.getProductCode());
 						sku.setSkuCodeOld(info.getSkuCode());
 						sku.setSkuName(info.getSkuName());
 						sku.setSkuPicurl(info.getSkuPicUrl());
 						sku.setSkuAdv(info.getSkuAdv());
 						sku.setSellerCode(sellerCode);
 						sku.setSellPrice(info.getSellPrice());
-						sku.setMarketPrice(product.getMarketPrice());
-						sku.setCostPrice(product.getCostPrice());
+						sku.setMarketPrice(info.getSellPrice());
+						sku.setCostPrice(info.getSellPrice());
 						sku.setSecurityStockNum(info.getSecurityStockNum());
 						sku.setStockNum(info.getStockNum());
 						sku.setMiniOrder(info.getMiniOrder());
