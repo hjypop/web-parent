@@ -38,6 +38,30 @@ public interface IApiSkuInfoDao {
 
 	/**
 	 * 
+	 * 方法: updateSkuPrice <br>
+	 * 描述: 修改sku价格 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月8日 下午1:41:13
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	int updateSkuPrice(PcSkuinfo entity);
+
+	/**
+	 * 
+	 * 方法: updateSkuStore <br>
+	 * 描述: 修改库存 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月8日 下午2:14:29
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	int updateSkuStore(PcSkuinfo entity);
+
+	/**
+	 * 
 	 * 方法: findSkuInfoListByProductCodeOld <br>
 	 * 描述: 根据外部商品编号查询sku列表 <br>
 	 * 作者: zhy<br>

@@ -110,6 +110,42 @@
 				max_sell_price = #{maxSellPrice,jdbcType=DECIMAL},
 			</if>
 		</set>
-		where product_code_old = #{productCodeOld,jdbcType=VARCHAR}
+		<where>
+			product_code_old = #{productCodeOld,jdbcType=VARCHAR}
+		</where>
 	</update>
+	<!-- 修改商品价格 -->
+	<update id="updateProductPrice" parameterType="com.hjy.entity.product.PcProductinfo">
+		update productcenter.pc_productinfo
+		<set>
+			<if test="costPrice != null">
+				cost_price = #{costPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="marketPrice != null">
+				market_price = #{marketPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="updateTime != null and updateTime != '' ">
+				update_time = #{updateTime,jdbcType=CHAR},
+			</if>
+			<if test="minSellPrice != null ">
+				min_sell_price = #{minSellPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="maxSellPrice != null">
+				max_sell_price = #{maxSellPrice,jdbcType=DECIMAL},
+			</if>
+		</set>
+		<where>
+			product_code_old = #{productCodeOld,jdbcType=VARCHAR}
+		</where>
+	</update>
+	<!-- 根据外部商品编号查询惠家有商品编号 2016-08-08 zhy -->
+	<select id="findProductCodeByOutCode" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		SELECT
+		product_code
+		FROM
+		productcenter.pc_productinfo
+		WHERE
+		product_code_old = #{productCodeOld,jdbcType=VARCHAR}
+	</select>
 </mapper>

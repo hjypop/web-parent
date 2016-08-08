@@ -1,6 +1,5 @@
 package com.hjy.service.product;
 
-import com.hjy.request.RequestProduct;
 import com.hjy.response.product.ResponseProduct;
 
 /**
