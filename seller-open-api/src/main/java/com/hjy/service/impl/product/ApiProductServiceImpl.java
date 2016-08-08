@@ -66,6 +66,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		ResponseProduct response = new ResponseProduct();
 		if (product != null && !"".equals(product)) {
 			try {
+				WebHelper.getInstance().addLock(10, "Product.addproduct");
 				RequestProduct requestProduct = JSON.toJavaObject(JSON.parseObject(product), RequestProduct.class);
 				if (requestProduct != null) {
 					if (requestProduct.getProduct() != null) {
@@ -99,6 +100,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				e.printStackTrace();
 				response.setCode(10);
 				response.setDesc(getInfo(10));
+			} finally {
+				WebHelper.getInstance().unLock("Product.addproduct");
 			}
 		} else {
 			response.setCode(10);
@@ -120,6 +123,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	public ResponseProduct editProduct(String product) {
 		ResponseProduct response = new ResponseProduct();
 		try {
+			WebHelper.getInstance().addLock(10, "Product.editproduct");
 			if (product != null && !"".equals(product)) {
 				RequestProduct requestProduct = JSON.toJavaObject(JSON.parseObject(product), RequestProduct.class);
 				if (requestProduct != null) {
@@ -156,6 +160,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			WebHelper.getInstance().unLock("Product.editproduct");
 		}
 		return response;
 	}
@@ -174,6 +180,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		ResponseProduct response = new ResponseProduct();
 		if (products != null && !"".equals(products)) {
 			try {
+				WebHelper.getInstance().addLock(10, "Product.syncProductList");
 				RequestProducts requestProduct = JSON.toJavaObject(JSON.parseObject(products), RequestProducts.class);
 				if (requestProduct != null) {
 					if (requestProduct.getProductInfos() != null && requestProduct.getProductInfos().size() > 0) {
@@ -222,6 +229,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				e.printStackTrace();
 				response.setCode(10);
 				response.setDesc(getInfo(10));
+			} finally {
+				WebHelper.getInstance().unLock("Product.syncProductList");
 			}
 		} else {
 			response.setCode(10);
@@ -244,6 +253,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	public ResponseProduct syncProductPrice(String products) {
 		ResponseProduct response = new ResponseProduct();
 		try {
+			WebHelper.getInstance().addLock(10, "Product.syncProductPrice");
 			if (products != null && !"".equals(products)) {
 				RequestProducts requestProducts = JSON.toJavaObject(JSON.parseObject(products), RequestProducts.class);
 				if (requestProducts != null) {
@@ -291,6 +301,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			e.printStackTrace();
 			response.setCode(10);
 			response.setDesc(getInfo(10));
+		} finally {
+			WebHelper.getInstance().unLock("Product.syncProductPrice");
 		}
 		return response;
 	}
@@ -308,6 +320,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	public ResponseProduct syncSkuStore(String products) {
 		ResponseProduct response = new ResponseProduct();
 		try {
+			WebHelper.getInstance().addLock(10, "Product.syncSkuStore");
 			RequestProducts requestProducts = JSON.toJavaObject(JSON.parseObject(products), RequestProducts.class);
 			if (requestProducts != null) {
 				List<ProductInfo> productList = requestProducts.getProductInfos();
@@ -354,6 +367,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			e.printStackTrace();
 			response.setCode(10);
 			response.setDesc(getInfo(10));
+		} finally {
+			WebHelper.getInstance().unLock("Product.syncSkuStore");
 		}
 		return response;
 	}
@@ -371,7 +386,6 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	private boolean addProduct(List<ProductInfo> producsts) {
 		boolean flag = false;
 		try {
-			WebHelper.getInstance().addLock(10, "openapi-test-addproduct");
 			String sellerCode = "";
 			/**
 			 * 批量添加商品

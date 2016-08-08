@@ -20,17 +20,17 @@
 		select
 			*
 		from 
-			lc_open_api_operation
+			logcenter.lc_open_api_operation
 		where 
 			zid = #{zid,jdbcType=INTEGER}
 	</select>
 	
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-		delete from lc_open_api_operation where zid = #{zid,jdbcType=INTEGER}
+		delete from logcenter.lc_open_api_operation where zid = #{zid,jdbcType=INTEGER}
 	</delete>
 	
 	<insert id="insertSelective" parameterType="com.hjy.entity.log.LcOpenApiOperation">
-		insert into lc_open_api_operation
+		insert into logcenter.lc_open_api_operation
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
 				zid,
@@ -104,7 +104,7 @@
 	</insert>
 	
 	<update id="updateSelective" parameterType="com.hjy.entity.log.LcOpenApiOperation">
-		update lc_open_api_operation
+		update logcenter.lc_open_api_operation
 		<set>
 			<if test="uid != null">
 				uid = #{uid,jdbcType=VARCHAR},
