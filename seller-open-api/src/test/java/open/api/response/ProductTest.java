@@ -17,6 +17,7 @@ import com.hjy.common.DateUtil;
 import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
 import com.hjy.dto.product.Productdescription;
+import com.hjy.helper.WebHelper;
 import com.hjy.request.RequestProduct;
 import com.hjy.request.RequestProducts;
 import com.hjy.response.product.ResponseProduct;
@@ -86,8 +87,9 @@ public class ProductTest extends BaseTest {
 		request.setTotal(productList.size());
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-		//ResponseProduct response = service.syncProductList(obj.toJSONString());
-		//System.out.println(JSON.toJSON(response));
+		// ResponseProduct response =
+		// service.syncProductList(obj.toJSONString());
+		// System.out.println(JSON.toJSON(response));
 	}
 
 	public void addProduct() {
@@ -196,8 +198,8 @@ public class ProductTest extends BaseTest {
 		request.setSign("");
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-		//ResponseProduct response = service.editProduct(obj.toJSONString());
-		//System.out.println(JSON.toJSON(response));
+		// ResponseProduct response = service.editProduct(obj.toJSONString());
+		// System.out.println(JSON.toJSON(response));
 	}
 
 	public void syncProductPrice() {
@@ -219,11 +221,11 @@ public class ProductTest extends BaseTest {
 		request.setProductInfos(products);
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-//		ResponseProduct response = service.syncProductPrice(obj.toJSONString());
-//		System.out.println(JSON.toJSON(response));
+		// ResponseProduct response =
+		// service.syncProductPrice(obj.toJSONString());
+		// System.out.println(JSON.toJSON(response));
 	}
 
-	@Test
 	public void syncSkuStore() {
 		ProductInfo product = new ProductInfo();
 		product.setProductOutCode("WBPD001");
@@ -241,7 +243,8 @@ public class ProductTest extends BaseTest {
 		request.setProductInfos(products);
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-//		ResponseProduct response = service.syncSkuStore(obj.toJSONString());
-//		System.out.println(JSON.toJSON(response));
+		// ResponseProduct response = service.syncSkuStore(obj.toJSONString());
+		// System.out.println(JSON.toJSON(response));
 	}
+
 }
