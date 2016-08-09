@@ -31,6 +31,11 @@ public class DateHelper {
 	 * 获取月度第一天
 	 */
 	public final static String CONST_PARSE_MONTH_FIRST_DAY = "yyyy-MM-01 00:00:00";
+	
+	/**
+	 * 获取每天0时0分0秒
+	 */
+	public final static String CONST_PARSE_DATETIME_0 = "yyyy-MM-dd 00:00:00";
 
 	/**
 	 * 强制转换日期
@@ -58,6 +63,17 @@ public class DateHelper {
 	public static String formatDate(Date dDate) {
 
 		return formatDate(dDate, CONST_PARSE_DATETIME);
+	}
+	
+	/** 
+	 * 获取每天0时0分0秒
+	 * 
+	 * @param dDate
+	 * @return
+	 */
+	public static String formatDateZero(Date dDate) {
+
+		return formatDate(dDate, CONST_PARSE_DATETIME_0);
 	}
 
 	/**

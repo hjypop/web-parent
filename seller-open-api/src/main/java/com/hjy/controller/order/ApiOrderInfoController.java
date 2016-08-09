@@ -66,7 +66,7 @@ public class ApiOrderInfoController {
 				result.toJSONString(),
 				new Date(), 
 				requestTime,
-				new Date(),
+				DateHelper.parseDate(result.getString("responseTime")), 
 				"remark"));
 		return  result;
 	}
@@ -84,11 +84,10 @@ public class ApiOrderInfoController {
 	@RequestMapping(value = "update_order_status", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject apiUpdateOrderStatus(String json){
-		json = this.apiUpdateOrderStatusTest();
+		// json = this.apiUpdateOrderStatusTest();
 		
 		Date requestTime = new Date();
 		JSONObject result = service.updateOrderStatus(json);
-		System.out.println(result.toJSONString());
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
 				result.getString("sellerCode") == null ? "错误的数据请求": result.getString("sellerCode") , 
@@ -98,11 +97,26 @@ public class ApiOrderInfoController {
 				result.toJSONString(),
 				new Date(), 
 				requestTime,
-				new Date(),
+				DateHelper.parseDate(result.getString("responseTime")), 
 				"remark"));
 		return result;
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * @descriptions 为apiUpdateOrderStatus()方法模拟测试数据
+	*
+	* @date 2016年8月9日 下午8:16:46
+	* @author Yangcl 
+	* @version 1.0.0.1
+	 */
 	public String apiUpdateOrderStatusTest(){
 		OrderInfoStatusRequest info = new OrderInfoStatusRequest();
 		info.setCreateTime(DateHelper.formatDate(new Date())); 
@@ -111,7 +125,7 @@ public class ApiOrderInfoController {
 		List< OrderInfoStatus> list = new ArrayList<OrderInfoStatus>();
 		OrderInfoStatus os1 = new OrderInfoStatus();
 		os1.setOrderCode("DD150916819918");
-		os1.setOrderStatus("449715390001000399");
+		os1.setOrderStatus("449715390001000399");// 模拟状态错误
 		os1.setUpdateTime("2018-08-08 18:08:08");
 		
 		OrderInfoStatus os2 = new OrderInfoStatus();
@@ -124,7 +138,7 @@ public class ApiOrderInfoController {
 		os3.setOrderStatus("4497153900010001");
 		os3.setUpdateTime("2018-08-08 18:08:08");
 		
-		OrderInfoStatus os4 = new OrderInfoStatus();
+		OrderInfoStatus os4 = new OrderInfoStatus();// 模拟非商户订单
 		os4.setOrderCode("DD150916808992");
 		os4.setOrderStatus("4497153900010004");
 		os4.setUpdateTime("2018-08-08 18:08:08");

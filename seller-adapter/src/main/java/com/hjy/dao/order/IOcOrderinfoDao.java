@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.order.OcOrderinfo;
-import com.hjy.request.data.OrderInfoRequest;
+import com.hjy.request.data.OrderInfoRequestDto;
 import com.hjy.request.data.OrderInfoStatusDto;
 import com.hjy.response.data.OrderInfoResponse;
 
@@ -39,7 +39,7 @@ public interface IOcOrderinfoDao extends BaseDao<OcOrderinfo, Integer>{
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */
-	public List<OrderInfoResponse> getOpenApiOrderinfoList(OrderInfoRequest dto);
+	public List<OrderInfoResponse> getOpenApiOrderinfoList(OrderInfoRequestDto dto);
 	
 	/**
 	 * @descriptions 根据orderCode更新订单状态。seller-open-api项目中使用

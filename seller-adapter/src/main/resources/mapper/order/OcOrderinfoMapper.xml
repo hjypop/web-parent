@@ -133,7 +133,7 @@
 		<!-- oc_order_remark 表字段 -->
 		<result column="remark" jdbcType="VARCHAR" property="remark" />
 	</resultMap>
-	<select id="getOpenApiOrderinfoList" parameterType="com.hjy.request.data.OrderInfoRequest" resultMap="OrderApiResultMap">
+	<select id="getOpenApiOrderinfoList" parameterType="com.hjy.request.data.OrderInfoRequestDto" resultMap="OrderApiResultMap">
 		SELECT 
 				info.order_code AS orderCode,
 				info.product_money AS productMoney,
@@ -158,10 +158,14 @@
 				LEFT JOIN ordercenter.oc_orderadress address ON info.order_code = address.order_code 
 				LEFT JOIN ordercenter.oc_order_remark remark ON info.order_code = remark.order_code
 		WHERE 
-				info.small_seller_code = #{sellerCode , jdbcType=VARCHAR} 
+				info.create_time between #{startTime , jdbcType=VARCHAR} and #{endTime , jdbcType=VARCHAR} 
+				and info.small_seller_code = #{sellerCode , jdbcType=VARCHAR} 
 				<if test="orderCode != null and orderCode != ''">
 					 and info.order_code = #{orderCode , jdbcType=VARCHAR}
 				</if>
+				
+				 
+				
 	</select>
 	
 	

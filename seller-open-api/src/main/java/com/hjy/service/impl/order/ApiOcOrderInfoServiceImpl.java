@@ -1,7 +1,10 @@
 package com.hjy.service.impl.order;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -20,6 +23,7 @@ import com.hjy.helper.ExceptionHelpter;
 import com.hjy.helper.SignHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.request.data.OrderInfoRequest;
+import com.hjy.request.data.OrderInfoRequestDto;
 import com.hjy.request.data.OrderInfoStatus;
 import com.hjy.request.data.OrderInfoStatusDto;
 import com.hjy.request.data.OrderInfoStatusRequest;
@@ -41,6 +45,8 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	/**
 	 * @descriptions 根据Json串查询订单信息|seller-open-api项目中使用
 	 *
+	 *	签名方式为：sellerCode + JSON.toJSONString(list) + responseTime
+	 *
 	 * @param json
 	 * @date 2016年8月3日上午10:43:17
 	 * @author Yangcl
@@ -49,6 +55,8 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	@Override
 	public JSONObject getOrderInfoByJson(String json) {
 		JSONObject result = new JSONObject();
+		String responseTime = DateHelper.formatDate(new Date());
+		result.put("responseTime", responseTime);
 		// 解析请求数据
 		OrderInfoRequest request = null;
 		try {
@@ -74,17 +82,22 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 //			return result;
 //		}
 		try {
-			List<OrderInfoResponse> list = dao.getOpenApiOrderinfoList(request);
+			String startTime = DateHelper.formatDateZero(new Date());  
+			String endTime = this.getNextDate(new Date()); 
+			List<OrderInfoResponse> list = dao.getOpenApiOrderinfoList(new OrderInfoRequestDto(sellerCode, request.getOrderCode(), startTime, endTime));
+			
+			String sign = SignHelper.md5Sign(sellerCode + JSON.toJSONString(list) + responseTime);
 			result.put("code", 0);
 			result.put("desc", "请求成功");
 			result.put("data", list);
+			result.put("sign", sign); 
 			return result; 
 		} catch (Exception ex) {
 			logger.error("查询订单状态信息异常|"  , ex);  
 			String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
 			openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , "OrderCode" , "OrderStatus" , 2 , new Date() , remark_));
 			result.put("code", 11);
-			result.put("desc", remark_);
+			result.put("desc", "查询订单状态信息异常");
 			return result; 
 		}
 	} 
@@ -222,8 +235,22 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 		return flag;
 	}
 
-
-	
+	/**
+	 * @descriptions 获取第二天的时间
+	*
+	* @date 2016年8月9日 下午9:42:54
+	* @author Yangcl 
+	* @version 1.0.0.1
+	 */
+	private String getNextDate(Date date){
+		 Calendar calendar = new GregorianCalendar();
+		 calendar.setTime(date);
+		 calendar.add(calendar.DATE , 1);//把日期往后增加一天.整数往后推,负数往前移动
+		 date=calendar.getTime(); //这个时间就是日期往后推一天的结果 
+		 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+		 
+		 return formatter.format(date);
+	}
 }
 
 
