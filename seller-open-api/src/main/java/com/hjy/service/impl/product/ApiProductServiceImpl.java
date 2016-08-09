@@ -122,25 +122,31 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	@Override
 	public ResponseProduct editProduct(String product) {
 		ResponseProduct response = new ResponseProduct();
+		String lock = "";
 		try {
-			WebHelper.getInstance().addLock(10, "Product.editproduct");
-			if (product != null && !"".equals(product)) {
-				RequestProduct requestProduct = JSON.toJavaObject(JSON.parseObject(product), RequestProduct.class);
-				if (requestProduct != null) {
-					if (requestProduct.getProduct() != null) {
-						List<ProductInfo> productList = new ArrayList<ProductInfo>();
-						requestProduct.getProduct().setOperate(1);
-						productList.add(requestProduct.getProduct());
-						for (ProductInfo productInfo : productList) {
-							// 根据外部商品编号查询惠家有商品编号
-							String productCode = productInfoDao
-									.findProductCodeByOutCode(productInfo.getProductOutCode());
-							productInfo.setProductCode(productCode);
-						}
-						// 执行编辑商品
-						if (editProduct(productList)) {
-							response.setCode(0);
-							response.setDesc(getInfo(0));
+			lock = WebHelper.getInstance().addLock(10, "Product.editproduct");
+			if (lock != null && !"".equals(lock)) {
+				if (product != null && !"".equals(product)) {
+					RequestProduct requestProduct = JSON.toJavaObject(JSON.parseObject(product), RequestProduct.class);
+					if (requestProduct != null) {
+						if (requestProduct.getProduct() != null) {
+							List<ProductInfo> productList = new ArrayList<ProductInfo>();
+							requestProduct.getProduct().setOperate(1);
+							productList.add(requestProduct.getProduct());
+							for (ProductInfo productInfo : productList) {
+								// 根据外部商品编号查询惠家有商品编号
+								String productCode = productInfoDao
+										.findProductCodeByOutCode(productInfo.getProductOutCode());
+								productInfo.setProductCode(productCode);
+							}
+							// 执行编辑商品
+							if (editProduct(productList)) {
+								response.setCode(0);
+								response.setDesc(getInfo(0));
+							} else {
+								response.setCode(10);
+								response.setDesc(getInfo(10));
+							}
 						} else {
 							response.setCode(10);
 							response.setDesc(getInfo(10));
@@ -153,15 +159,13 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					response.setCode(10);
 					response.setDesc(getInfo(10));
 				}
-			} else {
-				response.setCode(10);
-				response.setDesc(getInfo(10));
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			WebHelper.getInstance().unLock("Product.editproduct");
+			if (lock != null && !"".equals(lock)) {
+				WebHelper.getInstance().unLock(lock);
+			}
 		}
 		return response;
 	}
@@ -179,58 +183,64 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	public ResponseProduct syncProductList(String products) {
 		ResponseProduct response = new ResponseProduct();
 		if (products != null && !"".equals(products)) {
+			String lock = "";
 			try {
-				WebHelper.getInstance().addLock(10, "Product.syncProductList");
-				RequestProducts requestProduct = JSON.toJavaObject(JSON.parseObject(products), RequestProducts.class);
-				if (requestProduct != null) {
-					if (requestProduct.getProductInfos() != null && requestProduct.getProductInfos().size() > 0) {
-						response = verifyProduct(requestProduct.getProductInfos());
-						if (response.getCode() == 0) {
-							for (ProductInfo info : requestProduct.getProductInfos()) {
-								if (info.getOperate() == 1) {
-									// 根据外部商品编号查询惠家有商品编号
-									String productCode = productInfoDao
-											.findProductCodeByOutCode(info.getProductOutCode());
-									info.setProductCode(productCode);
-								} else {
-									info.setProductCode(WebHelper.getInstance().genUniqueCode(ProductHead));
+				lock = WebHelper.getInstance().addLock(10, "Product.syncProductList");
+				if (lock != null && !"".equals(lock)) {
+					RequestProducts requestProduct = JSON.toJavaObject(JSON.parseObject(products),
+							RequestProducts.class);
+					if (requestProduct != null) {
+						if (requestProduct.getProductInfos() != null && requestProduct.getProductInfos().size() > 0) {
+							response = verifyProduct(requestProduct.getProductInfos());
+							if (response.getCode() == 0) {
+								for (ProductInfo info : requestProduct.getProductInfos()) {
+									if (info.getOperate() == 1) {
+										// 根据外部商品编号查询惠家有商品编号
+										String productCode = productInfoDao
+												.findProductCodeByOutCode(info.getProductOutCode());
+										info.setProductCode(productCode);
+									} else {
+										info.setProductCode(WebHelper.getInstance().genUniqueCode(ProductHead));
+									}
 								}
-							}
-							/**
-							 * 遍历商品集合，根据操作类型区分是添加还是编辑，根据类型进行不同的操作
-							 */
-							List<ProductInfo> addList = new ArrayList<ProductInfo>();
-							List<ProductInfo> editList = new ArrayList<ProductInfo>();
-							for (int i = 0; i < requestProduct.getProductInfos().size(); i++) {
-								ProductInfo info = requestProduct.getProductInfos().get(i);
-								if (info.getOperate() == 0) {
-									addList.add(info);
-								} else if (info.getOperate() == 1) {
-									editList.add(info);
+								/**
+								 * 遍历商品集合，根据操作类型区分是添加还是编辑，根据类型进行不同的操作
+								 */
+								List<ProductInfo> addList = new ArrayList<ProductInfo>();
+								List<ProductInfo> editList = new ArrayList<ProductInfo>();
+								for (int i = 0; i < requestProduct.getProductInfos().size(); i++) {
+									ProductInfo info = requestProduct.getProductInfos().get(i);
+									if (info.getOperate() == 0) {
+										addList.add(info);
+									} else if (info.getOperate() == 1) {
+										editList.add(info);
+									}
 								}
+								// 执行添加操作
+								addProduct(addList);
+								// 执行编辑操作
+								editProduct(editList);
+								// 返回处理结果
+								response.setCode(0);
+								response.setDesc(getInfo(0));
 							}
-							// 执行添加操作
-							addProduct(addList);
-							// 执行编辑操作
-							editProduct(editList);
-							// 返回处理结果
-							response.setCode(0);
-							response.setDesc(getInfo(0));
+						} else {
+							response.setCode(10);
+							response.setDesc(getInfo(10));
 						}
 					} else {
 						response.setCode(10);
 						response.setDesc(getInfo(10));
 					}
-				} else {
-					response.setCode(10);
-					response.setDesc(getInfo(10));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				response.setCode(10);
 				response.setDesc(getInfo(10));
 			} finally {
-				WebHelper.getInstance().unLock("Product.syncProductList");
+				if (lock != null && !"".equals(lock)) {
+					WebHelper.getInstance().unLock(lock);
+				}
 			}
 		} else {
 			response.setCode(10);
@@ -252,39 +262,46 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	@Override
 	public ResponseProduct syncProductPrice(String products) {
 		ResponseProduct response = new ResponseProduct();
+		String lock = "";
 		try {
-			WebHelper.getInstance().addLock(10, "Product.syncProductPrice");
-			if (products != null && !"".equals(products)) {
-				RequestProducts requestProducts = JSON.toJavaObject(JSON.parseObject(products), RequestProducts.class);
-				if (requestProducts != null) {
-					List<ProductInfo> productList = requestProducts.getProductInfos();
-					if (productList != null && productList.size() > 0) {
-						String sellerCode = "";
-						for (ProductInfo info : productList) {
-							// 根据外部商品编号查询惠家有商品编号
-							String productCode = productInfoDao.findProductCodeByOutCode(info.getProductOutCode());
-							info.setProductCode(productCode);
-						}
-						/**
-						 * 编辑商品的最小售价和最大售价
-						 */
-						List<PcProductinfo> productInfos = getPcProdcutInfoList(productList, sellerCode);
-						if (productInfos != null && productInfos.size() > 0) {
-							for (PcProductinfo pcProductinfo : productInfos) {
-								productInfoDao.updateProductPrice(pcProductinfo);
+			lock = WebHelper.getInstance().addLock(10, "Product.syncProductPrice");
+			if (lock != null && !"".equals(lock)) {
+				if (products != null && !"".equals(products)) {
+					RequestProducts requestProducts = JSON.toJavaObject(JSON.parseObject(products),
+							RequestProducts.class);
+					if (requestProducts != null) {
+						List<ProductInfo> productList = requestProducts.getProductInfos();
+						if (productList != null && productList.size() > 0) {
+							String sellerCode = "";
+							for (ProductInfo info : productList) {
+								// 根据外部商品编号查询惠家有商品编号
+								String productCode = productInfoDao.findProductCodeByOutCode(info.getProductOutCode());
+								info.setProductCode(productCode);
 							}
-						}
-						/**
-						 * 编辑sku的售价
-						 */
-						List<PcSkuinfo> skuInfos = getPcSkuInfoList(productList, sellerCode);
-						if (skuInfos != null && skuInfos.size() > 0) {
-							for (PcSkuinfo pcSkuinfo : skuInfos) {
-								skuInfoDao.updateSkuPrice(pcSkuinfo);
+							/**
+							 * 编辑商品的最小售价和最大售价
+							 */
+							List<PcProductinfo> productInfos = getPcProdcutInfoList(productList, sellerCode);
+							if (productInfos != null && productInfos.size() > 0) {
+								for (PcProductinfo pcProductinfo : productInfos) {
+									productInfoDao.updateProductPrice(pcProductinfo);
+								}
 							}
+							/**
+							 * 编辑sku的售价
+							 */
+							List<PcSkuinfo> skuInfos = getPcSkuInfoList(productList, sellerCode);
+							if (skuInfos != null && skuInfos.size() > 0) {
+								for (PcSkuinfo pcSkuinfo : skuInfos) {
+									skuInfoDao.updateSkuPrice(pcSkuinfo);
+								}
+							}
+							response.setCode(0);
+							response.setDesc(getInfo(0));
+						} else {
+							response.setCode(10);
+							response.setDesc(getInfo(10));
 						}
-						response.setCode(0);
-						response.setDesc(getInfo(0));
 					} else {
 						response.setCode(10);
 						response.setDesc(getInfo(10));
@@ -293,16 +310,15 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					response.setCode(10);
 					response.setDesc(getInfo(10));
 				}
-			} else {
-				response.setCode(10);
-				response.setDesc(getInfo(10));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setCode(10);
 			response.setDesc(getInfo(10));
 		} finally {
-			WebHelper.getInstance().unLock("Product.syncProductPrice");
+			if (lock != null && !"".equals(lock)) {
+				WebHelper.getInstance().unLock(lock);
+			}
 		}
 		return response;
 	}
@@ -319,56 +335,61 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	@Override
 	public ResponseProduct syncSkuStore(String products) {
 		ResponseProduct response = new ResponseProduct();
+		String lock = "";
 		try {
-			WebHelper.getInstance().addLock(10, "Product.syncSkuStore");
-			RequestProducts requestProducts = JSON.toJavaObject(JSON.parseObject(products), RequestProducts.class);
-			if (requestProducts != null) {
-				List<ProductInfo> productList = requestProducts.getProductInfos();
-				if (productList != null && productList.size() > 0) {
-					List<String> productCodes = new ArrayList<String>();
-					List<PcSkuInfo> skuInfos = new ArrayList<PcSkuInfo>();
-					for (ProductInfo info : productList) {
-						productCodes.add(info.getProductOutCode());
-						skuInfos.addAll(info.getSkuInfoList());
-					}
-					/**
-					 * 修改pc_skuinfo表中的库存信息
-					 */
-					for (PcSkuInfo info : skuInfos) {
-						PcSkuinfo sku = new PcSkuinfo();
-						sku.setSkuCodeOld(info.getSkuCode());
-						sku.setStockNum(info.getStockNum());
-						skuInfoDao.updateSkuStore(sku);
-					}
-					/**
-					 * 根据外部订单编号查询pc_skuinfo数据
-					 * 将pc_skuinfo已修改库存同步到sc_store_skunum的库存信息
-					 */
-					List<PcSkuinfo> skuinfoList = skuInfoDao.findSkuInfoListByProductCodeOld(productCodes);
-					if (skuinfoList != null && skuinfoList.size() > 0) {
-						for (PcSkuinfo sku : skuinfoList) {
-							ScStoreSkunum skunum = new ScStoreSkunum();
-							skunum.setSkuCode(sku.getSkuCode());
-							skunum.setStockNum(sku.getStockNum());
-							scStoreSkunumDao.updateSelectiveBySkuCode(skunum);
+			lock = WebHelper.getInstance().addLock(10, "Product.syncSkuStore");
+			if (lock != null && !"".equals(lock)) {
+				RequestProducts requestProducts = JSON.toJavaObject(JSON.parseObject(products), RequestProducts.class);
+				if (requestProducts != null) {
+					List<ProductInfo> productList = requestProducts.getProductInfos();
+					if (productList != null && productList.size() > 0) {
+						List<String> productCodes = new ArrayList<String>();
+						List<PcSkuInfo> skuInfos = new ArrayList<PcSkuInfo>();
+						for (ProductInfo info : productList) {
+							productCodes.add(info.getProductOutCode());
+							skuInfos.addAll(info.getSkuInfoList());
 						}
+						/**
+						 * 修改pc_skuinfo表中的库存信息
+						 */
+						for (PcSkuInfo info : skuInfos) {
+							PcSkuinfo sku = new PcSkuinfo();
+							sku.setSkuCodeOld(info.getSkuCode());
+							sku.setStockNum(info.getStockNum());
+							skuInfoDao.updateSkuStore(sku);
+						}
+						/**
+						 * 根据外部订单编号查询pc_skuinfo数据
+						 * 将pc_skuinfo已修改库存同步到sc_store_skunum的库存信息
+						 */
+						List<PcSkuinfo> skuinfoList = skuInfoDao.findSkuInfoListByProductCodeOld(productCodes);
+						if (skuinfoList != null && skuinfoList.size() > 0) {
+							for (PcSkuinfo sku : skuinfoList) {
+								ScStoreSkunum skunum = new ScStoreSkunum();
+								skunum.setSkuCode(sku.getSkuCode());
+								skunum.setStockNum(sku.getStockNum());
+								scStoreSkunumDao.updateSelectiveBySkuCode(skunum);
+							}
+						}
+						response.setCode(0);
+						response.setDesc(getInfo(0));
+					} else {
+						response.setCode(10);
+						response.setDesc(getInfo(10));
 					}
-					response.setCode(0);
-					response.setDesc(getInfo(0));
 				} else {
 					response.setCode(10);
 					response.setDesc(getInfo(10));
 				}
-			} else {
-				response.setCode(10);
-				response.setDesc(getInfo(10));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setCode(10);
 			response.setDesc(getInfo(10));
 		} finally {
-			WebHelper.getInstance().unLock("Product.syncSkuStore");
+			if (lock != null && !"".equals(lock)) {
+				WebHelper.getInstance().unLock(lock);
+			}
 		}
 		return response;
 	}
