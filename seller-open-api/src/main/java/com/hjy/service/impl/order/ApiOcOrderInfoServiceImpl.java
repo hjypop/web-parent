@@ -17,9 +17,11 @@ import com.hjy.entity.log.LcOpenApiOrderStatus;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelpter;
+import com.hjy.helper.SignHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.request.data.OrderInfoRequest;
 import com.hjy.request.data.OrderInfoStatus;
+import com.hjy.request.data.OrderInfoStatusDto;
 import com.hjy.request.data.OrderInfoStatusRequest;
 import com.hjy.response.data.OrderInfoResponse;
 import com.hjy.service.impl.BaseServiceImpl;
@@ -71,18 +73,28 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 //			result.put("desc", "错误的商家编号，无API访问权限");
 //			return result;
 //		}
-		
-		List<OrderInfoResponse> list = dao.getOpenApiOrderinfoList(request);
-		result.put("code", 0);
-		result.put("desc", "请求成功");
-		result.put("data", list);
-		return result; 
+		try {
+			List<OrderInfoResponse> list = dao.getOpenApiOrderinfoList(request);
+			result.put("code", 0);
+			result.put("desc", "请求成功");
+			result.put("data", list);
+			return result; 
+		} catch (Exception ex) {
+			logger.error("查询订单状态信息异常|"  , ex);  
+			String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
+			openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , "OrderCode" , "OrderStatus" , 2 , new Date() , remark_));
+			result.put("code", 11);
+			result.put("desc", remark_);
+			return result; 
+		}
 	} 
 	
 	
 	/**
 	 * @descriptions 订单变更： 更新订单状态信息
 	 * 	包含效验对方传入错误的订单
+	 * 
+	 * 签名方式为：sellerCode + JSON.toJSONString(successList) + responseTime
 	 * 
 	 * @param info
 	 * @date 2016年8月3日上午10:23:53
@@ -91,6 +103,8 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	 */
 	public JSONObject updateOrderStatus(String json) {
 		JSONObject result = new JSONObject();
+		String responseTime = DateHelper.formatDate(new Date());
+		result.put("responseTime", responseTime);
 		// 解析请求数据
 		OrderInfoStatusRequest request = null;
 		try {
@@ -121,7 +135,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			return result; 
 		}
 		
-		String lockcode = WebHelper.getInstance().addLock(10000,"更新订单状态信息");      // 分布式锁
+		String lockcode = WebHelper.getInstance().addLock(10000,"com.hjy.controller.order.apiUpdateOrderStatus");      // 分布式锁
 		if(StringUtils.isNotEmpty(lockcode)) {
 			List<OrderInfoStatus> updateList = new ArrayList<OrderInfoStatus>();
 			List<OrderInfoStatus> exceptionStatusList = new ArrayList<OrderInfoStatus>();
@@ -133,34 +147,52 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 					exceptionStatusList.add(list.get(i));
 				}
 			}
-			
-			int count = 0;
+			if(exceptionStatusList.size() > 0){
+				result.put("errorStatusList", exceptionStatusList); // 订单状态非法记录
+			}
+			String sign = "";
+			List<OrderInfoStatus> successList = new ArrayList<OrderInfoStatus>(); // 保存同步成功的记录
+			List<OrderInfoStatus> errorList = new ArrayList<OrderInfoStatus>(); // 保存 非此商户订单 的记录
 			OrderInfoStatus e = null;
 			try {
 				for(OrderInfoStatus o : updateList){
 					e = o;
-					dao.apiUpdateOrderinfoStatus(o);
+					Integer count = dao.apiUpdateOrderinfoStatus(new OrderInfoStatusDto(o.getOrderCode() , o.getOrderStatus() , o.getUpdateTime() , sellerCode));
 					// 插入一条同步日志记录      zid   sellerCode  orderCode   orderStatus createTime 
 					openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , o.getOrderCode() , o.getOrderStatus() , 1 , new Date() , "update success"));
-					count ++;
+					if(count != null && count == 1){
+						successList.add(o);
+					}else if(count != null && count == 0){
+						errorList.add(o);
+					}
 				}
 			} catch (Exception ex) {
-				String desc_ = "平台内部错误，成功 " + count + " 条，失败 " + (updateList.size() - count) + " 条";
+				String desc_ = "平台内部错误，成功 " + successList.size() + " 条，失败 " + (updateList.size() - successList.size()) + " 条";
 				logger.error("更新订单状态信息异常|" + desc_ , ex);  
 				String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
 				openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , e.getOrderCode() , e.getOrderStatus() , 2 , new Date() , remark_));
+				result.put("successList", successList);
+				result.put("unsynchList", updateList.removeAll(successList)); // 订单状态未同步
+				if(errorList.size() > 0){
+					result.put("errorSellerCodeList", errorList); // 非此商户订单
+				}
+				sign = SignHelper.md5Sign(sellerCode + JSON.toJSONString(successList) + responseTime);
 				result.put("code", 11);
 				result.put("desc", desc_);
+				result.put("sign", sign);
 				return result; 
 			}finally {
 				WebHelper.getInstance().unLock(lockcode);
 			}
 			
+			sign = SignHelper.md5Sign(sellerCode + JSON.toJSONString(successList) + responseTime);
 			result.put("code", 0);
-			result.put("desc", "请求成功，已同步 " + updateList.size() + " 条订单状态记录");
-			if(exceptionStatusList.size() > 0){
-				result.put("订单状态非法记录", exceptionStatusList);
+			result.put("desc", "请求成功，已同步 " + successList.size() + " 条订单状态记录"); 
+			result.put("successList", successList);
+			if(errorList.size() > 0){
+				result.put("errorSellerCodeList", errorList);// 非此商户订单
 			}
+			result.put("sign", sign);
 			return result;
 		}else{
 			result.put("code", 14);

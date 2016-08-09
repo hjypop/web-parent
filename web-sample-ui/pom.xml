@@ -23,6 +23,11 @@
 			<artifactId>web-sample</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.huijiayou</groupId>
+			<artifactId>seller-open-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>sample</finalName>

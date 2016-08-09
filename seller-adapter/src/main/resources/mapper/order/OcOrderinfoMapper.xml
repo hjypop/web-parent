@@ -166,7 +166,7 @@
 	
 	
  	<!-- 根据订单编号更新订单信息表  open api 使用 - Yangcl -->
-	<update id="apiUpdateOrderinfoStatus" parameterType="com.hjy.request.data.OrderInfoStatus">
+	<update id="apiUpdateOrderinfoStatus" parameterType="com.hjy.request.data.OrderInfoStatusDto">
 		UPDATE ordercenter.oc_orderinfo
 		<set>
 			<trim suffixOverrides=",">
@@ -179,7 +179,7 @@
 			</trim>
 		</set>
 		<where>
-			order_code = #{orderCode,jdbcType=VARCHAR}
+			order_code = #{orderCode,jdbcType=VARCHAR} and small_seller_code = #{sellerCode,jdbcType=VARCHAR}
 		</where>
 	</update>
 </mapper>

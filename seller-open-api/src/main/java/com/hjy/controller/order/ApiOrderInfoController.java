@@ -1,6 +1,8 @@
 package com.hjy.controller.order;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
@@ -9,8 +11,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.entity.log.LcOpenApiOperation;
+import com.hjy.helper.DateHelper;
+import com.hjy.request.data.OrderInfoRequest;
+import com.hjy.request.data.OrderInfoStatus;
+import com.hjy.request.data.OrderInfoStatusRequest;
 import com.hjy.service.operation.IApiLcOpenApiOperationService;
 import com.hjy.service.order.IApiOcOrderInfoService;
 
@@ -44,9 +51,10 @@ public class ApiOrderInfoController {
 	@RequestMapping(value = "list", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject apiGetOrderInfo(String json){
-//		OrderInfoRequest  ooo = new OrderInfoRequest();
-//		ooo.setSellerCode("SF03150617100010");
-//		json = JSON.toJSONString(ooo);
+		OrderInfoRequest  ooo = new OrderInfoRequest();
+		ooo.setSellerCode("SF03150617100010");
+		json = JSON.toJSONString(ooo);
+		
 		Date requestTime = new Date();
 		JSONObject result = service.getOrderInfoByJson(json);
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
@@ -76,8 +84,11 @@ public class ApiOrderInfoController {
 	@RequestMapping(value = "update_order_status", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject apiUpdateOrderStatus(String json){
+		json = this.apiUpdateOrderStatusTest();
+		
 		Date requestTime = new Date();
 		JSONObject result = service.updateOrderStatus(json);
+		System.out.println(result.toJSONString());
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
 				result.getString("sellerCode") == null ? "错误的数据请求": result.getString("sellerCode") , 
@@ -92,6 +103,41 @@ public class ApiOrderInfoController {
 		return result;
 	}
 	
+	public String apiUpdateOrderStatusTest(){
+		OrderInfoStatusRequest info = new OrderInfoStatusRequest();
+		info.setCreateTime(DateHelper.formatDate(new Date())); 
+		info.setSellerCode("SF0-OPEN-API-TEST-4");
+		info.setSellerKey(""); 
+		List< OrderInfoStatus> list = new ArrayList<OrderInfoStatus>();
+		OrderInfoStatus os1 = new OrderInfoStatus();
+		os1.setOrderCode("DD150916819918");
+		os1.setOrderStatus("449715390001000399");
+		os1.setUpdateTime("2018-08-08 18:08:08");
+		
+		OrderInfoStatus os2 = new OrderInfoStatus();
+		os2.setOrderCode("DD150916819919");
+		os2.setOrderStatus("4497153900010001");
+		os2.setUpdateTime("2018-08-08 18:08:08");
+		
+		OrderInfoStatus os3 = new OrderInfoStatus();
+		os3.setOrderCode("DD150916819920");
+		os3.setOrderStatus("4497153900010001");
+		os3.setUpdateTime("2018-08-08 18:08:08");
+		
+		OrderInfoStatus os4 = new OrderInfoStatus();
+		os4.setOrderCode("DD150916808992");
+		os4.setOrderStatus("4497153900010004");
+		os4.setUpdateTime("2018-08-08 18:08:08");
+		
+		list.add(os1);
+		list.add(os2);
+		list.add(os3);
+		list.add(os4);
+		info.setList(list);
+		
+		
+		return JSON.toJSONString(info); 
+	}
 }
 
 

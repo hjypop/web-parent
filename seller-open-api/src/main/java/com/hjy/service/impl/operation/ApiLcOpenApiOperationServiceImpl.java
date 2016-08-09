@@ -1,7 +1,10 @@
 package com.hjy.service.impl.operation;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
+import com.hjy.dao.api.ILcOpenApiOperationDao;
 import com.hjy.entity.log.LcOpenApiOperation;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.operation.IApiLcOpenApiOperationService;
@@ -13,7 +16,10 @@ import com.hjy.service.operation.IApiLcOpenApiOperationService;
  * @author Yangcl
  * @version 1.0.1
  */
-@Service("apiLcOpenApiOperationService")
+@Service("logService")
 public class ApiLcOpenApiOperationServiceImpl  extends BaseServiceImpl<LcOpenApiOperation, Integer> implements IApiLcOpenApiOperationService{
 
+	@Resource
+	private ILcOpenApiOperationDao dao;
+	
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.request.data.OrderInfoRequest;
-import com.hjy.request.data.OrderInfoStatus;
+import com.hjy.request.data.OrderInfoStatusDto;
 import com.hjy.response.data.OrderInfoResponse;
 
 /**
@@ -49,7 +49,7 @@ public interface IOcOrderinfoDao extends BaseDao<OcOrderinfo, Integer>{
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */
-	public Integer apiUpdateOrderinfoStatus(OrderInfoStatus dto);
+	public Integer apiUpdateOrderinfoStatus(OrderInfoStatusDto dto);
 }
 
 
