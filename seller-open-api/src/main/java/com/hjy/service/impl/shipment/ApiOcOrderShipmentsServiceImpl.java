@@ -94,7 +94,7 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 			return result; 
 		}
 		
-		String lockcode = WebHelper.getInstance().addLock(10000,"同步物流信息");      // 分布式锁
+		String lockcode = WebHelper.getInstance().addLock(10000,"com.hjy.controller.shipment.ApiShipmentController.apiInsertShipments");      // 分布式锁
 		if(StringUtils.isNotEmpty(lockcode)) {
 			List<OrderShipment> correctList = new ArrayList<OrderShipment>(); // 保存合法的物流信息
 			List<OrderShipment> exceptionOrderList = new ArrayList<OrderShipment>();  // 异常的订单物流信息|关键字段不全，不做处理，返回给调用方
@@ -155,7 +155,7 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 			return result; 
 		}else{
 			result.put("code", 14);
-			result.put("desc", "分布式锁生效，同步物流信息已锁定");
+			result.put("desc", "分布式锁生效，同步物流信息已锁定，请联系HJY删除锁*.apiInsertShipments");
 			return result; 
 		}
 	} 

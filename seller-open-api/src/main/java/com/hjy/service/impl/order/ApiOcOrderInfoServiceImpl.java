@@ -135,7 +135,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			return result; 
 		}
 		
-		String lockcode = WebHelper.getInstance().addLock(10000,"com.hjy.controller.order.apiUpdateOrderStatus");      // 分布式锁
+		String lockcode = WebHelper.getInstance().addLock(10000,"com.hjy.controller.order.ApiOrderInfoController.apiUpdateOrderStatus");      // 分布式锁
 		if(StringUtils.isNotEmpty(lockcode)) {
 			List<OrderInfoStatus> updateList = new ArrayList<OrderInfoStatus>();
 			List<OrderInfoStatus> exceptionStatusList = new ArrayList<OrderInfoStatus>();
@@ -196,7 +196,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			return result;
 		}else{
 			result.put("code", 14);
-			result.put("desc", "分布式锁生效，更新订单状态信息已锁定");
+			result.put("desc", "分布式锁生效，更新订单状态信息已锁定，请联系HJY删除锁*.apiUpdateOrderStatus");
 			return result; 
 		}
 	}
