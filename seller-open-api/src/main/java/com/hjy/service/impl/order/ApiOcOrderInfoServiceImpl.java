@@ -17,6 +17,7 @@ import com.hjy.entity.log.LcOpenApiOrderStatus;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelpter;
+import com.hjy.helper.WebHelper;
 import com.hjy.request.data.OrderInfoRequest;
 import com.hjy.request.data.OrderInfoStatus;
 import com.hjy.request.data.OrderInfoStatusRequest;
@@ -120,43 +121,52 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			return result; 
 		}
 		
-		List<OrderInfoStatus> updateList = new ArrayList<OrderInfoStatus>();
-		List<OrderInfoStatus> exceptionStatusList = new ArrayList<OrderInfoStatus>();
-		for( int i = 0 ; i < list.size() ; i ++){
-			list.get(i).setUpdateTime(DateHelper.formatDate(new Date()));
-			if(this.validateOrderStatus(list.get(i))){
-				updateList.add(list.get(i));
-			}else{
-				exceptionStatusList.add(list.get(i));
+		String lockcode = WebHelper.getInstance().addLock(10000,"更新订单状态信息");      // 分布式锁
+		if(StringUtils.isNotEmpty(lockcode)) {
+			List<OrderInfoStatus> updateList = new ArrayList<OrderInfoStatus>();
+			List<OrderInfoStatus> exceptionStatusList = new ArrayList<OrderInfoStatus>();
+			for( int i = 0 ; i < list.size() ; i ++){
+				list.get(i).setUpdateTime(DateHelper.formatDate(new Date()));
+				if(this.validateOrderStatus(list.get(i))){
+					updateList.add(list.get(i));
+				}else{
+					exceptionStatusList.add(list.get(i));
+				}
 			}
-		}
-		
-		int count = 0;
-		OrderInfoStatus e = null;
-		try {
-			for(OrderInfoStatus o : updateList){
-				e = o;
-				dao.apiUpdateOrderinfoStatus(o);
-				// 插入一条同步日志记录      zid   sellerCode  orderCode   orderStatus createTime 
-				openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , o.getOrderCode() , o.getOrderStatus() , 1 , new Date() , "update success"));
-				count ++;
+			
+			int count = 0;
+			OrderInfoStatus e = null;
+			try {
+				for(OrderInfoStatus o : updateList){
+					e = o;
+					dao.apiUpdateOrderinfoStatus(o);
+					// 插入一条同步日志记录      zid   sellerCode  orderCode   orderStatus createTime 
+					openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , o.getOrderCode() , o.getOrderStatus() , 1 , new Date() , "update success"));
+					count ++;
+				}
+			} catch (Exception ex) {
+				String desc_ = "平台内部错误，成功 " + count + " 条，失败 " + (updateList.size() - count) + " 条";
+				logger.error("更新订单状态信息异常|" + desc_ , ex);  
+				String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
+				openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , e.getOrderCode() , e.getOrderStatus() , 2 , new Date() , remark_));
+				result.put("code", 11);
+				result.put("desc", desc_);
+				return result; 
+			}finally {
+				WebHelper.getInstance().unLock(lockcode);
 			}
-		} catch (Exception ex) {
-			String desc_ = "平台内部错误，成功 " + count + " 条，失败 " + (updateList.size() - count) + " 条";
-			logger.error("更新订单状态信息异常|" + desc_ , ex);  
-			String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
-			openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , e.getOrderCode() , e.getOrderStatus() , 2 , new Date() , remark_));
-			result.put("code", 11);
-			result.put("desc", desc_);
+			
+			result.put("code", 0);
+			result.put("desc", "请求成功，已同步 " + updateList.size() + " 条订单状态记录");
+			if(exceptionStatusList.size() > 0){
+				result.put("订单状态非法记录", exceptionStatusList);
+			}
+			return result;
+		}else{
+			result.put("code", 14);
+			result.put("desc", "分布式锁生效，更新订单状态信息已锁定");
 			return result; 
 		}
-		
-		result.put("code", 0);
-		result.put("desc", "请求成功，已同步 " + updateList.size() + " 条订单状态记录");
-		if(exceptionStatusList.size() > 0){
-			result.put("订单状态非法记录", exceptionStatusList);
-		}
-		return result;
 	}
 	
 	

@@ -1,5 +1,6 @@
 package com.hjy.selleradapter.job;
 
+import org.apache.commons.lang3.StringUtils;
 import org.quartz.JobExecutionContext;
 
 import com.hjy.helper.WebHelper;
@@ -16,8 +17,15 @@ public class JobGetChangeProductFromKJT extends RootJob {
 
 	public void doExecute(JobExecutionContext context) {
 		String Lockcode = WebHelper.getInstance().addLock(10000,"cpkjt15269");
-		//从跨境通查询信息变化的商品入库
-		new RsyncGetKjtProductIdByDate().doRsync();
-		WebHelper.getInstance().unLock(Lockcode);
+		if(StringUtils.isNotEmpty(Lockcode)) {
+			try {
+				//从跨境通查询信息变化的商品入库
+				new RsyncGetKjtProductIdByDate().doRsync();
+			} catch (Exception e) {
+			}finally{
+				WebHelper.getInstance().unLock(Lockcode);
+			}
+		}
+		
 	}
 }

@@ -21,6 +21,7 @@ import com.hjy.entity.order.OcOrderShipments;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelpter;
+import com.hjy.helper.WebHelper;
 import com.hjy.request.data.OrderShipment;
 import com.hjy.request.data.ShipmentRequest;
 import com.hjy.service.impl.BaseServiceImpl;
@@ -93,61 +94,70 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 			return result; 
 		}
 		
-		List<OrderShipment> correctList = new ArrayList<OrderShipment>(); // 保存合法的物流信息
-		List<OrderShipment> exceptionOrderList = new ArrayList<OrderShipment>();  // 异常的订单物流信息|关键字段不全，不做处理，返回给调用方
-		for(int i = 0 ; i < list.size() ; i ++){
-			if(StringUtils.isNotBlank(list.get(i).getOrderCode()) && StringUtils.isNotBlank(list.get(i).getLogisticseCode()) && 
-					StringUtils.isNotBlank(list.get(i).getLogisticseName()) && StringUtils.isNotBlank(list.get(i).getWaybill())){
-				
-				list.get(i).setUid(UUID.randomUUID().toString().replace("-", ""));
-				list.get(i).setCreator(sellerCode); 
-				list.get(i).setCreateTime(DateHelper.formatDate(new Date())); 
-				correctList.add(list.get(i)); 
-			}else{
-				exceptionOrderList.add(list.get(i)); 
+		String lockcode = WebHelper.getInstance().addLock(10000,"同步物流信息");      // 分布式锁
+		if(StringUtils.isNotEmpty(lockcode)) {
+			List<OrderShipment> correctList = new ArrayList<OrderShipment>(); // 保存合法的物流信息
+			List<OrderShipment> exceptionOrderList = new ArrayList<OrderShipment>();  // 异常的订单物流信息|关键字段不全，不做处理，返回给调用方
+			for(int i = 0 ; i < list.size() ; i ++){
+				if(StringUtils.isNotBlank(list.get(i).getOrderCode()) && StringUtils.isNotBlank(list.get(i).getLogisticseCode()) && 
+						StringUtils.isNotBlank(list.get(i).getLogisticseName()) && StringUtils.isNotBlank(list.get(i).getWaybill())){
+					
+					list.get(i).setUid(UUID.randomUUID().toString().replace("-", ""));
+					list.get(i).setCreator(sellerCode); 
+					list.get(i).setCreateTime(DateHelper.formatDate(new Date())); 
+					correctList.add(list.get(i)); 
+				}else{
+					exceptionOrderList.add(list.get(i)); 
+				}
 			}
-		}
-		List<OrderShipment> insertList = new ArrayList<OrderShipment>(); // 保存在我们库中的订单的物流信息，排除非法订单
-		List<OrderShipment> otherOrderList = new ArrayList<OrderShipment>();  // 非惠家有订单的物流信息，不做处理，返回给调用方
-		// 效验订单，判断是否有不在我们库中的订单	 
-		for(OrderShipment o : correctList){
-			OcOrderinfo info = orderinfoDao.findOrderInfoByOrderCode(o.getOrderCode());
-			if(null == info){
-				otherOrderList.add(o);
-			}else{
-				insertList.add(o);
-			}
-		}
-		
-		int count = 0;
-		OrderShipment ex = null;
-		try{  // 插入物流数据
-			for(OrderShipment s : insertList){
-				ex = s;
-				dao.insertSelective(new OcOrderShipments(s.getUid() , s.getOrderCode() , s.getLogisticseCode() , s.getLogisticseName() , s.getWaybill() , s.getCreator() , s.getCreateTime() , s.getRemark()));   
-				logShipmentStatusDao.insertSelective(new LcOpenApiShipmentStatus(ex.getUid() , sellerCode , ex.getOrderCode() , ex.getLogisticseName() , ex.getWaybill() , 1 , new Date() , "insert success"));
-				count ++;
+			List<OrderShipment> insertList = new ArrayList<OrderShipment>(); // 保存在我们库中的订单的物流信息，排除非法订单
+			List<OrderShipment> otherOrderList = new ArrayList<OrderShipment>();  // 非惠家有订单的物流信息，不做处理，返回给调用方
+			// 效验订单，判断是否有不在我们库中的订单	 
+			for(OrderShipment o : correctList){
+				OcOrderinfo info = orderinfoDao.findOrderInfoByOrderCode(o.getOrderCode());
+				if(null == info){
+					otherOrderList.add(o);
+				}else{
+					insertList.add(o);
+				}
 			}
 			
-		}catch(Exception e){
-			// 记录异常信息到数据库表  shipmentUid sellerCode orderCode logisticseName wayBill  flag createTime remark
-			String desc_ = "平台内部错误，成功 " + count + " 条，失败 " + (insertList.size() - count) + " 条";
-			logger.error("插入物流数据异常|" + desc_ , e); 
-			String remark_ = "{" + ExceptionHelpter.allExceptionInformation(e) + "}";
-			logShipmentStatusDao.insertSelective(new LcOpenApiShipmentStatus(ex.getUid() , sellerCode , ex.getOrderCode() , ex.getLogisticseName() , ex.getWaybill() , 2 , new Date() , remark_));
-			result.put("code", 11);
-			result.put("desc", desc_);
+			int count = 0;
+			OrderShipment ex = null;
+			try{  // 插入物流数据
+				for(OrderShipment s : insertList){
+					ex = s;
+					dao.insertSelective(new OcOrderShipments(s.getUid() , s.getOrderCode() , s.getLogisticseCode() , s.getLogisticseName() , s.getWaybill() , s.getCreator() , s.getCreateTime() , s.getRemark()));   
+					logShipmentStatusDao.insertSelective(new LcOpenApiShipmentStatus(ex.getUid() , sellerCode , ex.getOrderCode() , ex.getLogisticseName() , ex.getWaybill() , 1 , new Date() , "insert success"));
+					count ++;
+				}
+				
+			}catch(Exception e){
+				// 记录异常信息到数据库表  shipmentUid sellerCode orderCode logisticseName wayBill  flag createTime remark
+				String desc_ = "平台内部错误，成功 " + count + " 条，失败 " + (insertList.size() - count) + " 条";
+				logger.error("插入物流数据异常|" + desc_ , e); 
+				String remark_ = "{" + ExceptionHelpter.allExceptionInformation(e) + "}";
+				logShipmentStatusDao.insertSelective(new LcOpenApiShipmentStatus(ex.getUid() , sellerCode , ex.getOrderCode() , ex.getLogisticseName() , ex.getWaybill() , 2 , new Date() , remark_));
+				result.put("code", 11);
+				result.put("desc", desc_);
+				return result; 
+			}finally{
+				WebHelper.getInstance().unLock(lockcode);
+			}
+			result.put("code", 0);
+			result.put("desc", "请求成功，已同步 " + insertList.size() + " 条订单物流记录");
+			if(exceptionOrderList.size() > 0){
+				result.put("关键字段不全订单", exceptionOrderList);
+			}
+			if(otherOrderList.size() > 0){
+				result.put("非惠家有订单", otherOrderList);
+			}
+			return result; 
+		}else{
+			result.put("code", 14);
+			result.put("desc", "分布式锁生效，同步物流信息已锁定");
 			return result; 
 		}
-		result.put("code", 0);
-		result.put("desc", "请求成功，已同步 " + insertList.size() + " 条订单物流记录");
-		if(exceptionOrderList.size() > 0){
-			result.put("关键字段不全订单", exceptionOrderList);
-		}
-		if(otherOrderList.size() > 0){
-			result.put("非惠家有订单", otherOrderList);
-		}
-		return result; 
 	} 
 	
 	
