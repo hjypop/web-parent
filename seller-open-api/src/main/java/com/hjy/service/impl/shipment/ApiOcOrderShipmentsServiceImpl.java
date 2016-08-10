@@ -58,7 +58,7 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */
-	public JSONObject apiInsertShipments(String json) {
+	public JSONObject apiInsertShipments(String json , String sellerCode) {
 		JSONObject result = new JSONObject();
 		String responseTime = DateHelper.formatDate(new Date());
 		result.put("responseTime", responseTime);
@@ -71,25 +71,17 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 			result.put("desc", "请求参数错误，请求数据解析异常");
 			return result; 
 		}
-		
-		
-		if(StringUtils.isBlank(request.getSellerCode())){
-			result.put("code", 14);
-			result.put("desc", "请求参数seller code不得为空");
-			return result;
-		}
-		String sellerCode = request.getSellerCode();
-		result.put("sellerCode", sellerCode);
+ 
 		 
+		if(request.getList() != null && request.getList().size() == 0){
+			result.put("code", 1);
+			result.put("desc", "请求参数错误，数据不得为0条");
+			return result; 
+		}
 		List<OrderShipment> list = request.getList();
 		if(list.size() > COUNT){
 			result.put("code", 1);
 			result.put("desc", "请求参数错误，数据不得超过" + COUNT + "条");
-			return result; 
-		}
-		if(list.size() == 0){
-			result.put("code", 1);
-			result.put("desc", "请求参数错误，数据不得为0条");
 			return result; 
 		}
 		

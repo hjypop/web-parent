@@ -15,5 +15,5 @@ public interface IApiOcOrderShipmentsService  extends IBaseService<OcOrderShipme
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */
-	public JSONObject apiInsertShipments(String json);
+	public JSONObject apiInsertShipments(String json , String sellerCode);
 }

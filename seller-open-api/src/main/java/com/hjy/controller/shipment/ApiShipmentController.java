@@ -55,10 +55,10 @@ public class ApiShipmentController {
 		json = this.apiInsertShipmentsTest();
 		
 		Date requestTime = new Date();
-		JSONObject result = service.apiInsertShipments(json);
+		JSONObject result = service.apiInsertShipments(json , "seller code");  // TODO 
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
-				result.getString("sellerCode") == null ? "错误的数据请求": result.getString("sellerCode") , 
+				"seller code",   			// TODO 
 				"Order.Shipments",
 				"ApiOcOrderShipmentsServiceImpl.apiInsertShipments",
 				json,
@@ -83,60 +83,60 @@ public class ApiShipmentController {
 	 */
 	public String apiInsertShipmentsTest(){
 		ShipmentRequest info =  new ShipmentRequest();
-		info.setCreateTime(DateHelper.formatDate(new Date())); 
-		info.setSellerCode("SF0-OPEN-API-TEST-4");
-		info.setSellerKey(""); 
+		info.setCreateTime(""); 
+
+		// SF0-OPEN-API-TEST-4  
 		
 		List<OrderShipment> list = new ArrayList<OrderShipment>();
 		
 		OrderShipment a = new OrderShipment();
-		a.setUid(UUID.randomUUID().toString().replace("-", ""));
+		a.setUid("");
 		a.setOrderCode("DD150916819918");
 		a.setLogisticseCode("LC141013100001");
 		a.setLogisticseName("韵达物流1");
 		a.setWaybill("YD86851247598");
-		a.setCreator(info.getSellerCode());
-		a.setCreateTime(DateHelper.formatDate(new Date())); 
+		a.setCreator("");
+		a.setCreateTime(""); 
 		a.setRemark(""); 
 		
 		OrderShipment b = new OrderShipment();
-		b.setUid(UUID.randomUUID().toString().replace("-", ""));
+		b.setUid("");
 		b.setOrderCode("DD150916819919");
 		b.setLogisticseCode("shentong");
 		b.setLogisticseName("北京申通2");
 		b.setWaybill("ST229318770084");
-		b.setCreator(info.getSellerCode());
-		b.setCreateTime(DateHelper.formatDate(new Date())); 
+		b.setCreator("");
+		b.setCreateTime(""); 
 		b.setRemark("申通"); 
 		
 		OrderShipment c = new OrderShipment();
-		c.setUid(UUID.randomUUID().toString().replace("-", ""));
+		c.setUid("");
 		c.setOrderCode("DD150916819920");
 		c.setLogisticseCode("shunfeng");
 		c.setLogisticseName("顺风速运");
 		c.setWaybill("SF919652568865");
-		c.setCreator(info.getSellerCode());
-		c.setCreateTime(DateHelper.formatDate(new Date())); 
+		c.setCreator("");
+		c.setCreateTime(""); 
 		c.setRemark("顺风"); 
 		
 		OrderShipment d = new OrderShipment();
-		d.setUid(UUID.randomUUID().toString().replace("-", ""));
+		d.setUid("");
 		d.setOrderCode("DD150916819921");
 		d.setLogisticseCode("");
 		d.setLogisticseName("顺风速运");
 		d.setWaybill("");
-		d.setCreator(info.getSellerCode());
-		d.setCreateTime(DateHelper.formatDate(new Date())); 
+		d.setCreator("");
+		d.setCreateTime(""); 
 		d.setRemark("关键字段不全订单"); 
 		
 		OrderShipment e = new OrderShipment();
-		e.setUid(UUID.randomUUID().toString().replace("-", ""));
+		e.setUid("");
 		e.setOrderCode("DD00000000002");
 		e.setLogisticseCode("cainiao");
 		e.setLogisticseName("菜鸟快运");
 		e.setWaybill("CN823987888868");
-		e.setCreator(info.getSellerCode());
-		e.setCreateTime(DateHelper.formatDate(new Date())); 
+		e.setCreator("");
+		e.setCreateTime(""); 
 		e.setRemark("非惠家有订单"); 
 		
 		list.add(a);
@@ -160,8 +160,8 @@ public class ApiShipmentController {
 //f.setLogisticseCode("");
 //f.setLogisticseName("");
 //f.setWaybill("");
-//f.setCreator(info.getSellerCode());
-//f.setCreateTime(DateHelper.formatDate(new Date())); 
+//f.setCreator("");
+//f.setCreateTime(""); 
 //f.setRemark("非惠家有订单"); 
 
 
