@@ -1,6 +1,6 @@
 package com.hjy.service.product;
 
-import com.hjy.response.product.ResponseProduct;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 
@@ -21,7 +21,7 @@ public interface IApiProductService {
 	 * @param product
 	 * @return
 	 */
-	ResponseProduct addProduct(String product);
+	JSONObject addProduct(String product);
 
 	/**
 	 * 
@@ -33,7 +33,7 @@ public interface IApiProductService {
 	 * @param product
 	 * @return
 	 */
-	ResponseProduct editProduct(String product);
+	JSONObject editProduct(String product);
 
 	/**
 	 * 
@@ -45,7 +45,7 @@ public interface IApiProductService {
 	 * @param products
 	 * @return
 	 */
-	ResponseProduct syncProductList(String products);
+	JSONObject batchProducts(String products);
 
 	/**
 	 * 
@@ -57,7 +57,7 @@ public interface IApiProductService {
 	 * @param products
 	 * @return
 	 */
-	ResponseProduct syncProductPrice(String products);
+	JSONObject batchProductsPrice(String products);
 
 	/**
 	 * 
@@ -69,5 +69,5 @@ public interface IApiProductService {
 	 * @param products
 	 * @return
 	 */
-	ResponseProduct syncSkuStore(String products);
+	JSONObject batchProductsSkuStore(String products);
 }

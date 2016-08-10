@@ -18,7 +18,6 @@ import com.hjy.dto.product.ProductInfo;
 import com.hjy.dto.product.Productdescription;
 import com.hjy.request.RequestProduct;
 import com.hjy.request.RequestProducts;
-import com.hjy.response.product.ResponseProduct;
 import com.hjy.service.product.IApiProductService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -141,8 +140,8 @@ public class ProductTest extends BaseTest {
 		request.setSign("");
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-		ResponseProduct response = service.addProduct(obj.toJSONString());
-		System.out.println(JSON.toJSON(response));
+		JSONObject response = service.addProduct(obj.toJSONString());
+		System.out.println(response.toJSONString());
 	}
 
 	public void editProduct() {

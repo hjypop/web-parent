@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hjy.common.DateUtil;
 import com.hjy.dao.api.IApiProductInfoDao;
 import com.hjy.dao.api.IApiSkuInfoDao;
@@ -26,7 +27,6 @@ import com.hjy.entity.system.ScStoreSkunum;
 import com.hjy.helper.WebHelper;
 import com.hjy.request.RequestProduct;
 import com.hjy.request.RequestProducts;
-import com.hjy.response.product.ResponseProduct;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.product.IApiProductService;
 
@@ -62,8 +62,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @see com.hjy.service.product.IApiProductService#addProduct(java.lang.String)
 	 */
 	@Override
-	public ResponseProduct addProduct(String product) {
-		ResponseProduct response = new ResponseProduct();
+	public JSONObject addProduct(String product) {
+		JSONObject response = new JSONObject();
 		String lock = "";
 		if (product != null && !"".equals(product)) {
 			try {
@@ -76,37 +76,37 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 						requestProduct.getProduct().setProductCode(WebHelper.getInstance().genUniqueCode(ProductHead));
 						productList.add(requestProduct.getProduct());
 						response = verifyProduct(productList);
-						if (response.getCode() == 0) {
+						if (response.getInteger("code") == 0) {
 							// 执行添加商品方法
 							if (addProduct(productList)) {
-								response.setCode(0);
-								response.setDesc(getInfo(0));
+								response.put("code", 0);
+								response.put("desc", getInfo(0));
 							} else {
-								response.setCode(10);
-								response.setDesc(getInfo(10));
+								response.put("code", 10);
+								response.put("desc", getInfo(10));
 							}
 						} else {
-							response.setCode(10);
-							response.setDesc(getInfo(10));
+							response.put("code", 10);
+							response.put("desc", getInfo(10));
 						}
 					} else {
-						response.setCode(10);
-						response.setDesc(getInfo(10));
+						response.put("code", 10);
+						response.put("desc", getInfo(10));
 					}
 				} else {
-					response.setCode(10);
-					response.setDesc(getInfo(10));
+					response.put("code", 10);
+					response.put("desc", getInfo(10));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				response.setCode(10);
-				response.setDesc(getInfo(10));
+				response.put("code", 10);
+				response.put("desc", getInfo(10));
 			} finally {
 				WebHelper.getInstance().unLock(lock);
 			}
 		} else {
-			response.setCode(10);
-			response.setDesc(getInfo(10));
+			response.put("code", 10);
+			response.put("desc", getInfo(10));
 		}
 		return response;
 	}
@@ -121,8 +121,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @see com.hjy.service.product.IApiProductService#editProduct(java.lang.String)
 	 */
 	@Override
-	public ResponseProduct editProduct(String product) {
-		ResponseProduct response = new ResponseProduct();
+	public JSONObject editProduct(String product) {
+		JSONObject response = new JSONObject();
 		String lock = "";
 		try {
 			lock = WebHelper.getInstance().addLock(10, "Product.editproduct");
@@ -142,23 +142,23 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 							}
 							// 执行编辑商品
 							if (editProduct(productList)) {
-								response.setCode(0);
-								response.setDesc(getInfo(0));
+								response.put("code", 0);
+								response.put("desc", getInfo(0));
 							} else {
-								response.setCode(10);
-								response.setDesc(getInfo(10));
+								response.put("code", 10);
+								response.put("desc", getInfo(10));
 							}
 						} else {
-							response.setCode(10);
-							response.setDesc(getInfo(10));
+							response.put("code", 10);
+							response.put("desc", getInfo(10));
 						}
 					} else {
-						response.setCode(10);
-						response.setDesc(getInfo(10));
+						response.put("code", 10);
+						response.put("desc", getInfo(10));
 					}
 				} else {
-					response.setCode(10);
-					response.setDesc(getInfo(10));
+					response.put("code", 10);
+					response.put("desc", getInfo(10));
 				}
 			}
 		} catch (Exception e) {
@@ -181,8 +181,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @see com.hjy.service.product.IApiProductService#syncProductList(java.lang.String)
 	 */
 	@Override
-	public ResponseProduct syncProductList(String products) {
-		ResponseProduct response = new ResponseProduct();
+	public JSONObject batchProducts(String products) {
+		JSONObject response = new JSONObject();
 		if (products != null && !"".equals(products)) {
 			String lock = "";
 			try {
@@ -193,7 +193,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					if (requestProduct != null) {
 						if (requestProduct.getProductInfos() != null && requestProduct.getProductInfos().size() > 0) {
 							response = verifyProduct(requestProduct.getProductInfos());
-							if (response.getCode() == 0) {
+							if (response.getInteger("code") == 0) {
 								for (ProductInfo info : requestProduct.getProductInfos()) {
 									if (info.getOperate() == 1) {
 										// 根据外部商品编号查询惠家有商品编号
@@ -222,30 +222,30 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 								// 执行编辑操作
 								editProduct(editList);
 								// 返回处理结果
-								response.setCode(0);
-								response.setDesc(getInfo(0));
+								response.put("code", 0);
+								response.put("desc", getInfo(0));
 							}
 						} else {
-							response.setCode(10);
-							response.setDesc(getInfo(10));
+							response.put("code", 10);
+							response.put("desc", getInfo(10));
 						}
 					} else {
-						response.setCode(10);
-						response.setDesc(getInfo(10));
+						response.put("code", 10);
+						response.put("desc", getInfo(10));
 					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				response.setCode(10);
-				response.setDesc(getInfo(10));
+				response.put("code", 10);
+				response.put("desc", getInfo(10));
 			} finally {
 				if (lock != null && !"".equals(lock)) {
 					WebHelper.getInstance().unLock(lock);
 				}
 			}
 		} else {
-			response.setCode(10);
-			response.setDesc(getInfo(10));
+			response.put("code", 10);
+			response.put("desc", getInfo(10));
 		}
 		return response;
 	}
@@ -261,8 +261,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @see com.hjy.service.product.IApiProductService#syncProductPrice(java.lang.String)
 	 */
 	@Override
-	public ResponseProduct syncProductPrice(String products) {
-		ResponseProduct response = new ResponseProduct();
+	public JSONObject batchProductsPrice(String products) {
+		JSONObject response = new JSONObject();
 		String lock = "";
 		try {
 			lock = WebHelper.getInstance().addLock(10, "Product.syncProductPrice");
@@ -297,25 +297,25 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 									skuInfoDao.updateSkuPrice(pcSkuinfo);
 								}
 							}
-							response.setCode(0);
-							response.setDesc(getInfo(0));
+							response.put("code", 0);
+							response.put("desc", getInfo(0));
 						} else {
-							response.setCode(10);
-							response.setDesc(getInfo(10));
+							response.put("code", 10);
+							response.put("desc", getInfo(10));
 						}
 					} else {
-						response.setCode(10);
-						response.setDesc(getInfo(10));
+						response.put("code", 10);
+						response.put("desc", getInfo(10));
 					}
 				} else {
-					response.setCode(10);
-					response.setDesc(getInfo(10));
+					response.put("code", 10);
+					response.put("desc", getInfo(10));
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.setCode(10);
-			response.setDesc(getInfo(10));
+			response.put("code", 10);
+			response.put("desc", getInfo(10));
 		} finally {
 			if (lock != null && !"".equals(lock)) {
 				WebHelper.getInstance().unLock(lock);
@@ -334,8 +334,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @see com.hjy.service.product.IApiProductService#syncSkuStore(java.lang.String)
 	 */
 	@Override
-	public ResponseProduct syncSkuStore(String products) {
-		ResponseProduct response = new ResponseProduct();
+	public JSONObject batchProductsSkuStore(String products) {
+		JSONObject response = new JSONObject();
 		String lock = "";
 		try {
 			lock = WebHelper.getInstance().addLock(10, "Product.syncSkuStore");
@@ -372,21 +372,21 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 								scStoreSkunumDao.updateSelectiveBySkuCode(skunum);
 							}
 						}
-						response.setCode(0);
-						response.setDesc(getInfo(0));
+						response.put("code", 0);
+						response.put("desc", getInfo(0));
 					} else {
-						response.setCode(10);
-						response.setDesc(getInfo(10));
+						response.put("code", 10);
+						response.put("desc", getInfo(10));
 					}
 				} else {
-					response.setCode(10);
-					response.setDesc(getInfo(10));
+					response.put("code", 10);
+					response.put("desc", getInfo(10));
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.setCode(10);
-			response.setDesc(getInfo(10));
+			response.put("code", 10);
+			response.put("desc", getInfo(10));
 		} finally {
 			if (lock != null && !"".equals(lock)) {
 				WebHelper.getInstance().unLock(lock);
@@ -548,41 +548,41 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @param product
 	 * @return
 	 */
-	private ResponseProduct verifyProduct(List<ProductInfo> productList) {
-		ResponseProduct response = new ResponseProduct();
+	private JSONObject verifyProduct(List<ProductInfo> productList) {
+		JSONObject response = new JSONObject();
 		for (int i = 0; i < productList.size(); i++) {
 			ProductInfo product = productList.get(i);
 			if (product == null) {
-				response.setCode(11);
-				response.setDesc(getInfo(11));
+				response.put("code", 11);
+				response.put("desc", getInfo(11));
 				break;
 			}
 			if (StringUtils.isBlank(product.getProductName())) {
-				response.setCode(12);
-				response.setDesc(getInfo(12));
+				response.put("code", 12);
+				response.put("desc", getInfo(12));
 				break;
 			}
 			if (StringUtils.isBlank(product.getBrandCode())) {
-				response.setCode(13);
-				response.setDesc(getInfo(13));
+				response.put("code", 13);
+				response.put("desc", getInfo(13));
 				break;
 			} else {
 				// 验证商品编号是否存在 暂时不考虑
 			}
 			if (product.getSkuInfoList() == null || product.getSkuInfoList().size() == 0) {
-				response.setCode(14);
-				response.setDesc(getInfo(14));
+				response.put("code", 14);
+				response.put("desc", getInfo(14));
 				break;
 			}
 			for (PcSkuInfo sku : product.getSkuInfoList()) {
 				if (sku.getStockNum() < 0) {
-					response.setCode(15);
-					response.setDesc(getInfo(15));
+					response.put("code", 15);
+					response.put("desc", getInfo(15));
 					break;
 				}
 				if (sku.getSellPrice().doubleValue() < 0) {
-					response.setCode(16);
-					response.setDesc(getInfo(16));
+					response.put("code", 16);
+					response.put("desc", getInfo(16));
 					break;
 				}
 			}

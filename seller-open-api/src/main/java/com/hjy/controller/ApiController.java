@@ -30,12 +30,22 @@ public class ApiController {
 		if (flag) {
 			try {
 				String[] methods = request.getMethod().split(".");
-				if ("Product".equals(methods[0])) {
-					if ("addProduct".equals(methods[1])) {
-						result = null;//productService.addProduct(request.getData());
+				String type = methods[0];
+				String method = methods[1];
+				if ("Product".equals(type)) {
+					if ("addProduct".equals(method)) {
+						result = productService.addProduct(request.getData());
+					} else if ("editProduct".equals(method)) {
+						result = productService.editProduct(request.getData());
+					} else if ("batchProducts".equals(method)) {
+						result = productService.batchProducts(request.getData());
+					} else if ("batchProductsPrice".equals(method)) {
+						result = productService.batchProductsPrice(request.getData());
+					} else if ("batchProductsSkuStore".equals(method)) {
+						result = productService.batchProductsSkuStore(request.getData());
 					}
-				}else if("Order".equals(methods[0])){
-					
+				} else if ("Order".equals(type)) {
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

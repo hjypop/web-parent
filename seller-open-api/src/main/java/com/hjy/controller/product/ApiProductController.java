@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hjy.controller.ApiController;
 import com.hjy.entity.log.LcOpenApiOperation;
-import com.hjy.response.product.ResponseProduct;
 import com.hjy.service.operation.IApiLcOpenApiOperationService;
 import com.hjy.service.product.IApiProductService;
 
@@ -42,7 +42,7 @@ public class ApiProductController extends ApiController {
 	 */
 	@RequestMapping(value = "addProduct")
 	@ResponseBody
-	public ResponseProduct addProduct(String request) {
+	public JSONObject addProduct(String request) {
 		LcOpenApiOperation log = new LcOpenApiOperation();
 		log.setUid(UUID.randomUUID().toString().replace("-", ""));
 		log.setApiName("Product.addproduct");
@@ -50,7 +50,7 @@ public class ApiProductController extends ApiController {
 		log.setCreateTime(new Date());
 		log.setRequestTime(new Date());
 		log.setRequestJson(request);
-		ResponseProduct response = service.addProduct(request);
+		JSONObject response = service.addProduct(request);
 		log.setResponseJson(JSON.toJSONString(response));
 		log.setResponseTime(new Date());
 		logService.insertSelective(log);
@@ -69,7 +69,7 @@ public class ApiProductController extends ApiController {
 	 */
 	@RequestMapping("editProduct")
 	@ResponseBody
-	public ResponseProduct editProduct(String request) {
+	public JSONObject editProduct(String request) {
 		LcOpenApiOperation log = new LcOpenApiOperation();
 		log.setUid(UUID.randomUUID().toString().replace("-", ""));
 		log.setApiName("Product.addproduct");
@@ -77,7 +77,7 @@ public class ApiProductController extends ApiController {
 		log.setCreateTime(new Date());
 		log.setRequestTime(new Date());
 		log.setRequestJson(request);
-		ResponseProduct response = service.editProduct(request);
+		JSONObject response = service.editProduct(request);
 		log.setResponseJson(JSON.toJSONString(response));
 		log.setResponseTime(new Date());
 		logService.insertSelective(log);
@@ -96,7 +96,7 @@ public class ApiProductController extends ApiController {
 	 */
 	@RequestMapping("batchProducts")
 	@ResponseBody
-	public ResponseProduct syncProductList(String request) {
+	public JSONObject syncProductList(String request) {
 		LcOpenApiOperation log = new LcOpenApiOperation();
 		log.setUid(UUID.randomUUID().toString().replace("-", ""));
 		log.setApiName("Product.addproduct");
@@ -104,7 +104,7 @@ public class ApiProductController extends ApiController {
 		log.setCreateTime(new Date());
 		log.setRequestTime(new Date());
 		log.setResponseJson(request);
-		ResponseProduct response = service.syncProductList(request);
+		JSONObject response = service.batchProducts(request);
 		log.setRequestJson(JSON.toJSONString(response));
 		log.setResponseTime(new Date());
 		logService.insertSelective(log);
@@ -123,7 +123,7 @@ public class ApiProductController extends ApiController {
 	 */
 	@RequestMapping("batchProductsPrice")
 	@ResponseBody
-	public ResponseProduct syncProductPrice(String request) {
+	public JSONObject syncProductPrice(String request) {
 		LcOpenApiOperation log = new LcOpenApiOperation();
 		log.setUid(UUID.randomUUID().toString().replace("-", ""));
 		log.setApiName("Product.addproduct");
@@ -131,7 +131,7 @@ public class ApiProductController extends ApiController {
 		log.setCreateTime(new Date());
 		log.setRequestTime(new Date());
 		log.setRequestJson(request);
-		ResponseProduct response = service.syncProductPrice(request);
+		JSONObject response = service.batchProductsPrice(request);
 		log.setResponseJson(JSON.toJSONString(response));
 		log.setResponseTime(new Date());
 		logService.insertSelective(log);
@@ -150,7 +150,7 @@ public class ApiProductController extends ApiController {
 	 */
 	@RequestMapping("batchProductsSkuStore")
 	@ResponseBody
-	public ResponseProduct syncProductSkuStore(String request) {
+	public JSONObject syncProductSkuStore(String request) {
 		LcOpenApiOperation log = new LcOpenApiOperation();
 		log.setUid(UUID.randomUUID().toString().replace("-", ""));
 		log.setApiName("Product.addproduct");
@@ -158,7 +158,7 @@ public class ApiProductController extends ApiController {
 		log.setCreateTime(new Date());
 		log.setRequestTime(new Date());
 		log.setRequestJson(request);
-		ResponseProduct response = service.syncSkuStore(request);
+		JSONObject response = service.batchProductsSkuStore(request);
 		log.setResponseJson(JSON.toJSONString(response));
 		log.setResponseTime(new Date());
 		logService.insertSelective(log);
