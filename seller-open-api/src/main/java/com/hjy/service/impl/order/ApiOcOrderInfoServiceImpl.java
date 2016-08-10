@@ -129,8 +129,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	/**
 	 * @descriptions 订单变更： 更新订单状态信息
 	 * 	包含效验对方传入错误的订单
-	 * 
-	 * 签名方式为：sellerCode + JSON.toJSONString(successList) + responseTime
+	 *  
 	 * 
 	 * @param info
 	 * @date 2016年8月3日上午10:23:53
@@ -171,7 +170,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			return result; 
 		}
 		
-		String lockcode = WebHelper.getInstance().addLock(10000,"com.hjy.controller.order.ApiOrderInfoController.apiUpdateOrderStatus");      // 分布式锁
+		String lockcode = WebHelper.getInstance().addLock(10000 , sellerCode + "com.hjy.controller.order.ApiOrderInfoController.apiUpdateOrderStatus");      // 分布式锁
 		if(StringUtils.isNotEmpty(lockcode)) {
 			List<OrderInfoStatus> updateList = new ArrayList<OrderInfoStatus>();
 			List<OrderInfoStatus> exceptionStatusList = new ArrayList<OrderInfoStatus>();
@@ -186,7 +185,6 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			if(exceptionStatusList.size() > 0){
 				result.put("errorStatusList", exceptionStatusList); // 订单状态非法记录
 			}
-			String sign = "";
 			List<OrderInfoStatus> successList = new ArrayList<OrderInfoStatus>(); // 保存同步成功的记录
 			List<OrderInfoStatus> errorList = new ArrayList<OrderInfoStatus>(); // 保存 非此商户订单 的记录
 			OrderInfoStatus e = null;
@@ -208,27 +206,22 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 				String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
 				openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , e.getOrderCode() , e.getOrderStatus() , 2 , new Date() , remark_));
 				result.put("successList", successList);
-				result.put("unsynchList", updateList.removeAll(successList)); // 订单状态未同步
 				if(errorList.size() > 0){
 					result.put("errorSellerCodeList", errorList); // 非此商户订单
 				}
-				sign = SignHelper.md5Sign(sellerCode + JSON.toJSONString(successList) + responseTime);
 				result.put("code", 11);
 				result.put("desc", desc_);
-				result.put("sign", sign);
 				return result; 
 			}finally {
 				WebHelper.getInstance().unLock(lockcode);
 			}
 			
-			sign = SignHelper.md5Sign(sellerCode + JSON.toJSONString(successList) + responseTime);
 			result.put("code", 0);
 			result.put("desc", "请求成功，已同步 " + successList.size() + " 条订单状态记录"); 
 			result.put("successList", successList);
 			if(errorList.size() > 0){
 				result.put("errorSellerCodeList", errorList);// 非此商户订单
 			}
-			result.put("sign", sign);
 			return result;
 		}else{
 			result.put("code", 14);

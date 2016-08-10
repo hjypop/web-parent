@@ -84,6 +84,9 @@ public class ApiOrderInfoController {
 	@RequestMapping(value = "update_order_status", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject apiUpdateOrderStatus(String json){
+		
+		json = this.apiUpdateOrderStatusTest();
+		
 		Date requestTime = new Date();
 		JSONObject result = service.updateOrderStatus(json);
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
@@ -130,13 +133,13 @@ public class ApiOrderInfoController {
 		
 		OrderInfoStatus os2 = new OrderInfoStatus();
 		os2.setOrderCode("DD150916819919");
-		os2.setOrderStatus("4497153900010001");
-		os2.setUpdateTime("2018-08-08 18:08:08");
+		os2.setOrderStatus("4497153900010002");
+		os2.setUpdateTime("2019-08-08 18:08:08");
 		
 		OrderInfoStatus os3 = new OrderInfoStatus();
 		os3.setOrderCode("DD150916819920");
-		os3.setOrderStatus("4497153900010001");
-		os3.setUpdateTime("2018-08-08 18:08:08");
+		os3.setOrderStatus("4497153900010002");
+		os3.setUpdateTime("2019-08-08 18:08:08");
 		
 		OrderInfoStatus os4 = new OrderInfoStatus();// 模拟非商户订单
 		os4.setOrderCode("DD150916808992");

@@ -72,6 +72,17 @@ public class OcOrderinfo extends BaseModel{
 	private String roomId;
 
 	private String anchorId;
+	
+	
+
+	public OcOrderinfo() {
+		super();
+	}
+
+	public OcOrderinfo(String orderCode, String smallSellerCode) {
+		this.orderCode = orderCode;
+		this.smallSellerCode = smallSellerCode;
+	}
 
 	public String getOrderCode() {
 		return orderCode;

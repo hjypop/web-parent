@@ -42,14 +42,23 @@ public interface IOcOrderinfoDao extends BaseDao<OcOrderinfo, Integer>{
 	public List<OrderInfoResponse> getOpenApiOrderinfoList(OrderInfoRequestDto dto);
 	
 	/**
-	 * @descriptions 根据orderCode更新订单状态。seller-open-api项目中使用
-	 * 
+	 * @descriptions 根据order_code  small_seller_code更新订单状态。seller-open-api项目中使用
+	 * 	
 	 * @param list 
 	 * @date 2016年8月5日下午4:49:17
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */
 	public Integer apiUpdateOrderinfoStatus(OrderInfoStatusDto dto);
+	
+	/**
+	 * @descriptions 根据order_code 和 small_seller_code 获取一条记录信息
+	 * 
+	 * @date 2016年8月10日下午2:01:52
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public OcOrderinfo getOrderInfoByCode(OcOrderinfo info);
 }
 
 

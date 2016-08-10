@@ -17,4 +17,17 @@ public interface IOcOrderShipmentsDao extends BaseDao<OcOrderShipments, Integer>
 	 * @version 1.0.0.1
 	 */
 	public Integer apiBatchInsert(List<OrderShipment> list );
+	
+	/**
+	 * @descriptions 根据 order_code logisticse_code waybill 三个条件验证此条数据是否存在
+	 * 
+	 * @param info 
+	 * @date 2016年8月10日下午2:55:59
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public OcOrderShipments findWayBill(OrderShipment info);
+	
+	
+	public Integer updateSelectiveByUid(OcOrderShipments info);
 }

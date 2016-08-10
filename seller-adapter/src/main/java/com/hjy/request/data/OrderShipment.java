@@ -15,39 +15,64 @@ import com.hjy.pojo.entity.BaseEntity;
  * @version 1.0.1
  */
 public class OrderShipment {
-	
+
 	private String uid;
-	
-	private String orderCode; 		// 订单编号
-	
-	private String logisticseCode ;  // 物流公司 code
-	private String logisticseName;  // 物流公司 名称
-	private String waybill ; 				// 运单号码
-	private String creator;  // 商家编码
+
+	private String orderCode; // 订单编号
+
+	private String logisticseCode; // 物流公司 code
+	private String logisticseName; // 物流公司 名称
+	private String waybill; // 运单号码
+	private String creator; // 商家编码
 	private String createTime; // 创建时间
-	
-	private String remark ; // 备注 
+
+	private String remark; // 备注
 
 	/**
-	 * 4497153900010001 下单成功-未付款 
-	 * 4497153900010002 下单成功-未发货 
-	 * 4497153900010003 已发货      
-	 * 4497153900010004 已收货
-	 * 4497153900010005 交易成功	
+	 * 4497153900010001 下单成功-未付款 4497153900010002 下单成功-未发货 4497153900010003 已发货
+	 * 4497153900010004 已收货 4497153900010005 交易成功
 	 * 
-	 * 4497153900010006 交易失败 
-	 * 4497153900010007 交易无效
+	 * 4497153900010006 交易失败 4497153900010007 交易无效
 	 */
-//	private String orderStatus; // 订单状态
-	
-	
-	
+	// private String orderStatus; // 订单状态
+
+	public boolean equals(Object obj) {
+		if(!(obj instanceof OrderShipment)){  
+            return false;  
+        }   
+		OrderShipment p =(OrderShipment)obj;  
+    	return this.orderCode.equals(p.orderCode) && this.waybill == p.waybill;
+	}
+
+	public int hashCode() {
+		OrderShipment os = (OrderShipment) this; 
+		return (os.orderCode + os.waybill).hashCode();
+
+	}
 
 	public String getUid() {
 		return uid;
 	}
 
-	public void setUid(String uid) { 
+	public OrderShipment() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public OrderShipment(String uid, String orderCode, String logisticseCode, String logisticseName, String waybill,
+			String creator, String createTime, String remark) {
+		super();
+		this.uid = uid;
+		this.orderCode = orderCode;
+		this.logisticseCode = logisticseCode;
+		this.logisticseName = logisticseName;
+		this.waybill = waybill;
+		this.creator = creator;
+		this.createTime = createTime;
+		this.remark = remark;
+	}
+
+	public void setUid(String uid) {
 		this.uid = uid;
 	}
 
@@ -66,7 +91,6 @@ public class OrderShipment {
 	public void setOrderCode(String orderCode) {
 		this.orderCode = orderCode;
 	}
-
 
 	public String getLogisticseCode() {
 		return logisticseCode;
@@ -108,6 +132,4 @@ public class OrderShipment {
 		this.remark = remark;
 	}
 
-	
-	
 }
