@@ -84,8 +84,6 @@ public class ApiOrderInfoController {
 	@RequestMapping(value = "update_order_status", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject apiUpdateOrderStatus(String json){
-		// json = this.apiUpdateOrderStatusTest();
-		
 		Date requestTime = new Date();
 		JSONObject result = service.updateOrderStatus(json);
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
@@ -112,6 +110,8 @@ public class ApiOrderInfoController {
 	
 	/**
 	 * @descriptions 为apiUpdateOrderStatus()方法模拟测试数据
+	*	
+	* json = this.apiUpdateOrderStatusTest();
 	*
 	* @date 2016年8月9日 下午8:16:46
 	* @author Yangcl 

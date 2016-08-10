@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -14,9 +15,11 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.dao.api.ILcOpenApiQueryLogDao;
 import com.hjy.dao.log.ILcOpenApiOrderStatusDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.entity.log.LcOpenApiOrderStatus;
+import com.hjy.entity.log.LcOpenApiQueryLog;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelpter;
@@ -41,6 +44,9 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 
 	@Resource
 	private ILcOpenApiOrderStatusDao openApiOrderStatusDao;
+	
+	@Resource
+	private ILcOpenApiQueryLogDao openApiQueryDao;
 	
 	/**
 	 * @descriptions 根据Json串查询订单信息|seller-open-api项目中使用
@@ -91,13 +97,30 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			result.put("desc", "请求成功");
 			result.put("data", list);
 			result.put("sign", sign); 
+			openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
+					sellerCode , 
+					"list" , 
+					"com.hjy.controller.order.ApiOrderInfoController.apiGetOrderInfo" , 
+					new Date(),
+					1 , 
+					json,
+					result.toJSONString(),  
+					"query success"));
 			return result; 
 		} catch (Exception ex) {
 			logger.error("查询订单状态信息异常|"  , ex);  
 			String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
-			openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , "OrderCode" , "OrderStatus" , 2 , new Date() , remark_));
 			result.put("code", 11);
 			result.put("desc", "查询订单状态信息异常");
+			openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
+					sellerCode , 
+					"list" , 
+					"com.hjy.controller.order.ApiOrderInfoController.apiGetOrderInfo" , 
+					new Date(),
+					2 , 
+					json,
+					result.toJSONString(), 
+					remark_));
 			return result; 
 		}
 	} 
