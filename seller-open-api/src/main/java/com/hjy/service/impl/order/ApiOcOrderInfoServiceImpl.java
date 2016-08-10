@@ -29,7 +29,7 @@ import com.hjy.request.data.OrderInfoRequest;
 import com.hjy.request.data.OrderInfoRequestDto;
 import com.hjy.request.data.OrderInfoStatus;
 import com.hjy.request.data.OrderInfoStatusDto;
-import com.hjy.request.data.OrderInfoStatusRequest;
+import com.hjy.request.data.OrderInfoStatusRequest;          // TODO 删除
 import com.hjy.response.data.OrderInfoResponse;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.order.IApiOcOrderInfoService;
@@ -73,20 +73,13 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			return result; 
 		}
 		
-		
 		if(StringUtils.isBlank(request.getSellerCode())){
 			result.put("code", 14);
 			result.put("desc", "请求参数seller code不得为空");
 			return result;
 		}
 		String sellerCode = request.getSellerCode();
-		result.put("sellerCode", sellerCode);
-		// TODO 关联查询商家code是否存在
-//		if(count == 0){
-//			result.put("code", 3);
-//			result.put("desc", "错误的商家编号，无API访问权限");
-//			return result;
-//		}
+ 
 		try {
 			String startTime = DateHelper.formatDateZero(new Date());  
 			String endTime = this.getNextDate(new Date()); 
@@ -100,7 +93,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
 					sellerCode , 
 					"Order.List" , 
-					"com.hjy.service.impl.order.getOrderInfoByJson" , 
+					"com.hjy.service.impl.order.ApiOcOrderInfoServiceImpl.getOrderInfoByJson" , 
 					new Date(),
 					1 , 
 					json,
@@ -115,7 +108,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
 					sellerCode , 
 					"Order.List" , 
-					"com.hjy.service.impl.order.getOrderInfoByJson" , 
+					"com.hjy.service.impl.order.ApiOcOrderInfoServiceImpl.getOrderInfoByJson" , 
 					new Date(),
 					2 , 
 					json,
@@ -136,31 +129,28 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */
-	public JSONObject updateOrderStatus(String json) {
+	public JSONObject updateOrderStatus(String json , String sellerCode) {
 		JSONObject result = new JSONObject();
 		String responseTime = DateHelper.formatDate(new Date());
 		result.put("responseTime", responseTime);
 		// 解析请求数据
-		OrderInfoStatusRequest request = null;
+		List<OrderInfoStatus> list = null;
 		try {
-			request = JSON.parseObject(json, OrderInfoStatusRequest.class);
+			list = JSON.parseArray(json, OrderInfoStatus.class);
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("desc", "请求参数错误，请求数据解析异常");
 			return result;
 		}
-		String sellerCode = request.getSellerCode();
-		result.put("sellerCode", sellerCode);
 		
-		List<OrderInfoStatus> list = request.getList();
+		if(list == null || list.size() == 0){
+			result.put("code", 1);
+			result.put("desc", "请求参数错误，数据不得为0条");
+			return result; 
+		}
 		if(list.size() > COUNT){
 			result.put("code", 1);
 			result.put("desc", "请求参数错误，数据不得超过" + COUNT + "条");
-			return result; 
-		}
-		if(list.size() == 0){
-			result.put("code", 1);
-			result.put("desc", "请求参数错误，数据不得为0条");
 			return result; 
 		}
 		

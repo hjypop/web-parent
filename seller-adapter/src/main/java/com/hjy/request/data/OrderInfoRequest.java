@@ -26,7 +26,6 @@ public class OrderInfoRequest extends ApiRequest {
 	 */
 	private String orderStatus; 	// 订单状态 
 	private String sellerCode; 		// 商家编码| 非空
-	private String sellerKey  ;   	// 商家秘钥| 非空
 	
 	public String getOrderCode() {
 		return orderCode;
@@ -45,12 +44,6 @@ public class OrderInfoRequest extends ApiRequest {
 	}
 	public void setSellerCode(String sellerCode) {
 		this.sellerCode = sellerCode;
-	}
-	public String getSellerKey() {
-		return sellerKey;
-	}
-	public void setSellerKey(String sellerKey) {
-		this.sellerKey = sellerKey;
 	}
 	 
 }

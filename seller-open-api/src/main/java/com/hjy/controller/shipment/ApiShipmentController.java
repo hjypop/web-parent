@@ -55,17 +55,17 @@ public class ApiShipmentController {
 		json = this.apiInsertShipmentsTest();
 		
 		Date requestTime = new Date();
-		JSONObject result = service.apiInsertShipments(json , "seller code");  // TODO 
+		JSONObject result = service.apiInsertShipments(json , "seller code");  // TODO 此处解析后需要传入seller code 
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
-				"seller code",   			// TODO 
+				"seller code",   			// TODO 此处解析后需要传入seller code 
 				"Order.Shipments",
 				"ApiOcOrderShipmentsServiceImpl.apiInsertShipments",
 				json,
 				result.toJSONString(),
 				new Date(), 
 				requestTime,
-				new Date(),
+				DateHelper.parseDate(result.getString("responseTime")),
 				"remark"));
 		return result;
 	}

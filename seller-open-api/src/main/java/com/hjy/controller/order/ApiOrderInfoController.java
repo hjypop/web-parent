@@ -51,15 +51,18 @@ public class ApiOrderInfoController {
 	@RequestMapping(value = "list", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject apiGetOrderInfo(String json){
+		
+		String sellerCode = "SF03150617100010";             // TODO  根据 appid 查询得到
+		
 		OrderInfoRequest  ooo = new OrderInfoRequest();
-		ooo.setSellerCode("SF03150617100010");
+		ooo.setSellerCode(sellerCode);
 		json = JSON.toJSONString(ooo);
 		
 		Date requestTime = new Date();
 		JSONObject result = service.getOrderInfoByJson(json);
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
-				result.getString("sellerCode") == null ? "错误的数据请求": result.getString("sellerCode") , 
+				sellerCode , 
 				"Order.List",
 				"ApiOcOrderInfoServiceImpl.getOrderInfoByJson",
 				json,
@@ -88,10 +91,10 @@ public class ApiOrderInfoController {
 		json = this.apiUpdateOrderStatusTest();
 		
 		Date requestTime = new Date();
-		JSONObject result = service.updateOrderStatus(json);
+		JSONObject result = service.updateOrderStatus(json , "seller code");		// TODO 此处解析后需要传入seller code 
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
-				result.getString("sellerCode") == null ? "错误的数据请求": result.getString("sellerCode") , 
+				"seller code",   			// TODO 此处解析后需要传入seller code  
 				"Order.UpdateOrderStatus",
 				"ApiOcOrderInfoServiceImpl.updateOrderStatus",
 				json,
@@ -121,10 +124,6 @@ public class ApiOrderInfoController {
 	* @version 1.0.0.1
 	 */
 	public String apiUpdateOrderStatusTest(){
-		OrderInfoStatusRequest info = new OrderInfoStatusRequest();
-		info.setCreateTime(DateHelper.formatDate(new Date())); 
-		info.setSellerCode("SF0-OPEN-API-TEST-4");
-		info.setSellerKey(""); 
 		List< OrderInfoStatus> list = new ArrayList<OrderInfoStatus>();
 		OrderInfoStatus os1 = new OrderInfoStatus();
 		os1.setOrderCode("DD150916819918");
@@ -150,10 +149,9 @@ public class ApiOrderInfoController {
 		list.add(os2);
 		list.add(os3);
 		list.add(os4);
-		info.setList(list);
 		
 		
-		return JSON.toJSONString(info); 
+		return JSON.toJSONString(list); 
 	}
 }
 

@@ -21,11 +21,9 @@ import com.hjy.entity.order.OcOrderShipments;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelpter;
-import com.hjy.helper.SignHelper;
 import com.hjy.helper.WebHelper;
-import com.hjy.request.data.OrderInfoStatus;
 import com.hjy.request.data.OrderShipment;
-import com.hjy.request.data.ShipmentRequest;
+import com.hjy.request.data.ShipmentRequest;										 // TODO 删除
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.shipment.IApiOcOrderShipmentsService;
 
@@ -62,10 +60,10 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 		JSONObject result = new JSONObject();
 		String responseTime = DateHelper.formatDate(new Date());
 		result.put("responseTime", responseTime);
-		// 解析请求数据
-		ShipmentRequest request = null;
+		
+		List<OrderShipment> list = null;
 		try {
-			request = JSON.parseObject(json, ShipmentRequest.class);
+			list = JSON.parseArray(json, OrderShipment.class); 	// 解析请求数据
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("desc", "请求参数错误，请求数据解析异常");
@@ -73,12 +71,11 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 		}
  
 		 
-		if(request.getList() != null && request.getList().size() == 0){
+		if(list == null || list.size() == 0){
 			result.put("code", 1);
 			result.put("desc", "请求参数错误，数据不得为0条");
 			return result; 
 		}
-		List<OrderShipment> list = request.getList();
 		if(list.size() > COUNT){
 			result.put("code", 1);
 			result.put("desc", "请求参数错误，数据不得超过" + COUNT + "条");
@@ -86,7 +83,7 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 		}
 		
 		String lockcode = WebHelper.getInstance().addLock(10000 , sellerCode + "@ApiOcOrderShipmentsServiceImpl.apiInsertShipments");      // 分布式锁
-		if(StringUtils.isNotEmpty(lockcode)) { // 
+		if(StringUtils.isNotEmpty(lockcode)) { 
 			List<OrderShipment> correctList = new ArrayList<OrderShipment>(); // 保存合法的物流信息
 			List<OrderShipment> exceptionOrderList = new ArrayList<OrderShipment>();  // 异常的订单物流信息|关键字段不全，不做处理，返回给调用方
 			for(int i = 0 ; i < list.size() ; i ++){
