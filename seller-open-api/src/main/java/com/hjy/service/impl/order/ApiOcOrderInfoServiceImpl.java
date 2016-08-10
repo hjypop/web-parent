@@ -37,7 +37,7 @@ import com.hjy.service.order.IApiOcOrderInfoService;
 @Service("apiOcOrderInfoService")
 public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Integer> implements IApiOcOrderInfoService{
 	
-	private static Integer COUNT = 5000;      // 一次性批处理的数据数量
+	private static Integer COUNT = 5000;       // 一次性批处理的数据数量 
 
 	@Resource
 	private IOcOrderinfoDao dao;
