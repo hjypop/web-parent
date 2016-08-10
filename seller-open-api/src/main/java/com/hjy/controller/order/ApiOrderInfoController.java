@@ -60,8 +60,8 @@ public class ApiOrderInfoController {
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
 				result.getString("sellerCode") == null ? "错误的数据请求": result.getString("sellerCode") , 
-				"list",
-				"com.hjy.controller.order.apiGetOrderInfo",
+				"Order.List",
+				"ApiOcOrderInfoServiceImpl.getOrderInfoByJson",
 				json,
 				result.toJSONString(),
 				new Date(), 
@@ -92,8 +92,8 @@ public class ApiOrderInfoController {
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
 				result.getString("sellerCode") == null ? "错误的数据请求": result.getString("sellerCode") , 
-				"update_order_status",
-				"com.hjy.controller.order.apiUpdateOrderStatus",
+				"Order.UpdateOrderStatus",
+				"ApiOcOrderInfoServiceImpl.updateOrderStatus",
 				json,
 				result.toJSONString(),
 				new Date(), 

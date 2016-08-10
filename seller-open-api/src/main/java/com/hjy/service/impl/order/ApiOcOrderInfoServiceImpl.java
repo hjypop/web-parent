@@ -99,8 +99,8 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			result.put("sign", sign); 
 			openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
 					sellerCode , 
-					"list" , 
-					"com.hjy.controller.order.ApiOrderInfoController.apiGetOrderInfo" , 
+					"Order.List" , 
+					"com.hjy.service.impl.order.getOrderInfoByJson" , 
 					new Date(),
 					1 , 
 					json,
@@ -114,8 +114,8 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			result.put("desc", "查询订单状态信息异常");
 			openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
 					sellerCode , 
-					"list" , 
-					"com.hjy.controller.order.ApiOrderInfoController.apiGetOrderInfo" , 
+					"Order.List" , 
+					"com.hjy.service.impl.order.getOrderInfoByJson" , 
 					new Date(),
 					2 , 
 					json,
@@ -151,12 +151,6 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 		}
 		String sellerCode = request.getSellerCode();
 		result.put("sellerCode", sellerCode);
-		// TODO 关联查询商家code是否存在
-//		if(count == 0){
-//			result.put("code", 3);
-//			result.put("desc", "错误的商家编号，无API访问权限");
-//			return result;
-//		}
 		
 		List<OrderInfoStatus> list = request.getList();
 		if(list.size() > COUNT){
@@ -170,7 +164,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			return result; 
 		}
 		
-		String lockcode = WebHelper.getInstance().addLock(10000 , sellerCode + "@com.hjy.controller.order.ApiOrderInfoController.apiUpdateOrderStatus");      // 分布式锁
+		String lockcode = WebHelper.getInstance().addLock(10000 , sellerCode + "@ApiOcOrderInfoServiceImpl.updateOrderStatus");      // 分布式锁
 		if(StringUtils.isNotEmpty(lockcode)) {
 			List<OrderInfoStatus> updateList = new ArrayList<OrderInfoStatus>();
 			List<OrderInfoStatus> exceptionStatusList = new ArrayList<OrderInfoStatus>();
@@ -223,9 +217,9 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 				result.put("errorSellerCodeList", errorList);// 非此商户订单
 			}
 			return result;
-		}else{
+		}else{             // 处理机房断电、服务器宕机
 			result.put("code", 14);
-			result.put("desc", "分布式锁生效，更新订单状态信息已锁定，请联系HJY删除锁" + sellerCode + "@*.apiUpdateOrderStatus");
+			result.put("desc", "分布式锁生效，更新订单状态信息已锁定，请联系HJY删除锁" + sellerCode + "@ApiOcOrderInfoServiceImpl.updateOrderStatus");
 			return result; 
 		}
 	}

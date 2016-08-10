@@ -80,12 +80,7 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 		}
 		String sellerCode = request.getSellerCode();
 		result.put("sellerCode", sellerCode);
-		// TODO 关联查询商家code是否存在
-//		if(count == 0){
-//			result.put("code", 3);
-//			result.put("desc", "错误的商家编号，无API访问权限");
-//			return result;
-//		}
+		 
 		List<OrderShipment> list = request.getList();
 		if(list.size() > COUNT){
 			result.put("code", 1);
@@ -98,7 +93,7 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 			return result; 
 		}
 		
-		String lockcode = WebHelper.getInstance().addLock(10000 , sellerCode + "@com.hjy.controller.shipment.ApiShipmentController.apiInsertShipments");      // 分布式锁
+		String lockcode = WebHelper.getInstance().addLock(10000 , sellerCode + "@ApiOcOrderShipmentsServiceImpl.apiInsertShipments");      // 分布式锁
 		if(StringUtils.isNotEmpty(lockcode)) { // 
 			List<OrderShipment> correctList = new ArrayList<OrderShipment>(); // 保存合法的物流信息
 			List<OrderShipment> exceptionOrderList = new ArrayList<OrderShipment>();  // 异常的订单物流信息|关键字段不全，不做处理，返回给调用方
@@ -179,9 +174,9 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 			result.put("code", 0);
 			result.put("desc", "请求成功，已同步 " + (insertList.size() + updateList.size()) + " 条订单物流记录");
 			return result; 
-		}else{
+		}else{			// 处理机房断电、服务器宕机
 			result.put("code", 14);
-			result.put("desc", "分布式锁生效，同步物流信息已锁定，请联系HJY删除锁" + sellerCode + "@*.apiInsertShipments");
+			result.put("desc", "分布式锁生效，同步物流信息已锁定，请联系HJY删除锁" + sellerCode + "@ApiOcOrderShipmentsServiceImpl.apiInsertShipments");
 			return result; 
 		}
 	} 

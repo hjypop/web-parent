@@ -59,8 +59,8 @@ public class ApiShipmentController {
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
 				result.getString("sellerCode") == null ? "错误的数据请求": result.getString("sellerCode") , 
-				"insert_shipments",
-				"com.hjy.controller.shipment.apiInsertShipments",
+				"Order.Shipments",
+				"ApiOcOrderShipmentsServiceImpl.apiInsertShipments",
 				json,
 				result.toJSONString(),
 				new Date(), 
