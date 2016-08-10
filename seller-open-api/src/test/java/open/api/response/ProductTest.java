@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,7 +16,6 @@ import com.hjy.common.DateUtil;
 import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
 import com.hjy.dto.product.Productdescription;
-import com.hjy.helper.WebHelper;
 import com.hjy.request.RequestProduct;
 import com.hjy.request.RequestProducts;
 import com.hjy.response.product.ResponseProduct;

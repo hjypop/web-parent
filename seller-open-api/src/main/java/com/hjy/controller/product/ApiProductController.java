@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
+import com.hjy.controller.ApiController;
 import com.hjy.entity.log.LcOpenApiOperation;
 import com.hjy.response.product.ResponseProduct;
 import com.hjy.service.operation.IApiLcOpenApiOperationService;
@@ -16,7 +17,7 @@ import com.hjy.service.product.IApiProductService;
 
 @Controller
 @RequestMapping("openapi/product/")
-public class ApiProductController {
+public class ApiProductController extends ApiController {
 
 	@Autowired
 	private IApiProductService service;

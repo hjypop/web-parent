@@ -64,9 +64,10 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	@Override
 	public ResponseProduct addProduct(String product) {
 		ResponseProduct response = new ResponseProduct();
+		String lock = "";
 		if (product != null && !"".equals(product)) {
 			try {
-				WebHelper.getInstance().addLock(10, "Product.addproduct");
+				lock = WebHelper.getInstance().addLock(10, "Product.addproduct");
 				RequestProduct requestProduct = JSON.toJavaObject(JSON.parseObject(product), RequestProduct.class);
 				if (requestProduct != null) {
 					if (requestProduct.getProduct() != null) {
@@ -101,7 +102,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				response.setCode(10);
 				response.setDesc(getInfo(10));
 			} finally {
-				WebHelper.getInstance().unLock("Product.addproduct");
+				WebHelper.getInstance().unLock(lock);
 			}
 		} else {
 			response.setCode(10);
