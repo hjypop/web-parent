@@ -98,7 +98,7 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 			return result; 
 		}
 		
-		String lockcode = WebHelper.getInstance().addLock(10000 , sellerCode + "com.hjy.controller.shipment.ApiShipmentController.apiInsertShipments");      // 分布式锁
+		String lockcode = WebHelper.getInstance().addLock(10000 , sellerCode + "@com.hjy.controller.shipment.ApiShipmentController.apiInsertShipments");      // 分布式锁
 		if(StringUtils.isNotEmpty(lockcode)) { // 
 			List<OrderShipment> correctList = new ArrayList<OrderShipment>(); // 保存合法的物流信息
 			List<OrderShipment> exceptionOrderList = new ArrayList<OrderShipment>();  // 异常的订单物流信息|关键字段不全，不做处理，返回给调用方
@@ -168,7 +168,7 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 				String remark_ = "{" + ExceptionHelpter.allExceptionInformation(e) + "}";
 				logShipmentStatusDao.insertSelective(new LcOpenApiShipmentStatus(ex.getUid() , sellerCode , ex.getOrderCode() , ex.getLogisticseName() , ex.getWaybill() , 2 , new Date() , remark_));
 				
-				result.put("failList", insertList.removeAll(successList));
+				result.put("successList", successList);
 				result.put("code", 11);
 				result.put("desc", desc_);
 				return result; 
@@ -177,11 +177,11 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 			}
 			
 			result.put("code", 0);
-			result.put("desc", "请求成功，已同步 " + successList.size() + " 条订单物流记录");
+			result.put("desc", "请求成功，已同步 " + (insertList.size() + updateList.size()) + " 条订单物流记录");
 			return result; 
 		}else{
 			result.put("code", 14);
-			result.put("desc", "分布式锁生效，同步物流信息已锁定，请联系HJY删除锁*.apiInsertShipments");
+			result.put("desc", "分布式锁生效，同步物流信息已锁定，请联系HJY删除锁" + sellerCode + "@*.apiInsertShipments");
 			return result; 
 		}
 	} 
