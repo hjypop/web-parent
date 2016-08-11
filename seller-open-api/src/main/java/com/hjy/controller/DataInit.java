@@ -9,6 +9,7 @@ import java.util.Map;
 import com.alibaba.fastjson.JSON;
 import com.hjy.common.bill.HexUtil;
 import com.hjy.common.bill.MD5Util;
+import com.hjy.helper.SignHelper;
 import com.hjy.request.Request;
 import com.hjy.request.data.OrderInfoRequest;
 import com.hjy.request.data.OrderInfoStatus;
@@ -38,8 +39,8 @@ public class DataInit {
 			str.append(nameString);
 		}
 		str.append(request.getAppSecret());
-		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
-		
+//		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+		String sign =SignHelper.md5Sign(str.toString());
 		System.out.println(sign); 
 	}
 	
@@ -60,7 +61,7 @@ public class DataInit {
 		a.setLogisticseCode("LC141013100001");
 		a.setLogisticseName("韵达物流1111");
 		a.setWaybill("YD86851247598");
-		a.setRemark("货物已出库");
+		a.setRemark("出库");
 		
 		OrderShipment b = new OrderShipment();
 		b.setOrderCode("DD150623100134");

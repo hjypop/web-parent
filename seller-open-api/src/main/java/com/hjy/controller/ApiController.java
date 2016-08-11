@@ -20,6 +20,7 @@ import com.hjy.common.bill.MD5Util;
 import com.hjy.entity.log.LcOpenApiOperation;
 import com.hjy.entity.webcore.OpenApiAppid;
 import com.hjy.helper.DateHelper;
+import com.hjy.helper.SignHelper;
 import com.hjy.request.Request;
 import com.hjy.service.appid.IApiOpenApiAppidService;
 import com.hjy.service.operation.IApiLcOpenApiOperationService;
@@ -150,7 +151,8 @@ public class ApiController {
 			str.append(nameString);
 		}
 		str.append(request.getAppSecret());
-		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+//		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+		String sign =SignHelper.md5Sign(str.toString());
 		if (sign.equals(request.getSign())) {
 			flag = true;
 		}
