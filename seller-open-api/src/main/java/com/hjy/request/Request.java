@@ -13,10 +13,15 @@ public class Request {
 	 * 调用方法
 	 */
 	private String method;
+
+	/**
+	 * 商户渠道识别码编号
+	 */
+	private String appid;
 	/**
 	 * 商户渠道识别码
 	 */
-	private String appid;
+	private String appSecret;
 	/**
 	 * 时间戳
 	 */
@@ -29,6 +34,19 @@ public class Request {
 	 * 随机数
 	 */
 	private String nonce;
+
+	/**
+	 * 数字签名
+	 */
+	private String sign;
+
+	public String getSign() {
+		return sign;
+	}
+
+	public void setSign(String sign) {
+		this.sign = sign;
+	}
 
 	public String getMethod() {
 		return method;
@@ -68,6 +86,14 @@ public class Request {
 
 	public void setNonce(String nonce) {
 		this.nonce = nonce;
+	}
+
+	public String getAppSecret() {
+		return appSecret;
+	}
+
+	public void setAppSecret(String appSecret) {
+		this.appSecret = appSecret;
 	}
 
 }

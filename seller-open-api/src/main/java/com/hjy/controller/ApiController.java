@@ -1,10 +1,18 @@
 package com.hjy.controller;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.common.bill.HexUtil;
+import com.hjy.common.bill.MD5Util;
 import com.hjy.request.Request;
 import com.hjy.service.product.IApiProductService;
 
@@ -71,6 +79,28 @@ public class ApiController {
 	 */
 	private static boolean isSign(Request request) {
 		boolean flag = false;
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("appid", request.getAppid());
+		map.put("data", request.getData());
+		map.put("method", request.getMethod());
+		map.put("timestamp", request.getNonce());
+		map.put("nonce", request.getTimestamp());
+		List<String> list = new ArrayList<String>();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			if (entry.getValue() != "") {
+				list.add(entry.getKey() + "=" + entry.getValue() + "&");
+			}
+		}
+		Collections.sort(list); // 对List内容进行排序
+		StringBuffer str = new StringBuffer();
+		for (String nameString : list) {
+			str.append(nameString + "&");
+		}
+		str.append(request.getAppSecret());
+		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+		if (sign.equals(request.getSign())) {
+			flag = true;
+		}
 		return flag;
 	}
 }

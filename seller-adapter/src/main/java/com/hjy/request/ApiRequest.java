@@ -13,20 +13,31 @@ package com.hjy.request;
  */
 public class ApiRequest {
 	private String sign;
-	private String createTime; 	// 请求创建时间
-	
+	private String appSecret;// 商户渠道编号
+	private String createTime; // 请求创建时间
+
 	public String getSign() {
 		return sign;
 	}
+
 	public void setSign(String sign) {
 		this.sign = sign;
 	}
-	
+
 	public String getCreateTime() {
 		return createTime;
 	}
+
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
-	
+
+	public String getAppSecret() {
+		return appSecret;
+	}
+
+	public void setAppSecret(String appSecret) {
+		this.appSecret = appSecret;
+	}
+
 }
