@@ -11,3 +11,23 @@ ApiOcOrderShipmentsServiceImpl -> apiInsertShipments 需要加入新的日志表
 
 加入新的表，用于记录 open api 商户的 appid 和 惠家有的small_seller_code的关联信息
 open_api_appid
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

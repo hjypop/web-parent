@@ -10,13 +10,14 @@ import com.alibaba.fastjson.JSON;
 import com.hjy.common.bill.HexUtil;
 import com.hjy.common.bill.MD5Util;
 import com.hjy.request.Request;
+import com.hjy.request.data.OrderInfoRequest;
 import com.hjy.request.data.OrderInfoStatus;
 
 public class DataInit {
 	
 	public static void main(String[] args) {
 		
-		Request request = DataInit.apiUpdateOrderStatusTest();
+		Request request = DataInit.getOrderInfoByJsonTest();
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("appid", request.getAppid());
 		map.put("data", request.getData());
@@ -38,6 +39,23 @@ public class DataInit {
 		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
 		System.out.println(sign); 
 	}
+	
+	
+	public static Request getOrderInfoByJsonTest(){
+		Request r = new Request();
+		r.setMethod("Order.List");
+		r.setAppid("appid-order-list");
+		r.setAppSecret("1122334");
+		r.setTimestamp("2016-08-11 11:31:58");
+		r.setNonce("4"); 
+		r.setSign("d7e67b07c7983da4603dd467b2cf6f78"); 
+		
+		OrderInfoRequest info = new OrderInfoRequest();
+		
+		r.setData(JSON.toJSONString(info)); 
+		
+		return r; 
+	}
  
 	public static Request apiUpdateOrderStatusTest(){
 		
@@ -47,29 +65,25 @@ public class DataInit {
 		r.setAppSecret("1122334");
 		r.setTimestamp("2016-08-11 11:31:58");
 		r.setNonce("4"); 
-		r.setSign("f6c423d220fe5dbac0d6749124c56af7"); 
+		r.setSign("78c6fd898937c90cbbb07e40648afd2f"); 
 		
 		
 		List< OrderInfoStatus> list = new ArrayList<OrderInfoStatus>();
 		OrderInfoStatus os1 = new OrderInfoStatus();
 		os1.setOrderCode("DD150916819918");
-		os1.setOrderStatus("449715390001000399");// 模拟状态错误
-		os1.setUpdateTime("2018-08-08 18:08:08");
+		os1.setOrderStatus("449715390001000399");// 模拟状态错误 
 		
 		OrderInfoStatus os2 = new OrderInfoStatus();
 		os2.setOrderCode("DD150916819919");
-		os2.setOrderStatus("4497153900010004");
-		os2.setUpdateTime("2019-08-08 18:08:08");
+		os2.setOrderStatus("4497153900010004"); 
 		
 		OrderInfoStatus os3 = new OrderInfoStatus();
 		os3.setOrderCode("DD150916819920");
-		os3.setOrderStatus("4497153900010004");
-		os3.setUpdateTime("2019-08-08 18:08:08");
+		os3.setOrderStatus("4497153900010004"); 
 		
 		OrderInfoStatus os4 = new OrderInfoStatus();// 模拟非商户订单
 		os4.setOrderCode("DD150916808992");
-		os4.setOrderStatus("4497153900010004");
-		os4.setUpdateTime("2018-08-08 18:08:08");
+		os4.setOrderStatus("4497153900010004"); 
 		
 		list.add(os1);
 		list.add(os2);

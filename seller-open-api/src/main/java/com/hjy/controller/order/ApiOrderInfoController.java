@@ -58,7 +58,7 @@ public class ApiOrderInfoController {
 		json = JSON.toJSONString(ooo);
 		
 		Date requestTime = new Date();
-		JSONObject result = service.getOrderInfoByJson(json);
+		JSONObject result = service.getOrderInfoByJson(json,"");
 		// sellerCode apiName classUrl requestJson responseJson createTime remark
 		logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
 				sellerCode , 

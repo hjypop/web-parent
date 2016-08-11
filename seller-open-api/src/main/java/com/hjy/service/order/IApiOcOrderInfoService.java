@@ -14,7 +14,7 @@ public interface IApiOcOrderInfoService  extends IBaseService<OcOrderinfo, Integ
 	 * @author Yangcl
 	 * @version 1.0.0.1
 	 */
-	public JSONObject getOrderInfoByJson(String json);
+	public JSONObject getOrderInfoByJson(String json , String sellerCode);
 	
 	
 	/**

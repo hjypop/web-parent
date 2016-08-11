@@ -58,7 +58,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	 * @version 1.0.0.1
 	 */
 	@Override
-	public JSONObject getOrderInfoByJson(String json) {
+	public JSONObject getOrderInfoByJson(String json , String sellerCode) {
 		JSONObject result = new JSONObject();
 		String responseTime = DateHelper.formatDate(new Date());
 		result.put("responseTime", responseTime);
@@ -71,14 +71,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			result.put("desc", "请求参数错误，请求数据解析异常");
 			return result; 
 		}
-		
-		if(StringUtils.isBlank(request.getSellerCode())){
-			result.put("code", 14);
-			result.put("desc", "请求参数seller code不得为空");
-			return result;
-		}
-		String sellerCode = request.getSellerCode();
- 
+		 
 		try {
 			String startTime = DateHelper.formatDateZero(new Date());  
 			String endTime = this.getNextDate(new Date()); 

@@ -11,6 +11,7 @@ import com.hjy.request.ApiRequest;
  */
 public class OrderInfoRequest extends ApiRequest {
 	
+	private String sellerCode; 		// 商家编码| 非空
 	private String orderCode; 		// 订单编号
 
 
@@ -24,8 +25,11 @@ public class OrderInfoRequest extends ApiRequest {
 	 * 4497153900010006 交易失败 
 	 * 4497153900010007 交易无效
 	 */
-	private String orderStatus; 	// 订单状态 
-	private String sellerCode; 		// 商家编码| 非空
+	private String orderStatus;  // 订单状态      此字段保留          
+	
+	 
+	
+	
 	
 	public String getOrderCode() {
 		return orderCode;

@@ -55,7 +55,7 @@ public class ApiController {
 	@ResponseBody
 	public JSONObject requestApi(Request request) {  
 		
-		request = DataInit.apiUpdateOrderStatusTest();
+		request = DataInit.getOrderInfoByJsonTest();
 		
 		
 		JSONObject result = new JSONObject(); 
@@ -88,7 +88,7 @@ public class ApiController {
 					}
 				} else if ("Order".equals(type)) {
 					if("List".equals(method)){         // 根据传入的json串查询订单信息 - Yangcl
-						result = service.getOrderInfoByJson(request.getData());
+						result = service.getOrderInfoByJson(request.getData() , sellerCode);
 						logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),	
 								sellerCode , 
 								"Order.List",
