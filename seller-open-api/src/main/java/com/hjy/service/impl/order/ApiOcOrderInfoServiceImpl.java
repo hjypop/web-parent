@@ -181,7 +181,6 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 				logger.error("更新订单状态信息异常|" + desc_ , ex);  
 				String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
 				openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , e.getOrderCode() , e.getOrderStatus() , 2 , new Date() , remark_));
-				result.put("successList", successList);
 				if(errorList.size() > 0){
 					result.put("errorSellerCodeList", errorList); // 非此商户订单
 				}
@@ -194,7 +193,6 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			
 			result.put("code", 0);
 			result.put("desc", "请求成功，已同步 " + successList.size() + " 条订单状态记录"); 
-			result.put("successList", successList);
 			if(errorList.size() > 0){
 				result.put("errorSellerCodeList", errorList);// 非此商户订单
 			}
