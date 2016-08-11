@@ -103,6 +103,9 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 			for(OrderShipment o : correctList){
 				OcOrderinfo info = orderinfoDao.getOrderInfoByCode(new OcOrderinfo(o.getOrderCode() , sellerCode)); 
 				if(null == info){
+					o.setUid("");
+					o.setCreator("");
+					o.setCreateTime(""); 
 					otherOrderList.add(o);
 				}else{
 					insertList.add(o);

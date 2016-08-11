@@ -55,7 +55,7 @@ public class ApiController {
 	@ResponseBody
 	public JSONObject requestApi(Request request) {  
 		
-		request = DataInit.getOrderInfoByJsonTest();
+		request = DataInit.apiInsertShipmentsTest();
 		
 		
 		JSONObject result = new JSONObject(); 

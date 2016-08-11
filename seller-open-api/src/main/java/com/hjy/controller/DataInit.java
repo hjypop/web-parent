@@ -12,12 +12,14 @@ import com.hjy.common.bill.MD5Util;
 import com.hjy.request.Request;
 import com.hjy.request.data.OrderInfoRequest;
 import com.hjy.request.data.OrderInfoStatus;
+import com.hjy.request.data.OrderShipment;
 
 public class DataInit {
 	
 	public static void main(String[] args) {
 		
-		Request request = DataInit.getOrderInfoByJsonTest();
+		Request request = DataInit.apiInsertShipmentsTest();
+		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("appid", request.getAppid());
 		map.put("data", request.getData());
@@ -37,9 +39,66 @@ public class DataInit {
 		}
 		str.append(request.getAppSecret());
 		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+		
 		System.out.println(sign); 
 	}
 	
+	
+	public static Request apiInsertShipmentsTest(){
+		Request r = new Request();
+		r.setMethod("Order.Shipments");
+		r.setAppid("appid-shipments-insert");
+		r.setAppSecret("1122334");
+		r.setTimestamp("2016-08-11 11:31:58");
+		r.setNonce("4"); 
+		r.setSign("fdc9c234ae45be651869945a086b0f76"); 
+		
+	 
+		List<OrderShipment> list = new ArrayList<OrderShipment>();
+		OrderShipment a = new OrderShipment();
+		a.setOrderCode("DD150623100019");
+		a.setLogisticseCode("LC141013100001");
+		a.setLogisticseName("韵达物流");
+		a.setWaybill("YD86851247598");
+		a.setRemark("货物已出库");
+		
+		OrderShipment b = new OrderShipment();
+		b.setOrderCode("DD150623100134");
+		b.setLogisticseCode("shentong");
+		b.setLogisticseName("北京申通");
+		b.setWaybill("ST229318770084");
+		b.setRemark("马上发货");
+		
+		OrderShipment c = new OrderShipment();
+		c.setOrderCode("DD150626100408");
+		c.setLogisticseCode("shunfeng");
+		c.setLogisticseName("顺风速运");
+		c.setWaybill("SF919652568865");
+		c.setRemark("货物已出库，马上发货");
+		
+		OrderShipment d = new OrderShipment();      // 关键字段不全订单
+		d.setOrderCode("DD150629100423");
+		d.setLogisticseCode("");
+		d.setLogisticseName("顺风速运");        
+		d.setRemark("货物已出库，马上发货");
+		
+		OrderShipment e = new OrderShipment();    // 非惠家有订单
+		e.setOrderCode("DD00000000002");
+		e.setLogisticseCode("cainiao");
+		e.setLogisticseName("菜鸟快运");
+		e.setWaybill("CN823987888868");
+		e.setRemark("货物已出库，马上发货");
+		
+		list.add(a);
+		list.add(b);
+		list.add(c);
+		list.add(d);
+		list.add(e);
+
+		r.setData(JSON.toJSONString(list)); 
+		
+		return r; 
+	}
 	
 	public static Request getOrderInfoByJsonTest(){
 		Request r = new Request();
