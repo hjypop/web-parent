@@ -23,7 +23,6 @@ import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelpter;
 import com.hjy.helper.WebHelper;
 import com.hjy.request.data.OrderShipment;
-import com.hjy.request.data.ShipmentRequest;										 // TODO 删除
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.shipment.IApiOcOrderShipmentsService;
 

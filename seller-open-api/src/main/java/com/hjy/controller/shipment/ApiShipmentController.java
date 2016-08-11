@@ -16,7 +16,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hjy.entity.log.LcOpenApiOperation;
 import com.hjy.helper.DateHelper;
 import com.hjy.request.data.OrderShipment;
-import com.hjy.request.data.ShipmentRequest;
 import com.hjy.service.operation.IApiLcOpenApiOperationService;
 import com.hjy.service.shipment.IApiOcOrderShipmentsService;
 
@@ -82,8 +81,6 @@ public class ApiShipmentController {
 	* @version 1.0.0.1
 	 */
 	public String apiInsertShipmentsTest(){
-		ShipmentRequest info =  new ShipmentRequest();
-		info.setCreateTime(""); 
 
 		// SF0-OPEN-API-TEST-4  
 		
@@ -145,9 +142,8 @@ public class ApiShipmentController {
 		list.add(d);
 		list.add(e);
 //		list.add(f);
-		info.setList(list); 
 		
-		return JSON.toJSONString(info);
+		return JSON.toJSONString(list);
 	}
 	
 }
