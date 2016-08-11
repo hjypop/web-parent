@@ -15,6 +15,18 @@ public interface IApiProductInfoDao {
 
 	/**
 	 * 
+	 * 方法: insert <br>
+	 * 描述: 添加新商品 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月11日 下午2:18:00
+	 * 
+	 * @param product
+	 * @return
+	 */
+	int insert(PcProductinfo product);
+
+	/**
+	 * 
 	 * 方法: batchInsert <br>
 	 * 描述: 批量添加商品 <br>
 	 * 作者: zhy<br>
