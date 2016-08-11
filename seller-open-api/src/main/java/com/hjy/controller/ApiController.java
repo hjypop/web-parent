@@ -51,10 +51,9 @@ public class ApiController {
 
 	@RequestMapping("openapi")
 	@ResponseBody
- 
 	public JSONObject requestApi(Request request) {
 
-		request = DataInit.getOrderInfoByJsonTest();
+		request = DataInit.apiInsertShipmentsTest();
 
 		JSONObject result = new JSONObject();
 		OpenApiAppid info = appidService.findByAppid(new OpenApiAppid(request.getAppid(), request.getAppSecret()));

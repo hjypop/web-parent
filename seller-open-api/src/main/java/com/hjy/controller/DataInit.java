@@ -51,28 +51,28 @@ public class DataInit {
 		r.setAppSecret("1122334");
 		r.setTimestamp("2016-08-11 11:31:58");
 		r.setNonce("4"); 
-		r.setSign("fdc9c234ae45be651869945a086b0f76"); 
+		r.setSign("ce808b5149d02f81fb6881e10da67a06"); 
 		
 	 
 		List<OrderShipment> list = new ArrayList<OrderShipment>();
 		OrderShipment a = new OrderShipment();
 		a.setOrderCode("DD150623100019");
 		a.setLogisticseCode("LC141013100001");
-		a.setLogisticseName("韵达物流");
+		a.setLogisticseName("韵达物流1111");
 		a.setWaybill("YD86851247598");
 		a.setRemark("货物已出库");
 		
 		OrderShipment b = new OrderShipment();
 		b.setOrderCode("DD150623100134");
 		b.setLogisticseCode("shentong");
-		b.setLogisticseName("北京申通");
+		b.setLogisticseName("北京申通3333");
 		b.setWaybill("ST229318770084");
 		b.setRemark("马上发货");
 		
 		OrderShipment c = new OrderShipment();
 		c.setOrderCode("DD150626100408");
 		c.setLogisticseCode("shunfeng");
-		c.setLogisticseName("顺风速运");
+		c.setLogisticseName("顺风速运2222");
 		c.setWaybill("SF919652568865");
 		c.setRemark("货物已出库，马上发货");
 		
