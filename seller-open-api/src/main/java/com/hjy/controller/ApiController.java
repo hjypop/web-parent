@@ -2,19 +2,27 @@ package com.hjy.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.common.bill.HexUtil;
 import com.hjy.common.bill.MD5Util;
+import com.hjy.entity.log.LcOpenApiOperation;
+import com.hjy.helper.DateHelper;
 import com.hjy.request.Request;
+import com.hjy.service.operation.IApiLcOpenApiOperationService;
+import com.hjy.service.order.IApiOcOrderInfoService;
 import com.hjy.service.product.IApiProductService;
+import com.hjy.service.shipment.IApiOcOrderShipmentsService;
 
 /**
  * 
@@ -27,8 +35,18 @@ import com.hjy.service.product.IApiProductService;
 public class ApiController {
 	@Autowired
 	private IApiProductService productService;
+	
+	@Autowired
+	private IApiOcOrderInfoService service;
+	
+	@Autowired
+	private IApiLcOpenApiOperationService logService;
+	
+	@Autowired
+	private IApiOcOrderShipmentsService ocOrderShipmentsService;
 
 	@RequestMapping("openapi")
+	@ResponseBody
 	public JSONObject requestApi(Request request) {
 		JSONObject result = new JSONObject();
 		boolean flag = isSign(request);
@@ -36,6 +54,8 @@ public class ApiController {
 		 * 如果签名正确，根据method调用不同的service
 		 */
 		if (flag) {
+			String sellerCode = ""; // TODO 
+			Date requestTime = new Date();
 			try {
 				String[] methods = request.getMethod().split(".");
 				String type = methods[0];
@@ -53,7 +73,44 @@ public class ApiController {
 						result = productService.batchProductsSkuStore(request.getData());
 					}
 				} else if ("Order".equals(type)) {
-
+					if("List".equals(method)){         // 根据传入的json串查询订单信息 - Yangcl
+						result = service.getOrderInfoByJson(request.getMethod());
+						logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),	
+								sellerCode , // sellerCode apiName classUrl requestJson responseJson createTime remark
+								"Order.List",
+								"ApiOcOrderInfoServiceImpl.getOrderInfoByJson",
+								request.getMethod(),
+								result.toJSONString(),
+								new Date(), 
+								requestTime,
+								DateHelper.parseDate(result.getString("responseTime")), 
+								"remark"));
+					}else if("UpdateOrderStatus".equals(method)){                // 订单变更： 更新订单状态信息 - Yangcl
+						result = service.updateOrderStatus(request.getMethod() , sellerCode);	 
+						logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
+								sellerCode,   		  
+								"Order.UpdateOrderStatus",
+								"ApiOcOrderInfoServiceImpl.updateOrderStatus",
+								request.getMethod(),
+								result.toJSONString(),
+								new Date(), 
+								requestTime,
+								DateHelper.parseDate(result.getString("responseTime")), 
+								"remark"));
+					}else if ("Shipments".equals(method)){                        // 订单物流变更：根据传入的json串插入物流信息 - Yangcl
+						result = ocOrderShipmentsService.apiInsertShipments(request.getMethod() , sellerCode);   
+						logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
+								sellerCode ,   			 
+								"Order.Shipments",
+								"ApiOcOrderShipmentsServiceImpl.apiInsertShipments",
+								request.getMethod(),
+								result.toJSONString(),
+								new Date(), 
+								requestTime,
+								DateHelper.parseDate(result.getString("responseTime")),
+								"remark"));
+						return result;
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -83,8 +140,8 @@ public class ApiController {
 		map.put("appid", request.getAppid());
 		map.put("data", request.getData());
 		map.put("method", request.getMethod());
-		map.put("timestamp", request.getNonce());
-		map.put("nonce", request.getTimestamp());
+		map.put("timestamp", request.getTimestamp());
+		map.put("nonce", request.getNonce());
 		List<String> list = new ArrayList<String>();
 		for (Map.Entry<String, String> entry : map.entrySet()) {
 			if (entry.getValue() != "") {
@@ -94,7 +151,7 @@ public class ApiController {
 		Collections.sort(list); // 对List内容进行排序
 		StringBuffer str = new StringBuffer();
 		for (String nameString : list) {
-			str.append(nameString + "&");
+			str.append(nameString);
 		}
 		str.append(request.getAppSecret());
 		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
