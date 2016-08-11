@@ -9,3 +9,5 @@ ApiOcOrderShipmentsServiceImpl -> apiInsertShipments 需要加入新的日志表
 
 加入新的日志表 lc_open_api_operation  记录所有接口调用情况|sellerCode apiName classUrl requestJson responseJson createTime remark;
 
+加入新的表，用于记录 open api 商户的 appid 和 惠家有的small_seller_code的关联信息
+open_api_appid

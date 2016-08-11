@@ -17,8 +17,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.hjy.common.bill.HexUtil;
 import com.hjy.common.bill.MD5Util;
 import com.hjy.entity.log.LcOpenApiOperation;
+import com.hjy.entity.webcore.OpenApiAppid;
 import com.hjy.helper.DateHelper;
 import com.hjy.request.Request;
+import com.hjy.service.appid.IApiOpenApiAppidService;
 import com.hjy.service.operation.IApiLcOpenApiOperationService;
 import com.hjy.service.order.IApiOcOrderInfoService;
 import com.hjy.service.product.IApiProductService;
@@ -33,22 +35,35 @@ import com.hjy.service.shipment.IApiOcOrderShipmentsService;
  */
 @Controller
 public class ApiController {
+	
 	@Autowired
 	private IApiProductService productService;
-	
 	@Autowired
 	private IApiOcOrderInfoService service;
-	
 	@Autowired
 	private IApiLcOpenApiOperationService logService;
-	
 	@Autowired
 	private IApiOcOrderShipmentsService ocOrderShipmentsService;
 
+	@Autowired
+	private IApiOpenApiAppidService appidService;
+	
+	
+	
 	@RequestMapping("openapi")
 	@ResponseBody
 	public JSONObject requestApi(Request request) {
+		
+		request.setAppid("appid-1-d-e-r-t"); 
+		request.setAppSecret("1122334"); 
+		
 		JSONObject result = new JSONObject();
+		String appid = request.getAppid();
+		
+		OpenApiAppid oaa = new OpenApiAppid(request.getAppid() , request.getAppSecret());
+		oaa = appidService.findByAppid(oaa);
+		
+		
 		boolean flag = isSign(request);
 		/*
 		 * 如果签名正确，根据method调用不同的service
