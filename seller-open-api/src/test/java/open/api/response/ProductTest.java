@@ -2,7 +2,10 @@ package open.api.response;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +17,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.base.BaseTest;
 import com.hjy.common.DateUtil;
+import com.hjy.common.bill.HexUtil;
+import com.hjy.common.bill.MD5Util;
 import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
 import com.hjy.dto.product.Productdescription;
+import com.hjy.request.Request;
 import com.hjy.request.RequestProduct;
 import com.hjy.request.RequestProducts;
 import com.hjy.service.product.IApiProductService;
@@ -84,9 +90,40 @@ public class ProductTest extends BaseTest {
 		request.setProductInfos(productList);
 		request.setTotal(productList.size());
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
-		System.out.println(obj.toJSONString());
-		JSONObject response = service.batchProducts(obj.toJSONString(), "SI2003");
-		System.out.println(JSON.toJSON(response));
+		/**
+		 * 生成requeset请求对象
+		 */
+		Request req = new Request();
+		req.setAppid("");
+		req.setAppSecret("");
+		req.setData(obj.toJSONString());
+		req.setMethod("Product.batchProducts");
+		req.setNonce("13332");
+		req.setTimestamp(DateUtil.getSysDateTimestamp().getTime() + "");
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("appid", req.getAppid());
+		map.put("data", req.getData());
+		map.put("method", req.getMethod());
+		map.put("timestamp", req.getTimestamp());
+		map.put("nonce", req.getNonce());
+		List<String> list = new ArrayList<String>();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			if (entry.getValue() != "") {
+				list.add(entry.getKey() + "=" + entry.getValue() + "&");
+			}
+		}
+		Collections.sort(list); // 对List内容进行排序
+		StringBuffer str = new StringBuffer();
+		for (String nameString : list) {
+			str.append(nameString);
+		}
+		str.append(request.getAppSecret());
+		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+		req.setSign(sign);
+		System.out.println(JSON.toJSON(req));
+		// JSONObject response = service.batchProducts(obj.toJSONString(),
+		// "SI2003");
+		// System.out.println(JSON.toJSON(response));
 	}
 
 	public void addProduct() {
@@ -139,9 +176,40 @@ public class ProductTest extends BaseTest {
 		request.setCreateTime(DateUtil.getSysDateTimeString());
 		request.setSign("");
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
-		System.out.println(obj.toJSONString());
-		JSONObject response = service.addProduct(obj.toJSONString(), "SI2003");
-		System.out.println(response.toJSONString());
+		/**
+		 * 生成requeset请求对象
+		 */
+		Request req = new Request();
+		req.setAppid("");
+		req.setAppSecret("");
+		req.setData(obj.toJSONString());
+		req.setMethod("Product.addProduct");
+		req.setNonce("13332");
+		req.setTimestamp(DateUtil.getSysDateTimestamp().getTime() + "");
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("appid", req.getAppid());
+		map.put("data", req.getData());
+		map.put("method", req.getMethod());
+		map.put("timestamp", req.getTimestamp());
+		map.put("nonce", req.getNonce());
+		List<String> list = new ArrayList<String>();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			if (entry.getValue() != "") {
+				list.add(entry.getKey() + "=" + entry.getValue() + "&");
+			}
+		}
+		Collections.sort(list); // 对List内容进行排序
+		StringBuffer str = new StringBuffer();
+		for (String nameString : list) {
+			str.append(nameString);
+		}
+		str.append(request.getAppSecret());
+		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+		req.setSign(sign);
+		System.out.println(JSON.toJSON(req));
+		// JSONObject response = service.addProduct(obj.toJSONString(),
+		// "SI2003");
+		// System.out.println(response.toJSONString());
 	}
 
 	public void editProduct() {
@@ -194,11 +262,43 @@ public class ProductTest extends BaseTest {
 		request.setCreateTime(DateUtil.getSysDateTimeString());
 		request.setSign("");
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
-		System.out.println(obj.toJSONString());
-		JSONObject response = service.editProduct(obj.toJSONString(), "SI2003");
-		System.out.println(JSON.toJSON(response));
+		/**
+		 * 生成requeset请求对象
+		 */
+		Request req = new Request();
+		req.setAppid("");
+		req.setAppSecret("");
+		req.setData(obj.toJSONString());
+		req.setMethod("Product.editProduct");
+		req.setNonce("13332");
+		req.setTimestamp(DateUtil.getSysDateTimestamp().getTime() + "");
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("appid", req.getAppid());
+		map.put("data", req.getData());
+		map.put("method", req.getMethod());
+		map.put("timestamp", req.getTimestamp());
+		map.put("nonce", req.getNonce());
+		List<String> list = new ArrayList<String>();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			if (entry.getValue() != "") {
+				list.add(entry.getKey() + "=" + entry.getValue() + "&");
+			}
+		}
+		Collections.sort(list); // 对List内容进行排序
+		StringBuffer str = new StringBuffer();
+		for (String nameString : list) {
+			str.append(nameString);
+		}
+		str.append(request.getAppSecret());
+		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+		req.setSign(sign);
+		System.out.println(JSON.toJSON(req));
+		// JSONObject response = service.editProduct(obj.toJSONString(),
+		// "SI2003");
+		// System.out.println(JSON.toJSON(response));
 	}
 
+	@Test
 	public void syncProductPrice() {
 		ProductInfo product = new ProductInfo();
 		product.setProductOutCode("WBPD001");
@@ -217,12 +317,42 @@ public class ProductTest extends BaseTest {
 		products.add(product);
 		request.setProductInfos(products);
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
-		System.out.println(obj.toJSONString());
-		JSONObject response = service.batchProductsPrice(obj.toJSONString(), "SI2003");
-		System.out.println(response.toJSONString());
+		/**
+		 * 生成requeset请求对象
+		 */
+		Request req = new Request();
+		req.setAppid("");
+		req.setAppSecret("");
+		req.setData(obj.toJSONString());
+		req.setMethod("Product.batchProductsPrice");
+		req.setNonce("13332");
+		req.setTimestamp(DateUtil.getSysDateTimestamp().getTime() + "");
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("appid", req.getAppid());
+		map.put("data", req.getData());
+		map.put("method", req.getMethod());
+		map.put("timestamp", req.getTimestamp());
+		map.put("nonce", req.getNonce());
+		List<String> list = new ArrayList<String>();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			if (entry.getValue() != "") {
+				list.add(entry.getKey() + "=" + entry.getValue() + "&");
+			}
+		}
+		Collections.sort(list); // 对List内容进行排序
+		StringBuffer str = new StringBuffer();
+		for (String nameString : list) {
+			str.append(nameString);
+		}
+		str.append(request.getAppSecret());
+		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+		req.setSign(sign);
+		System.out.println(JSON.toJSON(req));
+		// JSONObject response = service.batchProductsPrice(obj.toJSONString(),
+		// "SI2003");
+		// System.out.println(response.toJSONString());
 	}
 
-	@Test
 	public void syncSkuStore() {
 		ProductInfo product = new ProductInfo();
 		product.setProductOutCode("WBPD001");
@@ -239,9 +369,40 @@ public class ProductTest extends BaseTest {
 		products.add(product);
 		request.setProductInfos(products);
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
-		System.out.println(obj.toJSONString());
-		JSONObject response = service.batchProductsSkuStore(obj.toJSONString(), "SI2003");
-		System.out.println(response);
+		/**
+		 * 生成requeset请求对象
+		 */
+		Request req = new Request();
+		req.setAppid("");
+		req.setAppSecret("");
+		req.setData(obj.toJSONString());
+		req.setMethod("Product.batchProductsSkuStore");
+		req.setNonce("13332");
+		req.setTimestamp(DateUtil.getSysDateTimestamp().getTime() + "");
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("appid", req.getAppid());
+		map.put("data", req.getData());
+		map.put("method", req.getMethod());
+		map.put("timestamp", req.getTimestamp());
+		map.put("nonce", req.getNonce());
+		List<String> list = new ArrayList<String>();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			if (entry.getValue() != "") {
+				list.add(entry.getKey() + "=" + entry.getValue() + "&");
+			}
+		}
+		Collections.sort(list); // 对List内容进行排序
+		StringBuffer str = new StringBuffer();
+		for (String nameString : list) {
+			str.append(nameString);
+		}
+		str.append(request.getAppSecret());
+		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+		req.setSign(sign);
+		System.out.println(JSON.toJSON(req));
+		// JSONObject response =
+		// service.batchProductsSkuStore(obj.toJSONString(), "SI2003");
+		// System.out.println(response);
 	}
 
 }
