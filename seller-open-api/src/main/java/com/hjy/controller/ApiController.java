@@ -36,7 +36,7 @@ import com.hjy.service.shipment.IApiOcOrderShipmentsService;
  */
 @Controller
 public class ApiController {
-	
+
 	@Autowired
 	private IApiProductService productService;
 	@Autowired
@@ -48,26 +48,23 @@ public class ApiController {
 
 	@Autowired
 	private IApiOpenApiAppidService appidService;
-	
-	
-	
+
 	@RequestMapping("openapi")
 	@ResponseBody
-	public JSONObject requestApi(Request request) {  
-		
-		request = DataInit.apiInsertShipmentsTest();
-		
-		
-		JSONObject result = new JSONObject(); 
-		OpenApiAppid info = appidService.findByAppid(new OpenApiAppid(request.getAppid() , request.getAppSecret()));
-		if(null == info){
+ 
+	public JSONObject requestApi(Request request) {
+
+		request = DataInit.getOrderInfoByJsonTest();
+
+		JSONObject result = new JSONObject();
+		OpenApiAppid info = appidService.findByAppid(new OpenApiAppid(request.getAppid(), request.getAppSecret()));
+		if (null == info) {
 			result.put("code", 3);
 			result.put("desc", "无API访问权限，错误的appid或appSecret");
 			return result;
 		}
-		
-		
-		if (isSign(request)) {   // 如果签名正确，根据method调用不同的service
+
+		if (isSign(request)) { // 如果签名正确，根据method调用不同的service
 			String sellerCode = info.getSellerCode();
 			Date requestTime = new Date();
 			try {
@@ -76,53 +73,39 @@ public class ApiController {
 				String method = methods[1];
 				if ("Product".equals(type)) {
 					if ("addProduct".equals(method)) {
-						result = productService.addProduct(request.getData());
+						result = productService.addProduct(request.getData(), sellerCode);
 					} else if ("editProduct".equals(method)) {
-						result = productService.editProduct(request.getData());
+						result = productService.editProduct(request.getData(), sellerCode);
 					} else if ("batchProducts".equals(method)) {
-						result = productService.batchProducts(request.getData());
+						result = productService.batchProducts(request.getData(), sellerCode);
 					} else if ("batchProductsPrice".equals(method)) {
-						result = productService.batchProductsPrice(request.getData());
+						result = productService.batchProductsPrice(request.getData(), sellerCode);
 					} else if ("batchProductsSkuStore".equals(method)) {
-						result = productService.batchProductsSkuStore(request.getData());
+						result = productService.batchProductsSkuStore(request.getData(), sellerCode);
 					}
 				} else if ("Order".equals(type)) {
-					if("List".equals(method)){         // 根据传入的json串查询订单信息 - Yangcl
-						result = service.getOrderInfoByJson(request.getData() , sellerCode);
-						logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),	
-								sellerCode , 
-								"Order.List",
-								"ApiOcOrderInfoServiceImpl.getOrderInfoByJson",
-								JSON.toJSONString(request),
-								result.toJSONString(),
-								new Date(), 
-								requestTime,
-								DateHelper.parseDate(result.getString("responseTime")), 
-								"remark"));
-					}else if("UpdateOrderStatus".equals(method)){                // 订单变更： 更新订单状态信息 - Yangcl
-						result = service.updateOrderStatus(request.getData() , sellerCode);	 
+					if ("List".equals(method)) { // 根据传入的json串查询订单信息 - Yangcl
+						result = service.getOrderInfoByJson(request.getData(), sellerCode);
 						logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
-								sellerCode,   		  
-								"Order.UpdateOrderStatus",
-								"ApiOcOrderInfoServiceImpl.updateOrderStatus",
-								JSON.toJSONString(request),
-								result.toJSONString(),
-								new Date(), 
-								requestTime,
-								DateHelper.parseDate(result.getString("responseTime")), 
-								"remark"));
-					}else if ("Shipments".equals(method)){                        // 订单物流变更：根据传入的json串插入物流信息 - Yangcl
-						result = ocOrderShipmentsService.apiInsertShipments(request.getData() , sellerCode);   
+								sellerCode, "Order.List", "ApiOcOrderInfoServiceImpl.getOrderInfoByJson",
+								JSON.toJSONString(request), result.toJSONString(), new Date(), requestTime,
+								DateHelper.parseDate(result.getString("responseTime")), "remark"));
+					} else if ("UpdateOrderStatus".equals(method)) { // 订单变更：
+																		// 更新订单状态信息
+																		// -
+																		// Yangcl
+						result = service.updateOrderStatus(request.getData(), sellerCode);
 						logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
-								sellerCode ,   			 
-								"Order.Shipments",
-								"ApiOcOrderShipmentsServiceImpl.apiInsertShipments",
-								JSON.toJSONString(request),
-								result.toJSONString(),
-								new Date(), 
-								requestTime,
-								DateHelper.parseDate(result.getString("responseTime")),
-								"remark"));
+								sellerCode, "Order.UpdateOrderStatus", "ApiOcOrderInfoServiceImpl.updateOrderStatus",
+								JSON.toJSONString(request), result.toJSONString(), new Date(), requestTime,
+								DateHelper.parseDate(result.getString("responseTime")), "remark"));
+					} else if ("Shipments".equals(method)) { // 订单物流变更：根据传入的json串插入物流信息
+																// - Yangcl
+						result = ocOrderShipmentsService.apiInsertShipments(request.getData(), sellerCode);
+						logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
+								sellerCode, "Order.Shipments", "ApiOcOrderShipmentsServiceImpl.apiInsertShipments",
+								JSON.toJSONString(request), result.toJSONString(), new Date(), requestTime,
+								DateHelper.parseDate(result.getString("responseTime")), "remark"));
 						return result;
 					}
 				}

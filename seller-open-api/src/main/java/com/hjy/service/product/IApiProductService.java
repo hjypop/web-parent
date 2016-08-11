@@ -19,9 +19,10 @@ public interface IApiProductService {
 	 * 时间: 2016年8月4日 上午9:36:53
 	 * 
 	 * @param product
+	 * @param sellerCode商户编码
 	 * @return
 	 */
-	JSONObject addProduct(String product);
+	JSONObject addProduct(String product, String sellerCode);
 
 	/**
 	 * 
@@ -31,9 +32,10 @@ public interface IApiProductService {
 	 * 时间: 2016年8月4日 上午9:37:00
 	 * 
 	 * @param product
+	 * @param sellerCode商户编码
 	 * @return
 	 */
-	JSONObject editProduct(String product);
+	JSONObject editProduct(String product, String sellerCode);
 
 	/**
 	 * 
@@ -43,9 +45,10 @@ public interface IApiProductService {
 	 * 时间: 2016年8月4日 上午9:37:07
 	 * 
 	 * @param products
+	 * @param sellerCode商户编码
 	 * @return
 	 */
-	JSONObject batchProducts(String products);
+	JSONObject batchProducts(String products, String sellerCode);
 
 	/**
 	 * 
@@ -55,9 +58,10 @@ public interface IApiProductService {
 	 * 时间: 2016年8月4日 下午2:42:59
 	 * 
 	 * @param products
+	 * @param sellerCode商户编码
 	 * @return
 	 */
-	JSONObject batchProductsPrice(String products);
+	JSONObject batchProductsPrice(String products, String sellerCode);
 
 	/**
 	 * 
@@ -67,7 +71,8 @@ public interface IApiProductService {
 	 * 时间: 2016年8月4日 下午2:42:29
 	 * 
 	 * @param products
+	 * @param sellerCode商户编码
 	 * @return
 	 */
-	JSONObject batchProductsSkuStore(String products);
+	JSONObject batchProductsSkuStore(String products, String sellerCode);
 }

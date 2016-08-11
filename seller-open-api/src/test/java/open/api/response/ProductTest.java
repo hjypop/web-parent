@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -84,9 +85,8 @@ public class ProductTest extends BaseTest {
 		request.setTotal(productList.size());
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-		// ResponseProduct response =
-		// service.syncProductList(obj.toJSONString());
-		// System.out.println(JSON.toJSON(response));
+		JSONObject response = service.batchProducts(obj.toJSONString(), "SI2003");
+		System.out.println(JSON.toJSON(response));
 	}
 
 	public void addProduct() {
@@ -140,7 +140,7 @@ public class ProductTest extends BaseTest {
 		request.setSign("");
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-		JSONObject response = service.addProduct(obj.toJSONString());
+		JSONObject response = service.addProduct(obj.toJSONString(), "SI2003");
 		System.out.println(response.toJSONString());
 	}
 
@@ -195,8 +195,8 @@ public class ProductTest extends BaseTest {
 		request.setSign("");
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-		// ResponseProduct response = service.editProduct(obj.toJSONString());
-		// System.out.println(JSON.toJSON(response));
+		JSONObject response = service.editProduct(obj.toJSONString(), "SI2003");
+		System.out.println(JSON.toJSON(response));
 	}
 
 	public void syncProductPrice() {
@@ -218,11 +218,11 @@ public class ProductTest extends BaseTest {
 		request.setProductInfos(products);
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-		// ResponseProduct response =
-		// service.syncProductPrice(obj.toJSONString());
-		// System.out.println(JSON.toJSON(response));
+		JSONObject response = service.batchProductsPrice(obj.toJSONString(), "SI2003");
+		System.out.println(response.toJSONString());
 	}
 
+	@Test
 	public void syncSkuStore() {
 		ProductInfo product = new ProductInfo();
 		product.setProductOutCode("WBPD001");
@@ -240,8 +240,8 @@ public class ProductTest extends BaseTest {
 		request.setProductInfos(products);
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-		// ResponseProduct response = service.syncSkuStore(obj.toJSONString());
-		// System.out.println(JSON.toJSON(response));
+		JSONObject response = service.batchProductsSkuStore(obj.toJSONString(), "SI2003");
+		System.out.println(response);
 	}
 
 }

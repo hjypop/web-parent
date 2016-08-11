@@ -8,22 +8,26 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.common.DateUtil;
 import com.hjy.dao.api.IApiProductInfoDao;
 import com.hjy.dao.api.IApiSkuInfoDao;
+import com.hjy.dao.api.ILcOpenApiProductErrorDao;
 import com.hjy.dao.product.IPcProductdescriptionDao;
 import com.hjy.dao.product.IPcProductpicDao;
 import com.hjy.dao.system.IScStoreSkunumDao;
 import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
+import com.hjy.entity.log.LcOpenApiProductError;
 import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.product.PcProductpic;
 import com.hjy.entity.product.PcSkuinfo;
 import com.hjy.entity.system.ScStoreSkunum;
+import com.hjy.factory.UserFactory;
 import com.hjy.helper.WebHelper;
 import com.hjy.request.RequestProduct;
 import com.hjy.request.RequestProducts;
@@ -51,6 +55,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	private IApiSkuInfoDao skuInfoDao;
 	@Resource
 	private IScStoreSkunumDao scStoreSkunumDao;
+	@Resource
+	private ILcOpenApiProductErrorDao errorDao;
 
 	/**
 	 * 
@@ -62,12 +68,12 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @see com.hjy.service.product.IApiProductService#addProduct(java.lang.String)
 	 */
 	@Override
-	public JSONObject addProduct(String product) {
+	public JSONObject addProduct(String product, String sellerCode) {
 		JSONObject response = new JSONObject();
 		String lock = "";
 		if (product != null && !"".equals(product)) {
 			try {
-				lock = WebHelper.getInstance().addLock(10, "Product.addproduct");
+				lock = WebHelper.getInstance().addLock(10, sellerCode + "_Product.addproduct");
 				RequestProduct requestProduct = JSON.toJavaObject(JSON.parseObject(product), RequestProduct.class);
 				if (requestProduct != null) {
 					if (requestProduct.getProduct() != null) {
@@ -78,12 +84,13 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 						response = verifyProduct(productList);
 						if (response.getInteger("code") == 0) {
 							// 执行添加商品方法
-							if (addProduct(productList)) {
-								response.put("code", 0);
-								response.put("desc", getInfo(0));
-							} else {
+							String errorCode = addProduct(productList, sellerCode);
+							if (errorCode != null && !"".equals(errorCode)) {
 								response.put("code", 10);
 								response.put("desc", getInfo(10));
+							} else {
+								response.put("code", 0);
+								response.put("desc", getInfo(0));
 							}
 						} else {
 							response.put("code", 10);
@@ -121,11 +128,11 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @see com.hjy.service.product.IApiProductService#editProduct(java.lang.String)
 	 */
 	@Override
-	public JSONObject editProduct(String product) {
+	public JSONObject editProduct(String product, String sellerCode) {
 		JSONObject response = new JSONObject();
 		String lock = "";
 		try {
-			lock = WebHelper.getInstance().addLock(10, "Product.editproduct");
+			lock = WebHelper.getInstance().addLock(10, sellerCode + "_Product.editproduct");
 			if (lock != null && !"".equals(lock)) {
 				if (product != null && !"".equals(product)) {
 					RequestProduct requestProduct = JSON.toJavaObject(JSON.parseObject(product), RequestProduct.class);
@@ -141,12 +148,13 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 								productInfo.setProductCode(productCode);
 							}
 							// 执行编辑商品
-							if (editProduct(productList)) {
-								response.put("code", 0);
-								response.put("desc", getInfo(0));
-							} else {
+							String errorCode = editProduct(productList, sellerCode);
+							if (errorCode != null && !"".equals(errorCode)) {
 								response.put("code", 10);
 								response.put("desc", getInfo(10));
+							} else {
+								response.put("code", 0);
+								response.put("desc", getInfo(0));
 							}
 						} else {
 							response.put("code", 10);
@@ -181,12 +189,12 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @see com.hjy.service.product.IApiProductService#syncProductList(java.lang.String)
 	 */
 	@Override
-	public JSONObject batchProducts(String products) {
+	public JSONObject batchProducts(String products, String sellerCode) {
 		JSONObject response = new JSONObject();
 		if (products != null && !"".equals(products)) {
 			String lock = "";
 			try {
-				lock = WebHelper.getInstance().addLock(10, "Product.syncProductList");
+				lock = WebHelper.getInstance().addLock(10, sellerCode + "_Product.syncProductList");
 				if (lock != null && !"".equals(lock)) {
 					RequestProducts requestProduct = JSON.toJavaObject(JSON.parseObject(products),
 							RequestProducts.class);
@@ -218,12 +226,18 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 									}
 								}
 								// 执行添加操作
-								addProduct(addList);
+								String errorCode = addProduct(addList, sellerCode);
 								// 执行编辑操作
-								editProduct(editList);
-								// 返回处理结果
-								response.put("code", 0);
-								response.put("desc", getInfo(0));
+								errorCode = errorCode + editProduct(editList, sellerCode);
+								// 返回操作结果
+								if (errorCode != null && !"".equals(errorCode)) {
+									response.put("code", 10);
+									response.put("desc", getInfo(10));
+								} else {
+									response.put("code", 0);
+									response.put("desc", getInfo(0));
+								}
+
 							}
 						} else {
 							response.put("code", 10);
@@ -261,44 +275,64 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @see com.hjy.service.product.IApiProductService#syncProductPrice(java.lang.String)
 	 */
 	@Override
-	public JSONObject batchProductsPrice(String products) {
+	public JSONObject batchProductsPrice(String products, String sellerCode) {
 		JSONObject response = new JSONObject();
 		String lock = "";
 		try {
-			lock = WebHelper.getInstance().addLock(10, "Product.syncProductPrice");
+			lock = WebHelper.getInstance().addLock(10, sellerCode + "_Product.batchProductsPrice");
 			if (lock != null && !"".equals(lock)) {
 				if (products != null && !"".equals(products)) {
 					RequestProducts requestProducts = JSON.toJavaObject(JSON.parseObject(products),
 							RequestProducts.class);
 					if (requestProducts != null) {
+						StringBuffer errorCode = new StringBuffer();
 						List<ProductInfo> productList = requestProducts.getProductInfos();
 						if (productList != null && productList.size() > 0) {
-							String sellerCode = "";
 							for (ProductInfo info : productList) {
 								// 根据外部商品编号查询惠家有商品编号
 								String productCode = productInfoDao.findProductCodeByOutCode(info.getProductOutCode());
 								info.setProductCode(productCode);
-							}
-							/**
-							 * 编辑商品的最小售价和最大售价
-							 */
-							List<PcProductinfo> productInfos = getPcProdcutInfoList(productList, sellerCode);
-							if (productInfos != null && productInfos.size() > 0) {
-								for (PcProductinfo pcProductinfo : productInfos) {
-									productInfoDao.updateProductPrice(pcProductinfo);
+								try {
+									/**
+									 * 编辑商品的最小售价和最大售价
+									 */
+									PcProductinfo product = setPcProductinfo(info, sellerCode);
+									productInfoDao.updateProductPrice(product);
+									/**
+									 * 编辑sku的售价
+									 */
+									List<PcSkuinfo> skuInfos = setPcSkuinfos(info, sellerCode);
+									if (skuInfos != null && skuInfos.size() > 0) {
+										for (PcSkuinfo pcSkuinfo : skuInfos) {
+											skuInfoDao.updateSkuPrice(pcSkuinfo);
+										}
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
+									errorCode.append(info.getProductOutCode()).append(",");
+									TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+									/**
+									 * 记录错误日志
+									 */
+									LcOpenApiProductError error = new LcOpenApiProductError();
+									error.setUid(WebHelper.getInstance().genUuid());
+									error.setMethod(
+											"com.hjy.service.impl.product.ApiProductServiceImpl.batchProductsPrice");
+									error.setProductData(JSON.toJSONString(info));
+									error.setProductOutCode(info.getProductOutCode());
+									error.setSellerCode(sellerCode);
+									error.setCreateTime(DateUtil.getSysDateTimestamp());
+									error.setCreateUser(UserFactory.INSTANCE.create().getUserCode());
+									errorDao.insertSelective(error);
 								}
 							}
-							/**
-							 * 编辑sku的售价
-							 */
-							List<PcSkuinfo> skuInfos = getPcSkuInfoList(productList, sellerCode);
-							if (skuInfos != null && skuInfos.size() > 0) {
-								for (PcSkuinfo pcSkuinfo : skuInfos) {
-									skuInfoDao.updateSkuPrice(pcSkuinfo);
-								}
+							if (errorCode != null && !"".equals(errorCode.toString())) {
+								response.put("code", 10);
+								response.put("desc", getInfo(10));
+							} else {
+								response.put("code", 0);
+								response.put("desc", getInfo(0));
 							}
-							response.put("code", 0);
-							response.put("desc", getInfo(0));
 						} else {
 							response.put("code", 10);
 							response.put("desc", getInfo(10));
@@ -334,43 +368,62 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @see com.hjy.service.product.IApiProductService#syncSkuStore(java.lang.String)
 	 */
 	@Override
-	public JSONObject batchProductsSkuStore(String products) {
+	public JSONObject batchProductsSkuStore(String products, String sellerCode) {
 		JSONObject response = new JSONObject();
 		String lock = "";
 		try {
-			lock = WebHelper.getInstance().addLock(10, "Product.syncSkuStore");
+			lock = WebHelper.getInstance().addLock(10, sellerCode + "_Product.syncSkuStore");
 			if (lock != null && !"".equals(lock)) {
 				RequestProducts requestProducts = JSON.toJavaObject(JSON.parseObject(products), RequestProducts.class);
 				if (requestProducts != null) {
 					List<ProductInfo> productList = requestProducts.getProductInfos();
 					if (productList != null && productList.size() > 0) {
-						List<String> productCodes = new ArrayList<String>();
-						List<PcSkuInfo> skuInfos = new ArrayList<PcSkuInfo>();
-						for (ProductInfo info : productList) {
-							productCodes.add(info.getProductOutCode());
-							skuInfos.addAll(info.getSkuInfoList());
-						}
-						/**
-						 * 修改pc_skuinfo表中的库存信息
-						 */
-						for (PcSkuInfo info : skuInfos) {
-							PcSkuinfo sku = new PcSkuinfo();
-							sku.setSkuCodeOld(info.getSkuCode());
-							sku.setStockNum(info.getStockNum());
-							skuInfoDao.updateSkuStore(sku);
-						}
-						/**
-						 * 根据外部订单编号查询pc_skuinfo数据
-						 * 将pc_skuinfo已修改库存同步到sc_store_skunum的库存信息
-						 */
-						List<PcSkuinfo> skuinfoList = skuInfoDao.findSkuInfoListByProductCodeOld(productCodes);
-						if (skuinfoList != null && skuinfoList.size() > 0) {
-							for (PcSkuinfo sku : skuinfoList) {
-								ScStoreSkunum skunum = new ScStoreSkunum();
-								skunum.setSkuCode(sku.getSkuCode());
-								skunum.setStockNum(sku.getStockNum());
-								scStoreSkunumDao.updateSelectiveBySkuCode(skunum);
+						try {
+							List<String> productCodes = new ArrayList<String>();
+							List<PcSkuInfo> skuInfos = new ArrayList<PcSkuInfo>();
+							for (ProductInfo info : productList) {
+								productCodes.add(info.getProductOutCode());
+								skuInfos.addAll(info.getSkuInfoList());
 							}
+							/**
+							 * 修改pc_skuinfo表中的库存信息
+							 */
+							for (PcSkuInfo info : skuInfos) {
+								PcSkuinfo sku = new PcSkuinfo();
+								sku.setSkuCodeOld(info.getSkuCode());
+								sku.setStockNum(info.getStockNum());
+								skuInfoDao.updateSkuStore(sku);
+							}
+							/**
+							 * 根据外部订单编号查询pc_skuinfo数据
+							 * 将pc_skuinfo已修改库存同步到sc_store_skunum的库存信息
+							 */
+							List<PcSkuinfo> skuinfoList = skuInfoDao.findSkuInfoListByProductCodeOld(productCodes);
+							if (skuinfoList != null && skuinfoList.size() > 0) {
+								for (PcSkuinfo sku : skuinfoList) {
+									ScStoreSkunum skunum = new ScStoreSkunum();
+									skunum.setSkuCode(sku.getSkuCode());
+									skunum.setStockNum(sku.getStockNum());
+									scStoreSkunumDao.updateSelectiveBySkuCode(skunum);
+								}
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							response.put("code", 10);
+							response.put("desc", getInfo(10));
+							TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+							/**
+							 * 记录错误日志
+							 */
+							LcOpenApiProductError error = new LcOpenApiProductError();
+							error.setUid(WebHelper.getInstance().genUuid());
+							error.setMethod("com.hjy.service.impl.product.ApiProductServiceImpl.batchProductsSkuStore");
+							error.setProductData(JSON.toJSONString(productList));
+							error.setProductOutCode("");
+							error.setSellerCode(sellerCode);
+							error.setCreateTime(DateUtil.getSysDateTimestamp());
+							error.setCreateUser(UserFactory.INSTANCE.create().getUserCode());
+							errorDao.insertSelective(error);
 						}
 						response.put("code", 0);
 						response.put("desc", getInfo(0));
@@ -405,48 +458,68 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @param producsts
 	 * @return
 	 */
-	private boolean addProduct(List<ProductInfo> producsts) {
-		boolean flag = false;
+	private String addProduct(List<ProductInfo> producsts, String sellerCode) {
+		StringBuffer errorCode = new StringBuffer();
 		try {
-			String sellerCode = "";
-			/**
-			 * 批量添加商品
-			 */
-			List<PcProductinfo> productInfoList = getPcProdcutInfoList(producsts, sellerCode);
-			productInfoDao.batchInsert(productInfoList);
-			/**
-			 * 批量添加商品描述
-			 */
-			List<PcProductdescription> pcProductdescriptionList = getPcProductdescriptionList(producsts);
-			if (pcProductdescriptionList != null && pcProductdescriptionList.size() > 0) {
-				productdescription.batchInsert(pcProductdescriptionList);
+			for (ProductInfo info : producsts) {
+				/**
+				 * 批量添加商品
+				 */
+				PcProductinfo product = setPcProductinfo(info, sellerCode);
+				if (product != null) {
+					try {
+						productInfoDao.insert(product);
+						/**
+						 * 批量添加商品描述
+						 */
+						PcProductdescription description = setPcProductdescription(info);
+						if (description != null) {
+							productdescription.insertSelective(description);
+						}
+						/**
+						 * 批量添加商品图片
+						 */
+						List<PcProductpic> productpicList = setPcProductpics(info);
+						if (productpicList != null && productpicList.size() > 0) {
+							pcProductpic.batchInsert(productpicList);
+						}
+						/**
+						 * 批量添加sku
+						 */
+						List<PcSkuinfo> skuInfoList = setPcSkuinfos(info, sellerCode);
+						if (skuInfoList != null && skuInfoList.size() > 0) {
+							skuInfoDao.batchInsert(skuInfoList);
+						}
+						/**
+						 * 批量添加库存信息
+						 */
+						List<ScStoreSkunum> storeList = setScStoreSkunums(skuInfoList);
+						if (storeList != null && storeList.size() > 0) {
+							scStoreSkunumDao.batchInsert(storeList);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						errorCode.append(info.getProductOutCode()).append(",");
+						TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+						/**
+						 * 记录错误日志
+						 */
+						LcOpenApiProductError error = new LcOpenApiProductError();
+						error.setUid(WebHelper.getInstance().genUuid());
+						error.setMethod("com.hjy.service.impl.product.ApiProductServiceImpl.addProduct");
+						error.setProductData(JSON.toJSONString(info));
+						error.setProductOutCode(info.getProductOutCode());
+						error.setSellerCode(sellerCode);
+						error.setCreateTime(DateUtil.getSysDateTimestamp());
+						error.setCreateUser(UserFactory.INSTANCE.create().getUserCode());
+						errorDao.insertSelective(error);
+					}
+				}
 			}
-			/**
-			 * 批量添加商品图片
-			 */
-			List<PcProductpic> productpicList = getPcProductpicList(producsts);
-			if (productpicList != null && productpicList.size() > 0) {
-				pcProductpic.batchInsert(productpicList);
-			}
-			/**
-			 * 批量添加sku
-			 */
-			List<PcSkuinfo> skuInfoList = getPcSkuInfoList(producsts, sellerCode);
-			if (skuInfoList != null && skuInfoList.size() > 0) {
-				skuInfoDao.batchInsert(skuInfoList);
-			}
-			/**
-			 * 批量添加库存信息
-			 */
-			List<ScStoreSkunum> storeList = getScStoreSkunumList(skuInfoList);
-			if (storeList != null && storeList.size() > 0) {
-				scStoreSkunumDao.batchInsert(storeList);
-			}
-			flag = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return flag;
+		return errorCode.toString();
 	}
 
 	/**
@@ -459,83 +532,78 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @param producsts
 	 * @return
 	 */
-	private boolean editProduct(List<ProductInfo> producsts) {
-		boolean flag = false;
+	private String editProduct(List<ProductInfo> producsts, String sellerCode) {
+		StringBuffer errorCode = new StringBuffer();
 		try {
-			String sellerCode = "";
-			List<PcProductinfo> productInfoList = getPcProdcutInfoList(producsts, sellerCode);
-			/**
-			 * 商品描述集合
-			 */
-			List<PcProductdescription> productDescriptionList = new ArrayList<PcProductdescription>();
-			/**
-			 * 商品图片集合
-			 */
-			List<PcProductpic> productPicList = new ArrayList<PcProductpic>();
-			/**
-			 * 商品sku集合
-			 */
-			List<PcSkuinfo> skuInfoList = new ArrayList<PcSkuinfo>();
-			/**
-			 * 批量编辑商品
-			 */
-			if (productInfoList != null && productInfoList.size() > 0) {
-				for (PcProductinfo info : productInfoList) {
-					productInfoDao.updateProductByProductCodeOld(info);
-					/**
-					 * 获取商品描述
-					 */
-					List<PcProductdescription> descriptions = getPcProductdescriptionList(producsts);
-					productDescriptionList.addAll(descriptions);
-					/**
-					 * 获取商品图片
-					 */
-					List<PcProductpic> pics = getPcProductpicList(producsts);
-					productPicList.addAll(pics);
-					/**
-					 * 获取sku
-					 */
-					List<PcSkuinfo> skus = getPcSkuInfoList(producsts, sellerCode);
-					skuInfoList.addAll(skus);
+			for (ProductInfo info : producsts) {
+				PcProductinfo product = setPcProductinfo(info, sellerCode);
+				if (product != null) {
+					try {
+						/**
+						 * 编辑商品
+						 */
+						productInfoDao.updateProductByProductCodeOld(product);
+
+						/**
+						 * 编辑商品描述
+						 */
+						PcProductdescription description = setPcProductdescription(info);
+						if (description != null) {
+							productdescription.updateSelective(description);
+						}
+						/**
+						 * 编辑商品图片
+						 */
+						List<PcProductpic> pics = setPcProductpics(info);
+						/**
+						 * 批量编辑商品图片
+						 */
+						if (pics.size() > 0) {
+							for (PcProductpic pic : pics) {
+								pcProductpic.updateSelective(pic);
+							}
+						}
+						/**
+						 * 编辑sku
+						 */
+						List<PcSkuinfo> skus = setPcSkuinfos(info, sellerCode);
+						if (skus != null && skus.size() > 0) {
+							for (PcSkuinfo sku : skus) {
+								skuInfoDao.updateSkuInfoBySkuCodeOld(sku);
+							}
+						}
+						/**
+						 * 编辑sku库存信息
+						 */
+						List<ScStoreSkunum> skuStoreList = setScStoreSkunums(skus);
+						if (skuStoreList != null && skuStoreList.size() > 0) {
+							for (ScStoreSkunum store : skuStoreList) {
+								scStoreSkunumDao.updateSelectiveBySkuCode(store);
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						errorCode.append(info.getProductOutCode()).append(",");
+						TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+						/**
+						 * 记录错误日志
+						 */
+						LcOpenApiProductError error = new LcOpenApiProductError();
+						error.setUid(WebHelper.getInstance().genUuid());
+						error.setMethod("com.hjy.service.impl.product.ApiProductServiceImpl.editProduct");
+						error.setProductData(JSON.toJSONString(info));
+						error.setProductOutCode(info.getProductOutCode());
+						error.setSellerCode(sellerCode);
+						error.setCreateTime(DateUtil.getSysDateTimestamp());
+						error.setCreateUser(UserFactory.INSTANCE.create().getUserCode());
+						errorDao.insertSelective(error);
+					}
 				}
 			}
-			/**
-			 * sku库存集合
-			 */
-			List<ScStoreSkunum> skuStoreList = getScStoreSkunumList(skuInfoList);
-			/**
-			 * 批量编辑商品描述
-			 */
-			if (productDescriptionList.size() > 0) {
-				for (PcProductdescription desc : productDescriptionList) {
-					productdescription.updateSelective(desc);
-				}
-			}
-			/**
-			 * 批量编辑商品图片
-			 */
-			if (productPicList.size() > 0) {
-				for (PcProductpic pic : productPicList) {
-					pcProductpic.updateSelective(pic);
-				}
-			}
-			/**
-			 * 批量编辑sku
-			 */
-			for (PcSkuinfo pcSkuinfo : skuInfoList) {
-				skuInfoDao.updateSkuInfoBySkuCodeOld(pcSkuinfo);
-			}
-			/**
-			 * 批量编辑库存信息
-			 */
-			for (ScStoreSkunum store : skuStoreList) {
-				scStoreSkunumDao.updateSelectiveBySkuCode(store);
-			}
-			flag = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return flag;
+		return errorCode.toString();
 	}
 
 	/**
@@ -550,6 +618,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 */
 	private JSONObject verifyProduct(List<ProductInfo> productList) {
 		JSONObject response = new JSONObject();
+		response.put("code", 0);
+		response.put("desc", getInfo(0));
 		for (int i = 0; i < productList.size(); i++) {
 			ProductInfo product = productList.get(i);
 			if (product == null) {
@@ -593,123 +663,108 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 
 	/**
 	 * 
-	 * 方法: getPcProdcutInfoList <br>
-	 * 描述: 获取商品集合 <br>
+	 * 方法: setPcProductinfo <br>
+	 * 描述: 将ProductInfo转换为PcProductinfo <br>
 	 * 作者: zhy<br>
-	 * 时间: 2016年8月2日 下午4:42:40
+	 * 时间: 2016年8月11日 下午2:09:42
 	 * 
-	 * @param infos
-	 * @param productCode
+	 * @param info
 	 * @param sellerCode
 	 * @return
 	 */
-	private static List<PcProductinfo> getPcProdcutInfoList(List<ProductInfo> infos, String sellerCode) {
-		List<PcProductinfo> list = new ArrayList<PcProductinfo>();
-		if (infos != null && infos.size() > 0) {
-			for (ProductInfo info : infos) {
-				if (info != null) {
-					PcProductinfo product = new PcProductinfo();
-					product.setUid(WebHelper.getInstance().genUuid());
-					product.setProductCode(info.getProductCode());
-					product.setProductCodeOld(info.getProductOutCode());
-					product.setProductCodeCopy(info.getProductOutCode());
-					product.setProductName(info.getProductName());
-					product.setProductShortname(info.getProductShortname());
-					product.setSellerCode("SI2003");
-					product.setSmallSellerCode(sellerCode);
-					product.setProductWeight(info.getProductWeight());
-					product.setCostPrice(info.getCostPrice());
-					product.setMarketPrice(info.getMarketPrice());
-					product.setMainPicUrl(info.getMainPicUrl());
-					product.setLabels(info.getLabels());
-					product.setProductVolumeItem(info.getProductVolumeItem());
-					product.setProductVolume(info.getProductVolume());
-					product.setProductAdv(info.getProductAdv());
-					product.setAdPicUrl(info.getAdpicUrl());
-					product.setExpiryDate(info.getExpiryDate());
-					product.setExpiryUnit(info.getExpiryUnit());
-					product.setCreateTime(DateUtil.getSysTimeString());
-					product.setUpdateTime(DateUtil.getSysTimeString());
-					/**
-					 * 获取商品的最小销售价格和最大销售价格
-					 */
-					if (info.getSkuInfoList() != null && info.getSkuInfoList().size() > 0) {
-						BigDecimal tempMin = new BigDecimal(0.00);
-						BigDecimal tempMax = new BigDecimal(0.00);
-						for (int i = 0; i < info.getSkuInfoList().size(); i++) {
-							PcSkuInfo sku = info.getSkuInfoList().get(i);
-							if (i == 0) {
-								tempMin = sku.getSellPrice();
-								tempMax = sku.getSellPrice();
-							} else {
-								if (tempMin.compareTo(sku.getSellPrice()) == 1)
-									tempMin = sku.getSellPrice();
-								if (tempMax.compareTo(sku.getSellPrice()) == -1)
-									tempMax = sku.getSellPrice();
-							}
-						}
-						product.setMinSellPrice(tempMin);
-						product.setMaxSellPrice(tempMax);
+	private static PcProductinfo setPcProductinfo(ProductInfo info, String sellerCode) {
+		PcProductinfo product = null;
+		if (info != null) {
+			product = new PcProductinfo();
+			product.setUid(WebHelper.getInstance().genUuid());
+			product.setProductCode(info.getProductCode());
+			product.setProductCodeOld(info.getProductOutCode());
+			product.setProductCodeCopy(info.getProductOutCode());
+			product.setProductName(info.getProductName());
+			product.setProductShortname(info.getProductShortname());
+			product.setSellerCode("SI2003");
+			product.setSmallSellerCode(sellerCode);
+			product.setProductWeight(info.getProductWeight());
+			product.setCostPrice(info.getCostPrice());
+			product.setMarketPrice(info.getMarketPrice());
+			product.setMainPicUrl(info.getMainPicUrl());
+			product.setLabels(info.getLabels());
+			product.setProductVolumeItem(info.getProductVolumeItem());
+			product.setProductVolume(info.getProductVolume());
+			product.setProductAdv(info.getProductAdv());
+			product.setAdPicUrl(info.getAdpicUrl());
+			product.setExpiryDate(info.getExpiryDate());
+			product.setExpiryUnit(info.getExpiryUnit());
+			product.setCreateTime(DateUtil.getSysTimeString());
+			product.setUpdateTime(DateUtil.getSysTimeString());
+			/**
+			 * 获取商品的最小销售价格和最大销售价格
+			 */
+			if (info.getSkuInfoList() != null && info.getSkuInfoList().size() > 0) {
+				BigDecimal tempMin = new BigDecimal(0.00);
+				BigDecimal tempMax = new BigDecimal(0.00);
+				for (int i = 0; i < info.getSkuInfoList().size(); i++) {
+					PcSkuInfo sku = info.getSkuInfoList().get(i);
+					if (i == 0) {
+						tempMin = sku.getSellPrice();
+						tempMax = sku.getSellPrice();
+					} else {
+						if (tempMin.compareTo(sku.getSellPrice()) == 1)
+							tempMin = sku.getSellPrice();
+						if (tempMax.compareTo(sku.getSellPrice()) == -1)
+							tempMax = sku.getSellPrice();
 					}
-					list.add(product);
 				}
+				product.setMinSellPrice(tempMin);
+				product.setMaxSellPrice(tempMax);
 			}
 		}
-		return list;
+		return product;
 	}
 
 	/**
 	 * 
-	 * 方法: getPcProductdescriptionList <br>
-	 * 描述: 获取商品描述信息集合 <br>
+	 * 方法: setPcProductdescription <br>
+	 * 描述: 转换PcProductdescription <br>
 	 * 作者: zhy<br>
-	 * 时间: 2016年8月3日 上午7:26:49
+	 * 时间: 2016年8月11日 下午2:10:01
 	 * 
-	 * @param infos
-	 * @param productCode
+	 * @param info
 	 * @return
 	 */
-	private static List<PcProductdescription> getPcProductdescriptionList(List<ProductInfo> infos) {
-		List<PcProductdescription> list = new ArrayList<PcProductdescription>();
-		if (infos != null && infos.size() > 0) {
-			for (ProductInfo product : infos) {
-				if (product.getDescription() != null) {
-					PcProductdescription description = new PcProductdescription();
-					description.setUid(WebHelper.getInstance().genUuid());
-					description.setProductCode(product.getProductCode());
-					description.setDescriptionInfo(product.getDescription().getDescriptionInfo());
-					description.setDescriptionPic(product.getDescription().getDescriptionPic());
-					list.add(description);
-				}
-			}
+	private static PcProductdescription setPcProductdescription(ProductInfo info) {
+		PcProductdescription description = null;
+		if (info != null && info.getDescription() != null) {
+			description = new PcProductdescription();
+			description.setUid(WebHelper.getInstance().genUuid());
+			description.setProductCode(info.getProductCode());
+			description.setDescriptionInfo(info.getDescription().getDescriptionInfo());
+			description.setDescriptionPic(info.getDescription().getDescriptionPic());
 		}
-		return list;
+		return description;
 	}
 
 	/**
 	 * 
-	 * 方法: getPcProductpicList <br>
-	 * 描述: 商品图片数据集合 <br>
+	 * 方法: setPcProductpic <br>
+	 * 描述: 获取PcProductpic <br>
 	 * 作者: zhy<br>
-	 * 时间: 2016年8月3日 下午1:52:05
+	 * 时间: 2016年8月11日 下午2:11:17
 	 * 
-	 * @param infos
-	 * @param productCode
+	 * @param info
 	 * @return
 	 */
-	private static List<PcProductpic> getPcProductpicList(List<ProductInfo> infos) {
+	private static List<PcProductpic> setPcProductpics(ProductInfo info) {
 		List<PcProductpic> list = new ArrayList<PcProductpic>();
-		if (infos != null && infos.size() > 0) {
-			for (ProductInfo product : infos) {
-				if (product.getPcPicList() != null && product.getPcPicList().size() > 0) {
-					for (String pic : product.getPcPicList()) {
-						PcProductpic ppic = new PcProductpic();
-						ppic.setUid(WebHelper.getInstance().genUuid());
-						ppic.setPicUrl(pic);
-						ppic.setProductCode(product.getProductCode());
-						ppic.setProductCodeOld(product.getProductOutCode());
-						list.add(ppic);
-					}
+		if (info != null) {
+			if (info.getPcPicList() != null && info.getPcPicList().size() > 0) {
+				for (String pic : info.getPcPicList()) {
+					PcProductpic ppic = new PcProductpic();
+					ppic.setUid(WebHelper.getInstance().genUuid());
+					ppic.setPicUrl(pic);
+					ppic.setProductCode(info.getProductCode());
+					ppic.setProductCodeOld(info.getProductOutCode());
+					list.add(ppic);
 				}
 			}
 		}
@@ -718,42 +773,37 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 
 	/**
 	 * 
-	 * 方法: getPcSkuInfoList <br>
-	 * 描述: 获取sku集合 <br>
+	 * 方法: setPcSkuinfos <br>
+	 * 描述: 获取sku列表 <br>
 	 * 作者: zhy<br>
-	 * 时间: 2016年8月2日 下午4:45:12
+	 * 时间: 2016年8月11日 下午2:13:11
 	 * 
-	 * @param infos
-	 * @param productCode
+	 * @param info
 	 * @param sellerCode
 	 * @return
 	 */
-	private static List<PcSkuinfo> getPcSkuInfoList(List<ProductInfo> infos, String sellerCode) {
+	private static List<PcSkuinfo> setPcSkuinfos(ProductInfo product, String sellerCode) {
 		List<PcSkuinfo> list = new ArrayList<PcSkuinfo>();
-		if (infos != null && infos.size() > 0) {
-			for (ProductInfo product : infos) {
-				if (product.getSkuInfoList() != null && product.getSkuInfoList().size() > 0) {
-					for (PcSkuInfo info : product.getSkuInfoList()) {
-						PcSkuinfo sku = new PcSkuinfo();
-						sku.setUid(WebHelper.getInstance().genUuid());
-						sku.setSkuCode(WebHelper.getInstance().genUniqueCode(SKUHead));
-						sku.setProductCode(product.getProductCode());
-						sku.setProductCodeOld(product.getProductOutCode());
-						sku.setSellProductcode(product.getProductCode());
-						sku.setSkuCodeOld(info.getSkuCode());
-						sku.setSkuName(info.getSkuName());
-						sku.setSkuPicurl(info.getSkuPicUrl());
-						sku.setSkuAdv(info.getSkuAdv());
-						sku.setSellerCode(sellerCode);
-						sku.setSellPrice(info.getSellPrice());
-						sku.setMarketPrice(info.getSellPrice());
-						sku.setCostPrice(info.getSellPrice());
-						sku.setSecurityStockNum(info.getSecurityStockNum());
-						sku.setStockNum(info.getStockNum());
-						sku.setMiniOrder(info.getMiniOrder());
-						list.add(sku);
-					}
-				}
+		if (product.getSkuInfoList() != null && product.getSkuInfoList().size() > 0) {
+			for (PcSkuInfo info : product.getSkuInfoList()) {
+				PcSkuinfo sku = new PcSkuinfo();
+				sku.setUid(WebHelper.getInstance().genUuid());
+				sku.setSkuCode(WebHelper.getInstance().genUniqueCode(SKUHead));
+				sku.setProductCode(product.getProductCode());
+				sku.setProductCodeOld(product.getProductOutCode());
+				sku.setSellProductcode(product.getProductCode());
+				sku.setSkuCodeOld(info.getSkuCode());
+				sku.setSkuName(info.getSkuName());
+				sku.setSkuPicurl(info.getSkuPicUrl());
+				sku.setSkuAdv(info.getSkuAdv());
+				sku.setSellerCode(sellerCode);
+				sku.setSellPrice(info.getSellPrice());
+				sku.setMarketPrice(info.getSellPrice());
+				sku.setCostPrice(info.getSellPrice());
+				sku.setSecurityStockNum(info.getSecurityStockNum());
+				sku.setStockNum(info.getStockNum());
+				sku.setMiniOrder(info.getMiniOrder());
+				list.add(sku);
 			}
 		}
 		return list;
@@ -761,7 +811,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 
 	/**
 	 * 
-	 * 方法: getScStoreSkunumList <br>
+	 * 方法: setScStoreSkunums <br>
 	 * 描述: 获取sku库存列表集合 <br>
 	 * 作者: zhy<br>
 	 * 时间: 2016年8月4日 上午9:47:54
@@ -769,7 +819,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @param infos
 	 * @return
 	 */
-	private static List<ScStoreSkunum> getScStoreSkunumList(List<PcSkuinfo> infos) {
+	private static List<ScStoreSkunum> setScStoreSkunums(List<PcSkuinfo> infos) {
 		List<ScStoreSkunum> list = new ArrayList<ScStoreSkunum>();
 		if (infos != null && infos.size() > 0) {
 			for (PcSkuinfo sku : infos) {
