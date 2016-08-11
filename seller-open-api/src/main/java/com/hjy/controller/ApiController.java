@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.common.bill.HexUtil;
 import com.hjy.common.bill.MD5Util;
@@ -52,27 +53,25 @@ public class ApiController {
 	
 	@RequestMapping("openapi")
 	@ResponseBody
-	public JSONObject requestApi(Request request) {
+	public JSONObject requestApi(Request request) {  
 		
-		request.setAppid("appid-1-d-e-r-t"); 
-		request.setAppSecret("1122334"); 
-		
-		JSONObject result = new JSONObject();
-		String appid = request.getAppid();
-		
-		OpenApiAppid oaa = new OpenApiAppid(request.getAppid() , request.getAppSecret());
-		oaa = appidService.findByAppid(oaa);
+		request = DataInit.apiUpdateOrderStatusTest();
 		
 		
-		boolean flag = isSign(request);
-		/*
-		 * 如果签名正确，根据method调用不同的service
-		 */
-		if (flag) {
-			String sellerCode = ""; // TODO 
+		JSONObject result = new JSONObject(); 
+		OpenApiAppid info = appidService.findByAppid(new OpenApiAppid(request.getAppid() , request.getAppSecret()));
+		if(null == info){
+			result.put("code", 3);
+			result.put("desc", "无API访问权限，错误的appid或appSecret");
+			return result;
+		}
+		
+		
+		if (isSign(request)) {   // 如果签名正确，根据method调用不同的service
+			String sellerCode = info.getSellerCode();
 			Date requestTime = new Date();
 			try {
-				String[] methods = request.getMethod().split(".");
+				String[] methods = request.getMethod().split("\\.");
 				String type = methods[0];
 				String method = methods[1];
 				if ("Product".equals(type)) {
@@ -89,36 +88,36 @@ public class ApiController {
 					}
 				} else if ("Order".equals(type)) {
 					if("List".equals(method)){         // 根据传入的json串查询订单信息 - Yangcl
-						result = service.getOrderInfoByJson(request.getMethod());
+						result = service.getOrderInfoByJson(request.getData());
 						logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),	
-								sellerCode , // sellerCode apiName classUrl requestJson responseJson createTime remark
+								sellerCode , 
 								"Order.List",
 								"ApiOcOrderInfoServiceImpl.getOrderInfoByJson",
-								request.getMethod(),
+								JSON.toJSONString(request),
 								result.toJSONString(),
 								new Date(), 
 								requestTime,
 								DateHelper.parseDate(result.getString("responseTime")), 
 								"remark"));
 					}else if("UpdateOrderStatus".equals(method)){                // 订单变更： 更新订单状态信息 - Yangcl
-						result = service.updateOrderStatus(request.getMethod() , sellerCode);	 
+						result = service.updateOrderStatus(request.getData() , sellerCode);	 
 						logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
 								sellerCode,   		  
 								"Order.UpdateOrderStatus",
 								"ApiOcOrderInfoServiceImpl.updateOrderStatus",
-								request.getMethod(),
+								JSON.toJSONString(request),
 								result.toJSONString(),
 								new Date(), 
 								requestTime,
 								DateHelper.parseDate(result.getString("responseTime")), 
 								"remark"));
 					}else if ("Shipments".equals(method)){                        // 订单物流变更：根据传入的json串插入物流信息 - Yangcl
-						result = ocOrderShipmentsService.apiInsertShipments(request.getMethod() , sellerCode);   
+						result = ocOrderShipmentsService.apiInsertShipments(request.getData() , sellerCode);   
 						logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
 								sellerCode ,   			 
 								"Order.Shipments",
 								"ApiOcOrderShipmentsServiceImpl.apiInsertShipments",
-								request.getMethod(),
+								JSON.toJSONString(request),
 								result.toJSONString(),
 								new Date(), 
 								requestTime,
