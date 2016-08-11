@@ -326,7 +326,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 									errorDao.insertSelective(error);
 								}
 							}
-							if (errorCode != null && !"".equals(errorCode)) {
+							if (errorCode != null && !"".equals(errorCode.toString())) {
 								response.put("code", 10);
 								response.put("desc", getInfo(10));
 							} else {
@@ -618,6 +618,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 */
 	private JSONObject verifyProduct(List<ProductInfo> productList) {
 		JSONObject response = new JSONObject();
+		response.put("code", 0);
+		response.put("desc", getInfo(0));
 		for (int i = 0; i < productList.size(); i++) {
 			ProductInfo product = productList.get(i);
 			if (product == null) {

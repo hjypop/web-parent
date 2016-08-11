@@ -2,10 +2,7 @@ package open.api.response;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,12 +14,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.base.BaseTest;
 import com.hjy.common.DateUtil;
-import com.hjy.common.bill.HexUtil;
-import com.hjy.common.bill.MD5Util;
 import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
 import com.hjy.dto.product.Productdescription;
-import com.hjy.request.Request;
 import com.hjy.request.RequestProduct;
 import com.hjy.request.RequestProducts;
 import com.hjy.service.product.IApiProductService;
@@ -34,7 +28,6 @@ public class ProductTest extends BaseTest {
 	@Autowired
 	private IApiProductService service;
 
-	@Test
 	public void syncProductList() {
 		List<ProductInfo> productList = new ArrayList<ProductInfo>();
 		for (int i = 1; i < 6; i++) {
@@ -91,50 +84,9 @@ public class ProductTest extends BaseTest {
 		request.setProductInfos(productList);
 		request.setTotal(productList.size());
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
-		// System.out.println(obj.toJSONString());
-		// ResponseProduct response =
-		// service.syncProductList(obj.toJSONString());
-		// System.out.println(JSON.toJSON(response));
-
-		Request req = new Request();
-		req.setAppid("11");
-		req.setAppSecret("1231231231232");
-		req.setData("");
-		req.setMethod("Product.batchProducts");
-		req.setNonce("5404467");
-		req.setTimestamp("20160811093654");
-		req.setSign("22b9ee373e8a83aa345a32b019e7dd37");
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("appid", req.getAppid());
-		map.put("data", req.getData());
-		map.put("method", req.getMethod());
-		map.put("timestamp", req.getTimestamp());
-		map.put("nonce", req.getNonce());
-		List<String> list = new ArrayList<String>();
-		for (Map.Entry<String, String> entry : map.entrySet()) {
-			if (entry.getValue() != "") {
-				list.add(entry.getKey() + "=" + entry.getValue() + "&");
-			}
-		}
-		Collections.sort(list); // 对List内容进行排序
-		StringBuffer str = new StringBuffer();
-		for (String nameString : list) {
-			str.append(nameString);
-		}
-		str.append(req.getAppSecret());
-		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
-		System.out.println("========================");
-		System.out.println(str.toString());
-		System.out.println("========================");
-		System.out.println("sign=" + sign);
-		System.out.println("========================");
-		System.out.println("requset.sign=" + req.getSign());
-		System.out.println("========================");
-		if (sign.equals(req.getSign())) {
-			System.out.println("校验数字签名成功");
-		} else {
-			System.out.println("校验数字签名失败");
-		}
+		System.out.println(obj.toJSONString());
+		JSONObject response = service.batchProducts(obj.toJSONString(), "SI2003");
+		System.out.println(JSON.toJSON(response));
 	}
 
 	public void addProduct() {
@@ -243,8 +195,8 @@ public class ProductTest extends BaseTest {
 		request.setSign("");
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-		// ResponseProduct response = service.editProduct(obj.toJSONString());
-		// System.out.println(JSON.toJSON(response));
+		JSONObject response = service.editProduct(obj.toJSONString(), "SI2003");
+		System.out.println(JSON.toJSON(response));
 	}
 
 	public void syncProductPrice() {
@@ -266,11 +218,11 @@ public class ProductTest extends BaseTest {
 		request.setProductInfos(products);
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-		// ResponseProduct response =
-		// service.syncProductPrice(obj.toJSONString());
-		// System.out.println(JSON.toJSON(response));
+		JSONObject response = service.batchProductsPrice(obj.toJSONString(), "SI2003");
+		System.out.println(response.toJSONString());
 	}
 
+	@Test
 	public void syncSkuStore() {
 		ProductInfo product = new ProductInfo();
 		product.setProductOutCode("WBPD001");
@@ -288,8 +240,8 @@ public class ProductTest extends BaseTest {
 		request.setProductInfos(products);
 		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		System.out.println(obj.toJSONString());
-		// ResponseProduct response = service.syncSkuStore(obj.toJSONString());
-		// System.out.println(JSON.toJSON(response));
+		JSONObject response = service.batchProductsSkuStore(obj.toJSONString(), "SI2003");
+		System.out.println(response);
 	}
 
 }

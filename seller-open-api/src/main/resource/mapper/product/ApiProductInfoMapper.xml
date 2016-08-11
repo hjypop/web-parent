@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hjy.dao.api.IApiProductInfoDao">
+	<insert id="insert" parameterType="com.hjy.entity.product.PcProductinfo">
+		INSERT INTO
+		productcenter.pc_productinfo (
+		uid,
+		product_code,
+		product_code_old,
+		product_code_copy,
+		product_name,
+		product_shortname,
+		seller_code,
+		small_seller_code,
+		product_weight,
+		cost_price,
+		market_price,
+		mainpic_url,
+		product_volume_item,
+		product_volume,
+		product_adv,
+		adpic_url,
+		expiry_date,
+		expiry_unit,
+		create_time,
+		update_time,
+		labels,
+		min_sell_price,
+		max_sell_price
+		)
+		VALUES
+		(
+		#{uid,jdbcType=VARCHAR},
+		#{productCode,jdbcType=VARCHAR},
+		#{productCodeOld,jdbcType=VARCHAR},
+		#{productCodeCopy,jdbcType=VARCHAR},
+		#{productName,jdbcType=VARCHAR},
+		#{productShortname,jdbcType=VARCHAR},
+		#{sellerCode,jdbcType=VARCHAR},
+		#{smallSellerCode,jdbcType=VARCHAR},
+		#{productWeight,jdbcType=DECIMAL},
+		#{costPrice,jdbcType=VARCHAR},
+		#{marketPrice,jdbcType=DECIMAL},
+		#{mainpicUrl,jdbcType=VARCHAR},
+		#{productVolumeItem,jdbcType=VARCHAR},
+		#{productVolume,jdbcType=DECIMAL},
+		#{productAdv,jdbcType=VARCHAR},
+		#{adpicUrl,jdbcType=VARCHAR},
+		#{expiryDate,jdbcType=VARCHAR},
+		#{expiryUnit,jdbcType=VARCHAR},
+		#{createTime,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=VARCHAR},
+		#{labels,jdbcType=VARCHAR},
+		#{minSellPrice,jdbcType=DECIMAL},
+		#{maxSellPrice,jdbcType=DECIMAL}
+		)
+	</insert>
 	<insert id="batchInsert" parameterType="list">
 		INSERT INTO productcenter.pc_productinfo (
 		uid,
