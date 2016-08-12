@@ -294,7 +294,7 @@
 			small_seller_code = #{smallSellerCode,jdbcType=VARCHAR}
 		</where>
 	</select>
-	<!-- 根据商品编码获取旧编号 2016-06-28 zhy -->
+	<!-- 根据旧编号获取商品编码 2016-06-28 zhy -->
 	<select id="findProductCodeByOldCode" parameterType="String"
 		resultType="String">
 		select product_code from productcenter.pc_productinfo
@@ -302,8 +302,11 @@
 			product_code_old=#{productCodeOld,jdbcType=VARCHAR}
 			AND
 			seller_code='SI2003'
+			AND small_seller_code = 'SF03KJT'
 		</where>
-		ORDER BY zid DESC
+		ORDER BY
+		update_time DESC
+		LIMIT 1
 	</select>
 
 	<!-- 可以扩展if中的查询条件 - Yangcl -->
