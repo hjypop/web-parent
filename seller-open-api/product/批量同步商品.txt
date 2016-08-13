@@ -1,0 +1,400 @@
+{
+    "total": 5,
+    "productInfos": [
+        {
+            "costPrice": 10,
+            "description": {
+                "keyword": "关键字-1",
+                "descriptionPic": "描述图片-1",
+                "descriptionInfo": "描述信息-1"
+            },
+            "productWeight": 0,
+            "mainPicUrl": "www.baidu.com",
+            "productVolume": 1,
+            "skuInfoList": [
+                {
+                    "skuName": "sku名称-1",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-1",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-1",
+                    "skuPicUrl": "商品的Sku的图片信息-1",
+                    "skuCode": "WBSKU001"
+                },
+                {
+                    "skuName": "sku名称-2",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-2",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-2",
+                    "skuPicUrl": "商品的Sku的图片信息-2",
+                    "skuCode": "WBSKU002"
+                },
+                {
+                    "skuName": "sku名称-3",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-3",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-3",
+                    "skuPicUrl": "商品的Sku的图片信息-3",
+                    "skuCode": "WBSKU003"
+                },
+                {
+                    "skuName": "sku名称-4",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-4",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-4",
+                    "skuPicUrl": "商品的Sku的图片信息-4",
+                    "skuCode": "WBSKU004"
+                },
+                {
+                    "skuName": "sku名称-5",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-5",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-5",
+                    "skuPicUrl": "商品的Sku的图片信息-5",
+                    "skuCode": "WBSKU005"
+                }
+            ],
+            "productName": "测试商品-1",
+            "pcPicList": [
+                "添加商品图片-1"
+            ],
+            "productOutCode": "WBPD001",
+            "labels": "测试openapi商品-1",
+            "expiryDate": 0,
+            "operate": 0,
+            "productVolumeItem": "10,10,10",
+            "productShortname": "测试商品-1",
+            "brandCode": "10002"
+        },
+        {
+            "costPrice": 10,
+            "description": {
+                "keyword": "关键字-2",
+                "descriptionPic": "描述图片-2",
+                "descriptionInfo": "描述信息-2"
+            },
+            "productWeight": 0,
+            "mainPicUrl": "www.baidu.com",
+            "productVolume": 1,
+            "skuInfoList": [
+                {
+                    "skuName": "sku名称-1",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-1",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-1",
+                    "skuPicUrl": "商品的Sku的图片信息-1",
+                    "skuCode": "WBSKU001"
+                },
+                {
+                    "skuName": "sku名称-2",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-2",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-2",
+                    "skuPicUrl": "商品的Sku的图片信息-2",
+                    "skuCode": "WBSKU002"
+                },
+                {
+                    "skuName": "sku名称-3",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-3",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-3",
+                    "skuPicUrl": "商品的Sku的图片信息-3",
+                    "skuCode": "WBSKU003"
+                },
+                {
+                    "skuName": "sku名称-4",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-4",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-4",
+                    "skuPicUrl": "商品的Sku的图片信息-4",
+                    "skuCode": "WBSKU004"
+                },
+                {
+                    "skuName": "sku名称-5",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-5",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-5",
+                    "skuPicUrl": "商品的Sku的图片信息-5",
+                    "skuCode": "WBSKU005"
+                }
+            ],
+            "productName": "测试商品-2",
+            "pcPicList": [
+                "添加商品图片-2"
+            ],
+            "productOutCode": "WBPD002",
+            "labels": "测试openapi商品-2",
+            "expiryDate": 0,
+            "operate": 0,
+            "productVolumeItem": "10,10,10",
+            "productShortname": "测试商品-2",
+            "brandCode": "10002"
+        },
+        {
+            "costPrice": 10,
+            "description": {
+                "keyword": "关键字-3",
+                "descriptionPic": "描述图片-3",
+                "descriptionInfo": "描述信息-3"
+            },
+            "productWeight": 0,
+            "mainPicUrl": "www.baidu.com",
+            "productVolume": 1,
+            "skuInfoList": [
+                {
+                    "skuName": "sku名称-1",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-1",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-1",
+                    "skuPicUrl": "商品的Sku的图片信息-1",
+                    "skuCode": "WBSKU001"
+                },
+                {
+                    "skuName": "sku名称-2",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-2",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-2",
+                    "skuPicUrl": "商品的Sku的图片信息-2",
+                    "skuCode": "WBSKU002"
+                },
+                {
+                    "skuName": "sku名称-3",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-3",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-3",
+                    "skuPicUrl": "商品的Sku的图片信息-3",
+                    "skuCode": "WBSKU003"
+                },
+                {
+                    "skuName": "sku名称-4",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-4",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-4",
+                    "skuPicUrl": "商品的Sku的图片信息-4",
+                    "skuCode": "WBSKU004"
+                },
+                {
+                    "skuName": "sku名称-5",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-5",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-5",
+                    "skuPicUrl": "商品的Sku的图片信息-5",
+                    "skuCode": "WBSKU005"
+                }
+            ],
+            "productName": "测试商品-3",
+            "pcPicList": [
+                "添加商品图片-3"
+            ],
+            "productOutCode": "WBPD003",
+            "labels": "测试openapi商品-3",
+            "expiryDate": 0,
+            "operate": 0,
+            "productVolumeItem": "10,10,10",
+            "productShortname": "测试商品-3",
+            "brandCode": "10002"
+        },
+        {
+            "costPrice": 10,
+            "description": {
+                "keyword": "关键字-4",
+                "descriptionPic": "描述图片-4",
+                "descriptionInfo": "描述信息-4"
+            },
+            "productWeight": 0,
+            "mainPicUrl": "www.baidu.com",
+            "productVolume": 1,
+            "skuInfoList": [
+                {
+                    "skuName": "sku名称-1",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-1",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-1",
+                    "skuPicUrl": "商品的Sku的图片信息-1",
+                    "skuCode": "WBSKU001"
+                },
+                {
+                    "skuName": "sku名称-2",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-2",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-2",
+                    "skuPicUrl": "商品的Sku的图片信息-2",
+                    "skuCode": "WBSKU002"
+                },
+                {
+                    "skuName": "sku名称-3",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-3",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-3",
+                    "skuPicUrl": "商品的Sku的图片信息-3",
+                    "skuCode": "WBSKU003"
+                },
+                {
+                    "skuName": "sku名称-4",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-4",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-4",
+                    "skuPicUrl": "商品的Sku的图片信息-4",
+                    "skuCode": "WBSKU004"
+                },
+                {
+                    "skuName": "sku名称-5",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-5",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-5",
+                    "skuPicUrl": "商品的Sku的图片信息-5",
+                    "skuCode": "WBSKU005"
+                }
+            ],
+            "productName": "测试商品-4",
+            "pcPicList": [
+                "添加商品图片-4"
+            ],
+            "productOutCode": "WBPD004",
+            "labels": "测试openapi商品-4",
+            "expiryDate": 0,
+            "operate": 0,
+            "productVolumeItem": "10,10,10",
+            "productShortname": "测试商品-4",
+            "brandCode": "10002"
+        },
+        {
+            "costPrice": 10,
+            "description": {
+                "keyword": "关键字-5",
+                "descriptionPic": "描述图片-5",
+                "descriptionInfo": "描述信息-5"
+            },
+            "productWeight": 0,
+            "mainPicUrl": "www.baidu.com",
+            "productVolume": 1,
+            "skuInfoList": [
+                {
+                    "skuName": "sku名称-1",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-1",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-1",
+                    "skuPicUrl": "商品的Sku的图片信息-1",
+                    "skuCode": "WBSKU001"
+                },
+                {
+                    "skuName": "sku名称-2",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-2",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-2",
+                    "skuPicUrl": "商品的Sku的图片信息-2",
+                    "skuCode": "WBSKU002"
+                },
+                {
+                    "skuName": "sku名称-3",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-3",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-3",
+                    "skuPicUrl": "商品的Sku的图片信息-3",
+                    "skuCode": "WBSKU003"
+                },
+                {
+                    "skuName": "sku名称-4",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-4",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-4",
+                    "skuPicUrl": "商品的Sku的图片信息-4",
+                    "skuCode": "WBSKU004"
+                },
+                {
+                    "skuName": "sku名称-5",
+                    "miniOrder": 1,
+                    "skuAdv": "sku广告语-5",
+                    "stockNum": 10,
+                    "sellPrice": 10,
+                    "securityStockNum": 10,
+                    "qrcodeLink": "二维码图片链接-5",
+                    "skuPicUrl": "商品的Sku的图片信息-5",
+                    "skuCode": "WBSKU005"
+                }
+            ],
+            "productName": "测试商品-5",
+            "pcPicList": [
+                "添加商品图片-5"
+            ],
+            "productOutCode": "WBPD005",
+            "labels": "测试openapi商品-5",
+            "expiryDate": 0,
+            "operate": 0,
+            "productVolumeItem": "10,10,10",
+            "productShortname": "测试商品-5",
+            "brandCode": "10002"
+        }
+    ]
+}

@@ -120,7 +120,8 @@ public class ProductTest extends BaseTest {
 		str.append(request.getAppSecret());
 		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
 		req.setSign(sign);
-		System.out.println(JSON.toJSON(req));
+		System.out.println(req.getData());
+		// System.out.println(JSON.toJSON(req));
 		// JSONObject response = service.batchProducts(obj.toJSONString(),
 		// "SI2003");
 		// System.out.println(JSON.toJSON(response));
@@ -171,18 +172,13 @@ public class ProductTest extends BaseTest {
 		sku.setMiniOrder(1);
 		skuList.add(sku);
 		product.setSkuInfoList(skuList);
-		RequestProduct request = new RequestProduct();
-		request.setProduct(product);
-		request.setCreateTime(DateUtil.getSysDateTimeString());
-		request.setSign("");
-		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		/**
 		 * 生成requeset请求对象
 		 */
 		Request req = new Request();
 		req.setAppid("");
 		req.setAppSecret("");
-		req.setData(obj.toJSONString());
+		req.setData(JSON.toJSONString(product));
 		req.setMethod("Product.addProduct");
 		req.setNonce("13332");
 		req.setTimestamp(DateUtil.getSysDateTimestamp().getTime() + "");
@@ -203,10 +199,11 @@ public class ProductTest extends BaseTest {
 		for (String nameString : list) {
 			str.append(nameString);
 		}
-		str.append(request.getAppSecret());
+		str.append(req.getAppSecret());
 		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
 		req.setSign(sign);
-		System.out.println(JSON.toJSON(req));
+		System.out.println(req.getData());
+		// System.out.println(JSON.toJSON(req));
 		// JSONObject response = service.addProduct(obj.toJSONString(),
 		// "SI2003");
 		// System.out.println(response.toJSONString());
@@ -257,18 +254,13 @@ public class ProductTest extends BaseTest {
 		sku.setMiniOrder(1);
 		skuList.add(sku);
 		product.setSkuInfoList(skuList);
-		RequestProduct request = new RequestProduct();
-		request.setProduct(product);
-		request.setCreateTime(DateUtil.getSysDateTimeString());
-		request.setSign("");
-		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		/**
 		 * 生成requeset请求对象
 		 */
 		Request req = new Request();
 		req.setAppid("");
 		req.setAppSecret("");
-		req.setData(obj.toJSONString());
+		req.setData(JSON.toJSONString(product));
 		req.setMethod("Product.editProduct");
 		req.setNonce("13332");
 		req.setTimestamp(DateUtil.getSysDateTimestamp().getTime() + "");
@@ -279,6 +271,7 @@ public class ProductTest extends BaseTest {
 		map.put("timestamp", req.getTimestamp());
 		map.put("nonce", req.getNonce());
 		List<String> list = new ArrayList<String>();
+		RequestProduct request = new RequestProduct();
 		for (Map.Entry<String, String> entry : map.entrySet()) {
 			if (entry.getValue() != "") {
 				list.add(entry.getKey() + "=" + entry.getValue() + "&");
@@ -292,7 +285,7 @@ public class ProductTest extends BaseTest {
 		str.append(request.getAppSecret());
 		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
 		req.setSign(sign);
-		System.out.println(JSON.toJSON(req));
+		System.out.println(req.getData());
 		// JSONObject response = service.editProduct(obj.toJSONString(),
 		// "SI2003");
 		// System.out.println(JSON.toJSON(response));
@@ -312,18 +305,15 @@ public class ProductTest extends BaseTest {
 			skuList.add(sku);
 		}
 		product.setSkuInfoList(skuList);
-		RequestProducts request = new RequestProducts();
 		List<ProductInfo> products = new ArrayList<ProductInfo>();
 		products.add(product);
-		request.setProductInfos(products);
-		JSONObject obj = (JSONObject) JSON.toJSON(request);
 		/**
 		 * 生成requeset请求对象
 		 */
 		Request req = new Request();
 		req.setAppid("");
 		req.setAppSecret("");
-		req.setData(obj.toJSONString());
+		req.setData(JSON.toJSONString(products));
 		req.setMethod("Product.batchProductsPrice");
 		req.setNonce("13332");
 		req.setTimestamp(DateUtil.getSysDateTimestamp().getTime() + "");
@@ -344,15 +334,17 @@ public class ProductTest extends BaseTest {
 		for (String nameString : list) {
 			str.append(nameString);
 		}
-		str.append(request.getAppSecret());
+		str.append(req.getAppSecret());
 		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
 		req.setSign(sign);
-		System.out.println(JSON.toJSON(req));
+//		System.out.println(req.getData());
+		// System.out.println(JSON.toJSON(req));
 		// JSONObject response = service.batchProductsPrice(obj.toJSONString(),
 		// "SI2003");
-		// System.out.println(response.toJSONString());
+		// System.out.print ln(response.toJSONString());
 	}
 
+	@Test
 	public void syncSkuStore() {
 		ProductInfo product = new ProductInfo();
 		product.setProductOutCode("WBPD001");
@@ -399,7 +391,8 @@ public class ProductTest extends BaseTest {
 		str.append(request.getAppSecret());
 		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
 		req.setSign(sign);
-		System.out.println(JSON.toJSON(req));
+		System.out.println(req.getData());
+		// System.out.println(JSON.toJSON(req));
 		// JSONObject response =
 		// service.batchProductsSkuStore(obj.toJSONString(), "SI2003");
 		// System.out.println(response);

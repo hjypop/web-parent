@@ -1,0 +1,21 @@
+[
+    {
+        "costPrice": 1,
+        "marketPrice": 1,
+        "productOutCode": "WBPD001",
+        "skuInfoList": [
+            {
+                "securityStockNum": 0,
+                "sellPrice": 35.55,
+                "skuCode": "WBSKU001",
+                "stockNum": 0
+            },
+            {
+                "securityStockNum": 0,
+                "sellPrice": 35.55,
+                "skuCode": "WBSKU002",
+                "stockNum": 0
+            }
+        ]
+    }
+]
