@@ -90,17 +90,13 @@ public class ApiController {
 								sellerCode, "Order.List", "ApiOcOrderInfoServiceImpl.getOrderInfoByJson",
 								JSON.toJSONString(request), result.toJSONString(), new Date(), requestTime,
 								DateHelper.parseDate(result.getString("responseTime")), "remark"));
-					} else if ("UpdateOrderStatus".equals(method)) { // 订单变更：
-																		// 更新订单状态信息
-																		// -
-																		// Yangcl
+					} else if ("UpdateOrderStatus".equals(method)) { // 订单变更：更新订单状态信息 - Yangcl
 						result = service.updateOrderStatus(request.getData(), sellerCode);
 						logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
 								sellerCode, "Order.UpdateOrderStatus", "ApiOcOrderInfoServiceImpl.updateOrderStatus",
 								JSON.toJSONString(request), result.toJSONString(), new Date(), requestTime,
 								DateHelper.parseDate(result.getString("responseTime")), "remark"));
-					} else if ("Shipments".equals(method)) { // 订单物流变更：根据传入的json串插入物流信息
-																// - Yangcl
+					} else if ("Shipments".equals(method)) { // 订单物流变更：根据传入的json串插入物流信息 - Yangcl
 						result = ocOrderShipmentsService.apiInsertShipments(request.getData(), sellerCode);
 						logService.insertSelective(new LcOpenApiOperation(UUID.randomUUID().toString().replace("-", ""),
 								sellerCode, "Order.Shipments", "ApiOcOrderShipmentsServiceImpl.apiInsertShipments",
