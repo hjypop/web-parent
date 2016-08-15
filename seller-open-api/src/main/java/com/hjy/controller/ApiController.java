@@ -59,7 +59,7 @@ public class ApiController {
 			return result;
 		}
 
-		if (!isSign(request)) { // 如果签名正确，根据method调用不同的service
+		if (isSign(request)) { // 如果签名正确，根据method调用不同的service
 			String sellerCode = info.getSellerCode();
 			LcOpenApiOperation log = new LcOpenApiOperation();
 			log.setApiName(request.getMethod());
