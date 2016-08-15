@@ -6,26 +6,56 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script type="text/javascript" src="../../js/jquery-1.9.1.js"></script>
 <title>api测试</title>
-<script type="text/javascript">
-function apiClick(action){
-	var url = action+".do";
-	$("#productApi").attr("action",url);
-	$("#productApi").submit();
-}
-</script>
 </head>
 <body>
-	<form id="productApi" action="" method="post">
-		<textarea id="request" name="request" rows="" cols=""
-			style="font-size: 11px !important; resize: both; width: 1078px; max-width: 1070px; height: 600px; min-height: 600px;"></textarea>
-		<br> <br>
-		<div>
-			<a href="javascript:void(0)" onclick="apiClick('batchProducts');">批量同步商品</a>
-			<a href="javascript:void(0)" onclick="apiClick('addProduct');">添加商品</a>
-			<a href="javascript:void(0)" onclick="apiClick('editProduct');">编辑商品</a>
-			<a href="javascript:void(0)" onclick="apiClick('batchProductsPrice');">同步商品价格</a>
-			<a href="javascript:void(0)" onclick="apiClick('batchProductsSkuStore');">同步商品库存</a>
-		</div>
+	<form id="productApi" action="../../openapi.do" method="post">
+		<table>
+			<tr>
+				<td>method:</td>
+				<td>
+					<input type="text" id="method" name="method" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>appid:</td>
+				<td>
+					<input type="text" id="appid" name="appid" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>appSecret:</td>
+				<td>
+					<input type="text" id="appSecret" name="appSecret" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>timestamp:</td>
+				<td>
+					<input type="text" id="timestamp" name="timestamp" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>data:</td>
+				<td>
+					<input type="text" id="data" name="data" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>nonce:</td>
+				<td>
+					<input type="text" id="nonce" name="nonce" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>sign:</td>
+				<td>
+					<input type="text" id="sign" name="sign" value="">
+				</td>
+			</tr>
+		</table>
+		<font>
+			<input type="submit" name="submit" value="提交">
+		</font>
 	</form>
 </body>
 </html>
