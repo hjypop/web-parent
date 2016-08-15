@@ -22,6 +22,7 @@ import com.hjy.common.bill.MD5Util;
 import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
 import com.hjy.dto.product.Productdescription;
+import com.hjy.helper.SignHelper;
 import com.hjy.request.Request;
 import com.hjy.request.RequestProduct;
 import com.hjy.request.RequestProducts;
@@ -337,7 +338,7 @@ public class ProductTest extends BaseTest {
 		str.append(req.getAppSecret());
 		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
 		req.setSign(sign);
-//		System.out.println(req.getData());
+		// System.out.println(req.getData());
 		// System.out.println(JSON.toJSON(req));
 		// JSONObject response = service.batchProductsPrice(obj.toJSONString(),
 		// "SI2003");
@@ -365,8 +366,8 @@ public class ProductTest extends BaseTest {
 		 * 生成requeset请求对象
 		 */
 		Request req = new Request();
-		req.setAppid("");
-		req.setAppSecret("");
+		req.setAppid("appid-order-list");
+		req.setAppSecret("1122334");
 		req.setData(obj.toJSONString());
 		req.setMethod("Product.batchProductsSkuStore");
 		req.setNonce("13332");
@@ -389,10 +390,10 @@ public class ProductTest extends BaseTest {
 			str.append(nameString);
 		}
 		str.append(request.getAppSecret());
-		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+		String sign = SignHelper.md5Sign(JSON.toJSONString(request));
 		req.setSign(sign);
-		System.out.println(req.getData());
-		// System.out.println(JSON.toJSON(req));
+		// System.out.println(req.getData());
+		System.out.println(JSON.toJSON(req));
 		// JSONObject response =
 		// service.batchProductsSkuStore(obj.toJSONString(), "SI2003");
 		// System.out.println(response);
