@@ -13,7 +13,7 @@ public class SignHelper {
 	public static String md5Sign(String s) {
 		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 		try {
-			byte[] btInput = s.getBytes("UTF-8");  
+			byte[] btInput = s.getBytes("UTF-8");  // 解决MD5加密关于中文不一致问题 - Yangcl
 			// 获得MD5摘要算法的 MessageDigest 对象
 			MessageDigest mdInst = MessageDigest.getInstance("MD5");
 			// 使用指定的字节更新摘要
