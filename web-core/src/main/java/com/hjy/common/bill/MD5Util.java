@@ -55,7 +55,7 @@ public class MD5Util {
      * @return MD5 digest
      */
     public static byte[] md5(String data) {
-        return md5(data.getBytes());
+        return md5(data.getBytes());  // TODO 是否需要考虑 getBytes("UTF-8");  中文转码问题？？2016-08-15 - Yangcl 
     }
 
     /**

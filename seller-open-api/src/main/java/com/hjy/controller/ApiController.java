@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.common.bill.HexUtil;
+import com.hjy.common.bill.MD5Util;
 import com.hjy.entity.log.LcOpenApiOperation;
 import com.hjy.entity.webcore.OpenApiAppid;
 import com.hjy.helper.SignHelper;
@@ -49,7 +51,7 @@ public class ApiController {
 	@ResponseBody
 	public JSONObject requestApi(Request request) {
 
-		//request = DataInit.apiInsertShipmentsTest();
+		request = DataInit.apiInsertShipmentsTest();
 
 		JSONObject result = new JSONObject();
 		OpenApiAppid info = appidService.findByAppid(new OpenApiAppid(request.getAppid(), request.getAppSecret()));
@@ -98,14 +100,13 @@ public class ApiController {
 						log.setClassUrl("ApiOcOrderInfoServiceImpl.getOrderInfoByJson");
 						log.setRemark("remark");
 						result = service.getOrderInfoByJson(request.getData(), sellerCode);
-					} else if ("UpdateOrderStatus".equals(method)) { // 订单变更：更新订单状态信息
-																		// -
-																		// Yangcl
+					} else if ("UpdateOrderStatus".equals(method)) { 
+						// 订单变更：更新订单状态信息 - Yangcl
 						log.setClassUrl("ApiOcOrderInfoServiceImpl.updateOrderStatus");
 						log.setRemark("remark");
 						result = service.updateOrderStatus(request.getData(), sellerCode);
-					} else if ("Shipments".equals(method)) { // 订单物流变更：根据传入的json串插入物流信息
-																// - Yangcl
+					} else if ("Shipments".equals(method)) {
+						// 订单物流变更：根据传入的json串插入物流信息 - Yangcl
 						log.setClassUrl("ApiOcOrderShipmentsServiceImpl.apiInsertShipments");
 						log.setRemark("remark");
 						result = ocOrderShipmentsService.apiInsertShipments(request.getData(), sellerCode);
@@ -162,7 +163,7 @@ public class ApiController {
 			str.append(nameString);
 		}
 		str.append(request.getAppSecret());
-		// String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+//		 String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));       此处代码废弃 存在编码问题
 		String sign = SignHelper.md5Sign(str.toString());
 		if (sign.equals(request.getSign())) {
 			flag = true;

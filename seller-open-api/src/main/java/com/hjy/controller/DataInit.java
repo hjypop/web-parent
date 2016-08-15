@@ -52,49 +52,82 @@ public class DataInit {
 		r.setAppSecret("1122334");
 		r.setTimestamp("2016-08-11 11:31:58");
 		r.setNonce("4"); 
-		r.setSign("ce808b5149d02f81fb6881e10da67a06"); 
+		r.setSign("3c23eb356ab3307c2dd646876e7e580e"); 
 		
 	 
 		List<OrderShipment> list = new ArrayList<OrderShipment>();
 		OrderShipment a = new OrderShipment();
-		a.setOrderCode("DD150623100019");
-		a.setLogisticseCode("LC141013100001");
-		a.setLogisticseName("韵达物流1111");
-		a.setWaybill("YD86851247598");
-		a.setRemark("出库");
-		
+		a.setOrderCode("abc");
+		a.setLogisticseCode("abc");
+		a.setLogisticseName("abc");
+		a.setWaybill("abc");
+		a.setRemark("abc"); 
+		list.add(a);
+				
 		OrderShipment b = new OrderShipment();
-		b.setOrderCode("DD150623100134");
-		b.setLogisticseCode("shentong");
-		b.setLogisticseName("北京申通3333");
+		b.setOrderCode("b");
+		b.setLogisticseCode("b");
+		b.setLogisticseName("b");
 		b.setWaybill("ST229318770084");
-		b.setRemark("马上发货");
+		b.setRemark("b");
+		list.add(b);
 		
 		OrderShipment c = new OrderShipment();
 		c.setOrderCode("DD150626100408");
 		c.setLogisticseCode("shunfeng");
-		c.setLogisticseName("顺风速运2222");
+		c.setLogisticseName("bbb2222");
 		c.setWaybill("SF919652568865");
-		c.setRemark("货物已出库，马上发货");
-		
-		OrderShipment d = new OrderShipment();      // 关键字段不全订单
-		d.setOrderCode("DD150629100423");
-		d.setLogisticseCode("");
-		d.setLogisticseName("顺风速运");        
-		d.setRemark("货物已出库，马上发货");
-		
-		OrderShipment e = new OrderShipment();    // 非惠家有订单
-		e.setOrderCode("DD00000000002");
-		e.setLogisticseCode("cainiao");
-		e.setLogisticseName("菜鸟快运");
-		e.setWaybill("CN823987888868");
-		e.setRemark("货物已出库，马上发货");
-		
-		list.add(a);
-		list.add(b);
+		c.setRemark("b43365水电费");		
 		list.add(c);
-		list.add(d);
-		list.add(e);
+				
+		
+		
+		
+		
+		
+		
+		
+		
+		
+//		OrderShipment a = new OrderShipment();
+//		a.setOrderCode("DD150623100019");
+//		a.setLogisticseCode("LC141013100001");
+//		a.setLogisticseName("韵达物流1111");
+//		a.setWaybill("YD86851247598");
+//		a.setRemark("出库");
+		
+//		OrderShipment b = new OrderShipment();
+//		b.setOrderCode("DD150623100134");
+//		b.setLogisticseCode("shentong");
+//		b.setLogisticseName("北京申通3333");
+//		b.setWaybill("ST229318770084");
+//		b.setRemark("马上发货");
+		
+//		OrderShipment c = new OrderShipment();
+//		c.setOrderCode("DD150626100408");
+//		c.setLogisticseCode("shunfeng");
+//		c.setLogisticseName("顺风速运2222");
+//		c.setWaybill("SF919652568865");
+//		c.setRemark("货物已出库，马上发货");
+		
+//		OrderShipment d = new OrderShipment();      // 关键字段不全订单
+//		d.setOrderCode("DD150629100423");
+//		d.setLogisticseCode("");
+//		d.setLogisticseName("顺风速运");        
+//		d.setRemark("货物已出库，马上发货");
+//		
+//		OrderShipment e = new OrderShipment();    // 非惠家有订单
+//		e.setOrderCode("DD00000000002");
+//		e.setLogisticseCode("cainiao");
+//		e.setLogisticseName("菜鸟快运");
+//		e.setWaybill("CN823987888868");
+//		e.setRemark("货物已出库，马上发货");
+		
+//		list.add(a);
+//		list.add(b);
+//		list.add(c);
+//		list.add(d);
+//		list.add(e);
 
 		r.setData(JSON.toJSONString(list)); 
 		
