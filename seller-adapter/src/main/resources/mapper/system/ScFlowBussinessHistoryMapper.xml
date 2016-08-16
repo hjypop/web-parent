@@ -18,18 +18,18 @@
 		select
 			*
 		from 
-			sc_flow_bussiness_history
+			systemcenter.sc_flow_bussiness_history
 		where 
 			zid = #{zid,jdbcType=INTEGER}
 	</select>
 	
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-		delete from sc_flow_bussiness_history where zid = #{zid,jdbcType=INTEGER}
+		delete from systemcenter.sc_flow_bussiness_history where zid = #{zid,jdbcType=INTEGER}
 	</delete>
 	
 	 
 	<insert id="insertSelective" parameterType="com.hjy.entity.system.ScFlowBussinessHistory">
-		insert into sc_flow_bussiness_history
+		insert into systemcenter.sc_flow_bussiness_history
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
 				zid,
@@ -85,7 +85,7 @@
 	</insert>
 	
 	<update id="updateSelective" parameterType="com.hjy.entity.system.ScFlowBussinessHistory">
-		update sc_flow_bussiness_history
+		update systemcenter.sc_flow_bussiness_history
 		<set>
 			<if test="uid != null">
 				uid = #{uid,jdbcType=VARCHAR},

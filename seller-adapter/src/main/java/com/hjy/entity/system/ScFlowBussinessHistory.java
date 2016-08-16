@@ -16,8 +16,25 @@ public class ScFlowBussinessHistory {
     private String flowRemark;
 
     private String currentStatus;
+    
+    
+    
 
-    public Integer getZid() {
+    public ScFlowBussinessHistory() {
+	}
+
+	public ScFlowBussinessHistory(String uid, String flowCode, String flowType, String creator,
+			String createTime, String flowRemark, String currentStatus) { 
+		this.uid = uid;
+		this.flowCode = flowCode;
+		this.flowType = flowType;
+		this.creator = creator;
+		this.createTime = createTime;
+		this.flowRemark = flowRemark;
+		this.currentStatus = currentStatus;
+	}
+
+	public Integer getZid() {
         return zid;
     }
 

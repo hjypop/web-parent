@@ -17,18 +17,18 @@
 		select
 			*
 		from 
-			sc_flow_statuschange
+			systemcenter.sc_flow_statuschange
 		where 
 			zid = #{zid,jdbcType=INTEGER}
 	</select>
 	
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-		delete from sc_flow_statuschange where zid = #{zid,jdbcType=INTEGER}
+		delete from systemcenter.sc_flow_statuschange where zid = #{zid,jdbcType=INTEGER}
 	</delete>
 	
  
 	<insert id="insertSelective" parameterType="com.hjy.entity.system.ScFlowStatuschange">
-		insert into sc_flow_statuschange
+		insert into systemcenter.sc_flow_statuschange
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
 				zid,
@@ -79,7 +79,7 @@
 	
 	
 	<update id="updateSelective" parameterType="com.hjy.entity.system.ScFlowStatuschange">
-		update sc_flow_statuschange
+		update systemcenter.sc_flow_statuschange
 		<set>
 			<if test="uid != null">
 				uid = #{uid,jdbcType=VARCHAR},
