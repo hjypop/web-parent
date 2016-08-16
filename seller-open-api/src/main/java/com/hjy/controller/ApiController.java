@@ -1,5 +1,6 @@
 package com.hjy.controller;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -51,7 +52,7 @@ public class ApiController {
 	@ResponseBody
 	public JSONObject requestApi(Request request) {
 
-		request = DataInit.apiInsertShipmentsTest();
+//		request = DataInit.apiInsertShipmentsTest();
 
 		JSONObject result = new JSONObject();
 		OpenApiAppid info = appidService.findByAppid(new OpenApiAppid(request.getAppid(), request.getAppSecret()));
@@ -100,7 +101,7 @@ public class ApiController {
 						log.setClassUrl("ApiOcOrderInfoServiceImpl.getOrderInfoByJson");
 						log.setRemark("remark");
 						result = service.getOrderInfoByJson(request.getData(), sellerCode);
-					} else if ("UpdateOrderStatus".equals(method)) { 
+					} else if ("UpdateOrderStatus".equals(method)) {
 						// 订单变更：更新订单状态信息 - Yangcl
 						log.setClassUrl("ApiOcOrderInfoServiceImpl.updateOrderStatus");
 						log.setRemark("remark");
@@ -145,28 +146,31 @@ public class ApiController {
 	 */
 	private static boolean isSign(Request request) {
 		boolean flag = false;
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("appid", request.getAppid());
-		map.put("data", request.getData());
-		map.put("method", request.getMethod());
-		map.put("timestamp", request.getTimestamp());
-		map.put("nonce", request.getNonce());
-		List<String> list = new ArrayList<String>();
-		for (Map.Entry<String, String> entry : map.entrySet()) {
-			if (entry.getValue() != "") {
-				list.add(entry.getKey() + "=" + entry.getValue() + "&");
+		try {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("appid", request.getAppid());
+			map.put("data", URLEncoder.encode(request.getData(), "UTF-8"));
+			map.put("method", request.getMethod());
+			map.put("timestamp", request.getTimestamp());
+			map.put("nonce", request.getNonce());
+			List<String> list = new ArrayList<String>();
+			for (Map.Entry<String, String> entry : map.entrySet()) {
+				if (entry.getValue() != "") {
+					list.add(entry.getKey() + "=" + entry.getValue() + "&");
+				}
 			}
-		}
-		Collections.sort(list); // 对List内容进行排序
-		StringBuffer str = new StringBuffer();
-		for (String nameString : list) {
-			str.append(nameString);
-		}
-		str.append(request.getAppSecret());
-//		 String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));       此处代码废弃 存在编码问题
-		String sign = SignHelper.md5Sign(str.toString());
-		if (sign.equals(request.getSign())) {
-			flag = true;
+			Collections.sort(list); // 对List内容进行排序
+			StringBuffer str = new StringBuffer();
+			for (String nameString : list) {
+				str.append(nameString);
+			}
+			str.append(request.getAppSecret());
+			String sign = SignHelper.md5Sign(str.toString());
+			if (sign.equals(request.getSign())) {
+				flag = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return flag;
 	}
