@@ -163,6 +163,7 @@ public class ApiController {
 				str.append(nameString);
 			}
 			str.append(request.getAppSecret());
+			System.out.println(str.toString());
 			String sign = SignHelper.md5Sign(str.toString());
 			if (sign.equals(request.getSign())) {
 				flag = true;

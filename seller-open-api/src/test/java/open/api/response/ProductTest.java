@@ -36,6 +36,7 @@ public class ProductTest extends BaseTest {
 	@Autowired
 	private IApiProductService service;
 
+	@Test
 	public void syncProductList() {
 		List<ProductInfo> productList = new ArrayList<ProductInfo>();
 		for (int i = 1; i < 6; i++) {
@@ -95,38 +96,40 @@ public class ProductTest extends BaseTest {
 		/**
 		 * 生成requeset请求对象
 		 */
-		Request req = new Request();
-		req.setAppid("");
-		req.setAppSecret("");
-		req.setData(obj.toJSONString());
-		req.setMethod("Product.batchProducts");
-		req.setNonce("13332");
-		req.setTimestamp(DateUtil.getSysDateTimestamp().getTime() + "");
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("appid", req.getAppid());
-		map.put("data", req.getData());
-		map.put("method", req.getMethod());
-		map.put("timestamp", req.getTimestamp());
-		map.put("nonce", req.getNonce());
-		List<String> list = new ArrayList<String>();
-		for (Map.Entry<String, String> entry : map.entrySet()) {
-			if (entry.getValue() != "") {
-				list.add(entry.getKey() + "=" + entry.getValue() + "&");
+		try {
+			Request req = new Request();
+			req.setAppid("appid-order-list");
+			req.setAppSecret("1122334");
+			req.setData(obj.toJSONString());
+			req.setMethod("Product.batchProductsSkuStore");
+			req.setNonce("13332");
+			req.setTimestamp("1471339012182");
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("appid", req.getAppid());
+			map.put("data", URLEncoder.encode(req.getData(), "UTF-8"));
+			map.put("method", req.getMethod());
+			map.put("timestamp", req.getTimestamp());
+			map.put("nonce", req.getNonce());
+			List<String> list = new ArrayList<String>();
+			for (Map.Entry<String, String> entry : map.entrySet()) {
+				if (entry.getValue() != "") {
+					list.add(entry.getKey() + "=" + entry.getValue() + "&");
+				}
 			}
+			Collections.sort(list); // 对List内容进行排序
+			StringBuffer str = new StringBuffer();
+			for (String nameString : list) {
+				str.append(nameString);
+			}
+			str.append(req.getAppSecret());
+			String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+			req.setSign(sign);
+			System.out.println(str.toString());
+			System.out.println(sign);
+			System.out.println(JSON.toJSON(req));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		Collections.sort(list); // 对List内容进行排序
-		StringBuffer str = new StringBuffer();
-		for (String nameString : list) {
-			str.append(nameString);
-		}
-		str.append(request.getAppSecret());
-		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
-		req.setSign(sign);
-		System.out.println(req.getData());
-		// System.out.println(JSON.toJSON(req));
-		// JSONObject response = service.batchProducts(obj.toJSONString(),
-		// "SI2003");
-		// System.out.println(JSON.toJSON(response));
 	}
 
 	public void addProduct() {
@@ -202,9 +205,9 @@ public class ProductTest extends BaseTest {
 			str.append(nameString);
 		}
 		str.append(req.getAppSecret());
-		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+		String sign = SignHelper.md5Sign(str.toString());
 		req.setSign(sign);
-		System.out.println(req.getData());
+		System.out.println(JSON.toJSON(req));
 		// System.out.println(JSON.toJSON(req));
 		// JSONObject response = service.addProduct(obj.toJSONString(),
 		// "SI2003");
@@ -293,7 +296,6 @@ public class ProductTest extends BaseTest {
 		// System.out.println(JSON.toJSON(response));
 	}
 
-	@Test
 	public void syncProductPrice() {
 		ProductInfo product = new ProductInfo();
 		product.setProductOutCode("WBPD001");
@@ -337,16 +339,17 @@ public class ProductTest extends BaseTest {
 			str.append(nameString);
 		}
 		str.append(req.getAppSecret());
-		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
+		String sign = SignHelper.md5Sign(str.toString());
+		// HexUtil.toHexString(MD5Util.md5(str.toString()));
+		System.out.println(str.toString());
 		req.setSign(sign);
 		// System.out.println(req.getData());
-		// System.out.println(JSON.toJSON(req));
+		System.out.println(JSON.toJSON(req));
 		// JSONObject response = service.batchProductsPrice(obj.toJSONString(),
 		// "SI2003");
 		// System.out.print ln(response.toJSONString());
 	}
 
-	@Test
 	public void syncSkuStore() {
 		try {
 			ProductInfo product = new ProductInfo();
