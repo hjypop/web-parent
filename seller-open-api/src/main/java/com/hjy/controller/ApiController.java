@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hjy.common.bill.HexUtil;
-import com.hjy.common.bill.MD5Util;
 import com.hjy.entity.log.LcOpenApiOperation;
 import com.hjy.entity.webcore.OpenApiAppid;
 import com.hjy.helper.SignHelper;
@@ -52,7 +50,7 @@ public class ApiController {
 	@ResponseBody
 	public JSONObject requestApi(Request request) {
 
-//		request = DataInit.apiInsertShipmentsTest();
+		// request = DataInit.apiInsertShipmentsTest();
 
 		JSONObject result = new JSONObject();
 		OpenApiAppid info = appidService.findByAppid(new OpenApiAppid(request.getAppid(), request.getAppSecret()));

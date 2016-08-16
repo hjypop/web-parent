@@ -1,6 +1,7 @@
 package open.api.response;
 
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -347,56 +348,59 @@ public class ProductTest extends BaseTest {
 
 	@Test
 	public void syncSkuStore() {
-		ProductInfo product = new ProductInfo();
-		product.setProductOutCode("WBPD001");
-		List<PcSkuInfo> skuList = new ArrayList<PcSkuInfo>();
-		for (int i = 1; i < 3; i++) {
-			PcSkuInfo sku = new PcSkuInfo();
-			sku.setSkuCode("WBSKU00" + i);
-			sku.setStockNum(100);
-			skuList.add(sku);
-		}
-		product.setSkuInfoList(skuList);
-		RequestProducts request = new RequestProducts();
-		List<ProductInfo> products = new ArrayList<ProductInfo>();
-		products.add(product);
-		request.setProductInfos(products);
-		JSONObject obj = (JSONObject) JSON.toJSON(request);
-		/**
-		 * 生成requeset请求对象
-		 */
-		Request req = new Request();
-		req.setAppid("appid-order-list");
-		req.setAppSecret("1122334");
-		req.setData(obj.toJSONString());
-		req.setMethod("Product.batchProductsSkuStore");
-		req.setNonce("13332");
-		req.setTimestamp(DateUtil.getSysDateTimestamp().getTime() + "");
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("appid", req.getAppid());
-		map.put("data", req.getData());
-		map.put("method", req.getMethod());
-		map.put("timestamp", req.getTimestamp());
-		map.put("nonce", req.getNonce());
-		List<String> list = new ArrayList<String>();
-		for (Map.Entry<String, String> entry : map.entrySet()) {
-			if (entry.getValue() != "") {
-				list.add(entry.getKey() + "=" + entry.getValue() + "&");
+		try {
+			ProductInfo product = new ProductInfo();
+			product.setProductOutCode("WBPD001");
+			List<PcSkuInfo> skuList = new ArrayList<PcSkuInfo>();
+			for (int i = 1; i < 3; i++) {
+				PcSkuInfo sku = new PcSkuInfo();
+				sku.setSkuCode("WBSKU00" + i);
+				sku.setStockNum(100);
+				skuList.add(sku);
 			}
+			product.setSkuInfoList(skuList);
+			RequestProducts request = new RequestProducts();
+			List<ProductInfo> products = new ArrayList<ProductInfo>();
+			products.add(product);
+			request.setProductInfos(products);
+			JSONObject obj = (JSONObject) JSON.toJSON(request);
+			/**
+			 * 生成requeset请求对象
+			 */
+			Request req = new Request();
+			req.setAppid("appid-order-list");
+			req.setAppSecret("1122334");
+			req.setData(obj.toJSONString());
+			req.setMethod("Product.batchProductsSkuStore");
+			req.setNonce("13332");
+			req.setTimestamp("1471339012182");
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("appid", req.getAppid());
+			map.put("data", URLEncoder.encode(req.getData(), "UTF-8"));
+			map.put("method", req.getMethod());
+			map.put("timestamp", req.getTimestamp());
+			map.put("nonce", req.getNonce());
+			List<String> list = new ArrayList<String>();
+			for (Map.Entry<String, String> entry : map.entrySet()) {
+				if (entry.getValue() != "") {
+					list.add(entry.getKey() + "=" + entry.getValue() + "&");
+				}
+			}
+			Collections.sort(list); // 对List内容进行排序
+			StringBuffer str = new StringBuffer();
+			for (String nameString : list) {
+				str.append(nameString);
+			}
+			str.append(req.getAppSecret());
+			String sign = SignHelper.md5Sign(str.toString());
+			System.out.println(sign);
+			System.out.println(str.toString());
+			System.out.println("------------------");
+			req.setSign(sign);
+			System.out.println(JSON.toJSON(req));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		Collections.sort(list); // 对List内容进行排序
-		StringBuffer str = new StringBuffer();
-		for (String nameString : list) {
-			str.append(nameString);
-		}
-		str.append(request.getAppSecret());
-		String sign = SignHelper.md5Sign(JSON.toJSONString(request));
-		req.setSign(sign);
-		// System.out.println(req.getData());
-		System.out.println(JSON.toJSON(req));
-		// JSONObject response =
-		// service.batchProductsSkuStore(obj.toJSONString(), "SI2003");
-		// System.out.println(response);
 	}
 
 }
