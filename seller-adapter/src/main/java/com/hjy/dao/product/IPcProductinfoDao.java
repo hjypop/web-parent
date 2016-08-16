@@ -69,4 +69,39 @@ public interface IPcProductinfoDao extends BaseDao<PcProductinfo, Integer> {
 	 * @version 1.0.0.1
 	 */
 	public int updateByOldProductCode(List<String> list);
+	
+	/**
+	 * @descriptions
+	 * 
+	 * @param list
+	 *            productCode list 另一个查询条件是 product_status = '4497153900060003'(已下架的)
+	 * @return
+	 * @date 2016年6月30日上午10:05:58
+	 * @author Yangcl
+	 * @version 1.0.0.1
+	 */
+	public List<PcProductinfo> getListByProductCodeList(List<String> list);
+
+	Integer updateProductStatus(PcProductinfo pcProductinfo); 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

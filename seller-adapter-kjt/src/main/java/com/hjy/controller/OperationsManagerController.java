@@ -37,7 +37,7 @@ public class OperationsManagerController {
 	@RequestMapping(value = "up_storage", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject upStorage(){
-		return  service.upStorage("D:/3.xlsx");
+		return  service.upStorage("");
 	}
 	
 	

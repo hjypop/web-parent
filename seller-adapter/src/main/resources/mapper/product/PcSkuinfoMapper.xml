@@ -194,10 +194,11 @@
 	</select>
 
 	<!-- 可以扩展if中的查询条件 - Yangcl -->
-	<select id="findList" resultMap="BaseResultMap"
-		parameterType="com.hjy.entity.product.PcSkuinfo">
-		select
-		* from productcenter.pc_skuinfo
+	<select id="findList" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcSkuinfo">
+		select 
+			* 
+		from 
+			productcenter.pc_skuinfo
 		where 1=1
 		<if test="productCode != null ">
 			and product_code = #{productCode , jdbcType=VARCHAR}

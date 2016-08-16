@@ -28,6 +28,20 @@ public class PcSkuinfo extends BaseModel {
 	private String skuName;
 	private String skuAdv;
 
+	
+	
+	
+	public PcSkuinfo() {
+	}
+	
+	
+
+	public PcSkuinfo(String productCode) {
+		this.productCode = productCode;
+	}
+
+
+
 	public String getSkuName() {
 		return skuName;
 	}

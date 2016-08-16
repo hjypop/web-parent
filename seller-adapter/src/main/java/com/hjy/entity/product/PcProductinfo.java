@@ -16,8 +16,12 @@ import com.hjy.model.ProductSkuInfo;
  * @version
  * 
  */
-public class PcProductinfo extends BaseModel {
+public class PcProductinfo {
 
+	private Integer zid=0;
+	private String uid=null;
+
+	
 	/**
 	 * 商品编码
 	 */
@@ -244,6 +248,39 @@ public class PcProductinfo extends BaseModel {
 	private String qualificationCategoryCode = "";
 
 	private String descriptionInfo = "";
+
+	 
+	public PcProductinfo() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	
+	
+	public PcProductinfo(String uid , String productCode, String productStatus) {
+		this.uid = uid;
+		this.productCode = productCode;
+		this.productStatus = productStatus;
+	}
+
+
+
+	public Integer getZid() {
+		return zid;
+	}
+
+	public void setZid(Integer zid) {
+		this.zid = zid;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+	
 
 	public String getDescriptionInfo() {
 		return descriptionInfo;
