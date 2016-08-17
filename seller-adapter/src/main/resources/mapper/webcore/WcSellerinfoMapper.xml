@@ -136,7 +136,9 @@
 			#{createTime,jdbcType=TIMESTAMP},
 			#{updator,jdbcType=VARCHAR},
 			#{updateTime,jdbcType=TIMESTAMP},
+			<if test="flowStatus != null">
 			#{flowStatus,jdbcType=VARCHAR},
+			</if>
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective" parameterType="com.hjy.entity.webcore.WcSellerinfo">

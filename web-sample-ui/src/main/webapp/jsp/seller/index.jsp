@@ -26,16 +26,24 @@
 										class="smallinput" /></span>
 								</p>
 								<p>
-									<label>商户名称</label> <span class="field"><input
-										type="text" name="sellerName" id="sellerName" value="${seller.sellerName }" class="smallinput" /></span>
+									<label>商户名称</label> 
+									<span class="field">
+										<input type="text" name="sellerName" id="sellerName" value="${seller.sellerName }" class="smallinput" />
+									</span>
+								</p>
+								<p>
+									<span class="field">
+									<a style="text-align: right;" href="javascript:void(0)" onclick="searchSeller();"
+										class="btn btn2 btn_blue btn_search radius50"><span>Search</span></a>
+									</span>
 								</p>
 							</div>
-							<div class="search_btn_div"
-								style="text-align: right; margin-bottom: 5px;">
-								<a href="javascript:void(0)" onclick="searchSeller();"
-									class="btn btn2 btn_blue btn_search radius50"><span>Search</span></a>
-							</div>
 						</form>
+					</div>
+					<div class="btn_div" style="margin-bottom: 5px;">
+						<a href="addindex.do" class="btn btn2 btn_blue btn_link">
+							<span>添加</span>
+						</a>
 					</div>
 					<div id="dyntable2_length" class="dataTables_length">
 						<label> 当前显示 <select id="select-page-size" size="1"
@@ -111,7 +119,7 @@
 			if (obj.status == 'success') {
 				alert(obj.msg);
 				var ps = $("#select-page-size").val();
-				var actions = "index.do?&pageNum=0&pageSize=" + ps;
+				var actions = "index.do";
 				$('#page-form').attr("action", actions);
 				$("#page-form").submit();
 			} else {
@@ -122,7 +130,7 @@
 	}
 	function searchSeller() {
 		var ps = $("#select-page-size").val();
-		var actions = "index.do?"+$("#search-form").serialize()+"&pageNum=0&pageSize=" + ps;
+		var actions = "index.do?"+$("#search-form").serialize();
 		$('#page-form').attr("action", actions);
 		$("#page-form").submit();
 	}

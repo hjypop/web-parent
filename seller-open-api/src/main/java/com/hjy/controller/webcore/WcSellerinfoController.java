@@ -1,6 +1,7 @@
 package com.hjy.controller.webcore;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hjy.dto.webcore.WcSellerinfoDto;
 import com.hjy.entity.webcore.WcSellerinfo;
+import com.hjy.helper.WebHelper;
 import com.hjy.service.webcore.IWcSellerinfoService;
 
 /**
@@ -72,6 +74,19 @@ public class WcSellerinfoController {
 	/**
 	 * 
 	 * 方法: add <br>
+	 * 描述: 商户信息-添加页面 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月17日 下午1:59:35
+	 * 
+	 * @return
+	 */
+	@RequestMapping("addindex")
+	public String addIndex(){
+		return "jsp/seller/add";
+	}
+	/**
+	 * 
+	 * 方法: add <br>
 	 * 描述: 商户信息-添加 <br>
 	 * 作者: zhy<br>
 	 * 时间: 2016年8月17日 下午1:59:35
@@ -79,10 +94,39 @@ public class WcSellerinfoController {
 	 * @return
 	 */
 	@RequestMapping("add")
-	public int add(WcSellerinfo entity) {
-		return service.insertSelective(entity);
+	@ResponseBody
+	public JSONObject add(WcSellerinfo entity) {
+		JSONObject obj = new JSONObject();
+		entity.setUid(WebHelper.getInstance().genUuid());
+		entity.setSellerCode(WebHelper.getInstance().genUniqueCode("SI"));
+		entity.setCreator("system");
+		entity.setCreateTime(new Date());
+		entity.setUpdator("system");
+		entity.setUpdateTime(new Date());
+		int result = service.insertSelective(entity);
+		if (result >= 0) {
+			obj.put("status", "success");
+			obj.put("msg", "添加成功");
+		} else {
+			obj.put("status", "error");
+			obj.put("msg", "添加失败");
+		}
+		return obj;
 	}
 
+	/**
+	 * 
+	 * 方法: add <br>
+	 * 描述: 商户信息-编辑页面 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月17日 下午1:59:35
+	 * 
+	 * @return
+	 */
+	@RequestMapping("editindex")
+	public String editIndex(){
+		return "jsp/seller/edit";
+	}
 	/**
 	 * 
 	 * 方法: edit <br>
@@ -93,8 +137,18 @@ public class WcSellerinfoController {
 	 * @return
 	 */
 	@RequestMapping("edit")
-	public int edit(WcSellerinfo entity) {
-		return service.updateSelective(entity);
+	@ResponseBody
+	public JSONObject edit(WcSellerinfo entity) {
+		JSONObject obj = new JSONObject();
+		int result = service.updateSelective(entity);
+		if (result >= 0) {
+			obj.put("status", "success");
+			obj.put("msg", "编辑成功");
+		} else {
+			obj.put("status", "error");
+			obj.put("msg", "编辑失败");
+		}
+		return obj;
 	}
 
 	/**
