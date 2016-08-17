@@ -1,0 +1,123 @@
+package com.hjy.controller.webcore;
+
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONObject;
+import com.github.miemiedev.mybatis.paginator.domain.Order;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.hjy.dto.webcore.WcSellerinfoDto;
+import com.hjy.entity.webcore.WcSellerinfo;
+import com.hjy.service.webcore.IWcSellerinfoService;
+
+/**
+ * 
+ * 类: WcSellerinfoController <br>
+ * 描述: 商户信息controller <br>
+ * 作者: zhy<br>
+ * 时间: 2016年8月17日 下午1:57:50
+ */
+@Controller
+@RequestMapping("/seller/")
+public class WcSellerinfoController {
+
+	@Autowired
+	private IWcSellerinfoService service;
+
+	/**
+	 * 
+	 * 方法: index <br>
+	 * 描述: 商户信息-列表 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月17日 下午1:58:42
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "index", produces = { "application/json;charset=utf-8" })
+	public String index(WcSellerinfoDto dto, ModelMap model) {
+		/*
+		 * 如果分页参数当前页为空，默认为0，页面最大显示数为空，默认为10
+		 */
+		String sortString = "create_time.desc";
+		Order.formString(sortString);
+		PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
+		WcSellerinfo entity = new WcSellerinfo();
+		entity.setSellerCode(dto.getSellerCode());
+		String name = "";
+		if (dto.getSellerName() != null && !"".equals(dto.getSellerName())) {
+			try {
+				name = new String(dto.getSellerName().getBytes("iso-8859-1"), "utf-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		entity.setSellerName(name);
+		List<WcSellerinfo> list = service.queryPage(entity);
+		System.out.println(list.size());
+		if (list != null && list.size() > 0) {
+			PageInfo<WcSellerinfo> pageList = new PageInfo<WcSellerinfo>(list);
+			model.put("pageList", pageList);
+		}
+		model.put("seller", entity);
+		return "jsp/seller/index";
+	}
+
+	/**
+	 * 
+	 * 方法: add <br>
+	 * 描述: 商户信息-添加 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月17日 下午1:59:35
+	 * 
+	 * @return
+	 */
+	@RequestMapping("add")
+	public int add(WcSellerinfo entity) {
+		return service.insertSelective(entity);
+	}
+
+	/**
+	 * 
+	 * 方法: edit <br>
+	 * 描述: 商户信息-编辑 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月17日 下午1:59:59
+	 * 
+	 * @return
+	 */
+	@RequestMapping("edit")
+	public int edit(WcSellerinfo entity) {
+		return service.updateSelective(entity);
+	}
+
+	/**
+	 * 
+	 * 方法: del <br>
+	 * 描述: 商户信息-删除 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月17日 下午2:00:23
+	 * 
+	 * @return
+	 */
+	@RequestMapping("del")
+	@ResponseBody
+	public JSONObject del(String sellerCode) {
+		JSONObject obj = new JSONObject();
+		int result = service.deleteBySellerCode(sellerCode);
+		if (result >= 0) {
+			obj.put("status", "success");
+			obj.put("msg", "删除成功");
+		} else {
+			obj.put("status", "error");
+			obj.put("msg", "删除失败");
+		}
+		return obj;
+	}
+}

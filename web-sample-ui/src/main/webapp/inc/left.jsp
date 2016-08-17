@@ -12,6 +12,7 @@
                         </li>
                         <li><a href="">二级菜单栏B</a></li>
                         <li><a href="">二级菜单栏C</a></li>
+                        <li><a href="${basePath}seller/index.do">商户管理</a></li>
                     </ul>
                 </li>
 
