@@ -142,6 +142,22 @@ private static Logger logger=Logger.getLogger(ExampleController.class);
 		
 		return "jsp/example/pageFormExample"; 
 	}
+	
+	/**
+	 * @descriptions 简单分页示例 Ajax分页 不涉及弹窗分页问题 
+	 * 
+	 * @param session 
+	 * @date 2016年8月17日下午5:44:52
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	@RequestMapping("ajaxFormExample")
+	public String toAjaxFormExample(HttpSession session){ 
+		// TODO 按钮权限控制等等
+		return "jsp/example/ajaxFormExample"; 
+	}
+	
+	
 
 	
 	@RequestMapping(value = "deleteOne", produces = { "application/json;charset=utf-8" })

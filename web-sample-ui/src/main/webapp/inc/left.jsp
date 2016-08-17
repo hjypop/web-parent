@@ -57,6 +57,9 @@
                         	<!-- 必须添加 $ { basePath } -->
                         	<a href="${basePath}example/pageFormExample.do">简单分页表单示例</a>
                         </li>
+                        <li class="gallery">
+                        	<a href="${basePath}example/ajaxFormExample.do">Ajax 分页示例</a>
+                        </li>
                         <!-- <li class="gallery">
                         	<a href="${basePath}example/pageFormExample.do">分页+弹窗分页示例</a>
                         </li> -->
