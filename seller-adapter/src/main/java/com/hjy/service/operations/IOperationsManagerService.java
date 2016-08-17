@@ -1,6 +1,7 @@
-package com.hjy.service;
+package com.hjy.service.operations;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.service.IBaseService;
 
 /**
  * @descriptions 执行运营人员的线上临时需求，如：一批商品下架、一批商品上架等等。
