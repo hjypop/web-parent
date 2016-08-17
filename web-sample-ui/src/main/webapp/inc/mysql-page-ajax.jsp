@@ -118,13 +118,11 @@
         当前第${pageList.pageNum }页|正在显示 ${pageList.startRow } 到 ${pageList.endRow } 条|共 <span style="color:#ff0000">${pageList.pages} </span>页 ${pageList.total} 条记录
     </div>
     <div id="a2" class="dataTables_paginate paging_full_numbers" >
-        <span id="first-page" class="first paginate_button paginate_button_disabled"
-                onclick="formPaging('1')">
+        <span id="first-page" class="first paginate_button paginate_button_disabled" onclick="formPaging('1')">
             首页
         </span>
         <c:if test="${!pageList.isFirstPage}"> <!-- 如果是第一页，则只显示下一页、尾页 -->
-            <span id="previous-page" class="previous paginate_button paginate_button_disabled"
-                 onclick="formPaging('${pageList.prePage}')">
+            <span id="previous-page" class="previous paginate_button paginate_button_disabled" onclick="formPaging('${pageList.prePage}')">
                 上一页
             </span>
         </c:if>
@@ -132,12 +130,10 @@
             <%-- 等待追加节点 --%>
         </span>
         <c:if test="${!pageList.isLastPage}"> <!-- 如果是末页，则只显示上一页 -->
-	        <span id="next-page" class="next paginate_button"  
-	        	onclick="formPaging('${pageList.nextPage}')">
+	        <span id="next-page" class="next paginate_button"   onclick="formPaging('${pageList.nextPage}')">
 	        	下一页
         	</span>
-	        <span id="last-page" class="last paginate_button"
-                onclick="formPaging('${pageList.pages}')"   >
+	        <span id="last-page" class="last paginate_button" onclick="formPaging('${pageList.pages}')"   >
                 末页
             </span>
         </c:if>

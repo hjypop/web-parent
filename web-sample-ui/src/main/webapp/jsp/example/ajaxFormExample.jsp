@@ -61,7 +61,8 @@
 
             <div id="contentwrapper" class="contentwrapper">
 
-                <div id="dyntable2_wrapper" class="dataTables_wrapper" >
+                <%-- dyntable2_wrapper --%>
+                <div id="table-form" class="dataTables_wrapper" >
                     <div class="contenttitle2">
                         <%--<h3>Dynamic Table with Checkbox Column</h3>--%>
                         <p style="margin: 0px">
