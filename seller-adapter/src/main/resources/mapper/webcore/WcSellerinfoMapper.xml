@@ -141,7 +141,7 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.hjy.entity.webcore.WcSellerinfo">
+	<update id="updateSelective" parameterType="com.hjy.entity.webcore.WcSellerinfo">
 		update wc_sellerinfo
 		<set>
 			<if test="sellerName != null">

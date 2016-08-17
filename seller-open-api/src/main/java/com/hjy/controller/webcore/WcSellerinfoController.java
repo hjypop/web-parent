@@ -124,7 +124,9 @@ public class WcSellerinfoController {
 	 * @return
 	 */
 	@RequestMapping("editindex")
-	public String editIndex(){
+	public String editIndex(String sellerCode,ModelMap model){
+		WcSellerinfo info = service.selectBySellerCode(sellerCode);
+		model.put("seller", info);
 		return "jsp/seller/edit";
 	}
 	/**
