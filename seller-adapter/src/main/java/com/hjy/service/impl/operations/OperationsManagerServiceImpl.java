@@ -1,4 +1,4 @@
-package com.hjy.service.impl;
+package com.hjy.service.impl.operations;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,7 +33,8 @@ import com.hjy.helper.DateHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.redis.core.RedisLaunch;
 import com.hjy.redis.srnpr.ERedisSchema;
-import com.hjy.service.IOperationsManagerService;
+import com.hjy.service.impl.BaseServiceImpl;
+import com.hjy.service.operations.IOperationsManagerService;
 
 /**
  * @descriptions 执行运营人员的线上临时需求，如：一批商品下架、一批商品上架等等。

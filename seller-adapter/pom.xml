@@ -18,5 +18,10 @@
 			<artifactId>web-quartz</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.huijiayou</groupId>
+			<artifactId>web-cache</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 </project>

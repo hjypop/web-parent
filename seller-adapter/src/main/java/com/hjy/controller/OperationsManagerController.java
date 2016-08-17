@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hjy.service.IOperationsManagerService;
+import com.hjy.service.operations.IOperationsManagerService;
 
 
 /**
