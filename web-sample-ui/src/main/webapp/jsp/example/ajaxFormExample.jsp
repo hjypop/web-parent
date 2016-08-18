@@ -3,19 +3,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+	<%@ include file="/inc/mysql-page-ajax.jsp" %>
     <%@ include file="/inc/head.jsp" %>
+    <script type="text/javascript" src="${js}/system/ajax-form.js"></script>
     <script type="text/javascript">
 
         $(function(){
-            loadTable();
+
+
+            var type_ = 'post';
+            var url_ = '${basePath}example/ajaxPageData.do';
+            var data_ = null;
+            var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+            if(obj.status == 'success'){
+                aForm.launch(url_ , 'table-form' , obj).init().drawForm(loadTable).setFunc(reloadTable);
+            }
+
+
+
         });
 
-        function loadTable(){
+        function loadTable(url_){
             var html_ = '';
+            alert("呵呵");
+            $('#ajax-tbody-1').append(html_);
+        }
 
-
-
-
+        function reloadTable(url_){
+            var html_ = '';
+            alert("哈哈" + url_);
             $('#ajax-tbody-1').append(html_);
         }
 
@@ -64,7 +80,6 @@
                 <%-- dyntable2_wrapper --%>
                 <div id="table-form" class="dataTables_wrapper" >
                     <div class="contenttitle2">
-                        <%--<h3>Dynamic Table with Checkbox Column</h3>--%>
                         <p style="margin: 0px">
                             <label>First Name</label>
                             <span class="field"><input id="name" type="text" name="name"  class="form-search"></span>
@@ -168,15 +183,12 @@
                                             <a href="${basePath}example/editInfoPage.do?id=${c.id }" title="修改" class="btn btn3 btn_book" style="cursor: pointer;"></a>
                                         </td>
                                     </tr>
-
                                 </c:forEach>
                             </c:if>
                         </tbody>
                     </table>
-
-					<%@ include file="/inc/mysql-page.jsp" %>
+                    
                 </div>
-				<%@ include file="/inc/page-form.jsp" %>
             </div>
 
         </div>

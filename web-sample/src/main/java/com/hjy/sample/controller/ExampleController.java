@@ -158,6 +158,49 @@ private static Logger logger=Logger.getLogger(ExampleController.class);
 	}
 	
 	
+	@RequestMapping(value = "ajaxPageData", produces = { "application/json;charset=utf-8" })
+	@ResponseBody
+	public JSONObject ajaxPageData(HttpServletRequest request, HttpSession session){
+		logger.info(" to ajaxFormExample.jsp  ... "); 
+		JSONObject result = new JSONObject();
+		
+		String pageNum = request.getParameter("pageNum"); // 当前第几页
+		String pageSize = request.getParameter("pageSize");  // 当前页所显示记录条数
+		
+		int num = 1;
+		int size = 10;
+		if (StringUtils.isNotBlank(pageNum)) {
+			num = Integer.parseInt(pageNum);
+		}
+		if (StringUtils.isNotBlank(pageSize)) {
+			size = Integer.parseInt(pageSize);
+		}
+		
+		UserInfo entity = new UserInfo();
+		entity.setSex(1); 
+		String sortString = "id.desc";
+		Order.formString(sortString);
+		PageHelper.startPage(num, size);
+		
+		
+		List<UserInfo> userList = userInfoService.queryPage(entity);
+		if(userList != null && userList.size() > 0){
+			PageInfo<UserInfo> pageList = new PageInfo<UserInfo>(userList);
+			result.put("status", "success");
+			result.put("data", pageList);
+		}else{
+			result.put("status", "error");
+			result.put("msg", "删除成功");
+		}
+		
+		
+		return result; 
+	}
+	
+	
+	
+	
+	
 
 	
 	@RequestMapping(value = "deleteOne", produces = { "application/json;charset=utf-8" })

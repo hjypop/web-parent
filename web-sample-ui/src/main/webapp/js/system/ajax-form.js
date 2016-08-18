@@ -1,10 +1,26 @@
 /**
- * 
+ * javascript 回调函数
+ * http://blog.csdn.net/luoweifu/article/details/41466537
+ *
+ * http://blog.sina.com.cn/s/blog_601b97ee0101f1rc.html
+ *
+ *
  */
 
 
 var aForm = {
 
+    jsonObj:null,
+    url:'',
+    formId:'',
+    callName:null,
+
+    launch : function(url , formId , obj){
+        this.url = url;
+        this.formId = formId;
+        this.jsonObj = obj;
+        return aForm;
+    },
 
     /**
      * 实例化分页html部分
@@ -20,27 +36,39 @@ var aForm = {
      * @param isLastPage true or false 是否是最后一页
      * @param nextPage
      */
-    init : function(formId  , pageNum , startRow , endRow , pages , total , isFirstPage , prePage , isLastPage , nextPage){
+    init : function(){
+        var formId = this.formId;
+        var obj = this.jsonObj.data;
+        var pageNum = obj.pageNum;
+        var startRow = obj.startRow;
+        var endRow = obj.endRow;
+        var pages = obj.pages;
+        var total = obj.total;
+        var isFirstPage = obj.isFirstPage;
+        var prePage = obj.prePage;
+        var isLastPage = obj.isLastPage;
+        var nextPage = obj.nextPage;
+
         var html_ =
             '<div id="a1" class="dataTables_info" >'
                 +'当前第' + pageNum +'页|正在显示 ' + startRow +' 到 ' + endRow + ' 条|共 <span style="color:#ff0000">' + pages + ' </span>页 ' + total + ' 条记录'
             +'</div>'
             +'<div id="a2" class="dataTables_paginate paging_full_numbers" >'
-                +'<span id="first-page" class="first paginate_button paginate_button_disabled" onclick="aForm.formPaging(1)">'  // TODO 这里写数字 1 是否会有潜在异常
+                +'<span id="first-page" class="first paginate_button paginate_button_disabled" onclick="aForm.formPaging(1)">'
                     +'首页'
                 +'</span>';
 
         if(!isFirstPage){ // 如果是第一页，则只显示下一页、尾页
-            html_ += '<span id="previous-page" class="previous paginate_button paginate_button_disabled" onclick="aForm.formPaging(\'' + prePage + '\')">' // TODO 这里是否会有潜在异常
+            html_ += '<span id="previous-page" class="previous paginate_button paginate_button_disabled" onclick="aForm.formPaging(\'' + prePage + '\')">'
                                 +'上一页'
                             +'</span>';
         }
         html_ += '<span id="dynamic-page-num"></span>';
         if(!isLastPage){ // 如果是末页，则只显示上一页
-            html_ += '<span id="next-page" class="next paginate_button"   onclick="aForm.formPaging(\'' + nextPage + '\')">'  // TODO 这里是否会有潜在异常
+            html_ += '<span id="next-page" class="next paginate_button"   onclick="aForm.formPaging(\'' + nextPage + '\')">'
                                 +'下一页'
                         +'</span>'
-                        +'<span id="last-page" class="last paginate_button" onclick="aForm.formPaging(\'' + pages +'\')" >'  // TODO 这里是否会有潜在异常
+                        +'<span id="last-page" class="last paginate_button" onclick="aForm.formPaging(\'' + pages +'\')" >'
                             +'末页'
                         +'</span>';
         }
@@ -48,7 +76,7 @@ var aForm = {
         $("#" + formId).append(html_);
         aForm.oneToSeven(pageNum , pages);
 
-
+        return aForm;
     },
 
     /**
@@ -108,16 +136,36 @@ var aForm = {
     },
 
     formPaging : function(pn){
-        var ps = $("#select-page-size").val();
-        var actions = '${bpath}' + '${pageUrl}&pageNum=' + pn +'&pageSize=' + ps;
-        $('#page-form').attr("action", actions);
-        $("#page-form").submit();
+        var actions = this.url + '&pageNum=' + pn +'&pageSize=' + parseInt($("#select-page-size").val());
+        if(this.callName != null && (typeof this.callName=="function")){
+            this.callName(actions);
+        }
+    },
+
+    // 绘制表单
+    drawForm : function(callback){
+        callback();
+        return aForm;
+    },
+
+    setFunc : function(name){
+        eval("this.callName = name;");
+        return aForm;
     }
 
 
 }
-
-
+//
+//$.note=function(val,call){
+//    $("#note-title").html(val);
+//    $("#note-modal").modal();
+//    $("#note-modal").on("hidden.bs.modal",function(){
+//        if(call){
+//            (typeof call=="function") && call();
+//        }
+//    });
+//    setTimeout("$('#note-modal').modal('hide')",1000);
+//}
 
 
 
