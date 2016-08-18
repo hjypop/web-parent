@@ -32,10 +32,6 @@ public class WcSellerinfo extends BaseModel {
 	 * 商家描述
 	 */
 	private String sellerDescrption;
-	/**
-	 * 商家状态
-	 */
-	private String sellerStatus;
 
 	/**
 	 * 所在地
@@ -83,10 +79,9 @@ public class WcSellerinfo extends BaseModel {
 	private String sellerType;
 
 	/**
-	 * 合作到期时间
+	 * 商户状态 0 未开通 1 已开通 2 已禁用
 	 */
-	private String outDate;
-
+	private Integer status;
 	/**
 	 * 创建人
 	 */
@@ -105,10 +100,13 @@ public class WcSellerinfo extends BaseModel {
 	 */
 	private Date updateTime;
 
-	/**
-	 * 审核是否通过:4497172300140001(待合同专员审批)
-	 */
-	private String flowStatus;
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
 	public String getSellerCode() {
 		return sellerCode;
@@ -140,14 +138,6 @@ public class WcSellerinfo extends BaseModel {
 
 	public void setSellerDescrption(String sellerDescrption) {
 		this.sellerDescrption = sellerDescrption;
-	}
-
-	public String getSellerStatus() {
-		return sellerStatus;
-	}
-
-	public void setSellerStatus(String sellerStatus) {
-		this.sellerStatus = sellerStatus;
 	}
 
 	public String getSellerArea() {
@@ -222,14 +212,6 @@ public class WcSellerinfo extends BaseModel {
 		this.sellerType = sellerType;
 	}
 
-	public String getOutDate() {
-		return outDate;
-	}
-
-	public void setOutDate(String outDate) {
-		this.outDate = outDate;
-	}
-
 	public String getCreator() {
 		return creator;
 	}
@@ -260,14 +242,6 @@ public class WcSellerinfo extends BaseModel {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
-	}
-
-	public String getFlowStatus() {
-		return flowStatus;
-	}
-
-	public void setFlowStatus(String flowStatus) {
-		this.flowStatus = flowStatus;
 	}
 
 }

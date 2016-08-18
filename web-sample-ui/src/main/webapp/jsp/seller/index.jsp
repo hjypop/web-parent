@@ -68,9 +68,9 @@
 								<th class="head1">商户编号</th>
 								<th class="head1">商户名称</th>
 								<th class="head1">商家简称</th>
-								<th class="head1">商家状态</th>
 								<th class="head1">公司名称</th>
 								<th class="head1">联系电话</th>
+								<th class="head1">合作状态</th>
 								<th class="head1">创建人</th>
 								<th class="head1">创建时间</th>
 								<th class="head1">修改人</th>
@@ -83,16 +83,22 @@
 								<tr>
 									<td class="head0"><input type="checkbox" name="" id=""></input>
 									</td>
-									<td class="head0">${seller.sellerCode}</td>
+									<td class="head0" style="text-align: center;">${seller.sellerCode}</td>
 									<td class="head0">${seller.sellerName}</td>
 									<td class="head0">${seller.sellerShortName}</td>
-									<td class="head0">${seller.sellerStatus}</td>
 									<td class="head0">${seller.sellerCompanyName}</td>
-									<td class="head0">${seller.sellerTelephone}</td>
-									<td class="head0">${seller.creator}</td>
-									<td class="head0">${seller.createTime}</td>
-									<td class="head0">${seller.updator}</td>
-									<td class="head0">${seller.updateTime}</td>
+									<td class="head0" style="text-align: center;">${seller.sellerTelephone}</td>
+									<td class="head0" style="text-align: center;">
+										<c:choose>
+											<c:when test="${seller.status == 1}">已开通</c:when>
+											<c:when test="${seller.status == 2}">已禁用</c:when>
+											<c:otherwise>未开通</c:otherwise>
+										</c:choose>
+									</td>
+									<td class="head0" style="text-align: center;">${seller.creator}</td>
+									<td class="head0" style="text-align: center;">${seller.createTime}</td>
+									<td class="head0" style="text-align: center;">${seller.updator}</td>
+									<td class="head0" style="text-align: center;">${seller.updateTime}</td>
 									<td class="head0">
 									<a href="editindex.do?sellerCode=${seller.sellerCode }" title="编辑" class="btn btn3 btn_book" style="cursor: pointer;"></a>
 									&nbsp;

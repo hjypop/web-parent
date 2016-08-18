@@ -87,11 +87,6 @@ public class WcSellerinfoController {
 	@RequestMapping("addindex")
 	public String addIndex(ModelMap model) {
 		/**
-		 * 商户状态
-		 */
-		List<ScDefine> sellerStatus = scDefineService.findDefineByParentCode("449717230004");
-		model.put("sellerStatus", sellerStatus);
-		/**
 		 * 商户类型
 		 */
 		List<ScDefine> sellerType = scDefineService.findDefineByParentCode("44974639");
@@ -140,11 +135,6 @@ public class WcSellerinfoController {
 	 */
 	@RequestMapping("editindex")
 	public String editIndex(String sellerCode, ModelMap model) {
-		/**
-		 * 商户状态
-		 */
-		List<ScDefine> sellerStatus = scDefineService.findDefineByParentCode("449717230004");
-		model.put("sellerStatus", sellerStatus);
 		/**
 		 * 商户类型
 		 */
