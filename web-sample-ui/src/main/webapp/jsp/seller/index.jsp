@@ -94,8 +94,9 @@
 									<td class="head0">${seller.updator}</td>
 									<td class="head0">${seller.updateTime}</td>
 									<td class="head0">
-									<a onclick="deleteOne('${seller.sellerCode}')" title="删除" class="btn btn3 btn_trash" style="cursor: pointer;"></a>
 									<a href="editindex.do?sellerCode=${seller.sellerCode }" title="编辑" class="btn btn3 btn_book" style="cursor: pointer;"></a>
+									&nbsp;
+									<a onclick="deleteOne('${seller.sellerCode}')" title="删除" class="btn btn3 btn_trash" style="cursor: pointer;"></a>
 									</td>
 								</tr>
 							</c:forEach>

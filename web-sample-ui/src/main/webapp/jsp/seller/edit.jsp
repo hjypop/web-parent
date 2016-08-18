@@ -52,14 +52,11 @@ function cancel(){
                         	<label>店铺类型</label>
                             <span class="field">
 	                            <select name="sellerType" id="sellerType">
-	                            	<option value="">Choose One</option>
-	                            	
-	                                <option value="1" <c:if test="${seller.sellerType == 1 }">selected="selected"</c:if>>Selection One</option>
-	                                <option value="2" <c:if test="${seller.sellerType == 2 }">selected="selected"</c:if>>Selection Two</option>
-	                                <option value="3" <c:if test="${seller.sellerType == 3 }">selected="selected"</c:if>>Selection Three</option>
-	                                <option value="4" <c:if test="${seller.sellerType == 4 }">selected="selected"</c:if>>Selection Four</option>
-	                            </select>
-                            </span>
+	                            	<option value="">请选择</option>
+	                            	<c:forEach var="type" items="${sellerType }">
+	                            		<option <c:if test="${seller.sellerType == type.defineCode }">selected="selected"</c:if> value="${type.defineCode }">${type.defineName }</option>	
+	                            	</c:forEach>
+	                            </select>                            </span>
                         </p>
                         <p>
                         	<label>商户描述</label>
@@ -71,11 +68,10 @@ function cancel(){
                         	<label>商家状态</label>
                             <span class="field">
 	                            <select name="sellerStatus" id="sellerStatus">
-	                            	<option value="">Choose One</option>
-	                                <option value="1">Selection One</option>
-	                                <option value="2">Selection Two</option>
-	                                <option value="3">Selection Three</option>
-	                                <option value="4">Selection Four</option>
+	                            	<option value="">请选择</option>
+	                            	<c:forEach var="status" items="${sellerStatus }">
+	                            		<option <c:if test="${seller.sellerStatus == status.defineCode }">selected="selected"</c:if> value="${status.defineCode }">${status.defineName }</option>	
+	                            	</c:forEach>
 	                            </select>
                             </span>
                         </p>

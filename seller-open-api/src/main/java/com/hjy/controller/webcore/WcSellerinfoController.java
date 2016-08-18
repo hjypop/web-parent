@@ -15,8 +15,10 @@ import com.github.miemiedev.mybatis.paginator.domain.Order;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hjy.dto.webcore.WcSellerinfoDto;
+import com.hjy.entity.system.ScDefine;
 import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.helper.WebHelper;
+import com.hjy.service.system.IScDefineService;
 import com.hjy.service.webcore.IWcSellerinfoService;
 
 /**
@@ -32,6 +34,9 @@ public class WcSellerinfoController {
 
 	@Autowired
 	private IWcSellerinfoService service;
+
+	@Autowired
+	private IScDefineService scDefineService;
 
 	/**
 	 * 
@@ -62,7 +67,6 @@ public class WcSellerinfoController {
 		}
 		entity.setSellerName(name);
 		List<WcSellerinfo> list = service.queryPage(entity);
-		System.out.println(list.size());
 		if (list != null && list.size() > 0) {
 			PageInfo<WcSellerinfo> pageList = new PageInfo<WcSellerinfo>(list);
 			model.put("pageList", pageList);
@@ -81,9 +85,20 @@ public class WcSellerinfoController {
 	 * @return
 	 */
 	@RequestMapping("addindex")
-	public String addIndex(){
+	public String addIndex(ModelMap model) {
+		/**
+		 * 商户状态
+		 */
+		List<ScDefine> sellerStatus = scDefineService.findDefineByParentCode("449717230004");
+		model.put("sellerStatus", sellerStatus);
+		/**
+		 * 商户类型
+		 */
+		List<ScDefine> sellerType = scDefineService.findDefineByParentCode("44974639");
+		model.put("sellerType", sellerType);
 		return "jsp/seller/add";
 	}
+
 	/**
 	 * 
 	 * 方法: add <br>
@@ -124,11 +139,22 @@ public class WcSellerinfoController {
 	 * @return
 	 */
 	@RequestMapping("editindex")
-	public String editIndex(String sellerCode,ModelMap model){
+	public String editIndex(String sellerCode, ModelMap model) {
+		/**
+		 * 商户状态
+		 */
+		List<ScDefine> sellerStatus = scDefineService.findDefineByParentCode("449717230004");
+		model.put("sellerStatus", sellerStatus);
+		/**
+		 * 商户类型
+		 */
+		List<ScDefine> sellerType = scDefineService.findDefineByParentCode("44974639");
+		model.put("sellerType", sellerType);
 		WcSellerinfo info = service.selectBySellerCode(sellerCode);
 		model.put("seller", info);
 		return "jsp/seller/edit";
 	}
+
 	/**
 	 * 
 	 * 方法: edit <br>

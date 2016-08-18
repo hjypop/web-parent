@@ -52,11 +52,10 @@ function cancel(){
                         	<label>店铺类型</label>
                             <span class="field">
 	                            <select name="sellerType" id="sellerType">
-	                            	<option value="">Choose One</option>
-	                                <option value="1">Selection One</option>
-	                                <option value="2">Selection Two</option>
-	                                <option value="3">Selection Three</option>
-	                                <option value="4">Selection Four</option>
+	                            	<option value="">请选择</option>
+	                            	<c:forEach var="type" items="${sellerType }">
+	                            		<option value="${type.defineCode }">${type.defineName }</option>	
+	                            	</c:forEach>
 	                            </select>
                             </span>
                         </p>
@@ -70,11 +69,10 @@ function cancel(){
                         	<label>商家状态</label>
                             <span class="field">
 	                            <select name="sellerStatus" id="sellerStatus">
-	                            	<option value="">Choose One</option>
-	                                <option value="1">Selection One</option>
-	                                <option value="2">Selection Two</option>
-	                                <option value="3">Selection Three</option>
-	                                <option value="4">Selection Four</option>
+	                            	<option value="">请选择</option>
+	                            	<c:forEach var="status" items="${sellerStatus }">
+	                            		<option value="${status.defineCode }">${status.defineName }</option>	
+	                            	</c:forEach>
 	                            </select>
                             </span>
                         </p>
