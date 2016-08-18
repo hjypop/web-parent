@@ -1,4 +1,8 @@
 /**
+ *
+ * ajax 分页 - Yangcl
+ * 2016-08-18
+ *
  * javascript 回调函数
  * http://blog.csdn.net/luoweifu/article/details/41466537
  *
@@ -6,8 +10,6 @@
  *
  *
  */
-
-
 var aForm = {
 
     jsonObj:null,
@@ -137,11 +139,16 @@ var aForm = {
         $("#dynamic-page-num").append(html_);
     },
 
+    /**
+     * 触发分页事件
+     * @param pn
+     */
     formPaging : function(pn){
-        var actions = this.url + '?pageNum=' + pn +'&pageSize=' + parseInt($("#select-page-size").val());
+        var parse = aForm.parseUrl(this.url);
+        var url = parse.protocol + '://' + parse.host + ':' + parse.port + parse.path;
+        var actions = url + '?pageNum=' + pn +'&pageSize=' + parseInt($("#select-page-size").val());
         if(this.callName != null && (typeof this.callName=="function")){
             this.callName(actions);
-            //aForm.init();                              TODO                @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         }
     },
 
@@ -150,6 +157,39 @@ var aForm = {
         callback();
         eval("this.callName = callback;");
         return aForm;
+    } ,
+
+    /**
+     * 强效解析地址信息
+     * @param url
+     * @returns {{source: *, protocol: string, host: string, port: (Function|string|c.validator.methods.remote.port|*), query: (Function|string|ui.autocomplete.search|search), params, file: (string|*), hash: string, path: string, relative: (*|string), segments: (Array|string[])}}
+     */
+    parseUrl : function(url) {
+        var a =  document.createElement('a');
+        a.href = url;
+        return {
+            source: url,
+            protocol: a.protocol.replace(':',''),
+            host: a.hostname,
+            port: a.port,
+            query: a.search,
+            params: (function(){
+                var ret = {},
+                    seg = a.search.replace(/^\?/,'').split('&'),
+                    len = seg.length, i = 0, s;
+                for (;i<len;i++) {
+                    if (!seg[i]) { continue; }
+                    s = seg[i].split('=');
+                    ret[s[0]] = s[1];
+                }
+                return ret;
+            })(),
+            file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
+            hash: a.hash.replace('#',''),
+            path: a.pathname.replace(/^([^\/])/,'/$1'),
+            relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
+            segments: a.pathname.replace(/^\//,'').split('/')
+        };
     }
 }
 

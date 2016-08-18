@@ -8,6 +8,11 @@
     <script type="text/javascript" src="${js}/system/ajax-form.js"></script>
     <script type="text/javascript">
 
+        /**
+         * Ajax 页面分页示例
+         *
+         * var data_ = null; 这里暂设置为null，这两处为空的地方可以根据实际情况处理。注意loadTable()也有。
+         */
         $(function(){
             var type_ = 'post';
             var url_ = '${basePath}example/ajaxPageData.do';
@@ -18,34 +23,42 @@
             }
         });
 
+        // 回调函数
         function loadTable(url_){
-            if(url_ == undefined){
-                url_ = aForm.url;
+            if(url_ == undefined){ // 首次加载表单
+                draw(aForm.jsonObj);
+                console.log("A1")
+                return;
             }
-            var html_ = '';
+            // 这种情况是响应上一页或下一页的触发事件
             var type_ = 'post';
             var data_ = null;
             var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
             if(obj.status == 'success'){
-                $('#ajax-tbody-1 tr').remove();
-                var list = obj.data.list;
-                for(var i = 0 ; i < list.length ; i ++){
-                    html_ += '<tr id="tr-' + list[i].id + '" class="gradeX">'
-                        +'<td align="center"><span class="center"> <input type="checkbox"/> </span></td>'
-                        +'<td>' + list[i].id + '</td>'
-                        +'<td>' + list[i].userName + '</td>'
-                        +'<td>' + list[i].mobile + '</td>'
-                        +'<td class="center">' + list[i].idNumber + '</td>'
-                        +'<td class="center">' + list[i].email + '</td>'
-                        +'<td width="100px" align="center">'
-                            +'<a onclick="deleteOne(\'' + list[i].id + '\')" title="删除"  style="cursor: pointer;">删除</a> | '
-                            +'<a href="${basePath}example/editInfoPage.do?id=' + list[i].id + '" title="修改"  style="cursor: pointer;">修改</a>'
-                        +'</td></tr>'
-                }
-
+                aForm.launch(url_ , 'table-form' , obj).init();
+                console.log("B" + obj.data.pageNum);
+                draw(obj);
             }
+        }
 
-
+        // 画表格
+        function draw(obj){
+            $('#ajax-tbody-1 tr').remove();
+            var html_ = '';
+            var list = obj.data.list;
+            for(var i = 0 ; i < list.length ; i ++){
+                html_ += '<tr id="tr-' + list[i].id + '" class="gradeX">'
+                +'<td align="center"><span class="center"> <input type="checkbox"/> </span></td>'
+                +'<td>' + list[i].id + '</td>'
+                +'<td>' + list[i].userName + '</td>'
+                +'<td>' + list[i].mobile + '</td>'
+                +'<td class="center">' + list[i].idNumber + '</td>'
+                +'<td class="center">' + list[i].email + '</td>'
+                +'<td width="100px" align="center">'
+                +'<a onclick="deleteOne(\'' + list[i].id + '\')" title="删除"  style="cursor: pointer;">删除</a> | '
+                +'<a href="${basePath}example/editInfoPage.do?id=' + list[i].id + '" title="修改"  style="cursor: pointer;">修改</a>'
+                +'</td></tr>'
+            }
             $('#ajax-tbody-1').append(html_);
         }
 
@@ -129,10 +142,10 @@
                         <label>
                             当前显示
                             <select id="select-page-size" size="1" name="dyntable2_length" onchange="formPaging('1')">
-                                <option value="10"  <c:if test="${pageList.pageSize == 10}">selected="selected"</c:if>>10</option>
-                                <option value="25"  <c:if test="${pageList.pageSize == 25}">selected="selected"</c:if>>25</option>
-                                <option value="50" <c:if test="${pageList.pageSize == 50}">selected="selected"</c:if>>50</option>
-                                <option value="100" <c:if test="${pageList.pageSize == 100}">selected="selected"</c:if>>100</option>
+                                <option value="10">10</option>
+                                <option value="25" >25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
                             </select>
                             条记录
                         </label>
@@ -177,26 +190,7 @@
                         </tfoot>
 
                         <tbody id="ajax-tbody-1">
-                            <c:if test="${status == true}">
-                                <c:forEach items="${pageList.list}" var="c">
-                                    <tr id="tr-${c.id }" class="gradeX">
-                                        <td align="center">
-                                            <span class="center">
-                                                <input type="checkbox"/>
-                                            </span>
-                                        </td>
-                                        <td>${c.id }</td>
-                                        <td>${c.userName }</td>
-                                        <td>${c.mobile }</td>
-                                        <td class="center">${c.idNumber }</td>
-                                        <td class="center">${c.email }</td>
-                                        <td width="100px" align="center">
-                                            <a onclick="deleteOne('${c.id }')" title="删除" class="btn btn3 btn_trash" style="cursor: pointer;"></a>
-                                            <a href="${basePath}example/editInfoPage.do?id=${c.id }" title="修改" class="btn btn3 btn_book" style="cursor: pointer;"></a>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
+                            <%-- 等待填充 --%>
                         </tbody>
                     </table>
                     
