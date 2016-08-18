@@ -3,7 +3,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<%@ include file="/inc/mysql-page-ajax.jsp" %>
     <%@ include file="/inc/head.jsp" %>
     <script type="text/javascript" src="${js}/system/ajax-form.js"></script>
     <script type="text/javascript">
@@ -141,7 +140,7 @@
                     <div id="dyntable2_length" class="dataTables_length">
                         <label>
                             当前显示
-                            <select id="select-page-size" size="1" name="dyntable2_length" onchange="formPaging('1')">
+                            <select id="select-page-size" size="1" name="dyntable2_length" onchange="aForm.formPaging('1')">
                                 <option value="10">10</option>
                                 <option value="25" >25</option>
                                 <option value="50">50</option>
