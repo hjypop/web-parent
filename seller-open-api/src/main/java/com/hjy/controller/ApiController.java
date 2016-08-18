@@ -15,11 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.entity.log.LcOpenApiOperation;
-import com.hjy.entity.webcore.OpenApiAppid;
 import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.helper.SignHelper;
 import com.hjy.request.Request;
-import com.hjy.service.appid.IApiOpenApiAppidService;
 import com.hjy.service.operation.IApiLcOpenApiOperationService;
 import com.hjy.service.order.IApiOcOrderInfoService;
 import com.hjy.service.product.IApiProductService;
@@ -44,9 +42,6 @@ public class ApiController {
 	private IApiLcOpenApiOperationService logService;
 	@Autowired
 	private IApiOcOrderShipmentsService ocOrderShipmentsService;
-
-	@Autowired
-	private IApiOpenApiAppidService appidService;
 
 	@Autowired
 	private IWcSellerinfoService sellerInfoService;
