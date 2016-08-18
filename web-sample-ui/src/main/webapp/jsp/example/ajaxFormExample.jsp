@@ -9,31 +9,47 @@
     <script type="text/javascript">
 
         $(function(){
-
-
             var type_ = 'post';
             var url_ = '${basePath}example/ajaxPageData.do';
             var data_ = null;
             var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
             if(obj.status == 'success'){
-                aForm.launch(url_ , 'table-form' , obj).init().drawForm(loadTable).setFunc(reloadTable);
+                aForm.launch(url_ , 'table-form' , obj).init().drawForm(loadTable);
             }
-
-
-
         });
 
         function loadTable(url_){
+            if(url_ == undefined){
+                url_ = aForm.url;
+            }
             var html_ = '';
-            alert("呵呵");
+            var type_ = 'post';
+            var data_ = null;
+            var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+            if(obj.status == 'success'){
+                $('#ajax-tbody-1 tr').remove();
+                var list = obj.data.list;
+                for(var i = 0 ; i < list.length ; i ++){
+                    html_ += '<tr id="tr-' + list[i].id + '" class="gradeX">'
+                        +'<td align="center"><span class="center"> <input type="checkbox"/> </span></td>'
+                        +'<td>' + list[i].id + '</td>'
+                        +'<td>' + list[i].userName + '</td>'
+                        +'<td>' + list[i].mobile + '</td>'
+                        +'<td class="center">' + list[i].idNumber + '</td>'
+                        +'<td class="center">' + list[i].email + '</td>'
+                        +'<td width="100px" align="center">'
+                            +'<a onclick="deleteOne(\'' + list[i].id + '\')" title="删除"  style="cursor: pointer;">删除</a> | '
+                            +'<a href="${basePath}example/editInfoPage.do?id=' + list[i].id + '" title="修改"  style="cursor: pointer;">修改</a>'
+                        +'</td></tr>'
+                }
+
+            }
+
+
             $('#ajax-tbody-1').append(html_);
         }
 
-        function reloadTable(url_){
-            var html_ = '';
-            alert("哈哈" + url_);
-            $('#ajax-tbody-1').append(html_);
-        }
+
 
 
         function deleteOne(id_){
@@ -50,10 +66,6 @@
                 }
             }
         }
-
-
-
-
 
     </script>
 </head>

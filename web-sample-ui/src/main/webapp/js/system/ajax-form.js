@@ -49,11 +49,13 @@ var aForm = {
         var isLastPage = obj.isLastPage;
         var nextPage = obj.nextPage;
 
+        $(".page-info").remove();
+
         var html_ =
-            '<div id="a1" class="dataTables_info" >'
+            '<div id="a1" class="dataTables_info page-info" >'
                 +'当前第' + pageNum +'页|正在显示 ' + startRow +' 到 ' + endRow + ' 条|共 <span style="color:#ff0000">' + pages + ' </span>页 ' + total + ' 条记录'
             +'</div>'
-            +'<div id="a2" class="dataTables_paginate paging_full_numbers" >'
+            +'<div id="a2" class="dataTables_paginate paging_full_numbers page-info" >'
                 +'<span id="first-page" class="first paginate_button paginate_button_disabled" onclick="aForm.formPaging(1)">'
                     +'首页'
                 +'</span>';
@@ -136,36 +138,22 @@ var aForm = {
     },
 
     formPaging : function(pn){
-        var actions = this.url + '&pageNum=' + pn +'&pageSize=' + parseInt($("#select-page-size").val());
+        var actions = this.url + '?pageNum=' + pn +'&pageSize=' + parseInt($("#select-page-size").val());
         if(this.callName != null && (typeof this.callName=="function")){
             this.callName(actions);
+            //aForm.init();                              TODO                @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         }
     },
 
     // 绘制表单
     drawForm : function(callback){
         callback();
-        return aForm;
-    },
-
-    setFunc : function(name){
-        eval("this.callName = name;");
+        eval("this.callName = callback;");
         return aForm;
     }
-
-
 }
-//
-//$.note=function(val,call){
-//    $("#note-title").html(val);
-//    $("#note-modal").modal();
-//    $("#note-modal").on("hidden.bs.modal",function(){
-//        if(call){
-//            (typeof call=="function") && call();
-//        }
-//    });
-//    setTimeout("$('#note-modal').modal('hide')",1000);
-//}
+
+
 
 
 
