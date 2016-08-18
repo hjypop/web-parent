@@ -1,5 +1,6 @@
 package com.hjy.controller;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,7 +24,11 @@ public class DataInit {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("appid", request.getAppid());
-		map.put("data", request.getData());
+		try {
+			map.put("data", URLEncoder.encode(request.getData(), "UTF-8"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		map.put("method", request.getMethod());
 		map.put("timestamp", request.getTimestamp());
 		map.put("nonce", request.getNonce());
@@ -48,11 +53,11 @@ public class DataInit {
 	public static Request apiInsertShipmentsTest(){
 		Request r = new Request();
 		r.setMethod("Order.Shipments");
-		r.setAppid("appid-shipments-insert");
-		r.setAppSecret("1122334");
+		r.setAppid("SI10000");
+		r.setAppSecret("83c0dc04aa5f11e39ee0000c298b20fc");
 		r.setTimestamp("2016-08-11 11:31:58");
 		r.setNonce("4"); 
-		r.setSign("3c23eb356ab3307c2dd646876e7e580e"); 
+		r.setSign("c062f07197d91c8ae627fb059e0f4217"); 
 		
 	 
 		List<OrderShipment> list = new ArrayList<OrderShipment>();
