@@ -10,8 +10,6 @@
 			jdbcType="VARCHAR" />
 		<result column="seller_descrption" property="sellerDescrption"
 			jdbcType="VARCHAR" />
-		<result column="seller_status" property="sellerStatus"
-			jdbcType="VARCHAR" />
 		<result column="seller_area" property="sellerArea" jdbcType="VARCHAR" />
 		<result column="seller_telephone" property="sellerTelephone"
 			jdbcType="VARCHAR" />
@@ -27,7 +25,7 @@
 			jdbcType="VARCHAR" />
 		<result column="seller_email" property="sellerEmail" jdbcType="VARCHAR" />
 		<result column="seller_type" property="sellerType" jdbcType="VARCHAR" />
-		<result column="out_date" property="outDate" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
 		<result column="creator" property="creator" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="updator" property="updator" jdbcType="VARCHAR" />
@@ -37,14 +35,12 @@
 	<sql id="Base_Column_List">
 		zid, uid, seller_code, seller_name, seller_short_name,
 		seller_descrption,
-		seller_status,
 		seller_area, seller_telephone,
 		seller_return_address, seller_return_postcode,
 		seller_return_contact,
 		seller_return_telephone, seller_company_name, seller_email,
-		seller_type, out_date,
-		creator, create_time, updator, update_time,
-		flow_status
+		seller_type,`status`,
+		creator, create_time, updator, update_time
 	</sql>
 	<select id="selectBySellerCode" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
@@ -53,9 +49,9 @@
 		from wc_sellerinfo
 		where seller_code = #{sellerCode,jdbcType=VARCHAR}
 	</select>
-
 	<!-- 查询商户信息列表 2016-08-17 zhy -->
-	<select id="queryPage" resultMap="BaseResultMap" parameterType="com.hjy.entity.webcore.WcSellerinfo">
+	<select id="queryPage" resultMap="BaseResultMap"
+		parameterType="com.hjy.entity.webcore.WcSellerinfo">
 		select
 		<include refid="Base_Column_List" />
 		from wc_sellerinfo
@@ -65,9 +61,19 @@
 				AND seller_code = #{sellerCode,jdbcType=VARCHAR}
 			</if>
 			<if test="sellerName != null and sellerName != ''">
-				AND seller_name LIKE CONCAT('%',#{sellerName,jdbcType=VARCHAR},'%')
+				AND seller_name LIKE
+				CONCAT('%',#{sellerName,jdbcType=VARCHAR},'%')
 			</if>
 		</where>
+	</select>
+	<!-- 根据商户编号查询已开通openapi的商户信息 2016-08-18 zhy -->
+		<select id="selectBySellerCodeByApi" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from wc_sellerinfo
+		where seller_code = #{sellerCode,jdbcType=VARCHAR}
+		AND `status` = 1
 	</select>
 	<delete id="deleteBySellerCode" parameterType="java.lang.String">
 		delete from
@@ -84,9 +90,6 @@
 			<if test="sellerDescrption != null">
 				seller_descrption,
 			</if>
-			<if test="sellerStatus != null">
-				seller_status,
-			</if>
 			seller_area,
 			seller_telephone,
 			seller_return_address,
@@ -98,14 +101,10 @@
 			<if test="sellerType != null">
 				seller_type,
 			</if>
-			out_date,
 			creator,
 			create_time,
 			updator,
 			update_time,
-			<if test="flowStatus != null">
-				flow_status,
-			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			#{uid,jdbcType=CHAR},
@@ -114,9 +113,6 @@
 			#{sellerShortName,jdbcType=VARCHAR},
 			<if test="sellerDescrption != null">
 				#{sellerDescrption,jdbcType=VARCHAR},
-			</if>
-			<if test="sellerStatus != null">
-				#{sellerStatus,jdbcType=VARCHAR},
 			</if>
 			#{sellerArea,jdbcType=VARCHAR},
 			#{sellerTelephone,jdbcType=VARCHAR},
@@ -129,16 +125,10 @@
 			<if test="sellerType != null">
 				#{sellerType,jdbcType=VARCHAR},
 			</if>
-			<if test="outDate != null">
-				#{outDate,jdbcType=VARCHAR},
-			</if>
 			#{creator,jdbcType=VARCHAR},
 			#{createTime,jdbcType=TIMESTAMP},
 			#{updator,jdbcType=VARCHAR},
 			#{updateTime,jdbcType=TIMESTAMP},
-			<if test="flowStatus != null">
-			#{flowStatus,jdbcType=VARCHAR},
-			</if>
 		</trim>
 	</insert>
 	<update id="updateSelective" parameterType="com.hjy.entity.webcore.WcSellerinfo">
@@ -152,9 +142,6 @@
 			</if>
 			<if test="sellerDescrption != null">
 				seller_descrption = #{sellerDescrption,jdbcType=VARCHAR},
-			</if>
-			<if test="sellerStatus != null">
-				seller_status = #{sellerStatus,jdbcType=VARCHAR},
 			</if>
 			<if test="sellerArea != null">
 				seller_area = #{sellerArea,jdbcType=VARCHAR},
@@ -188,8 +175,8 @@
 			<if test="sellerType != null">
 				seller_type = #{sellerType,jdbcType=VARCHAR},
 			</if>
-			<if test="outDate != null">
-				out_date = #{outDate,jdbcType=VARCHAR},
+			<if test="status != null">
+				`status` = #{status,jdbcType=INTEGER},
 			</if>
 			<if test="updator != null">
 				updator = #{updator,jdbcType=VARCHAR},
@@ -197,10 +184,8 @@
 			<if test="updateTime != null">
 				update_time = #{updateTime,jdbcType=TIMESTAMP},
 			</if>
-			<if test="flowStatus != null">
-				flow_status = #{flowStatus,jdbcType=VARCHAR},
-			</if>
 		</set>
 		where seller_code = #{sellerCode,jdbcType=VARCHAR}
 	</update>
+	
 </mapper>

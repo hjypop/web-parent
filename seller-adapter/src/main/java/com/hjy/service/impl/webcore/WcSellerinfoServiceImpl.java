@@ -49,4 +49,18 @@ public class WcSellerinfoServiceImpl extends BaseServiceImpl<WcSellerinfo, Integ
 		return dao.deleteBySellerCode(sellerCode);
 	}
 
+	/**
+	 * 
+	 * 方法: selectBySellerCodeByApi <br>
+	 * 描述: TODO
+	 * 
+	 * @param sellerCode
+	 * @return
+	 * @see com.hjy.service.webcore.IWcSellerinfoService#selectBySellerCodeByApi(java.lang.String)
+	 */
+	@Override
+	public WcSellerinfo selectBySellerCodeByApi(String sellerCode) {
+		return dao.selectBySellerCodeByApi(sellerCode);
+	}
+
 }

@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.entity.log.LcOpenApiOperation;
-import com.hjy.entity.webcore.OpenApiAppid;
+import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.helper.SignHelper;
 import com.hjy.request.Request;
-import com.hjy.service.appid.IApiOpenApiAppidService;
 import com.hjy.service.operation.IApiLcOpenApiOperationService;
 import com.hjy.service.order.IApiOcOrderInfoService;
 import com.hjy.service.product.IApiProductService;
 import com.hjy.service.shipment.IApiOcOrderShipmentsService;
+import com.hjy.service.webcore.IWcSellerinfoService;
 
 /**
  * 
@@ -44,30 +44,30 @@ public class ApiController {
 	private IApiOcOrderShipmentsService ocOrderShipmentsService;
 
 	@Autowired
-	private IApiOpenApiAppidService appidService;
+	private IWcSellerinfoService sellerInfoService;
 
 	@RequestMapping("openapi")
 	@ResponseBody
 	public JSONObject requestApi(Request request) {
 
-		// request = DataInit.apiInsertShipmentsTest();
+		 //request = DataInit.apiInsertShipmentsTest();
 
 		JSONObject result = new JSONObject();
-		OpenApiAppid info = appidService.findByAppid(new OpenApiAppid(request.getAppid(), request.getAppSecret()));
-		if (null == info) {
+		WcSellerinfo seller = sellerInfoService.selectBySellerCodeByApi(request.getAppid());
+		if (null == seller) {
 			result.put("code", 3);
 			result.put("desc", "无API访问权限，错误的appid或appSecret");
 			return result;
 		}
-
+		request.setAppSecret(seller.getUid());
 		if (isSign(request)) { // 如果签名正确，根据method调用不同的service
-			String sellerCode = info.getSellerCode();
+			String sellerCode = seller.getSellerCode();
 			LcOpenApiOperation log = new LcOpenApiOperation();
 			log.setApiName(request.getMethod());
 			log.setCreateTime(new Date());
 			log.setRequestJson(request.getData());
 			log.setRequestTime(new Date());
-			log.setSellerCode(info.getSellerCode());
+			log.setSellerCode(seller.getSellerCode());
 			try {
 				String[] methods = request.getMethod().split("\\.");
 				String type = methods[0];
