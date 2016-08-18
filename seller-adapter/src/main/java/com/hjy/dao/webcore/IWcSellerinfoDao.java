@@ -1,6 +1,5 @@
 package com.hjy.dao.webcore;
 
-
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.webcore.WcSellerinfo;
 
@@ -36,4 +35,15 @@ public interface IWcSellerinfoDao extends BaseDao<WcSellerinfo, Integer> {
 	 * @return
 	 */
 	int deleteBySellerCode(String sellerCode);
+
+	/**
+	 * 
+	 * 方法: selectBySellerCodeByApi <br>
+	 * 描述: 根据商户编号查询已开通openapi的商户信息 作者: zhy<br>
+	 * 时间: 2016年8月18日 上午11:48:20
+	 * 
+	 * @param sellerCode
+	 * @return
+	 */
+	WcSellerinfo selectBySellerCodeByApi(String sellerCode);
 }
