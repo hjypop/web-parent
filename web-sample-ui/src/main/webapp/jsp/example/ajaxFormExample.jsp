@@ -140,6 +140,7 @@
                     <div id="dyntable2_length" class="dataTables_length">
                         <label>
                             当前显示
+                            <%-- TODO 注意：select-page-size 这个ID是写定的，如果没有这个显示条数，则默认显示10条 - Yangcl --%>
                             <select id="select-page-size" size="1" name="dyntable2_length" onchange="aForm.formPaging('1')">
                                 <option value="10">10</option>
                                 <option value="25" >25</option>

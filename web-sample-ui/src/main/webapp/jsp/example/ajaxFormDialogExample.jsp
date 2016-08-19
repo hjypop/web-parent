@@ -82,12 +82,29 @@
         }
 
         /**
+         * @描述: 关闭BlockUI弹框
+         * @作者: Yangcl
+         * @时间: 2016-08-19 : 15-20-56
+         */
+        function closeDialog(){
+            $.unblockUI();
+        }
+
+        /**
          * @描述: 打开dialog insert BlockUI弹框
          * @作者: Yangcl
          * @时间: 2016-08-19 : 15-20-56
          */
-        function openDialogPage(dialogFormId){
+        function openDialogPage(id){
 //            dialogFormNull(dialogFormId)
+            var type_ = 'post';
+            var url_ = '${basePath}example/ajaxPageData.do';
+            var data_ = null;
+            var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+            if(obj.status == 'success'){
+                dForm.launch(url_ , 'dialog-table-form' , obj).init().drawForm(loadDialogTable);
+            }
+
             $.blockUI({
                 showOverlay:true ,
                 css:  {
@@ -96,7 +113,7 @@
                     width:$("#dialog-page-div").width()+'px',
                     top:($(window).height()-$("#dialog-page-div").height())/2 + 'px',
                     position:'fixed', //居中
-                    border: '3px solid #FB9337'                  // 无边界
+                    border: '3px solid #FB9337'  // 边界
                 },
                 message: $('#dialog-page-div'),
                 fadeIn: 500,//淡入时间
@@ -104,13 +121,42 @@
             });
         }
 
-        /**
-         * @描述: 关闭BlockUI弹框
-         * @作者: Yangcl
-         * @时间: 2016-08-19 : 15-20-56
-         */
-        function closeDialog(){
-            $.unblockUI();
+        // 回调函数
+        function loadDialogTable(url_){
+            if(url_ == undefined){ // 首次加载表单
+                drawDialog(dForm.jsonObj);
+                console.log("C1")
+                return;
+            }
+            // 这种情况是响应上一页或下一页的触发事件
+            var type_ = 'post';
+            var data_ = null;
+            var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+            if(obj.status == 'success'){
+                dForm.launch(url_ , 'dialog-table-form' , obj).init();
+                console.log("D" + obj.data.pageNum);
+                drawDialog(obj);
+            }
+        }
+
+        function drawDialog(obj){
+            $('#dialog-ajax-tbody tr').remove();
+            var html_ = '';
+            var list = obj.data.list;
+            for(var i = 0 ; i < list.length ; i ++){
+                html_ += '<tr id="tr-d-' + list[i].id + '" class="gradeX">'   // TODO 注意：这里的 tr 的 id 是以 tr-d-****  作为开头的 - Yangcl
+                +'<td align="center"><span class="center"> <input type="checkbox"/> </span></td>'
+                +'<td width="100px">' + list[i].id + '</td>'
+                +'<td>' + list[i].userName + '</td>'
+                +'<td>' + list[i].mobile + '</td>'
+                +'<td class="center">' + list[i].idNumber + '</td>'
+                +'<td class="center">' + list[i].email + '</td>'
+                +'<td width="150px" align="center">'
+                +'<a onclick="deleteOne(\'' + list[i].id + '\')" title="删除"  style="cursor: pointer;">删除</a> | '
+                +'<a href="${basePath}example/editInfoPage.do?id=' + list[i].id + '" title="修改"  style="cursor: pointer;">修改</a> '
+                +'</td></tr>'
+            }
+            $('#dialog-ajax-tbody').append(html_);
         }
 
 
@@ -177,6 +223,7 @@
                     <div id="dyntable2_length" class="dataTables_length">
                         <label>
                             当前显示
+                            <%-- TODO 注意：select-page-size 这个ID是写定的，如果没有这个显示条数，则默认显示10条 - Yangcl --%>
                             <select id="select-page-size" size="1" name="dyntable2_length" onchange="aForm.formPaging('1')">
                                 <option value="10">10</option>
                                 <option value="25" >25</option>
@@ -239,11 +286,10 @@
             <div id="dialog-dyntable" class=" dialog-show-count" >
                 <label>
                     当前显示
-                    <select id="dialog-select-page-size" size="1" name="dyntable2_length" onchange="aForm.formPaging('1')">
+                    <%-- TODO 注意：dialog-select-page-size 这个ID是写定的，如果没有这个显示条数，则默认显示10条 - Yangcl --%>
+                    <select id="dialog-select-page-size" size="1" name="dyntable2_length" onchange="dForm.formPaging('1')">
                         <option value="10">10</option>
-                        <option value="25" >25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
+                        <%-- TODO 注意：这里最好只给10条，因为悬浮窗体并不会随之变大 onchange()事件也最好不要，但这里作为示例给出 - Yangcl--%>
                     </select>
                     条记录
                 </label>
