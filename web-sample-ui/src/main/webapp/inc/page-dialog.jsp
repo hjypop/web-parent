@@ -1,1 +1,0 @@
-<form id='page-dialog' method='post' action='' name='form'></form>

@@ -61,6 +61,11 @@
                         <li class="gallery">
                         	<a href="${basePath}example/ajaxFormExample.do">Ajax 分页示例</a>
                         </li>
+                        
+                        <li class="gallery">
+                        	<a href="${basePath}example/ajaxFormDialogExample.do">Ajax 分页+弹出窗体分页 示例</a>
+                        </li>
+                        
                         <!-- <li class="gallery">
                         	<a href="${basePath}example/pageFormExample.do">分页+弹窗分页示例</a>
                         </li> -->

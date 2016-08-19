@@ -157,7 +157,6 @@ private static Logger logger=Logger.getLogger(ExampleController.class);
 		return "jsp/example/ajaxFormExample"; 
 	}
 	
-	
 	@RequestMapping(value = "ajaxPageData", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
 	public JSONObject ajaxPageData(HttpServletRequest request, HttpSession session){
@@ -196,6 +195,22 @@ private static Logger logger=Logger.getLogger(ExampleController.class);
 		
 		return result; 
 	}
+	
+	
+	/**
+	 * @descriptions Ajax分页 且弹窗同时分页
+	 * 
+	 * @param session 
+	 * @date 2016年8月17日下午5:44:52
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	@RequestMapping("ajaxFormDialogExample")
+	public String toAjaxFormDialogExample(HttpSession session){ 
+		// TODO 按钮权限控制等等
+		return "jsp/example/ajaxFormDialogExample"; 
+	}
+	
 	
 	
 	

@@ -2573,3 +2573,54 @@ blockquote.bq2 {
 	.photopreview a img { width: 300px; }
 		
 }
+
+.dialog-show-count{
+	text-align: left;
+	background: #fcfcfc;
+	border: 1px solid #ddd;
+	border-bottom: 0;
+	padding: 8px;
+}
+
+
+
+.dialog-close{
+	width:20px; 
+	height:20px; 
+	display:block; 
+	float:right; 
+	margin-right:10px; 
+	margin-top:10px; 
+	background-image:url(../images/dialog/cancle_icon.png); 
+}
+
+.dialog-title{
+	text-align:center; 
+	line-height:40px; 
+	/*background-color:#FB9337;*/
+	background: #34445e url(../images/default/topheaderbg.png);
+	color:#FFFFFF;
+	margin-top:0px; 
+	padding-left:36px;
+	font-size:18px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
