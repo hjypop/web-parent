@@ -64,7 +64,7 @@ $(document).ready(function(){
 		<%@ include file="/inc/left.jsp"%>
 		<div class="centercontent">
 			<div class="pageheader notab">
-				<h1 class="pagetitle">商户管理-添加商户</h1>
+				<h1 class="pagetitle">商户管理-编辑商户</h1>
 			</div>
                     <form id="editSeller" class="stdform" method="post" action="add.do">
                     	<input type="hidden" id="sellerCode" name="sellerCode" value="${seller.sellerCode }"></input>
