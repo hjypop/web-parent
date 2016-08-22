@@ -71,7 +71,7 @@
                         </li> -->
                         
                         <li class="gallery">
-                        	<a href="${basePath}example/queryLeft.do">左连接查询示例</a>
+                        	<a href="${basePath}example/alertExample.do">自定义 alert confirm note 示例</a>
                         </li>
                     </ul>
                 </li>

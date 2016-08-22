@@ -213,7 +213,19 @@ private static Logger logger=Logger.getLogger(ExampleController.class);
 	
 	
 	
-	
+	/**
+	 * @descriptions 自定义 alert confirm note
+	 * 
+	 * @param session 
+	 * @date 2016年8月22日上午11:43:59
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */ 
+	@RequestMapping("alertExample")
+	public String toAlertExample(HttpSession session){ 
+		// TODO 按钮权限控制等等
+		return "jsp/example/alertExample"; 
+	}
 	
 	
 

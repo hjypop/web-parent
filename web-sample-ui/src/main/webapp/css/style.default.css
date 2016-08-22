@@ -2606,7 +2606,20 @@ blockquote.bq2 {
 }
 
 
-
+.sys-notice-style {
+	z-index: 99999;
+}
+.sys-notice-style .bui-stdmod-body {
+	font-size:14px;
+	color:#323742;
+	text-align:center;
+	padding-top: 40px;
+	height: auto !important;
+}
+.sys-notice-style .bui-stdmod-footer button{
+	vertical-align: top;
+    margin-right: 15px;
+}
 
 
 
