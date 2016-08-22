@@ -122,9 +122,7 @@ public class RsyncGetKjtProductById
 				productinfo.setPcProdcutflow(pcProdcutflow);
 				int resultCode = productService.AddProductTx(productinfo, error, "");
 				if (resultCode == 1) {// 添加商品成功刷新缓存
-					PlusHelperNotice.onChangeProductInfo(productinfo.getProductCode()); // TODO
-																						// Yangcl
-																						// 此处等待MNT进行Redis封包
+					new PlusHelperNotice().onChangeProductInfo(productinfo.getProductCode()); 
 				}
 				result.setCode(resultCode);
 				result.setMessage(error.toString());

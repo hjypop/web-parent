@@ -15,22 +15,22 @@ public class PcProductdescription extends BaseModel {
 	/**
 	 * 商品编号
 	 */
-	private String productCode = "";
+	private String productCode ;
 
 	/**
 	 * 描述信息
 	 */
-	private String descriptionInfo = "";
+	private String descriptionInfo ;
 
 	/**
 	 * 描述图片
 	 */
-	private String descriptionPic = "";
+	private String descriptionPic ;
 
 	/**
 	 * 关键字
 	 */
-	private String keyword = "";
+	private String keyword ;
 
 	public void setProductCode(String productCode) {
 		this.productCode = productCode;

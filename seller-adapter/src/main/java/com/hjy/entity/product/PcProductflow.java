@@ -15,35 +15,35 @@ public class PcProductflow extends BaseModel {
 	/**
 	 * 流程编号
 	 */
-	private String flowCode = "";
+	private String flowCode ;
 	/**
 	 * 商品编号
 	 */
-	private String productCode = "";
+	private String productCode ;
 	/**
 	 * 商品草稿数据
 	 */
-	private String productJson = "";
+	private String productJson ;
 	/**
 	 * 流程状态
 	 */
-	private String flowStatus = "";
+	private String flowStatus ;
 	/**
 	 * 创建时间
 	 */
-	private String createTime = "";
+	private String createTime ;
 	/**
 	 * 更新时间
 	 */
-	private String updateTime = "";
+	private String updateTime ;
 	/**
 	 * 创建人
 	 */
-	private String creator = "";
+	private String creator ;
 	/**
 	 * 更新人
 	 */
-	private String updator = "";
+	private String updator ;
 
 	public void setFlowCode(String flowCode) {
 		this.flowCode = flowCode;

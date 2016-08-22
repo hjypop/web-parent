@@ -4,9 +4,9 @@ import com.hjy.base.BaseModel;
 
 public class UcSellercategoryProductRelation extends BaseModel {
 
-	private String productCode = "";
-	private String categoryCode = "";
-	private String sellerCode = "";
+	private String productCode;
+	private String categoryCode;
+	private String sellerCode;
 
 	public String getProductCode() {
 		return productCode;

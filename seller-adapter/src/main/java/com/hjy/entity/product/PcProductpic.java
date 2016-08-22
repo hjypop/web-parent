@@ -15,19 +15,19 @@ public class PcProductpic extends BaseModel {
 	/**
 	 * 商品编号
 	 */
-	private String productCode = "";
+	private String productCode ;
 	/**
 	 * 图片路径
 	 */
-	private String picUrl = "";
+	private String picUrl ;
 
 	/**
 	 * 商品的skuCode
 	 */
-	private String skuCode = "";
+	private String skuCode ;
 	
 	
-	private String productCodeOld = "";
+	private String productCodeOld ;
 	
 	
 

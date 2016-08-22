@@ -18,30 +18,30 @@ import com.hjy.model.ProductSkuInfo;
  */
 public class PcProductinfo {
 
-	private Integer zid=0;
-	private String uid=null;
+	private Integer zid;
+	private String uid;
 
 	
 	/**
 	 * 商品编码
 	 */
-	private String productCode = "";
+	private String productCode ;
 	/**
 	 * 商品名称（此字段的get，set方法有问题。以后此字段获取不到值时先查这个问题。）
 	 */
-	private String productName = "";
+	private String productName ;
 	/**
 	 * 商品简称
 	 */
-	private String productShortname = "";
+	private String productShortname ;
 	/**
 	 * 卖家编号
 	 */
-	private String sellerCode = "";
+	private String sellerCode ;
 	/**
 	 * 品牌编号
 	 */
-	private String brandCode = "";
+	private String brandCode ;
 	/**
 	 * 商品重量
 	 */
@@ -53,11 +53,11 @@ public class PcProductinfo {
 	/**
 	 * 
 	 */
-	private String createTime = "";
+	private String createTime ;
 	/**
 	 * 
 	 */
-	private String updateTime = "";
+	private String updateTime ;
 
 	/**
 	 * 最小销售价
@@ -83,22 +83,22 @@ public class PcProductinfo {
 	/**
 	 * 主图的Url
 	 */
-	private String mainPicUrl = "";
+	private String mainPicUrl ;
 	
-	private String mainpicUrl = "";
+	private String mainpicUrl ;
 	
 	/**
 	 * 供应商名称
 	 */
-	private String supplierName = "";
+	private String supplierName ;
 	/**
 	 * 商品视频链接
 	 */
-	private String videoUrl = "";
+	private String videoUrl ;
 	/**
 	 * 标签值 ，用逗号分开
 	 */
-	private String labels = "";
+	private String labels ;
 
 	/**
 	 * 是否货到付款 0 否 1 是
@@ -108,7 +108,7 @@ public class PcProductinfo {
 	/**
 	 * 长 宽 高 ，用逗号隔开
 	 */
-	private String productVolumeItem = "";
+	private String productVolumeItem ;
 
 	/**
 	 * 商品分类信息
@@ -148,7 +148,7 @@ public class PcProductinfo {
 	/**
 	 * 旧的商品编号
 	 */
-	private String productCodeOld = "";
+	private String productCodeOld ;
 
 	/**
 	 * 商品体积
@@ -158,40 +158,40 @@ public class PcProductinfo {
 	/**
 	 * 运费模板
 	 */
-	private String transportTemplate = "";
+	private String transportTemplate ;
 
 	/**
 	 * 限制地区模板
 	 */
-	private String areaTemplate = "";
+	private String areaTemplate ;
 
 	/**
 	 * 商家编码
 	 */
-	private String sellProductcode = "";
+	private String sellProductcode ;
 
 	/**
 	 * 销售范围限制
 	 */
-	private String saleScopeDid = "";
+	private String saleScopeDid ;
 
 	/**
 	 * 4497153900060001 待上架 4497153900060002 已上架 4497153900060003 商家下架
 	 * 4497153900060004 平台强制下架
 	 */
-	private String productStatus = "";
+	private String productStatus ;
 
 	/**
 	 * 品牌名字
 	 */
-	private String brandName = "";
+	private String brandName ;
 
 	private String validateFlag;
 
 	/**
 	 * 第三方商户编号
 	 */
-	private String smallSellerCode = "";
+	private String smallSellerCode ;
 
 	/**
 	 * 税率
@@ -211,16 +211,16 @@ public class PcProductinfo {
 	/**
 	 * 来源商品编号
 	 */
-	private String productCodeCopy = "";
+	private String productCodeCopy ;
 
 	/**
 	 * 广告图的Url
 	 */
-	private String adpicUrl = "";
+	private String adpicUrl ;
 	/**
 	 * 商品广告
 	 */
-	private String productAdv = "";
+	private String productAdv ;
 
 	/**
 	 * 商品库存
@@ -235,19 +235,19 @@ public class PcProductinfo {
 	/**
 	 * 保质期单位 4497471600290001:天，4497471600290002:月,4497471600290003:年
 	 */
-	private String expiryUnit = "";
+	private String expiryUnit ;
 
 	/**
 	 * 抄底价商品 449747110001:否，449747110002:是
 	 */
-	private String lowGood = "";
+	private String lowGood ;
 
 	/**
 	 * 资质品类
 	 */
-	private String qualificationCategoryCode = "";
+	private String qualificationCategoryCode ;
 
-	private String descriptionInfo = "";
+	private String descriptionInfo ;
 
 	 
 	public PcProductinfo() {

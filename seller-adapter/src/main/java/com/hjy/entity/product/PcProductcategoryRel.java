@@ -14,11 +14,11 @@ public class PcProductcategoryRel extends BaseModel {
 	/**
 	 * 商品编号
 	 */
-	private String productCode = "";
+	private String productCode ;
 	/**
 	 * 分类编号
 	 */
-	private String categoryCode = "";
+	private String categoryCode ;
 	/**
 	 * 是否主分类
 	 */

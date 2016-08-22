@@ -9,7 +9,7 @@ package com.hjy.base;
  */
 public class BaseModel {
 
-	private Integer zid=0;
+	private Integer zid=null;
 	private String uid=null;
 
 	public Integer getZid() {

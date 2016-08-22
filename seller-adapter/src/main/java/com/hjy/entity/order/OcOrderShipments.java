@@ -14,23 +14,23 @@ import com.hjy.base.BaseModel;
  */
 public class OcOrderShipments {
 
-	private Integer zid=0;
+	private Integer zid;
 	
-	private String uid=null;
+	private String uid;
 
 	
 	/**
 	 * 订单编号
 	 */
-	private String orderCode = "";
+	private String orderCode ;
 	/**
 	 * 物流商家code
 	 */
-	private String logisticseCode = "";
+	private String logisticseCode ;
 	/**
 	 * 物流商家name
 	 */
-	private String logisticseName = "";
+	private String logisticseName ;
 
 	private Integer sendCount;
 
@@ -47,22 +47,22 @@ public class OcOrderShipments {
 	/**
 	 * 运单号码
 	 */
-	private String waybill = "";
+	private String waybill ;
 
 	private Integer isSend100Flag;
 
 	/**
 	 * 创建人
 	 */
-	private String creator = "";
+	private String creator ;
 	/**
 	 * 创建时间
 	 */
-	private String createTime = "";
+	private String createTime ;
 	/**
 	 * 发货说明
 	 */
-	private String remark = "";
+	private String remark ;
 	
 	
 
@@ -101,7 +101,7 @@ public class OcOrderShipments {
 	}
 
 	/* 跨境通运单号 */
-	private String order_code_seq = "";
+	private String order_code_seq ;
 
 	public void setOrderCode(String orderCode) {
 		this.orderCode = orderCode;

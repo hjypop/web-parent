@@ -17,11 +17,11 @@ public class OcOrderPay extends BaseModel {
 	/**
 	 * 订单编号
 	 */
-	private String orderCode = "";
+	private String orderCode ;
 	/**
 	 * 流水编号，可以是礼品卡卡号，优惠券号，银行流水号，支付宝流水号
 	 */
-	private String paySequenceid = "";
+	private String paySequenceid ;
 	/**
 	 * 此流水支付了多少钱
 	 */
@@ -30,27 +30,27 @@ public class OcOrderPay extends BaseModel {
 	/**
 	 * 礼品卡密码
 	 */
-	private String passWord = "";
+	private String passWord ;
 
 	/**
 	 * 支付类型449746280001:礼品卡 449746280002:优惠券 449746280003:支付宝支付
 	 * 449746280004:快钱支付 449746280005:微信支付 449746280006:储值金
 	 * (家有汇)449746280007:暂存款(家有汇) 449746280008:积分(家有汇)
 	 */
-	private String payType = "";
+	private String payType ;
 
 	/**
 	 * 买家编号
 	 */
-	private String merchantId = "";
+	private String merchantId ;
 	/**
 	 * 支付备注
 	 */
-	private String payRemark = "";
+	private String payRemark ;
 
-	private String createTime = "";
+	private String createTime ;
 
-	private String phpCode = "";
+	private String phpCode ;
 
 	private BigDecimal payedAllFee = new BigDecimal(0.00);
 
@@ -58,7 +58,7 @@ public class OcOrderPay extends BaseModel {
 
 	private Integer status = 0;
 
-	private String payCode = "";
+	private String payCode ;
 
 	public String getPhpCode() {
 		return phpCode;

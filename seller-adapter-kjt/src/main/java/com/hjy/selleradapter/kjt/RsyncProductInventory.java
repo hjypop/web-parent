@@ -141,14 +141,14 @@ public class RsyncProductInventory
 					scStoreSkunumService.insertSelective(scStoreSkunum);
 				}
 				// 修改SKU库存
-				PlusHelperNotice.onChangeSkuStock(sku_code);
+				new PlusHelperNotice().onChangeSkuStock(sku_code);
 				// 编辑商品属性
 				PcProductinfoExt pcProductinfoExt = new PcProductinfoExt();
 				pcProductinfoExt.setProductCode(product_code);
 				pcProductinfoExt.setOaSiteNo(wareGouse);
 				pcProductinfoExtService.updatePcProductinfoExt(pcProductinfoExt);
 
-				PlusHelperNotice.onChangeProductInfo(product_code);
+				new PlusHelperNotice().onChangeProductInfo(product_code);
 				// 触发消息队列
 				ProductJmsSupport pjs = new ProductJmsSupport();
 				pjs.onChangeForProductChangeAll(product_code);

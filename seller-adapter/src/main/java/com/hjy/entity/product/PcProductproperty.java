@@ -16,29 +16,29 @@ public class PcProductproperty extends BaseModel {
 	/**
 	 * 商品编号
 	 */
-	private String productCode = "";
+	private String productCode ;
 	/**
 	 * 属性名称编号
 	 */
-	private String propertyKeycode = "";
+	private String propertyKeycode ;
 	/**
 	 * 属性编号
 	 */
-	private String propertyCode = "";
+	private String propertyCode ;
 	/**
 	 * 属性名称
 	 */
-	private String propertyKey = "";
+	private String propertyKey ;
 	/**
 	 * 属性值
 	 */
-	private String propertyValue = "";
+	private String propertyValue ;
 	/**
 	 * 属性类型 449736200001 颜色属性 449736200002 关键属性 449736200003 销售属性 449736200004
 	 * 自定义属性
 	 * 
 	 */
-	private String propertyType = "";
+	private String propertyType ;
 
 	/**
 	 * 大项排序
@@ -50,7 +50,7 @@ public class PcProductproperty extends BaseModel {
 	 */
 	private int smallSort = 0;
 
-	private String skuCode = "";
+	private String skuCode ;
 
 	/*
 	 * 新加查询条件propertyType集合

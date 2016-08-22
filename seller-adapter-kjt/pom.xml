@@ -17,11 +17,6 @@
 			<groupId>com.huijiayou</groupId>
 			<artifactId>seller-adapter</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.huijiayou</groupId>
-			<artifactId>web-cache</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+		</dependency> 
 	</dependencies>
 </project>

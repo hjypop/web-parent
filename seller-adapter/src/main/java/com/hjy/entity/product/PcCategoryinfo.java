@@ -15,15 +15,15 @@ public class PcCategoryinfo extends BaseModel {
 	/**
 	 * 分类编号
 	 */
-	private String categoryCode = "";
+	private String categoryCode ;
 	/**
 	 * 分类名称
 	 */
-	private String categoryName = "";
+	private String categoryName ;
 	/**
 	 * 父编号
 	 */
-	private String parentCode = "";
+	private String parentCode ;
 
 	public void setCategoryCode(String categoryCode) {
 		this.categoryCode = categoryCode;

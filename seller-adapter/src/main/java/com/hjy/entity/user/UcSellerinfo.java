@@ -23,7 +23,7 @@ public class UcSellerinfo extends BaseModel{
 	/**
 	 * 卖家logo
 	 */
-	private String sellerPic="";
+	private String sellerPic ;
 
 	public String getSellerCode() {
 		return sellerCode;

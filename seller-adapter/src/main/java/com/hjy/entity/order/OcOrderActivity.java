@@ -16,45 +16,45 @@ public class OcOrderActivity extends BaseModel {
 	/**
 	 * 订单编号(接口勿传,此值会被覆盖，请勿传)
 	 */
-	private String orderCode = "";
+	private String orderCode ;
 	/**
 	 * 商品编号
 	 */
-	private String productCode = "";
+	private String productCode ;
 	/**
 	 * sku商品编号
 	 */
-	private String skuCode = "";
+	private String skuCode ;
 	/**
 	 * 优惠的金钱
 	 */
-	private float preferentialMoney = 0;
+	private float preferentialMoney ;
 	/**
 	 * 活动编号
 	 */
-	private String activityCode = "";
+	private String activityCode ;
 	/**
 	 * 活动类型
 	 */
-	private String activityType = "";
+	private String activityType ;
 
 	/**
 	 * 活动名称 非数据库字段
 	 */
-	private String activityName = "";
+	private String activityName ;
 
 	/**
 	 * 订单最低价格 非数据库字段
 	 */
-	private float orderMinMoney = 0;
+	private float orderMinMoney ;
 
 	/**
 	 * 外部活动编号
 	 */
-	private String outActiveCode = "";
+	private String outActiveCode ;
 
 	/** 活动券码 */
-	private String ticketCode = "";
+	private String ticketCode ;
 
 	public String getActivityName() {
 		return activityName;

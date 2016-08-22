@@ -10,6 +10,10 @@ import com.hjy.base.BaseModel;
  */
 public class PcProductinfoExt extends BaseModel {
 
+	private Integer zid ;
+	
+	private String uid ;
+
 	private String productCodeOld;
 
 	private String productCode;
@@ -22,6 +26,22 @@ public class PcProductinfoExt extends BaseModel {
 
 	private String oaSiteNo;
 
+	public Integer getZid() {
+		return zid;
+	}
+
+	public void setZid(Integer zid) {
+		this.zid = zid;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+	
 	/**
 	 * 毛利润
 	 *

@@ -55,13 +55,13 @@ public class ProductChangeFlag {
 	/**
 	 * 商品的老主图-请勿删
 	 */
-	private String oldPicUrl = "";
+	private String oldPicUrl ;
 	
 	
 	/**
 	 * 商品的老名字-请勿删
 	 */
-	private String oldProductName = "";
+	private String oldProductName ;
 	
 	/**
 	 * 是否能修改商品的扩展属性
