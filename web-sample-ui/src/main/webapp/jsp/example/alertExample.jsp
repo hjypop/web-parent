@@ -8,6 +8,9 @@
 	<link rel="stylesheet" href="${css}/bui/bui.css" type="text/css" />
 	<script src="${js}/bui/bui.js" type="text/javascript"></script>
 
+	<style type="text/css">
+
+	</style>
 
 	<script type="text/javascript">
 		$(function(){
