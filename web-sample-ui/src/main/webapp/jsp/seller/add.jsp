@@ -199,6 +199,9 @@ $(document).ready(function(){
                     <p>
                     	<label>佣金设置</label>
                     	<span class="field">
+								<input type="checkbox" name="ucSellerType" value="LD" /> LD商品
+								<input id="LD" style="width:40px;margin:5px;" class="commission" type="text" name="ucSellerCommission" value=""/>%
+								<br />
                     		<c:forEach var="type" items="${ucSellerType}">
 								<input type="checkbox" name="ucSellerType" value="${type.defineCode}" /> ${type.defineName}
 								<input id="${type.defineCode }" style="width:40px;margin:5px;" class="commission" type="text" name="ucSellerCommission" value=""/>%

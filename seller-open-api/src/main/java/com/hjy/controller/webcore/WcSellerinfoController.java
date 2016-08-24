@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,9 +16,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.miemiedev.mybatis.paginator.domain.Order;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.hjy.common.DateUtil;
 import com.hjy.dto.webcore.WcSellerinfoDto;
 import com.hjy.entity.system.ScDefine;
 import com.hjy.entity.webcore.WcSellerinfo;
+import com.hjy.factory.UserFactory;
 import com.hjy.helper.WebHelper;
 import com.hjy.service.system.IScDefineService;
 import com.hjy.service.webcore.IWcSellerinfoService;
@@ -118,9 +122,9 @@ public class WcSellerinfoController {
 		entity.setUid(WebHelper.getInstance().genUuid());
 		entity.setSellerCode(WebHelper.getInstance().genUniqueCode("SI"));
 		entity.setCreator("system");
-		entity.setCreateTime(new Date());
+		entity.setCreateTime(DateUtil.getSysDateTimeString());
 		entity.setUpdator("system");
-		entity.setUpdateTime(new Date());
+		entity.setUpdateTime(DateUtil.getSysDateTimeString());
 		int result = service.insertSelective(entity);
 		if (result >= 0) {
 			obj.put("status", "success");
@@ -171,6 +175,8 @@ public class WcSellerinfoController {
 	@ResponseBody
 	public JSONObject edit(WcSellerinfo entity) {
 		JSONObject obj = new JSONObject();
+		entity.setUpdator("system");
+		entity.setUpdateTime(DateUtil.getSysDateTimeString());
 		int result = service.updateSelective(entity);
 		if (result >= 0) {
 			obj.put("status", "success");
