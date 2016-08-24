@@ -6,42 +6,23 @@
 		<result column="uid" property="uid" jdbcType="CHAR" />
 		<result column="seller_code" property="sellerCode" jdbcType="VARCHAR" />
 		<result column="seller_name" property="sellerName" jdbcType="VARCHAR" />
-		<result column="seller_short_name" property="sellerShortName"
-			jdbcType="VARCHAR" />
-		<result column="seller_descrption" property="sellerDescrption"
-			jdbcType="VARCHAR" />
-		<result column="seller_area" property="sellerArea" jdbcType="VARCHAR" />
 		<result column="seller_telephone" property="sellerTelephone"
 			jdbcType="VARCHAR" />
-		<result column="seller_return_address" property="sellerReturnAddress"
-			jdbcType="VARCHAR" />
-		<result column="seller_return_postcode" property="sellerReturnPostcode"
-			jdbcType="VARCHAR" />
-		<result column="seller_return_contact" property="sellerReturnContact"
-			jdbcType="VARCHAR" />
-		<result column="seller_return_telephone" property="sellerReturnTelephone"
-			jdbcType="VARCHAR" />
-		<result column="seller_company_name" property="sellerCompanyName"
-			jdbcType="VARCHAR" />
+		<result column="seller_descrption" property="sellerDescrption"
+			jdbcType="LONGVARCHAR" />
 		<result column="seller_email" property="sellerEmail" jdbcType="VARCHAR" />
-		<result column="seller_type" property="sellerType" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="INTEGER" />
 		<result column="price_type" property="priceType" jdbcType="INTEGER" />
-		<result column="commission" property="commission" jdbcType="VARCHAR" />
+		<result column="commission" property="commission" jdbcType="LONGVARCHAR" />
 		<result column="creator" property="creator" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
 		<result column="updator" property="updator" jdbcType="VARCHAR" />
 		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		zid, uid, seller_code, seller_name, seller_short_name,
-		seller_descrption,
-		seller_area, seller_telephone,
-		seller_return_address, seller_return_postcode,
-		seller_return_contact,
-		seller_return_telephone, seller_company_name, seller_email,
-		seller_type,`status`,
-		price_type,commission,
+		zid, uid, seller_code, seller_name,seller_descrption,
+		seller_telephone,
+		seller_email, status, price_type, commission,
 		creator,
 		DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') AS create_time,
 		updator,
@@ -91,21 +72,11 @@
 			uid,
 			seller_code,
 			seller_name,
-			seller_short_name,
 			<if test="sellerDescrption != null">
 				seller_descrption,
 			</if>
-			seller_area,
 			seller_telephone,
-			seller_return_address,
-			seller_return_postcode,
-			seller_return_contact,
-			seller_return_telephone,
-			seller_company_name,
 			seller_email,
-			<if test="sellerType != null">
-				seller_type,
-			</if>
 			price_type,
 			commission,
 			creator,
@@ -117,21 +88,11 @@
 			#{uid,jdbcType=CHAR},
 			#{sellerCode,jdbcType=VARCHAR},
 			#{sellerName,jdbcType=VARCHAR},
-			#{sellerShortName,jdbcType=VARCHAR},
 			<if test="sellerDescrption != null">
 				#{sellerDescrption,jdbcType=VARCHAR},
 			</if>
-			#{sellerArea,jdbcType=VARCHAR},
 			#{sellerTelephone,jdbcType=VARCHAR},
-			#{sellerReturnAddress,jdbcType=VARCHAR},
-			#{sellerReturnPostcode,jdbcType=VARCHAR},
-			#{sellerReturnContact,jdbcType=VARCHAR},
-			#{sellerReturnTelephone,jdbcType=VARCHAR},
-			#{sellerCompanyName,jdbcType=VARCHAR},
 			#{sellerEmail,jdbcType=VARCHAR},
-			<if test="sellerType != null">
-				#{sellerType,jdbcType=VARCHAR},
-			</if>
 			#{priceType,jdbcType=INTEGER},
 			#{commission,jdbcType=VARCHAR},
 			#{creator,jdbcType=VARCHAR},
@@ -146,43 +107,14 @@
 			<if test="sellerName != null">
 				seller_name = #{sellerName,jdbcType=VARCHAR},
 			</if>
-			<if test="sellerShortName != null">
-				seller_short_name = #{sellerShortName,jdbcType=VARCHAR},
-			</if>
 			<if test="sellerDescrption != null">
 				seller_descrption = #{sellerDescrption,jdbcType=VARCHAR},
-			</if>
-			<if test="sellerArea != null">
-				seller_area = #{sellerArea,jdbcType=VARCHAR},
 			</if>
 			<if test="sellerTelephone != null">
 				seller_telephone = #{sellerTelephone,jdbcType=VARCHAR},
 			</if>
-			<if test="sellerReturnAddress != null">
-				seller_return_address =
-				#{sellerReturnAddress,jdbcType=VARCHAR},
-			</if>
-			<if test="sellerReturnPostcode != null">
-				seller_return_postcode =
-				#{sellerReturnPostcode,jdbcType=VARCHAR},
-			</if>
-			<if test="sellerReturnContact != null">
-				seller_return_contact =
-				#{sellerReturnContact,jdbcType=VARCHAR},
-			</if>
-			<if test="sellerReturnTelephone != null">
-				seller_return_telephone =
-				#{sellerReturnTelephone,jdbcType=VARCHAR},
-			</if>
-			<if test="sellerCompanyName != null">
-				seller_company_name =
-				#{sellerCompanyName,jdbcType=VARCHAR},
-			</if>
 			<if test="sellerEmail != null">
 				seller_email = #{sellerEmail,jdbcType=VARCHAR},
-			</if>
-			<if test="sellerType != null">
-				seller_type = #{sellerType,jdbcType=VARCHAR},
 			</if>
 			<if test="status != null">
 				`status` = #{status,jdbcType=INTEGER},

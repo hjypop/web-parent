@@ -67,8 +67,6 @@
 									id="checkedAll"></input></th>
 								<th class="head1">商户编号</th>
 								<th class="head1">商户名称</th>
-								<th class="head1">商家简称</th>
-								<th class="head1">公司名称</th>
 								<th class="head1">联系电话</th>
 								<th class="head1">合作状态</th>
 								<th class="head1">创建人</th>
@@ -85,8 +83,6 @@
 									</td>
 									<td class="head0" style="text-align: center;">${seller.sellerCode}</td>
 									<td class="head0">${seller.sellerName}</td>
-									<td class="head0">${seller.sellerShortName}</td>
-									<td class="head0">${seller.sellerCompanyName}</td>
 									<td class="head0" style="text-align: center;">${seller.sellerTelephone}</td>
 									<td class="head0" style="text-align: center;">
 										<c:choose>

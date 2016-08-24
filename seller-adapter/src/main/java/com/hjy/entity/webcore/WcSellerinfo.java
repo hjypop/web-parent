@@ -1,94 +1,48 @@
 package com.hjy.entity.webcore;
 
+import java.util.Date;
 
 import com.hjy.base.BaseModel;
 
 /**
  * 
  * 类: WcSellerinfo <br>
- * 描述: 商家信息 <br>
+ * 描述: 接口商家信息表 <br>
  * 作者: zhy<br>
- * 时间: 2016年8月17日 上午11:34:13
+ * 时间: 2016年8月24日 上午11:27:21
  */
 public class WcSellerinfo extends BaseModel {
 
 	/**
-	 * 商家编号
+	 * 商家编码
 	 */
 	private String sellerCode;
-
 	/**
 	 * 商家名称
 	 */
 	private String sellerName;
-
-	/**
-	 * 商家简称
-	 */
-	private String sellerShortName;
-
 	/**
 	 * 商家描述
 	 */
 	private String sellerDescrption;
-
-	/**
-	 * 所在地
-	 */
-	private String sellerArea;
-
 	/**
 	 * 联系电话
 	 */
 	private String sellerTelephone;
-
 	/**
-	 * 退货地址
-	 */
-	private String sellerReturnAddress;
-
-	/**
-	 * 退货邮编
-	 */
-	private String sellerReturnPostcode;
-
-	/**
-	 * 退货联系人地址
-	 */
-	private String sellerReturnContact;
-
-	/**
-	 * 退货联系人电话
-	 */
-	private String sellerReturnTelephone;
-
-	/**
-	 * 公司名称
-	 */
-	private String sellerCompanyName;
-
-	/**
-	 * 商家信箱
+	 * 邮箱
 	 */
 	private String sellerEmail;
-
-	/**
-	 * 店铺类型
-	 */
-	private String sellerType;
-
 	/**
 	 * 商户状态 0 未开通 1 已开通 2 已禁用
 	 */
 	private Integer status;
-
 	/**
 	 * 价格类型 0 成本价 1 销售价
 	 */
 	private Integer priceType;
-
 	/**
-	 * 佣金比例 json存储,存储内容包含商户类型和佣金
+	 * 佣金比例 json存储
 	 */
 	private String commission;
 	/**
@@ -103,19 +57,10 @@ public class WcSellerinfo extends BaseModel {
 	 * 修改人
 	 */
 	private String updator;
-
 	/**
 	 * 修改时间
 	 */
 	private String updateTime;
-
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
 
 	public String getSellerCode() {
 		return sellerCode;
@@ -133,28 +78,12 @@ public class WcSellerinfo extends BaseModel {
 		this.sellerName = sellerName;
 	}
 
-	public String getSellerShortName() {
-		return sellerShortName;
-	}
-
-	public void setSellerShortName(String sellerShortName) {
-		this.sellerShortName = sellerShortName;
-	}
-
 	public String getSellerDescrption() {
 		return sellerDescrption;
 	}
 
 	public void setSellerDescrption(String sellerDescrption) {
 		this.sellerDescrption = sellerDescrption;
-	}
-
-	public String getSellerArea() {
-		return sellerArea;
-	}
-
-	public void setSellerArea(String sellerArea) {
-		this.sellerArea = sellerArea;
 	}
 
 	public String getSellerTelephone() {
@@ -165,46 +94,6 @@ public class WcSellerinfo extends BaseModel {
 		this.sellerTelephone = sellerTelephone;
 	}
 
-	public String getSellerReturnAddress() {
-		return sellerReturnAddress;
-	}
-
-	public void setSellerReturnAddress(String sellerReturnAddress) {
-		this.sellerReturnAddress = sellerReturnAddress;
-	}
-
-	public String getSellerReturnPostcode() {
-		return sellerReturnPostcode;
-	}
-
-	public void setSellerReturnPostcode(String sellerReturnPostcode) {
-		this.sellerReturnPostcode = sellerReturnPostcode;
-	}
-
-	public String getSellerReturnContact() {
-		return sellerReturnContact;
-	}
-
-	public void setSellerReturnContact(String sellerReturnContact) {
-		this.sellerReturnContact = sellerReturnContact;
-	}
-
-	public String getSellerReturnTelephone() {
-		return sellerReturnTelephone;
-	}
-
-	public void setSellerReturnTelephone(String sellerReturnTelephone) {
-		this.sellerReturnTelephone = sellerReturnTelephone;
-	}
-
-	public String getSellerCompanyName() {
-		return sellerCompanyName;
-	}
-
-	public void setSellerCompanyName(String sellerCompanyName) {
-		this.sellerCompanyName = sellerCompanyName;
-	}
-
 	public String getSellerEmail() {
 		return sellerEmail;
 	}
@@ -213,44 +102,12 @@ public class WcSellerinfo extends BaseModel {
 		this.sellerEmail = sellerEmail;
 	}
 
-	public String getSellerType() {
-		return sellerType;
+	public Integer getStatus() {
+		return status;
 	}
 
-	public void setSellerType(String sellerType) {
-		this.sellerType = sellerType;
-	}
-
-	public String getCreator() {
-		return creator;
-	}
-
-	public void setCreator(String creator) {
-		this.creator = creator;
-	}
-
-	public String getUpdator() {
-		return updator;
-	}
-
-	public void setUpdator(String updator) {
-		this.updator = updator;
-	}
-
-	public String getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(String createTime) {
-		this.createTime = createTime;
-	}
-
-	public String getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(String updateTime) {
-		this.updateTime = updateTime;
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 	public Integer getPriceType() {
@@ -267,6 +124,38 @@ public class WcSellerinfo extends BaseModel {
 
 	public void setCommission(String commission) {
 		this.commission = commission;
+	}
+
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getUpdator() {
+		return updator;
+	}
+
+	public void setUpdator(String updator) {
+		this.updator = updator;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
 	}
 
 }

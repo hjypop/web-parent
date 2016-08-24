@@ -42,31 +42,12 @@ $(document).ready(function(){
 	jQuery("#editSeller").validate({
 		rules: {
 			sellerName: "required",
-			sellerCompanyName: "required",
-			sellerType: "required",
-			sellerArea: "required",
 			sellerTelephone: "required",
-			sellerReturnAddress: "required",
-			sellerReturnPostcode: "required",
-			sellerReturnContact: "required",
-			sellerEmail:{
-				required: true,
-				email: true,
-			},
-			outDate: "required",
 			priceType: "required"
 		},
 		messages: {
 			sellerName: "请填写商户名称",
-			sellerCompanyName: "请填写商户公司名称",
-			sellerType:"请选择商户类型",
-			sellerArea:"请填写商户所在地",
 			sellerTelephone:"请填写商户联系电话",
-			sellerReturnAddress: "请填写退货地址",
-			sellerReturnPostcode: "请填写退货邮编",
-			sellerReturnContact: "请填写退货联系人地址",
-			sellerEmail: "请填写商家信箱",
-			outDate: "请填写合作到期时间",
 			priceType:"请选择商户同步价格类型"
 		},
 		debug:true,
@@ -127,30 +108,6 @@ $(document).ready(function(){
                             	<input maxlength="20" type="text" value="${seller.sellerName }" name="sellerName" id="sellerName" class="smallinput" />
                             </span>
                         </p>
-                        
-                        <p>
-                        	<label>商户简称</label>
-                            <span class="field">
-                            	<input maxlength="20" type="text" value="${seller.sellerShortName }" name="sellerShortName" id="sellerShortName" class="smallinput" />
-                            </span>
-                        </p>
-                        <p>
-                        	<label>公司名称</label>
-                            <span class="field">
-                            	<input maxlength="50" type="text" value="${seller.sellerCompanyName }" name="sellerCompanyName" id="sellerCompanyName" class="smallinput" />
-                            </span>
-                        </p>
-                        <p>
-                        	<label>店铺类型</label>
-                            <span class="field">
-	                            <select name="sellerType" id="sellerType">
-	                            	<option value="">请选择</option>
-	                            	<c:forEach var="type" items="${sellerType }">
-	                            		<option <c:if test="${seller.sellerType == type.defineCode }">selected="selected"</c:if> value="${type.defineCode }">${type.defineName }</option>	
-	                            	</c:forEach>
-	                            </select>
-	                        </span>
-                        </p>
                         <p>
                         	<label>商户描述</label>
                             <span class="field">
@@ -158,39 +115,9 @@ $(document).ready(function(){
                             </span> 
                         </p>
                         <p>
-                        	<label>所在地</label>
-                            <span class="field">
-                            	<input maxlength="100"  type="text" value="${seller.sellerArea }" name="sellerArea" id="sellerArea" class="smallinput" />
-                            </span>
-                        </p>
-                        <p>
                         	<label>联系电话</label>
                             <span class="field">
                             	<input maxlength="20" type="text" value="${seller.sellerTelephone }" name="sellerTelephone" id="sellerTelephone" class="smallinput" />
-                            </span>
-                        </p>
-                        <p>
-                        	<label>退货地址</label>
-                            <span class="field">
-                            	<input maxlength="100" type="text" value="${seller.sellerReturnAddress }" name="sellerReturnAddress" id="sellerReturnAddress" class="smallinput" />
-                            </span>
-                        </p>
-                        <p>
-                        	<label>退货邮箱</label>
-                            <span class="field">
-                            	<input maxlength="6" type="text" value="${seller.sellerReturnPostcode }" name="sellerReturnPostcode" id="sellerReturnPostcode" class="smallinput" />
-                            </span>
-                        </p>
-                        <p>
-                        	<label>退货联系人地址</label>
-                            <span class="field">
-                            	<input maxlength="100" type="text" value="${seller.sellerReturnContact }" name="sellerReturnContact" id="sellerReturnContact" class="smallinput" />
-                            </span>
-                        </p>
-                        <p>
-                        	<label>退货联系人电话</label>
-                            <span class="field">
-                            	<input maxlength="20" type="text" value="${seller.sellerReturnTelephone }" name="sellerReturnTelephone" id="sellerReturnTelephone" class="smallinput" />
                             </span>
                         </p>
                         <p>
