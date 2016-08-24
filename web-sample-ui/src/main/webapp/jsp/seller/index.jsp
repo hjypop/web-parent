@@ -61,9 +61,9 @@
 				+'<td class="head0" style="text-align: center;">' + list[i].createTime + ' </td>'
 				+'<td class="head0" style="text-align: center;">' + list[i].updator + ' </td>'
 				+'<td class="head0" style="text-align: center;">' + list[i].updateTime + ' </td>'
-				+'<td class="head0">'
-					+'<a onclick="deleteOne(\'' + list[i].sellerCode + '\')" title="删除"  style="cursor: pointer;">删除</a> | '
-					+'<a href="editindex.do?sellerCode=' + list[i].sellerCode + ' " title="修改"  style="cursor: pointer;">修改</a> '
+				+'<td class="head0" style="text-align:center;">'
+				+'<a class="btn btn3 btn_book" href="editindex.do?sellerCode=' + list[i].sellerCode + ' " title="修改"  style="cursor: pointer;"></a> '
+				+'<a class="btn btn3 btn_trash" onclick="deleteOne(\'' + list[i].sellerCode + '\')" title="删除"  style="cursor: pointer;"></a>'
 				+'</td>'
 				+'</tr>'
 
