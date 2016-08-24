@@ -6,10 +6,8 @@
 		<result column="uid" property="uid" jdbcType="CHAR" />
 		<result column="seller_code" property="sellerCode" jdbcType="VARCHAR" />
 		<result column="seller_name" property="sellerName" jdbcType="VARCHAR" />
-		<result column="seller_telephone" property="sellerTelephone"
-			jdbcType="VARCHAR" />
-		<result column="seller_descrption" property="sellerDescrption"
-			jdbcType="LONGVARCHAR" />
+		<result column="seller_telephone" property="sellerTelephone" jdbcType="VARCHAR" />
+		<result column="seller_descrption" property="sellerDescrption" jdbcType="LONGVARCHAR" />
 		<result column="seller_email" property="sellerEmail" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="INTEGER" />
 		<result column="price_type" property="priceType" jdbcType="INTEGER" />
@@ -18,56 +16,54 @@
 		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
 		<result column="updator" property="updator" jdbcType="VARCHAR" />
 		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
 	</resultMap>
-	<sql id="Base_Column_List">
-		zid, uid, seller_code, seller_name,seller_descrption,
-		seller_telephone,
-		seller_email, status, price_type, commission,
-		creator,
-		DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') AS create_time,
-		updator,
-		DATE_FORMAT(update_time,'%Y-%m-%d %H:%i:%s') AS update_time
-	</sql>
-	<select id="selectBySellerCode" resultMap="BaseResultMap"
-		parameterType="java.lang.String">
+	
+	<select id="selectBySellerCode" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
-		<include refid="Base_Column_List" />
-		from wc_sellerinfo
-		where seller_code = #{sellerCode,jdbcType=VARCHAR}
+			*
+		from 
+			webcore.wc_sellerinfo
+		where 
+			seller_code = #{sellerCode,jdbcType=VARCHAR}
 	</select>
+	
 	<!-- 查询商户信息列表 2016-08-17 zhy -->
-	<select id="queryPage" resultMap="BaseResultMap"
-		parameterType="com.hjy.entity.webcore.WcSellerinfo">
+	<select id="queryPage" resultMap="BaseResultMap" parameterType="com.hjy.entity.webcore.WcSellerinfo">
 		select
-		<include refid="Base_Column_List" />
-		from wc_sellerinfo
+			*
+		from webcore.wc_sellerinfo
 		<where>
 			1=1
 			<if test="sellerCode != null and sellerCode != '' ">
 				AND seller_code = #{sellerCode,jdbcType=VARCHAR}
 			</if>
 			<if test="sellerName != null and sellerName != ''">
-				AND seller_name LIKE
-				CONCAT('%',#{sellerName,jdbcType=VARCHAR},'%')
+				AND seller_name LIKE CONCAT('%',#{sellerName,jdbcType=VARCHAR},'%')
 			</if>
 		</where>
 	</select>
+	
 	<!-- 根据商户编号查询已开通openapi的商户信息 2016-08-18 zhy -->
-	<select id="selectBySellerCodeByApi" resultMap="BaseResultMap"
-		parameterType="java.lang.String">
+	<select id="selectBySellerCodeByApi" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
-		<include refid="Base_Column_List" />
-		from wc_sellerinfo
-		where seller_code = #{sellerCode,jdbcType=VARCHAR}
+			*
+		from 
+			webcore.wc_sellerinfo
+		where 
+			seller_code = #{sellerCode,jdbcType=VARCHAR}
 		AND `status` = 1
 	</select>
+	
 	<delete id="deleteBySellerCode" parameterType="java.lang.String">
 		delete from
-		wc_sellerinfo
-		where seller_code = #{sellerCode,jdbcType=VARCHAR}
+			webcore.wc_sellerinfo
+		where 
+			seller_code = #{sellerCode,jdbcType=VARCHAR}
 	</delete>
+	
 	<insert id="insertSelective" parameterType="com.hjy.entity.webcore.WcSellerinfo">
-		insert into wc_sellerinfo
+		insert into webcore.wc_sellerinfo
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			uid,
 			seller_code,
@@ -83,6 +79,7 @@
 			create_time,
 			updator,
 			update_time,
+			type,
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			#{uid,jdbcType=CHAR},
@@ -99,10 +96,13 @@
 			STR_TO_DATE(#{createTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
 			#{updator,jdbcType=VARCHAR},
 			STR_TO_DATE(#{updateTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
+			#{type , jdbcType=INTEGER},
 		</trim>
 	</insert>
+	
+	
 	<update id="updateSelective" parameterType="com.hjy.entity.webcore.WcSellerinfo">
-		update wc_sellerinfo
+		update webcore.wc_sellerinfo
 		<set>
 			<if test="sellerName != null">
 				seller_name = #{sellerName,jdbcType=VARCHAR},
@@ -131,6 +131,9 @@
 			<if test="updateTime != null and updateTime != ''">
 				update_time =
 				STR_TO_DATE(#{updateTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
+			</if>
+			<if test="type != null">
+				`type` = #{type , jdbcType=INTEGER},
 			</if>
 		</set>
 		where seller_code = #{sellerCode,jdbcType=VARCHAR}

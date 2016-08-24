@@ -189,7 +189,7 @@ private static Logger logger=Logger.getLogger(ExampleController.class);
 			result.put("data", pageList);
 		}else{
 			result.put("status", "error");
-			result.put("msg", "删除成功");
+			result.put("msg", "没有查询到可以显示的数据");
 		}
 		
 		

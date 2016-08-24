@@ -1,10 +1,11 @@
 package com.hjy.controller.webcore;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -12,11 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.github.miemiedev.mybatis.paginator.domain.Order;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.hjy.common.DateUtil;
-import com.hjy.dto.webcore.WcSellerinfoDto;
 import com.hjy.entity.system.ScDefine;
 import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.helper.WebHelper;
@@ -32,9 +29,11 @@ import com.hjy.service.webcore.IWcSellerinfoService;
  * 时间: 2016年8月17日 下午1:57:50
  */
 @Controller
-@RequestMapping("/seller/")
+@RequestMapping("seller")
 public class WcSellerinfoController {
 
+	private static Logger logger=Logger.getLogger(WcSellerinfoController.class);
+	
 	@Autowired
 	private HttpSession session;
 	
@@ -53,33 +52,19 @@ public class WcSellerinfoController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "index", produces = { "application/json;charset=utf-8" })
-	public String index(WcSellerinfoDto dto, ModelMap model) {
-		/*
-		 * 如果分页参数当前页为空，默认为0，页面最大显示数为空，默认为10
-		 */
-		String sortString = "create_time.desc";
-		Order.formString(sortString);
-		PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
-		WcSellerinfo entity = new WcSellerinfo();
-		entity.setSellerCode(dto.getSellerCode());
-		String name = "";
-		if (dto.getSellerName() != null && !"".equals(dto.getSellerName())) {
-			try {
-				name = new String(dto.getSellerName().getBytes("iso-8859-1"), "utf-8");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-		}
-		entity.setSellerName(name);
-		List<WcSellerinfo> list = service.queryPage(entity);
-		if (list != null && list.size() > 0) {
-			PageInfo<WcSellerinfo> pageList = new PageInfo<WcSellerinfo>(list);
-			model.put("pageList", pageList);
-		}
-		model.put("seller", entity);
+	@RequestMapping(value = "index")
+	public String index() { 
 		return "jsp/seller/index";
 	}
+	
+	@RequestMapping(value = "ajaxPageData", produces = { "application/json;charset=utf-8" })
+	@ResponseBody
+	public JSONObject ajaxPageData(WcSellerinfo entity ,HttpServletRequest request, HttpSession session){
+		return service.ajaxPageData(entity , request , session);
+	}
+	
+	
+	
 
 	/**
 	 * 

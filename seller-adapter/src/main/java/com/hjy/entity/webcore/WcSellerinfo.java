@@ -1,6 +1,5 @@
 package com.hjy.entity.webcore;
 
-import java.util.Date;
 
 import com.hjy.base.BaseModel;
 
@@ -61,6 +60,22 @@ public class WcSellerinfo extends BaseModel {
 	 * 修改时间
 	 */
 	private String updateTime;
+	
+	/*
+	 * 1：对内；2：对外
+	 */
+	private Integer type;
+
+	
+	
+	
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
 
 	public String getSellerCode() {
 		return sellerCode;
