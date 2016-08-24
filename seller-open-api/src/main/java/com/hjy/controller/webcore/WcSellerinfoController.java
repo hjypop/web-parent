@@ -1,7 +1,6 @@
 package com.hjy.controller.webcore;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -20,8 +19,8 @@ import com.hjy.common.DateUtil;
 import com.hjy.dto.webcore.WcSellerinfoDto;
 import com.hjy.entity.system.ScDefine;
 import com.hjy.entity.webcore.WcSellerinfo;
-import com.hjy.factory.UserFactory;
 import com.hjy.helper.WebHelper;
+import com.hjy.pojo.entity.login.UserInfo;
 import com.hjy.service.system.IScDefineService;
 import com.hjy.service.webcore.IWcSellerinfoService;
 
@@ -36,6 +35,9 @@ import com.hjy.service.webcore.IWcSellerinfoService;
 @RequestMapping("/seller/")
 public class WcSellerinfoController {
 
+	@Autowired
+	private HttpSession session;
+	
 	@Autowired
 	private IWcSellerinfoService service;
 
@@ -118,12 +120,13 @@ public class WcSellerinfoController {
 	@RequestMapping("add")
 	@ResponseBody
 	public JSONObject add(WcSellerinfo entity) {
+		UserInfo user = (UserInfo) session.getAttribute("userInfo");
 		JSONObject obj = new JSONObject();
 		entity.setUid(WebHelper.getInstance().genUuid());
 		entity.setSellerCode(WebHelper.getInstance().genUniqueCode("SI"));
-		entity.setCreator("system");
+		entity.setCreator(user.getUserName());
 		entity.setCreateTime(DateUtil.getSysDateTimeString());
-		entity.setUpdator("system");
+		entity.setUpdator(user.getUserName());
 		entity.setUpdateTime(DateUtil.getSysDateTimeString());
 		int result = service.insertSelective(entity);
 		if (result >= 0) {
@@ -174,8 +177,9 @@ public class WcSellerinfoController {
 	@RequestMapping("edit")
 	@ResponseBody
 	public JSONObject edit(WcSellerinfo entity) {
+		UserInfo user = (UserInfo) session.getAttribute("userInfo");
 		JSONObject obj = new JSONObject();
-		entity.setUpdator("system");
+		entity.setUpdator(user.getUserName());
 		entity.setUpdateTime(DateUtil.getSysDateTimeString());
 		int result = service.updateSelective(entity);
 		if (result >= 0) {

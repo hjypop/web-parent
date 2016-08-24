@@ -1,6 +1,5 @@
 package com.hjy.entity.webcore;
 
-import java.util.Date;
 
 import com.hjy.base.BaseModel;
 
