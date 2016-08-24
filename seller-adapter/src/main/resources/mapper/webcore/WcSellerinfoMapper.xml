@@ -29,10 +29,9 @@
 		<result column="price_type" property="priceType" jdbcType="INTEGER" />
 		<result column="commission" property="commission" jdbcType="VARCHAR" />
 		<result column="creator" property="creator" jdbcType="VARCHAR" />
-		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
 		<result column="updator" property="updator" jdbcType="VARCHAR" />
-		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-		<result column="flow_status" property="flowStatus" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		zid, uid, seller_code, seller_name, seller_short_name,
@@ -43,8 +42,10 @@
 		seller_return_telephone, seller_company_name, seller_email,
 		seller_type,`status`,
 		price_type,commission,
-		creator, create_time,
-		updator, update_time
+		creator,
+		DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') AS create_time,
+		updator,
+		DATE_FORMAT(update_time,'%Y-%m-%d %H:%i:%s') AS update_time
 	</sql>
 	<select id="selectBySellerCode" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
@@ -134,9 +135,9 @@
 			#{priceType,jdbcType=INTEGER},
 			#{commission,jdbcType=VARCHAR},
 			#{creator,jdbcType=VARCHAR},
-			#{createTime,jdbcType=TIMESTAMP},
+			STR_TO_DATE(#{createTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
 			#{updator,jdbcType=VARCHAR},
-			#{updateTime,jdbcType=TIMESTAMP},
+			STR_TO_DATE(#{updateTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
 		</trim>
 	</insert>
 	<update id="updateSelective" parameterType="com.hjy.entity.webcore.WcSellerinfo">
@@ -195,8 +196,9 @@
 			<if test="updator != null">
 				updator = #{updator,jdbcType=VARCHAR},
 			</if>
-			<if test="updateTime != null">
-				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			<if test="updateTime != null and updateTime != ''">
+				update_time =
+				STR_TO_DATE(#{updateTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
 			</if>
 		</set>
 		where seller_code = #{sellerCode,jdbcType=VARCHAR}

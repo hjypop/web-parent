@@ -99,7 +99,7 @@ public class WcSellerinfo extends BaseModel {
 	/**
 	 * 创建时间
 	 */
-	private Date createTime;
+	private String createTime;
 	/**
 	 * 修改人
 	 */
@@ -108,7 +108,7 @@ public class WcSellerinfo extends BaseModel {
 	/**
 	 * 修改时间
 	 */
-	private Date updateTime;
+	private String updateTime;
 
 	public Integer getStatus() {
 		return status;
@@ -230,14 +230,6 @@ public class WcSellerinfo extends BaseModel {
 		this.creator = creator;
 	}
 
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
 	public String getUpdator() {
 		return updator;
 	}
@@ -246,11 +238,19 @@ public class WcSellerinfo extends BaseModel {
 		this.updator = updator;
 	}
 
-	public Date getUpdateTime() {
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(Date updateTime) {
+	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
 	}
 
