@@ -26,6 +26,8 @@
 		<result column="seller_email" property="sellerEmail" jdbcType="VARCHAR" />
 		<result column="seller_type" property="sellerType" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="price_type" property="priceType" jdbcType="INTEGER" />
+		<result column="commission" property="commission" jdbcType="VARCHAR" />
 		<result column="creator" property="creator" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="updator" property="updator" jdbcType="VARCHAR" />
@@ -40,7 +42,9 @@
 		seller_return_contact,
 		seller_return_telephone, seller_company_name, seller_email,
 		seller_type,`status`,
-		creator, create_time, updator, update_time
+		price_type,commission,
+		creator, create_time,
+		updator, update_time
 	</sql>
 	<select id="selectBySellerCode" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
@@ -67,7 +71,7 @@
 		</where>
 	</select>
 	<!-- 根据商户编号查询已开通openapi的商户信息 2016-08-18 zhy -->
-		<select id="selectBySellerCodeByApi" resultMap="BaseResultMap"
+	<select id="selectBySellerCodeByApi" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
@@ -101,6 +105,8 @@
 			<if test="sellerType != null">
 				seller_type,
 			</if>
+			price_type,
+			commission,
 			creator,
 			create_time,
 			updator,
@@ -125,6 +131,8 @@
 			<if test="sellerType != null">
 				#{sellerType,jdbcType=VARCHAR},
 			</if>
+			#{priceType,jdbcType=INTEGER},
+			#{commission,jdbcType=VARCHAR},
 			#{creator,jdbcType=VARCHAR},
 			#{createTime,jdbcType=TIMESTAMP},
 			#{updator,jdbcType=VARCHAR},
@@ -178,6 +186,12 @@
 			<if test="status != null">
 				`status` = #{status,jdbcType=INTEGER},
 			</if>
+			<if test="priceType != null">
+				price_type = #{priceType,jdbcType=INTEGER},
+			</if>
+			<if test="commission != null and commission != ''">
+				commission = #{commission,jdbcType=VARCHAR},
+			</if>
 			<if test="updator != null">
 				updator = #{updator,jdbcType=VARCHAR},
 			</if>
@@ -187,5 +201,5 @@
 		</set>
 		where seller_code = #{sellerCode,jdbcType=VARCHAR}
 	</update>
-	
+
 </mapper>

@@ -87,10 +87,18 @@ public class WcSellerinfoController {
 	@RequestMapping("addindex")
 	public String addIndex(ModelMap model) {
 		/**
-		 * 商户类型
+		 * 店铺类型
 		 */
 		List<ScDefine> sellerType = scDefineService.findDefineByParentCode("44974639");
+		/**
+		 * 商户类型
+		 */
+		List<ScDefine> ucSellerType = scDefineService.findDefineByParentCode("449747810005");
+		/**
+		 * 
+		 */
 		model.put("sellerType", sellerType);
+		model.put("ucSellerType", ucSellerType);
 		return "jsp/seller/add";
 	}
 
@@ -140,6 +148,11 @@ public class WcSellerinfoController {
 		 */
 		List<ScDefine> sellerType = scDefineService.findDefineByParentCode("44974639");
 		model.put("sellerType", sellerType);
+		/**
+		 * 商户类型
+		 */
+		List<ScDefine> ucSellerType = scDefineService.findDefineByParentCode("449747810005");
+		model.put("ucSellerType", ucSellerType);
 		WcSellerinfo info = service.selectBySellerCode(sellerCode);
 		model.put("seller", info);
 		return "jsp/seller/edit";

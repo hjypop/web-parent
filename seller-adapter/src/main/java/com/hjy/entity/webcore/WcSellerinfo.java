@@ -82,6 +82,16 @@ public class WcSellerinfo extends BaseModel {
 	 * 商户状态 0 未开通 1 已开通 2 已禁用
 	 */
 	private Integer status;
+
+	/**
+	 * 价格类型 0 成本价 1 销售价
+	 */
+	private Integer priceType;
+
+	/**
+	 * 佣金比例 json存储,存储内容包含商户类型和佣金
+	 */
+	private String commission;
 	/**
 	 * 创建人
 	 */
@@ -242,6 +252,22 @@ public class WcSellerinfo extends BaseModel {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public Integer getPriceType() {
+		return priceType;
+	}
+
+	public void setPriceType(Integer priceType) {
+		this.priceType = priceType;
+	}
+
+	public String getCommission() {
+		return commission;
+	}
+
+	public void setCommission(String commission) {
+		this.commission = commission;
 	}
 
 }
