@@ -13,6 +13,7 @@
                         <li><a href="">二级菜单栏B</a></li>
                         <li><a href="${basePath}kjt/index.do">跨境通临时问题维护</a></li>
                         <li><a href="${basePath}seller/index.do">商户管理</a></li>
+                        <li><a href="${basePath}api/index.do">商户管理</a></li>
                     </ul>
                 </li>
 

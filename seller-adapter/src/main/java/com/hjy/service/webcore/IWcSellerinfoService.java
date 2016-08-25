@@ -1,9 +1,5 @@
 package com.hjy.service.webcore;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import com.alibaba.fastjson.JSONObject;
 import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.service.IBaseService;
 
@@ -15,18 +11,7 @@ import com.hjy.service.IBaseService;
  * 时间: 2016年8月17日 上午11:38:45
  */
 public interface IWcSellerinfoService extends IBaseService<WcSellerinfo, Integer> {
-	
-	/**
-	 * @descriptions ajax 分页
-	 * 
-	 * @param request
-	 * @param session 
-	 * @date 2016年8月24日下午2:03:56
-	 * @author Yangcl 
-	 * @version 1.0.0.1
-	 */
-	public JSONObject ajaxPageData(WcSellerinfo entity ,HttpServletRequest request, HttpSession session);
-	
+
 	/**
 	 * 
 	 * 方法: selectBySellerCode <br>

@@ -6,8 +6,10 @@
 		<result column="uid" property="uid" jdbcType="CHAR" />
 		<result column="seller_code" property="sellerCode" jdbcType="VARCHAR" />
 		<result column="seller_name" property="sellerName" jdbcType="VARCHAR" />
-		<result column="seller_telephone" property="sellerTelephone" jdbcType="VARCHAR" />
-		<result column="seller_descrption" property="sellerDescrption" jdbcType="LONGVARCHAR" />
+		<result column="seller_telephone" property="sellerTelephone"
+			jdbcType="VARCHAR" />
+		<result column="seller_descrption" property="sellerDescrption"
+			jdbcType="LONGVARCHAR" />
 		<result column="seller_email" property="sellerEmail" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="INTEGER" />
 		<result column="price_type" property="priceType" jdbcType="INTEGER" />
@@ -18,20 +20,31 @@
 		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
 		<result column="type" property="type" jdbcType="INTEGER" />
 	</resultMap>
-	
-	<select id="selectBySellerCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+	<sql id="Base_Column_List">
+		zid, uid, seller_code, seller_name,seller_descrption,
+		seller_telephone,
+		seller_email, status, price_type, commission,
+		creator,
+		DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') AS create_time,
+		updator,
+		DATE_FORMAT(update_time,'%Y-%m-%d %H:%i:%s') AS update_time
+	</sql>
+	<select id="selectBySellerCode" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
 		select
-			*
-		from 
-			webcore.wc_sellerinfo
-		where 
-			seller_code = #{sellerCode,jdbcType=VARCHAR}
+		<include refid="Base_Column_List" />
+		from
+		webcore.wc_sellerinfo
+		where
+		seller_code =
+		#{sellerCode,jdbcType=VARCHAR}
 	</select>
-	
+
 	<!-- 查询商户信息列表 2016-08-17 zhy -->
-	<select id="queryPage" resultMap="BaseResultMap" parameterType="com.hjy.entity.webcore.WcSellerinfo">
+	<select id="queryPage" resultMap="BaseResultMap"
+		parameterType="com.hjy.entity.webcore.WcSellerinfo">
 		select
-			*
+		<include refid="Base_Column_List" />
 		from webcore.wc_sellerinfo
 		<where>
 			1=1
@@ -39,29 +52,32 @@
 				AND seller_code = #{sellerCode,jdbcType=VARCHAR}
 			</if>
 			<if test="sellerName != null and sellerName != ''">
-				AND seller_name LIKE CONCAT('%',#{sellerName,jdbcType=VARCHAR},'%')
+				AND seller_name LIKE
+				CONCAT('%',#{sellerName,jdbcType=VARCHAR},'%')
 			</if>
 		</where>
 	</select>
-	
+
 	<!-- 根据商户编号查询已开通openapi的商户信息 2016-08-18 zhy -->
-	<select id="selectBySellerCodeByApi" resultMap="BaseResultMap" parameterType="java.lang.String">
+	<select id="selectBySellerCodeByApi" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
 		select
-			*
-		from 
-			webcore.wc_sellerinfo
-		where 
-			seller_code = #{sellerCode,jdbcType=VARCHAR}
+		<include refid="Base_Column_List" />
+		from
+		webcore.wc_sellerinfo
+		where
+		seller_code =
+		#{sellerCode,jdbcType=VARCHAR}
 		AND `status` = 1
 	</select>
-	
+
 	<delete id="deleteBySellerCode" parameterType="java.lang.String">
 		delete from
-			webcore.wc_sellerinfo
-		where 
-			seller_code = #{sellerCode,jdbcType=VARCHAR}
+		webcore.wc_sellerinfo
+		where
+		seller_code = #{sellerCode,jdbcType=VARCHAR}
 	</delete>
-	
+
 	<insert id="insertSelective" parameterType="com.hjy.entity.webcore.WcSellerinfo">
 		insert into webcore.wc_sellerinfo
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -99,8 +115,7 @@
 			#{type , jdbcType=INTEGER},
 		</trim>
 	</insert>
-	
-	
+
 	<update id="updateSelective" parameterType="com.hjy.entity.webcore.WcSellerinfo">
 		update webcore.wc_sellerinfo
 		<set>
@@ -125,13 +140,9 @@
 			<if test="commission != null and commission != ''">
 				commission = #{commission,jdbcType=VARCHAR},
 			</if>
-			<if test="updator != null">
-				updator = #{updator,jdbcType=VARCHAR},
-			</if>
-			<if test="updateTime != null and updateTime != ''">
-				update_time =
-				STR_TO_DATE(#{updateTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
-			</if>
+			updator = #{updator,jdbcType=VARCHAR},
+			update_time =
+			STR_TO_DATE(#{updateTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
 			<if test="type != null">
 				`type` = #{type , jdbcType=INTEGER},
 			</if>

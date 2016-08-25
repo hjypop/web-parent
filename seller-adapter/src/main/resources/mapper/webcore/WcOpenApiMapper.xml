@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.webcore.IWcOpenApiDao">
+	<resultMap id="BaseResultMap" type="com.hjy.entity.webcore.WcOpenApi">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="uid" property="uid" jdbcType="CHAR" />
+		<result column="api_code" property="apiCode" jdbcType="VARCHAR" />
+		<result column="api_name" property="apiName" jdbcType="VARCHAR" />
+		<result column="method" property="method" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="description" property="description" jdbcType="LONGVARCHAR" />
+		<result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+		<result column="creator" property="creator" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="updator" property="updator" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		zid, uid, api_code, api_name, method, status,
+		description,is_deleted,
+		creator,
+		DATE_FORMAT(create_time,'%Y-%m-%d
+		%H:%i:%s') AS create_time,
+		updator,
+		DATE_FORMAT(update_time,'%Y-%m-%d
+		%H:%i:%s') AS update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from webcore.wc_openapi
+		where zid = #{zid,jdbcType=INTEGER}
+	</select>
+	<update id="deleteApiCode" parameterType="java.lang.String">
+		UPDATE
+		webcore.wc_openapi SET is_deleted = 1 where
+		api_code=#{apiCode,jdbcType=VARCHAR}
+	</update>
+	<insert id="insertSelective" parameterType="com.hjy.entity.webcore.WcOpenApi">
+		insert into wc_openapi
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			uid,
+			api_code,
+			api_name,
+			method,
+			<if test="status != null">
+				status,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			creator,
+			create_time,
+			updator,
+			update_time,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{uid,jdbcType=CHAR},
+			#{apiCode,jdbcType=VARCHAR},
+			#{apiName,jdbcType=VARCHAR},
+			#{method,jdbcType=VARCHAR},
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=LONGVARCHAR},
+			</if>
+			#{creator,jdbcType=VARCHAR},
+			STR_TO_DATE(#{createTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
+			#{updator,jdbcType=VARCHAR},
+			STR_TO_DATE(#{updateTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
+		</trim>
+	</insert>
+	<update id="updateSelective" parameterType="com.hjy.entity.webcore.WcOpenApi">
+		update wc_openapi
+		<set>
+			<if test="apiName != null">
+				api_name = #{apiName,jdbcType=VARCHAR},
+			</if>
+			<if test="method != null">
+				method = #{method,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			updator = #{updator,jdbcType=VARCHAR},
+			update_time =
+			STR_TO_DATE(#{updateTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
+		</set>
+		where api_code = #{apiCode,jdbcType=VARCHAR}
+	</update>
+	<select id="queryPage" resultMap="BaseResultMap"
+		parameterType="com.hjy.entity.webcore.WcSellerApi">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		webcore.wc_openapi
+		<where>
+			is_deleted=0
+			<if test="apiName != null and apiName != ''">
+				AND api_name LIKE CONCAT('%',
+				#{apiName,jdbcType=VARCHAR}, '%')
+			</if>
+			<if test="method != null and method != ''">
+				AND method = #{method,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

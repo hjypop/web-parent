@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -32,11 +31,9 @@ import com.hjy.service.webcore.IWcSellerinfoService;
 @RequestMapping("seller")
 public class WcSellerinfoController {
 
-	private static Logger logger=Logger.getLogger(WcSellerinfoController.class);
-	
 	@Autowired
 	private HttpSession session;
-	
+
 	@Autowired
 	private IWcSellerinfoService service;
 
@@ -53,18 +50,15 @@ public class WcSellerinfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "index")
-	public String index() { 
+	public String index() {
 		return "jsp/seller/index";
 	}
-	
+
 	@RequestMapping(value = "ajaxPageData", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
-	public JSONObject ajaxPageData(WcSellerinfo entity ,HttpServletRequest request, HttpSession session){
-		return service.ajaxPageData(entity , request , session);
+	public JSONObject ajaxPageData(WcSellerinfo entity, HttpServletRequest request) {
+		return service.ajaxPageData(entity, request);
 	}
-	
-	
-	
 
 	/**
 	 * 
