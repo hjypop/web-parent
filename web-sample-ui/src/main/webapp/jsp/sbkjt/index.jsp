@@ -6,7 +6,46 @@
     <%@ include file="/inc/head.jsp" %>
     <script type="text/javascript">
 
+        function funcOne(){
+            var type_ = 'post';
+            var url_ = '${basePath}kjt/funcOne.do';
+            var data_ = {json:$("#json-str").val()};
+            var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+            if(obj.status == 'success'){
+                alert(obj.desc);
+            }
+        }
 
+        function funcTwo(){
+            var s = $("#s-time").val();
+            var e = $("#e-time").val();
+
+            var type_ = 'post';
+            var url_ = '${basePath}kjt/funcTwo.do';
+            var data_ = {
+                s:s,
+                e:e
+            };
+            var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+            if(obj.status == 'success'){
+                alert(obj.desc);
+            }
+        }
+
+        function funcThree(){
+            var remark_ = $("#remark").val();
+            var execTime_ = $("#exec-time").val();
+            var type_ = 'post';
+            var url_ = '${basePath}kjt/funcThree.do';
+            var data_ = {
+                remark:remark_,
+                execTime:execTime_
+            };
+            var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+            if(obj.status == 'success'){
+                alert(obj.desc);
+            }
+        }
 
     </script>
 </head>
@@ -33,7 +72,17 @@
                         <h3>批量拉取商品价格变动信息|接口标识：Product.ProudctInfoBatchGet</h3>
                     </div>
 
-
+                    <div class="statusbox" style="width: 800px">
+                        <form id="json-post" action="#">
+                            <div class="status_thumb">商品编号Json串：</div>
+                            <div style="padding-right:20px;">
+                                <textarea id="json-str" name="" cols="" rows="" style="height: 200px;width: 790px"></textarea>
+                            </div>
+                            <div class="submit">
+                                <button class="stdbtn btn_orange" onclick="funcOne()">执 行 任 务</button>
+                            </div>
+                        </form>
+                    </div>
 
                 </div>
 
@@ -42,6 +91,24 @@
                         <h3>拉取指定时间段内商品价格变动信息|接口标识：Product.ProudctInfoBatchGet</h3>
                     </div>
 
+                    <div class="statusbox" style="width: 800px">
+                        <form id="date-post" action="#">
+                            <div style="padding-right:20px;">
+                                <div class="comment_authorimg"  >开始时间</div>
+                                <div class="commentcontent" style="padding-right: 12px;margin-left:65px; margin-bottom: 10px">
+                                    <input  id="s-time" type="text" value="这是一个示例：2016-08-08 00:00:00">
+                                </div>
+
+                                <div class="comment_authorimg">结束时间</div>
+                                <div class="commentcontent" style="padding-right: 12px;margin-left:65px;">
+                                    <input  id="e-time" type="text" placeholder="2016-08-08 00:00:00">
+                                </div>
+                            </div>
+                            <div class="submit">
+                                <button class="stdbtn btn_orange" onclick="funcTwo()">执 行 任 务</button>
+                            </div>
+                        </form>
+                    </div>
 
 
                 </div>
@@ -51,6 +118,23 @@
                         <h3>重新同步跨境通问题订单|接口标识：Order.SOCreate</h3>
                     </div>
 
+                    <div class="statusbox" style="width: 800px">
+                        <form id="poststatus" action="#">
+                            <div class="status_thumb">备注信息：</div>
+                            <div style="padding-right:20px;margin-bottom: 20px">
+                                <textarea id="remark" name="" cols="" rows="" style="height: 100px;width: 790px"></textarea>
+                            </div>
+
+                            <div class="comment_authorimg"  >执行时间</div>
+                            <div class="commentcontent" style="padding-right: 12px;margin-left:65px; margin-bottom: 10px">
+                                <input  id="exec-time" type="text" placeholder="这是一个示例：2016-08-08 00:00:00  默认则为当前时间">
+                            </div>
+
+                            <div class="submit">
+                                <button class="stdbtn btn_orange" onclick="funcThree()">执 行 任 务</button>
+                            </div>
+                        </form>
+                    </div>
 
 
                 </div>

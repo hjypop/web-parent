@@ -109,10 +109,7 @@
 
 	<update id="updateSelective" parameterType="com.hjy.pojo.entity.system.JobExectimer">
 		update job_exectimer
-		<set>
-			<if test="uid != null">
-				uid = #{uid,jdbcType=CHAR},
-			</if>
+		<set> 
 			<if test="execCode != null">
 				exec_code = #{execCode,jdbcType=VARCHAR},
 			</if>
@@ -197,4 +194,26 @@
 			AND exec_number &lt; #{execNumber,jdbcType=INTEGER}
 		</where>
 	</select>
+	
+	<update id="updateSelectiveByFlag" parameterType="com.hjy.pojo.entity.system.JobExectimer">
+		update job_exectimer
+		<set>  
+			<if test="beginTime != null">
+				begin_time = '',
+			</if>
+			<if test="endTime != null">
+				end_time = '',
+			</if>
+			<if test="execTime != null">
+				exec_time = #{execTime,jdbcType=CHAR},
+			</if> 
+			<if test="remark != null">
+				remark = #{remark,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="execNumber != null">
+				exec_number = #{execNumber,jdbcType=INTEGER},
+			</if> 
+		</set>
+		where flag_success = 0
+	</update>
 </mapper>

@@ -126,6 +126,12 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 						}
 					}
 				}
+				
+				// 兼容线上运营人员的临时需求 - Yangcl
+				if(pcodeList != null && pcodeList.size() != 0){
+					queryProductCodeOldList = pcodeList;
+				}
+				
 				// 设置预期处理数量
 				int productSize = queryProductCodeOldList.size();
 				result.setProcessNum(productSize);

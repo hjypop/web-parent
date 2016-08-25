@@ -14,4 +14,13 @@ public interface IJobExectimerDao extends BaseDao<JobExectimer, Integer> {
 	 * @version 1.0.0.1
 	 */
 	public Integer updateSelectiveByExecCode(JobExectimer entity);
+	
+	/**
+	 * @descriptions KjtOperationsManagerServiceImpl 调用一次
+	 *  
+	 * @date 2016年8月25日下午1:47:41
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public Integer updateSelectiveByFlag(JobExectimer entity);
 }

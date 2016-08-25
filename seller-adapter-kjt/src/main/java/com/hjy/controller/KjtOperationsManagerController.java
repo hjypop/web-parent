@@ -1,5 +1,7 @@
 package com.hjy.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -9,7 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.request.data.OrderInfoStatus;
+import com.hjy.service.IKjtOperationsManagerService;
 import com.hjy.service.operations.IOperationsManagerService;
 
 /**
@@ -30,6 +35,8 @@ public class KjtOperationsManagerController {
 	@Autowired
 	private IOperationsManagerService service;
 	
+	@Autowired
+	private IKjtOperationsManagerService kjtService;
 	
 	
 	/**
@@ -61,15 +68,24 @@ public class KjtOperationsManagerController {
 		return "jsp/sbkjt/index";
 	}
 	
-	@RequestMapping(value = "ajaxPageData", produces = { "application/json;charset=utf-8" })
+	@RequestMapping(value = "funcOne", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
-	public JSONObject ajaxPageData(HttpServletRequest request, HttpSession session){
-		return null;
+	public JSONObject funcOne(String json){
+		List<String> list = JSON.parseArray(json, String.class);
+		return kjtService.funcOne(list); 
 	}
 	
+	@RequestMapping(value = "funcTwo", produces = { "application/json;charset=utf-8" })
+	@ResponseBody
+	public JSONObject funcTwo(String s , String e){
+		return kjtService.funcTwo(s , e); 
+	}
 	
-	
-	
+	@RequestMapping(value = "funcThree", produces = { "application/json;charset=utf-8" })
+	@ResponseBody
+	public JSONObject funcThree(String execTime , String remark){
+		return kjtService.funcThree(execTime , remark);  
+	}
 	
 	
 	
