@@ -14,27 +14,21 @@
 			var url_ = '${basePath}seller/ajaxPageData.do';
 			var data_ = null;
 			var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
-			if(obj.status == 'success'){
-				aForm.launch(url_ , 'table-form' , obj).init().drawForm(loadTable);
-			}
+			aForm.launch(url_ , 'table-form' , obj).init().drawForm(loadTable);
 		});
 
 		// 回调函数
 		function loadTable(url_){
 			if(url_ == undefined){ // 首次加载表单
 				draw(aForm.jsonObj);
-				console.log("A1")
 				return;
 			}
 			// 这种情况是响应上一页或下一页的触发事件
 			var type_ = 'post';
 			var data_ = $("#search-form").serializeArray();
 			var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
-			if(obj.status == 'success'){
-				aForm.launch(url_ , 'table-form' , obj).init();
-				console.log("B" + obj.data.pageNum);
-				draw(obj);
-			}
+			aForm.launch(url_ , 'table-form' , obj).init();
+			draw(obj);
 		}
 
 		// 画表格
@@ -42,32 +36,40 @@
 			$('#ajax-tbody-1 tr').remove();
 			var html_ = '';
 			var list = obj.data.list;
-			for(var i = 0 ; i < list.length ; i ++){
-				html_ += '<tr class="gradeX">'
-				+'<td align="center"><span class="center"><input type="checkbox" id="' + list[i].zid + '"></span></td>'
-				+'<td class="head0" style="text-align: center;">' + list[i].sellerCode + ' </td>'
-				+'<td class="head0">' + list[i].sellerName + ' </td>'
-				+'<td class="head0" style="text-align: center;">' + list[i].sellerTelephone + ' </td>'
-				+'<td class="head0" style="text-align: center;">'
-				if(list[i].status == 1){
-					html_ += '已开通';
-				}else if(list[i].status == 2){
-					html_ += '已禁用';
-				}else{
-					html_ += '未开通';
-				}
-				html_ += '</td>'
-				+'<td class="head0" style="text-align: center;">' + list[i].creator + ' </td>'
-				+'<td class="head0" style="text-align: center;">' + list[i].createTime + ' </td>'
-				+'<td class="head0" style="text-align: center;">' + list[i].updator + ' </td>'
-				+'<td class="head0" style="text-align: center;">' + list[i].updateTime + ' </td>'
-				+'<td class="head0" style="text-align:center;">'
-				+'<a class="btn btn3 btn_book" href="editindex.do?sellerCode=' + list[i].sellerCode + ' " title="修改"  style="cursor: pointer;"></a> '
-				+'<a class="btn btn3 btn_trash" onclick="deleteOne(\'' + list[i].sellerCode + '\')" title="删除"  style="cursor: pointer;"></a>'
-				+'</td>'
-				+'</tr>'
+			if(list.length>0){
+				for(var i = 0 ; i < list.length ; i ++){
+					html_ += '<tr class="gradeX">'
+					+'<td align="center"><span class="center"><input type="checkbox" id="' + list[i].zid + '"></span></td>'
+					+'<td class="head0" style="text-align: center;">' + list[i].sellerCode + ' </td>'
+					+'<td class="head0">' + list[i].sellerName + ' </td>'
+					+'<td class="head0" style="text-align: center;">' + list[i].sellerTelephone + ' </td>'
+					+'<td class="head0" style="text-align: center;">'
+					if(list[i].status == 1){
+						html_ += '已开通';
+					}else if(list[i].status == 2){
+						html_ += '已禁用';
+					}else{
+						html_ += '未开通';
+					}
+					html_ += '</td>'
+					+'<td class="head0" style="text-align: center;">' + list[i].creator + ' </td>'
+					+'<td class="head0" style="text-align: center;">' + list[i].createTime + ' </td>'
+					+'<td class="head0" style="text-align: center;">' + list[i].updator + ' </td>'
+					+'<td class="head0" style="text-align: center;">' + list[i].updateTime + ' </td>'
+					+'<td class="head0" style="text-align:center;">'
+					+'<a href="#" class="btn btn3 btn_link"></a>'
+					+'</td>'
+					+'<td class="head0" style="text-align:center;">'
+					+'<a class="btn btn3 btn_book" href="editindex.do?sellerCode=' + list[i].sellerCode + ' " title="修改"  style="cursor: pointer;"></a> '
+					+'<a class="btn btn3 btn_trash" onclick="deleteOne(\'' + list[i].sellerCode + '\')" title="删除"  style="cursor: pointer;"></a>'
+					+'</td>'
+					+'</tr>'
 
+				}
+			}else{
+				html_='<tr><td colspan="11" style="text-align: center;">'+obj.msg+'</td></tr>';
 			}
+
 			$('#ajax-tbody-1').append(html_);
 		}
 
@@ -100,11 +102,8 @@
 			var url_ = '${basePath}seller/ajaxPageData.do?pageSize=' + parseInt($("#select-page-size").val());
 			var data_ = $("#search-form").serializeArray();
 			var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
-			if(obj.status == 'success'){
-				aForm.launch(url_ , 'table-form' , obj).init();
-				console.log("B" + obj.data.pageNum);
-				draw(obj);
-			}
+			aForm.launch(url_ , 'table-form' , obj).init();
+			draw(obj);
 		}
 
 
@@ -176,6 +175,7 @@
 								<th class="head1">创建时间</th>
 								<th class="head1">修改人</th>
 								<th class="head1">修改时间</th>
+								<th class="head1">接口管理</th>
 								<th class="head1">操作</th>
 							</tr>
 						</thead>

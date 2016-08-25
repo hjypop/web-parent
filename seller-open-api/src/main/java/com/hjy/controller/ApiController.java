@@ -50,7 +50,7 @@ public class ApiController {
 	@ResponseBody
 	public JSONObject requestApi(Request request) {
 
-		 //request = DataInit.apiInsertShipmentsTest();
+		// request = DataInit.apiInsertShipmentsTest();
 
 		JSONObject result = new JSONObject();
 		WcSellerinfo seller = sellerInfoService.selectBySellerCodeByApi(request.getAppid());
@@ -163,7 +163,6 @@ public class ApiController {
 				str.append(nameString);
 			}
 			str.append(request.getAppSecret());
-			System.out.println(str.toString());
 			String sign = SignHelper.md5Sign(str.toString());
 			if (sign.equals(request.getSign())) {
 				flag = true;
