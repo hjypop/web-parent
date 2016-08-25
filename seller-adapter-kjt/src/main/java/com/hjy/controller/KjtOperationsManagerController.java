@@ -5,9 +5,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.http.HttpResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -63,28 +65,49 @@ public class KjtOperationsManagerController {
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */
-	@RequestMapping(value = "index")
-	public String index() { 
-		return "jsp/sbkjt/index";
+	@RequestMapping(value = "validate")
+	public String validate() { 
+		return "jsp/sbkjt/validate";
 	}
+	  
+	@RequestMapping(value = "index")
+	public String index(ModelMap model , String key, HttpSession session ) { 
+		if(key.equals("whosyourdaddy")){ 
+			session.setAttribute("kjt-key", "kjt-key"); // 写入session
+			return "redirect:/jsp/sbkjt/index.jsp";    
+		}else{
+			model.put("status", true);
+			model.put("msg", "无效的Key，请重新输入。"); 
+			return "jsp/sbkjt/validate";
+		} 
+	}
+	
+	// 离开此页面
+	@RequestMapping(value = "leave")
+	public String leave(HttpSession session ) { 
+		session.setAttribute("kjt-key", null); // 删除session
+		return "redirect:/jsp/sbkjt/validate.jsp";    
+	}
+	
+	
+	
 	
 	@RequestMapping(value = "funcOne", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
-	public JSONObject funcOne(String json){
-		List<String> list = JSON.parseArray(json, String.class);
-		return kjtService.funcOne(list); 
+	public JSONObject funcOne(String json, HttpSession session){
+		return kjtService.funcOne(json , session); 
 	}
 	
 	@RequestMapping(value = "funcTwo", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
-	public JSONObject funcTwo(String s , String e){
-		return kjtService.funcTwo(s , e); 
+	public JSONObject funcTwo(String s , String e, HttpSession session){
+		return kjtService.funcTwo(s , e , session); 
 	}
 	
 	@RequestMapping(value = "funcThree", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
-	public JSONObject funcThree(String execTime , String remark){
-		return kjtService.funcThree(execTime , remark);  
+	public JSONObject funcThree(String execTime , String remark, HttpSession session){
+		return kjtService.funcThree(execTime , remark , session);  
 	}
 	
 	

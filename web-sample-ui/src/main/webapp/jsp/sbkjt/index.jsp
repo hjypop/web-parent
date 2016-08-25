@@ -1,5 +1,28 @@
-<%@ include file="/inc/resource.inc" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+	String js = path + "/js";
+	String css = path + "/css";
+	String img = path + "/images";
+	String resources = path + "/resources";
+	
+	pageContext.setAttribute("js", js);
+	pageContext.setAttribute("css", css);
+	pageContext.setAttribute("img", img);
+	pageContext.setAttribute("basePath", basePath);
+	pageContext.setAttribute("resources", resources);
+	
+	if(session.getAttribute("kjt-key") == null){
+		String url = basePath + "jsp/sbkjt/validate.jsp";
+		response.sendRedirect(url);
+		return;
+	}
+%>
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -61,7 +84,7 @@
             <div class="pageheader notab">
                 <h1 class="pagetitle">跨境通线上临时问题解决页面</h1>
                     <span class="pagedesc">
-                        这个页面 执行运营人员的线上临时需求，如：一批商品下架、一批商品上架等等。
+                        这个页面 执行运营人员的线上临时需求，如：一批商品下架、一批商品上架等等。 | <a href="${basePath}kjt/leave.do" style="color: #ff0000">【离开此页面】</a>
                     </span>
                 <span style="display:none">jsp/sbkjt/index.jsp</span>
             </div>

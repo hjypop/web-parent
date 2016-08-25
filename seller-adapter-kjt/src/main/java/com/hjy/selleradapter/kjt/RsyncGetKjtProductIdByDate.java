@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import com.hjy.annotation.Inject;
 import com.hjy.dao.product.IPcProductinfoDao;
@@ -26,6 +27,9 @@ import com.hjy.support.MailSupport;
  * 
  */
 public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProductIdByDate, RsyncRequestGetKjtProductIdByDate, RsyncResponseGetKjtProductIdByDate> {
+	
+	private static Logger logger=Logger.getLogger(RsyncGetKjtProductIdByDate.class);
+	
 	@Inject
 	private IPcProductinfoDao productinfoDao;
 	
@@ -134,6 +138,8 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 				
 				// 设置预期处理数量
 				int productSize = queryProductCodeOldList.size();
+				logger.info("@@@@@@@@@@@@@@@@@@@@@@ productSize = " + productSize);
+				
 				result.setProcessNum(productSize);
 				int queryCount = 0;// 由于查询商品详细信息，每次最多传5个商品id,这里记录需要查询的次数
 				if (productSize % qnum == 0) {
@@ -148,6 +154,9 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 							changeProductCodeList.add(queryProductCodeOldList.get(j));
 						}
 					}
+					
+					logger.info("########## 第：" + i + "次 changeProductCodeList = " + changeProductCodeList.toString()); 
+
 					if (changeProductCodeList != null && changeProductCodeList.size() > 0) {
 						MWebResult mResult = saveProductData((String[]) changeProductCodeList.toArray(new String[changeProductCodeList.size()]));
 						// 如果成功则将成功计数加1

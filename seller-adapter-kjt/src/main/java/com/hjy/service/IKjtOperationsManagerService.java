@@ -2,10 +2,12 @@ package com.hjy.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import com.alibaba.fastjson.JSONObject;
 
 public interface IKjtOperationsManagerService {
-	public JSONObject funcOne(List<String> list);
+	public JSONObject funcOne(String json , HttpSession session);
 
 	/**
 	 * @descriptions 
@@ -16,7 +18,7 @@ public interface IKjtOperationsManagerService {
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */
-	public JSONObject funcTwo(String s, String e); 
+	public JSONObject funcTwo(String s, String e, HttpSession session); 
 	
-	public JSONObject funcThree(String execTime , String remark); 
+	public JSONObject funcThree(String execTime , String remark, HttpSession session); 
 }

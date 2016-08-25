@@ -92,7 +92,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 		pptModel.setMinSellPrice(pc.getMinSellPrice());
 		pptModel.setProductCode(pc.getProductCode());
 		pptModel.setProductCodeOld(pc.getProductCodeOld() == null ? "" : pc.getProductCodeOld());
-		pptModel.setProductName(pc.getProdutName());
+		pptModel.setProductName(pc.getProdutName().replaceAll("</?[^>]+>", "")); //过滤html标签
 		pptModel.setProductStatus(pc.getProductStatus());
 		pptModel.setProductVolume(pc.getProductVolume());
 		pptModel.setProductVolumeItem(pc.getProductVolumeItem());
@@ -144,7 +144,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 			ppdModel.setProductCode(pc.getProductCode());
 			ppdModel.setKeyword(pc.getDescription().getKeyword());
 			ppdModel.setDescriptionPic(pc.getDescription().getDescriptionPic());
-			ppdModel.setDescriptionInfo(pc.getDescription().getDescriptionInfo());
+			ppdModel.setDescriptionInfo(pc.getDescription().getDescriptionInfo().replaceAll("(<script).*(script>)", ""));//过滤js
 			ppdModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 			ppsm.insertSelective(ppdModel);
 		}
@@ -299,9 +299,9 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 		String createTime = DateUtil.getSysDateTimeString();
 		// 更新商品的基本信息
 		PcProductinfo ppModel = new PcProductinfo();
-
+		
 		ppModel.setProductCode(pc.getProductCode());
-		ppModel.setProductName(pc.getProdutName());
+		ppModel.setProductName(pc.getProdutName().replaceAll("</?[^>]+>", "")); //过滤html标签
 		ppModel.setMarketPrice(pc.getMarketPrice());
 		ppModel.setBrandCode(pc.getBrandCode());
 		ppModel.setProductWeight(pc.getProductWeight());
@@ -642,7 +642,7 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 				PcProductdescription ppdModel = new PcProductdescription();
 				ppdModel.setProductCode(pc.getProductCode());
 				ppdModel.setKeyword(pc.getDescription().getKeyword());
-				ppdModel.setDescriptionInfo(pc.getDescription().getDescriptionInfo());
+				ppdModel.setDescriptionInfo(pc.getDescription().getDescriptionInfo().replaceAll("(<script).*(script>)", ""));//过滤js
 				ppdModel.setDescriptionPic(pc.getDescription().getDescriptionPic());
 				ppdModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 				ppsm.insertSelective(ppdModel);

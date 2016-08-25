@@ -4,10 +4,12 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.dao.IJobExectimerDao;
 import com.hjy.helper.DateHelper;
@@ -21,24 +23,47 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 	@Resource
 	private IJobExectimerDao jobExectimerDao;
 	
-	public JSONObject funcOne(List<String> list) {
+	public JSONObject funcOne(String json, HttpSession session) {
 		JSONObject result = new JSONObject();
-		new JobGetChangeProductFromKJT(list).doExecute(null); 
-		result.put("status", "success");
-		result.put("desc", "请求执行完成");
+		if(session.getAttribute("kjt-key") == null){
+			result.put("status", "success");
+			result.put("desc", "请输入你的秘钥");
+			return result;
+		}
+		try {
+			List<String> list = JSON.parseArray(json, String.class);
+			new JobGetChangeProductFromKJT(list).doExecute(null); 
+			result.put("status", "success");
+			result.put("desc", "请求执行完成");
+		} catch (Exception e) {
+			result.put("status", "success");
+			result.put("desc", "非法的Json数据");
+		}
 		return result;
 	}
 
-	public JSONObject funcTwo(String s, String e) {
+	public JSONObject funcTwo(String s, String e, HttpSession session) {
 		JSONObject result = new JSONObject();
+		if(session.getAttribute("kjt-key") == null){
+			result.put("status", "success");
+			result.put("desc", "请输入你的秘钥");
+			return result;
+		}
+		
 		new JobGetChangeProductFromKJT(s , e).doExecute(null); 
 		result.put("status", "success");
 		result.put("desc", "请求执行完成");
 		return result; 
 	}
 
-	public JSONObject funcThree(String execTime, String remark) {
+	public JSONObject funcThree(String execTime, String remark, HttpSession session) {
 		JSONObject result = new JSONObject();
+		if(session.getAttribute("kjt-key") == null){
+			result.put("status", "success");
+			result.put("desc", "请输入你的秘钥");
+			return result;
+		}
+		
 		JobExectimer e = new JobExectimer();
 		if(StringUtils.isNotBlank(execTime)){
 			e.setExecTime(DateHelper.parseDate(execTime));
