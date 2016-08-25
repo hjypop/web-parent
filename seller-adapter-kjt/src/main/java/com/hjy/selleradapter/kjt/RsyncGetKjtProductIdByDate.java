@@ -28,6 +28,22 @@ import com.hjy.support.MailSupport;
 public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProductIdByDate, RsyncRequestGetKjtProductIdByDate, RsyncResponseGetKjtProductIdByDate> {
 	@Inject
 	private IPcProductinfoDao productinfoDao;
+	
+	
+	private List<String> pcodeList = null;
+	private String startDate = null;
+	private String endDate = null;
+	
+	
+
+	public RsyncGetKjtProductIdByDate() {
+	}
+
+	public RsyncGetKjtProductIdByDate(List<String> pcodeList, String startDate, String endDate) {
+		this.pcodeList = pcodeList;
+		this.startDate = startDate;
+		this.endDate = endDate;
+	}
 
 	final static RsyncConfigGetKjtProductIdByDate CONFIG_GET_TV_BY_DATE = new RsyncConfigGetKjtProductIdByDate();
 	final static int qnum = 5;// 每次查询的数量
@@ -41,8 +57,16 @@ public class RsyncGetKjtProductIdByDate extends RsyncKjt<RsyncConfigGetKjtProduc
 		// 返回输入参数
 		RsyncRequestGetKjtProductIdByDate request = new RsyncRequestGetKjtProductIdByDate();
 		RsyncDateCheck rsyncDateCheck = upDateCheck(upConfig());
-		request.setChangedDateBegin(rsyncDateCheck.getStartDate());
-		request.setChangedDateEnd(rsyncDateCheck.getEndDate());
+		
+		if(StringUtils.isNotBlank(this.startDate) && StringUtils.isNotBlank(this.endDate)){             // 兼容线上运营人员的临时需求 - Yangcl
+			request.setChangedDateBegin(this.startDate);
+			request.setChangedDateEnd(this.endDate);
+		}else{
+			request.setChangedDateBegin(rsyncDateCheck.getStartDate());
+			request.setChangedDateEnd(rsyncDateCheck.getEndDate());
+		}
+		
+		
 		request.setSaleChannelSysNo(getConfig("seller_adapter_kjt.rsync_kjt_SaleChannelSysNo"));
 		request.setLimitRows(getConfig("seller_adapter_kjt.rsync_kjt_limit_rows"));// 默认足够大的条数1百万
 		return request;
