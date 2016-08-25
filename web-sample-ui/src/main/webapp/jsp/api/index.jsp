@@ -27,10 +27,8 @@
 		var type_ = 'post';
 		var data_ = $("#search-form").serializeArray();
 		var obj = JSON.parse(ajaxs.sendAjax(type_, url_, data_));
-		if (obj.status == 'success') {
-			aForm.launch(url_, 'table-form', obj).init();
-			draw(obj);
-		}
+		aForm.launch(url_, 'table-form', obj).init();
+		draw(obj);
 	}
 	// 画表格
 	function draw(obj) {
