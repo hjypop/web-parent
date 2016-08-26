@@ -241,6 +241,26 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 		 
 		 return formatter.format(date);
 	}
+
+
+	/**
+	 * @descriptions 插入订单状态信息
+	 *  惠家有：商户；第三方：销售平台。
+	 *  第三方将订单信息发送给惠家有，惠家有插入订单
+	 * 
+	 * @param info
+	 * @date 2016年8月26日下午4:38:58
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public JSONObject insertOrder(String json, String sellerCode) {
+		// TODO 
+
+		
+		
+		
+		return null;
+	}
 }
 
 
