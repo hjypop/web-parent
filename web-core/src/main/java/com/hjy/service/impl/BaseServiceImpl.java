@@ -147,8 +147,8 @@ public class BaseServiceImpl<T, PK extends Serializable> extends BaseClass imple
 		/*
 		 * 如果分页参数当前页为空，默认为0，页面最大显示数为空，默认为10
 		 */
-		String sortString = "create_time.desc";
-		Order.formString(sortString); 
+//		String sortString = "create_time.desc";
+//		Order.formString(sortString); 
 		PageHelper.startPage(num, size);
 		List<T> list = baseDao.queryPage(entity);
 		if (list != null && list.size() > 0) {

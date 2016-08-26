@@ -18,9 +18,7 @@
             var url_ = '${basePath}example/ajaxPageData.do';
             var data_ = null;
             var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
-            if(obj.status == 'success'){
-                aForm.launch(url_ , 'table-form' , obj).init().drawForm(loadTable);
-            }
+            aForm.launch(url_ , 'table-form' , obj).init().drawForm(loadTable);
         });
 
         // 回调函数
@@ -34,11 +32,8 @@
             var type_ = 'post';
             var data_ = null;
             var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
-            if(obj.status == 'success'){
-                aForm.launch(url_ , 'table-form' , obj).init();
-                console.log("B" + obj.data.pageNum);
-                draw(obj);
-            }
+            aForm.launch(url_ , 'table-form' , obj).init();
+            draw(obj);
         }
 
         // 画表格
@@ -46,20 +41,25 @@
             $('#ajax-tbody-1 tr').remove();
             var html_ = '';
             var list = obj.data.list;
-            for(var i = 0 ; i < list.length ; i ++){
-                html_ += '<tr id="tr-' + list[i].id + '" class="gradeX">'
-                +'<td align="center"><span class="center"> <input type="checkbox"/> </span></td>'
-                +'<td width="100px">' + list[i].id + '</td>'
-                +'<td>' + list[i].userName + '</td>'
-                +'<td>' + list[i].mobile + '</td>'
-                +'<td class="center">' + list[i].idNumber + '</td>'
-                +'<td class="center">' + list[i].email + '</td>'
-                +'<td width="150px" align="center">'
-                +'<a onclick="deleteOne(\'' + list[i].id + '\')" title="删除"  style="cursor: pointer;">删除</a> | '
-                +'<a href="${basePath}example/editInfoPage.do?id=' + list[i].id + '" title="修改"  style="cursor: pointer;">修改</a> | '
-                +'<a onclick="openDialogPage(\'' + list[i].id + '\')" style="cursor: pointer;">弹窗分页</a>'
-                +'</td></tr>'
+            if(list.length>0){
+	            for(var i = 0 ; i < list.length ; i ++){
+	                html_ += '<tr id="tr-' + list[i].id + '" class="gradeX">'
+	                +'<td align="center"><span class="center"> <input type="checkbox"/> </span></td>'
+	                +'<td width="100px">' + list[i].id + '</td>'
+	                +'<td>' + list[i].userName + '</td>'
+	                +'<td>' + list[i].mobile + '</td>'
+	                +'<td class="center">' + list[i].idNumber + '</td>'
+	                +'<td class="center">' + list[i].email + '</td>'
+	                +'<td width="150px" align="center">'
+	                +'<a onclick="deleteOne(\'' + list[i].id + '\')" title="删除"  style="cursor: pointer;">删除</a> | '
+	                +'<a href="${basePath}example/editInfoPage.do?id=' + list[i].id + '" title="修改"  style="cursor: pointer;">修改</a> | '
+	                +'<a onclick="openDialogPage(\'' + list[i].id + '\')" style="cursor: pointer;">弹窗分页</a>'
+	                +'</td></tr>'
+	            }
+            }else{
+            	html_='<tr><td colspan="11" style="text-align: center;">'+obj.msg+'</td></tr>';
             }
+            
             $('#ajax-tbody-1').append(html_);
         }
 
@@ -96,14 +96,12 @@
          * @时间: 2016-08-19 : 15-20-56
          */
         function openDialogPage(id){
-//            dialogFormNull(dialogFormId)
+//            dialogFormClear(dialogFormId)        // TODO 可选：清空上一次遗留的内容
             var type_ = 'post';
             var url_ = '${basePath}example/ajaxPageData.do';
             var data_ = null;
             var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
-            if(obj.status == 'success'){
-                dForm.launch(url_ , 'dialog-table-form' , obj).init().drawForm(loadDialogTable);
-            }
+            dForm.launch(url_ , 'dialog-table-form' , obj).init().drawForm(loadDialogTable);
 
             $.blockUI({
                 showOverlay:true ,
@@ -125,36 +123,36 @@
         function loadDialogTable(url_){
             if(url_ == undefined){ // 首次加载表单
                 drawDialog(dForm.jsonObj);
-                console.log("C1")
                 return;
             }
             // 这种情况是响应上一页或下一页的触发事件
             var type_ = 'post';
             var data_ = null;
             var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
-            if(obj.status == 'success'){
-                dForm.launch(url_ , 'dialog-table-form' , obj).init();
-                console.log("D" + obj.data.pageNum);
-                drawDialog(obj);
-            }
+            dForm.launch(url_ , 'dialog-table-form' , obj).init();
+            drawDialog(obj);
         }
 
         function drawDialog(obj){
             $('#dialog-ajax-tbody tr').remove();
             var html_ = '';
             var list = obj.data.list;
-            for(var i = 0 ; i < list.length ; i ++){
-                html_ += '<tr id="tr-d-' + list[i].id + '" class="gradeX">'   // TODO 注意：这里的 tr 的 id 是以 tr-d-****  作为开头的 - Yangcl
-                +'<td align="center"><span class="center"> <input type="checkbox"/> </span></td>'
-                +'<td width="100px">' + list[i].id + '</td>'
-                +'<td>' + list[i].userName + '</td>'
-                +'<td>' + list[i].mobile + '</td>'
-                +'<td class="center">' + list[i].idNumber + '</td>'
-                +'<td class="center">' + list[i].email + '</td>'
-                +'<td width="150px" align="center">'
-                +'<a onclick="deleteOne(\'' + list[i].id + '\')" title="删除"  style="cursor: pointer;">删除</a> | '
-                +'<a href="${basePath}example/editInfoPage.do?id=' + list[i].id + '" title="修改"  style="cursor: pointer;">修改</a> '
-                +'</td></tr>'
+            if(list.length>0){
+	            for(var i = 0 ; i < list.length ; i ++){
+	                html_ += '<tr id="tr-d-' + list[i].id + '" class="gradeX">'   // TODO 注意：这里的 tr 的 id 是以 tr-d-****  作为开头的 - Yangcl
+	                +'<td align="center"><span class="center"> <input type="checkbox"/> </span></td>'
+	                +'<td width="100px">' + list[i].id + '</td>'
+	                +'<td>' + list[i].userName + '</td>'
+	                +'<td>' + list[i].mobile + '</td>'
+	                +'<td class="center">' + list[i].idNumber + '</td>'
+	                +'<td class="center">' + list[i].email + '</td>'
+	                +'<td width="150px" align="center">'
+	                +'<a onclick="deleteOne(\'' + list[i].id + '\')" title="删除"  style="cursor: pointer;">删除</a> | '
+	                +'<a href="${basePath}example/editInfoPage.do?id=' + list[i].id + '" title="修改"  style="cursor: pointer;">修改</a> '
+	                +'</td></tr>'
+	            }
+            }else{
+            	html_='<tr><td colspan="11" style="text-align: center;">'+obj.msg+'</td></tr>';
             }
             $('#dialog-ajax-tbody').append(html_);
         }

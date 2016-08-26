@@ -165,7 +165,6 @@ private static Logger logger=Logger.getLogger(ExampleController.class);
 		
 		String pageNum = request.getParameter("pageNum"); // 当前第几页
 		String pageSize = request.getParameter("pageSize");  // 当前页所显示记录条数
-		
 		int num = 1;
 		int size = 10;
 		if (StringUtils.isNotBlank(pageNum)) {
@@ -181,17 +180,16 @@ private static Logger logger=Logger.getLogger(ExampleController.class);
 		Order.formString(sortString);
 		PageHelper.startPage(num, size);
 		
-		
 		List<UserInfo> userList = userInfoService.queryPage(entity);
 		if(userList != null && userList.size() > 0){
-			PageInfo<UserInfo> pageList = new PageInfo<UserInfo>(userList);
 			result.put("status", "success");
-			result.put("data", pageList);
 		}else{
 			result.put("status", "error");
 			result.put("msg", "没有查询到可以显示的数据");
 		}
 		
+		PageInfo<UserInfo> pageList = new PageInfo<UserInfo>(userList);
+		result.put("data", pageList);
 		
 		return result; 
 	}

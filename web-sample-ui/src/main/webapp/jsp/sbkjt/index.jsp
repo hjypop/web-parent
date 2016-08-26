@@ -92,7 +92,7 @@
             <div id="contentwrapper" class="contentwrapper">
                 <div id="fuck-one">
                     <div class="contenttitle2">
-                        <h3>批量拉取商品价格变动信息|接口标识：Product.ProudctInfoBatchGet</h3>
+                        <h3>A  批量拉取商品价格变动信息|接口标识：Product.ProudctInfoBatchGet</h3>
                     </div>
 
                     <div class="statusbox" style="width: 800px">
@@ -111,7 +111,7 @@
 
                 <div id="fuck-two">
                     <div class="contenttitle2">
-                        <h3>拉取指定时间段内商品价格变动信息|接口标识：Product.ProudctInfoBatchGet</h3>
+                        <h3>B  拉取指定时间段内商品价格变动信息|接口标识：Product.ProudctInfoBatchGet</h3>
                     </div>
 
                     <div class="statusbox" style="width: 800px">
@@ -138,7 +138,7 @@
 
                 <div id="fuck-three">
                     <div class="contenttitle2">
-                        <h3>重新同步跨境通问题订单|接口标识：Order.SOCreate</h3>
+                        <h3>C  重新同步跨境通问题订单|接口标识：Order.SOCreate</h3>
                     </div>
 
                     <div class="statusbox" style="width: 800px">

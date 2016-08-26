@@ -36,7 +36,7 @@
                                 </div>
                             </div>
                             <div class="submit">
-                                <input type="submit" class="stdbtn btn_orange"  value=" 验 证 秘 钥">
+                                <input type="submit" class="stdbtn btn_orange"  value=" 启 用 秘 技 ">
                             </div>
                         </form>
                     </div>
