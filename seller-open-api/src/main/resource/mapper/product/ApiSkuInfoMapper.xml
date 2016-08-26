@@ -1,6 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hjy.dao.api.IApiSkuInfoDao">
+	<resultMap id="BaseResultMap" type="com.hjy.entity.product.PcSkuinfo">
+		<id column="zid" jdbcType="INTEGER" property="zid" />
+		<result column="uid" jdbcType="CHAR" property="uid" />
+		<result column="sku_code_old" jdbcType="VARCHAR" property="skuCodeOld" />
+		<result column="sku_code" jdbcType="VARCHAR" property="skuCode" />
+		<result column="product_code" jdbcType="VARCHAR" property="productCode" />
+		<result column="sell_price" jdbcType="DECIMAL" property="sellPrice" />
+		<result column="market_price" jdbcType="DECIMAL" property="marketPrice" />
+		<result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+		<result column="stock_num" jdbcType="DECIMAL" property="stockNum" />
+		<result column="sku_key" jdbcType="VARCHAR" property="skuKey" />
+		<result column="sku_keyvalue" jdbcType="VARCHAR" property="skuKeyvalue" />
+		<result column="sku_picurl" jdbcType="VARCHAR" property="skuPicurl" />
+		<result column="sell_productcode" jdbcType="VARCHAR" property="sellProductcode" />
+		<result column="seller_code" jdbcType="VARCHAR" property="sellerCode" />
+		<result column="security_stock_num" jdbcType="DECIMAL"
+			property="securityStockNum" />
+		<result column="product_code_old" jdbcType="VARCHAR" property="productCodeOld" />
+		<result column="qrcode_link" jdbcType="VARCHAR" property="qrcodeLink" />
+		<result column="sell_count" jdbcType="INTEGER" property="sellCount" />
+		<result column="sale_yn" jdbcType="VARCHAR" property="saleYn" />
+		<result column="flag_enable" jdbcType="INTEGER" property="flagEnable" />
+		<result column="barcode" jdbcType="VARCHAR" property="barcode" />
+		<result column="mini_order" jdbcType="INTEGER" property="miniOrder" />
+		<result column="sku_name" jdbcType="LONGVARCHAR" property="skuName" />
+		<result column="sku_adv" jdbcType="LONGVARCHAR" property="skuAdv" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		zid, uid, sku_code_old, sku_code, product_code, sell_price,
+		market_price,
+		cost_price,
+		stock_num, sku_key, sku_keyvalue, sku_picurl,
+		sell_productcode, seller_code,
+		security_stock_num,
+		product_code_old,
+		qrcode_link, sell_count, sale_yn, flag_enable, barcode,
+		mini_order,sku_name,sku_adv
+	</sql>
 	<insert id="batchInsert" parameterType="list">
 		INSERT INTO productcenter.pc_skuinfo (
 		uid,
@@ -116,4 +154,22 @@
 			sku_code_old = #{skuCodeOld,jdbcType=VARCHAR}
 		</where>
 	</update>
+	<!-- 根据商品编号查询sku集合 2016-08-25 zhy -->
+	<select id="findSkuByProductCode" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		SELECT
+		sku.sku_code,
+		sku.sku_name,
+		sku.sell_price,
+		IFNULL(stock.stock_num,0) AS stock_num,
+		sku.sku_picurl,
+		sku.sku_adv,
+		sku.mini_order
+		FROM
+		productcenter.pc_skuinfo AS sku
+		LEFT JOIN systemcenter.sc_store_skunum AS stock ON sku.sku_code =
+		stock.sku_code
+		where sku.product_code =
+		#{productCode,jdbcType=VARCHAR}
+	</select>
 </mapper>

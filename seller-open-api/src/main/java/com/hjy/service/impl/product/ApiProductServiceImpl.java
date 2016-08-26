@@ -2,7 +2,9 @@ package com.hjy.service.impl.product;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.common.DateUtil;
 import com.hjy.dao.api.IApiProductInfoDao;
@@ -27,6 +30,7 @@ import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.product.PcProductpic;
 import com.hjy.entity.product.PcSkuinfo;
 import com.hjy.entity.system.ScStoreSkunum;
+import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.factory.UserFactory;
 import com.hjy.helper.WebHelper;
 import com.hjy.request.RequestProduct;
@@ -833,5 +837,189 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			}
 		}
 		return list;
+	}
+
+	/**
+	 * 
+	 * 方法: pushProduct <br>
+	 * 描述: TODO
+	 * 
+	 * @param seller
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 * @see com.hjy.service.product.IApiProductService#pushProduct(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
+	@Override
+	public JSONObject pushProduct(WcSellerinfo seller, String startDate, String endDate) {
+		List<ProductInfo> responseProduct = new ArrayList<ProductInfo>();
+		// 读取合作商的产品获取权限
+		if (seller.getCommission() != null && !"".equals(seller.getCommission())) {
+			JSONArray commissions = JSONArray.parseArray(seller.getCommission());
+			// 获取参数
+			for (int i = 0; i < commissions.size(); i++) {
+				JSONObject c = commissions.getJSONObject(i);
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("startTime", startDate + " 00:00:00");
+				map.put("endTime", endDate + " 23:59:59");
+				if ("LD".equals(c.getString("type"))) {
+					map.put("LD", "LD");
+				} else {
+					map.put("sellerType", c.getString("type"));
+				}
+				List<PcProductinfo> list = productInfoDao.findProductBySellerProductype(map);
+				List<ProductInfo> products = initPcProduct(list, c.getDouble("commission"), seller.getPriceType());
+				if (products != null && products.size() > 0) {
+					responseProduct.addAll(products);
+				}
+			}
+		}
+		/**
+		 * 生成响应报文
+		 */
+		JSONObject obj = new JSONObject();
+		obj.put("data", responseProduct);
+		obj.put("total", responseProduct.size());
+		return obj;
+	}
+
+	/**
+	 * 
+	 * 方法: initPcProductinof <br>
+	 * 描述: 获取需要推送的产品信息 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月25日 下午4:54:20
+	 * 
+	 * @param list
+	 * @param commission
+	 * @return
+	 */
+	public List<ProductInfo> initPcProduct(List<PcProductinfo> list, Double commission, Integer priceType) {
+		List<ProductInfo> products = new ArrayList<ProductInfo>();
+		if (list != null && list.size() > 0) {
+			for (int i = 0; i < list.size(); i++) {
+				PcProductinfo info = list.get(i);
+				/**
+				 * 生成推送到第三方产品对象信息
+				 */
+				ProductInfo product = new ProductInfo();
+				/**
+				 * 商品编号
+				 */
+				product.setProductCode(info.getProductCode());
+				/**
+				 * 商品名称
+				 */
+				product.setProductName(info.getProductName());
+				/**
+				 * 商品简称
+				 */
+				product.setProductShortname(info.getProductShortname());
+				/**
+				 * 商品重量
+				 */
+				product.setProductWeight(info.getProductWeight());
+				/**
+				 * 成本价
+				 */
+				if (priceType == 0) {
+					product.setCostPrice(
+							info.getCostPrice().add(info.getCostPrice().multiply(BigDecimal.valueOf(commission))));
+				} else {
+					product.setCostPrice(
+							info.getSellPrice().add(info.getSellPrice().multiply(BigDecimal.valueOf(commission))));
+				}
+				/**
+				 * 主图的Url
+				 */
+				product.setMainPicUrl(info.getMainpicUrl());
+				/**
+				 * 商品描述
+				 */
+				product.setDescription(productInfoDao.getProductDescByCode(info.getProductCode()));
+				/**
+				 * 商品图片信息
+				 */
+				List<String> pcPicList = productInfoDao.getProductPicByCode(info.getProductCode());
+				product.setPcPicList(pcPicList);
+				/**
+				 * 商品体积
+				 */
+				product.setProductVolume(info.getProductVolume());
+				/**
+				 * sku集合
+				 */
+				product.setSkuInfoList(initSkuList(info.getProductCode(), commission));
+				/**
+				 * 广告图的Url
+				 */
+				product.setAdpicUrl(info.getAdPicUrl());
+				/**
+				 * 商品广告
+				 */
+				product.setProductAdv(info.getProductAdv());
+				/**
+				 * 保质期
+				 */
+				product.setExpiryDate(info.getExpiryDate());
+				products.add(product);
+			}
+		}
+		return products;
+	}
+
+	/**
+	 * 
+	 * 方法: initSkuList <br>
+	 * 描述: 获取需要推送的sku信息 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月25日 下午5:31:19
+	 * 
+	 * @param productCode
+	 * @param commission
+	 * @return
+	 */
+	public List<PcSkuInfo> initSkuList(String productCode, Double commission) {
+		List<PcSkuinfo> skuInfos = skuInfoDao.findSkuByProductCode(productCode);
+		/**
+		 * 商品的Sku列表的属性信息
+		 */
+		List<PcSkuInfo> skuList = new ArrayList<PcSkuInfo>();
+		for (int i = 0; i < skuInfos.size(); i++) {
+			PcSkuinfo skuInfo = skuInfos.get(i);
+			PcSkuInfo sku = new PcSkuInfo();
+			/**
+			 * sku编码
+			 */
+			sku.setSkuCode(skuInfo.getSkuCode());
+			/**
+			 * 商品的sku名称信息
+			 */
+			sku.setSkuName(skuInfo.getSkuName());
+			/**
+			 * 销售价
+			 */
+			sku.setSellPrice(
+					skuInfo.getSellPrice().add(skuInfo.getSellPrice().multiply(BigDecimal.valueOf(commission))));
+			/**
+			 * 库存数
+			 */
+			sku.setStockNum(skuInfo.getStockNum());
+			/**
+			 * 商品的Sku的图片信息
+			 */
+			sku.setSkuPicUrl(skuInfo.getSkuPicurl());
+			/**
+			 * 广告语
+			 */
+			sku.setSkuAdv(skuInfo.getSkuAdv());
+			/**
+			 * 最小购买数
+			 */
+			sku.setMiniOrder(skuInfo.getMiniOrder());
+			skuList.add(sku);
+		}
+		return skuList;
 	}
 }

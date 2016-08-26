@@ -1,6 +1,81 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hjy.dao.api.IApiProductInfoDao">
+	<resultMap id="BaseResultMap" type="com.hjy.entity.product.PcProductinfo">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="uid" property="uid" jdbcType="CHAR" />
+		<result column="product_code_old" property="productCodeOld"
+			jdbcType="VARCHAR" />
+		<result column="product_code" property="productCode" jdbcType="VARCHAR" />
+		<result column="product_name" property="productName" jdbcType="VARCHAR" />
+		<result column="product_shortname" property="productShortname"
+			jdbcType="VARCHAR" />
+		<result column="video_url" property="videoUrl" jdbcType="VARCHAR" />
+		<result column="seller_code" property="sellerCode" jdbcType="VARCHAR" />
+		<result column="small_seller_code" property="smallSellerCode"
+			jdbcType="VARCHAR" />
+		<result column="brand_code" property="brandCode" jdbcType="VARCHAR" />
+		<result column="product_weight" property="productWeight"
+			jdbcType="DECIMAL" />
+		<result column="flag_sale" property="flagSale" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="CHAR" />
+		<result column="update_time" property="updateTime" jdbcType="CHAR" />
+		<result column="min_sell_price" property="minSellPrice"
+			jdbcType="DECIMAL" />
+		<result column="max_sell_price" property="maxSellPrice"
+			jdbcType="DECIMAL" />
+		<result column="market_price" property="marketPrice" jdbcType="DECIMAL" />
+		<result column="cost_price" property="costPrice" jdbcType="DECIMAL" />
+		<result column="tax_rate" property="taxRate" jdbcType="DECIMAL" />
+		<result column="product_status" property="productStatus"
+			jdbcType="VARCHAR" />
+		<result column="product_volume" property="productVolume"
+			jdbcType="DECIMAL" />
+		<result column="transport_template" property="transportTemplate"
+			jdbcType="VARCHAR" />
+		<result column="area_template" property="areaTemplate"
+			jdbcType="VARCHAR" />
+		<result column="sell_productcode" property="sellProductcode"
+			jdbcType="VARCHAR" />
+		<result column="supplier_name" property="supplierName"
+			jdbcType="VARCHAR" />
+		<result column="mainpic_url" property="mainpicUrl" jdbcType="VARCHAR" />
+		<result column="labels" property="labels" jdbcType="VARCHAR" />
+		<result column="flag_payway" property="flagPayway" jdbcType="INTEGER" />
+		<result column="product_volume_item" property="productVolumeItem"
+			jdbcType="VARCHAR" />
+		<result column="sale_scope_did" property="saleScopeDid"
+			jdbcType="VARCHAR" />
+		<result column="validate_flag" property="validateFlag"
+			jdbcType="VARCHAR" />
+		<result column="product_code_copy" property="productCodeCopy"
+			jdbcType="VARCHAR" />
+		<result column="adpic_url" property="adpicUrl" jdbcType="VARCHAR" />
+		<result column="expiry_date" property="expiryDate" jdbcType="INTEGER" />
+		<result column="expiry_unit" property="expiryUnit" jdbcType="VARCHAR" />
+		<result column="low_good" property="lowGood" jdbcType="VARCHAR" />
+		<result column="qualification_category_code" property="qualificationCategoryCode"
+			jdbcType="VARCHAR" />
+		<result column="product_adv" property="productAdv" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		zid, uid, product_code_old, product_code, product_name,
+		product_shortname,
+		video_url,
+		seller_code, small_seller_code,
+		brand_code, product_weight, flag_sale,
+		create_time,
+		update_time,
+		min_sell_price, max_sell_price, market_price, cost_price, tax_rate,
+		product_status, product_volume, transport_template, area_template,
+		sell_productcode,
+		supplier_name, mainpic_url, labels, flag_payway,
+		product_volume_item,
+		sale_scope_did,
+		validate_flag, product_code_copy,
+		adpic_url, expiry_date, expiry_unit, low_good,
+		qualification_category_code,product_adv
+	</sql>
 	<insert id="insert" parameterType="com.hjy.entity.product.PcProductinfo">
 		INSERT INTO
 		productcenter.pc_productinfo (
@@ -201,5 +276,66 @@
 		productcenter.pc_productinfo
 		WHERE
 		product_code_old = #{productCodeOld,jdbcType=VARCHAR}
+	</select>
+	<!-- 根据商品编号productCode查询描述信息 2016-08-26 zhy -->
+	<select id="getProductDescByCode" parameterType="java.lang.String"
+		resultType="com.hjy.dto.product.Productdescription">
+		SELECT
+		description_info AS descriptionInfo,
+		description_pic
+		AS descriptionPic,
+		keyword
+		FROM
+		productcenter.pc_productdescription
+		WHERE
+		product_code = #{productCode,jdbcType=VARCHAR}
+		ORDER BY
+		zid DESC
+		LIMIT 1
+	</select>
+	<!-- 根据商品编号productCode查询图片列表 2016-08-26 zhy -->
+	<select id="getProductPicByCode" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		SELECT
+		pic_url
+		FROM
+		productcenter.pc_productpic
+		WHERE
+		product_code = #{productCode,jdbcType=VARCHAR}
+	</select>
+	<!-- 根据开放接口商户权限获取商品列表 2016-08-26 zhy -->
+	<select id="findProductBySellerProductype" parameterType="Map"
+		resultMap="BaseResultMap">
+		SELECT
+		p.*
+		FROM
+		usercenter.uc_sellerinfo AS u
+		LEFT JOIN
+		usercenter.uc_seller_info_extend AS ue ON
+		u.small_seller_code =
+		ue.small_seller_code
+		LEFT JOIN
+		productcenter.pc_productinfo AS p ON
+		p.small_seller_code =
+		u.small_seller_code
+		where
+		p.product_status =
+		'4497153900060002'
+		AND (
+		<if test="LD != null and LD != ''">
+			p.small_seller_code = 'SI2003'
+			AND p.seller_code = 'SI2003'
+		</if>
+		<if test="sellerType != null and sellerType != ''">
+			u.seller_status = '4497172300040004'
+			AND ue.business_status
+			= '4497471600090001'
+			AND ue.uc_seller_type IN (${sellerType})
+		</if>
+		)
+		AND (
+		p.update_time BETWEEN #{startTime,jdbcType=VARCHAR} AND
+		#{endTime,jdbcType=VARCHAR}
+		)
 	</select>
 </mapper>

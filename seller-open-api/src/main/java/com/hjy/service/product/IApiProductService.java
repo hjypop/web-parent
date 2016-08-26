@@ -1,6 +1,7 @@
 package com.hjy.service.product;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.entity.webcore.WcSellerinfo;
 
 /**
  * 
@@ -75,4 +76,17 @@ public interface IApiProductService {
 	 * @return
 	 */
 	JSONObject batchProductsSkuStore(String products, String sellerCode);
+	
+	/**
+	 * 
+	 * 方法: pushProduct <br>
+	 * 描述: 推送商品到第三方 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月25日 下午4:40:30
+	 * @param sellerCode 合作商编号
+	 * @param startDate 开始日期
+	 * @param endDate 结束日期
+	 * @return
+	 */
+	JSONObject pushProduct(WcSellerinfo seller,String startDate,String endDate);
 }

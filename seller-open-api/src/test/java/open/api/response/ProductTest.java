@@ -36,7 +36,6 @@ public class ProductTest extends BaseTest {
 	@Autowired
 	private IApiProductService service;
 
-	@Test
 	public void syncProductList() {
 		List<ProductInfo> productList = new ArrayList<ProductInfo>();
 		for (int i = 1; i < 6; i++) {
