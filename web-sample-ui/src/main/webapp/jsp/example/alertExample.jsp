@@ -4,113 +4,46 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<%@ include file="/inc/head.jsp" %>
-
-	<link rel="stylesheet" href="${css}/bui/bui.css" type="text/css" />
-	<script src="${js}/bui/bui.js" type="text/javascript"></script>
-
 	<style type="text/css">
 
 	</style>
-
 	<script type="text/javascript">
+
 		$(function(){
-			BUI.use('bui/overlay',function(Overlay){
-				var alertSetting = {
-					title:'系统提示',
-					width:310,
-					height:130,
-					mask:true,  //设置是否模态
-					closeable : false,
-					elCls : 'sys-notice-style',
-					bodyContent:''
-				};
-
-				var formatVal = function(val){
-					// val = typeof val=='string' ? val : '{{!}} 注意了  O o 。.';
-					val = val.replace('{{v}}','<i class="ico ico-right"></i>');
-					val = val.replace('{{!}}','<i class="ico ico-notice"></i>');
-					return val;
-				}
-
-				$.alert = function(val,call){
-					if(typeof val=="string"){
-						var alertDialog = new Overlay.Dialog( alertSetting );
-						alertDialog.set("bodyContent", formatVal(val) );
-						alertDialog.set("buttons", [{
-							text:'确定',
-							elCls : 'but-blue',
-							handler : function(){
-								(typeof call=="function") && call();
-								this.close();
-								$(".bui-ext-mask").css("z-index","1040")
-							}
-						}]);
-						alertDialog.show();
-						$(".bui-ext-mask").css("z-index","888")
-					}else{
-
-					}
-				}
-
-				$.confirm = function(val,call,call2){
-					if(typeof val=="string"){
-						var alertDialog = new Overlay.Dialog( alertSetting );
-						alertDialog.set("bodyContent", formatVal(val) );
-						alertDialog.set("buttons", [{
-							text:'确定',
-							elCls : 'but-blue',
-							handler : function(){
-								(typeof call=="function") && call();
-								this.close();
-							}
-						},{
-							text:'取消',
-							elCls : 'but-wire-blue',
-							handler : function(){
-								(typeof call2=="function") && call2();
-								this.close();
-							}
-						}]);
-						alertDialog.show();
-					}else{
-
-					}
-				}
-
-				$.note = function(val,call){
-					if(typeof val=="string"){
-						var alertDialog = new Overlay.Dialog( alertSetting );
-						alertDialog.set("bodyContent", formatVal(val) );
-						alertDialog.set("buttons", []);
-						alertDialog.show();
-						setTimeout(function(){
-							if(typeof call=="function" ){
-								alertDialog.close();
-								call();
-							}else if(typeof call=="string" ){
-								window.location.href = call;
-							}
-						}, 1*1000);
-					}else{
-
-					}
-				}
+			$('#alertboxbutton').click(function(){
+				jAlert('自定义 alert 展示', 'alert-title');
+				return false;
 			});
 
+			$('#confirmbutton').click(function(){
+				// 注意：flag = ture or false - Yangcl
+				jConfirm('Can you confirm this?', 'confirm-title', function(flag) {
+					jAlert('您选择了: ' + flag, 'alert-title');
+				});
+				return false;
+			});
 
+			$('#promptbutton').click(function(){
+				// 注意：content = 你输入的内容 - Yangcl
+				jPrompt('请输入：', '', 'prompt-title', function(content) {
+					if(content) {
+						alert('您输入了：' + content);
+					}
+				});
+				return false;
+			});
 
-
+			$('#alerthtmlbutton').click(function(){
+				var html_ = '<a href="${basePath}example/ajaxFormDialogExample.do" target="_blank" class="anchorbutton">Ajax 分页+弹出窗体分页 示例</a>';
+				var title = 'alert 支持html标签';
+				jAlert(html_ , title);
+				return false;
+			});
 
 		})
 
-		function tryaaa(){
-			$.alert("开始编号已被使用请重新输入");
-		}
 
 	</script>
-
-
-
 </head>
 
 <body class="withvernav">
@@ -118,18 +51,35 @@
     <div class="bodywrapper">
 		<%@ include file="/inc/top.jsp" %>
 		<%@ include file="/inc/left.jsp" %>
-
-        <div class="centercontent">
-
-			<div id="validation" class="subcontent" style="display: block">
-				<form id="form-example" class="stdform" method="post" action="#" style="margin-top: 100px; margin-left: 100px">
-					<button type="button" class="submit radius2" onclick="tryaaa()">$alert test</button>
-					<button type="button" class="submit radius2" onclick="tryaaa()">confirm test</button>
-					<button type="button" class="submit radius2" onclick="tryaaa()">$note test</button>
-				</form>
+		<div class="centercontent tables">
+			<!--这个跳转页面的功能及跳转路径等等-->
+			<div class="pageheader notab">
+				<h1 class="pagetitle">自定义封装 alert confirm prompt 示例</h1>
+                    <span class="pagedesc">
+                        这个页面描述了系统中最常用的功能：自定义提示框。
+                    </span>
+				<span style="display:none">jsp/example/pageFormExample</span>
 			</div>
 
-        </div>
+			<div id="contentwrapper" class="contentwrapper">
+
+				<div id="dyntable2_wrapper" class="dataTables_wrapper" >
+					<div class="contenttitle2">
+						<h3>请选择你的用例 本页面包含JavaScript调用方式</h3>
+					</div>
+
+					<div class="subcontent" style="display: block; margin-top: 100px; margin-left: 20px">
+						<a id="alertboxbutton" href="" class="anchorbutton">基本 Alert</a> &nbsp;
+						<a id="confirmbutton" href="" class="anchorbutton">确认对话框 confirm</a> &nbsp;
+						<a id="promptbutton" href="" class="anchorbutton">输入对话框 prompt</a> &nbsp;
+						<a id="alerthtmlbutton" href="" class="anchorbutton">alert 支持html标签</a>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
 
 
     </div>
