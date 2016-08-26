@@ -97,17 +97,17 @@ public class ApiController {
 				} else if ("Order".equals(type)) {
 					if ("List".equals(method)) { // 根据传入的json串查询订单信息 - Yangcl
 						log.setClassUrl("ApiOcOrderInfoServiceImpl.getOrderInfoByJson");
-						log.setRemark("remark");
+						log.setRemark(request.getMethod());
 						result = service.getOrderInfoByJson(request.getData(), sellerCode);
 					} else if ("UpdateOrderStatus".equals(method)) {
 						// 订单变更：更新订单状态信息 - Yangcl
 						log.setClassUrl("ApiOcOrderInfoServiceImpl.updateOrderStatus");
-						log.setRemark("remark");
+						log.setRemark(request.getMethod());
 						result = service.updateOrderStatus(request.getData(), sellerCode);
 					} else if ("Shipments".equals(method)) {
 						// 订单物流变更：根据传入的json串插入物流信息 - Yangcl
 						log.setClassUrl("ApiOcOrderShipmentsServiceImpl.apiInsertShipments");
-						log.setRemark("remark");
+						log.setRemark(request.getMethod());
 						result = ocOrderShipmentsService.apiInsertShipments(request.getData(), sellerCode);
 						return result;
 					}
