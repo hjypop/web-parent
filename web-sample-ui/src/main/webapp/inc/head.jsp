@@ -17,10 +17,18 @@
     <script src="${js}/plugins/css3-mediaqueries.js"></script>
     <![endif]-->
 
-    <script type="text/javascript" src="${js}/jquery-1.9.1.js"></script>
+	
+	
+    <script type="text/javascript" src="${js}/jquery-1.10.2.js"></script> 
+	<script type="text/javascript" src="${js}/plugins/jquery-ui.js"></script>
+	<script type="text/javascript" src="${js}/plugins/colorpicker.js" ></script>
+	<script type="text/javascript" src="${js}/plugins/jquery.alerts.js" ></script>
+	
+	<!-- ajax相关方法 jsonp等 -->
+    <script type="text/javascript" src="${js}/utils/ajaxs.js"></script> 
     <script type="text/javascript" src="${js}/system/general.js"></script>
-    <script type="text/javascript" src="${js}/utils/ajaxs.js"></script> <!-- ajax相关方法 jsonp等 -->
-    <script type="text/javascript" src="${js}/system/login.js"></script> <!-- 退出相关方法 -->
+    <!-- 退出相关方法 -->
+    <script type="text/javascript" src="${js}/system/login.js"></script> 
     
     <!-- 
     	这个页面引入到所html的head标签中 这里控制了浏览器自适应以及整个系统页面的全局样式。

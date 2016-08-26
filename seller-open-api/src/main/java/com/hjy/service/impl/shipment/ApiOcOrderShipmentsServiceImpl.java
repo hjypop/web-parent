@@ -170,6 +170,31 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 			result.put("desc", "分布式锁生效，同步物流信息已锁定，请联系HJY删除锁" + sellerCode + "@ApiOcOrderShipmentsServiceImpl.apiInsertShipments");
 			return result; 
 		}
+	}
+
+	
+	
+	
+	
+	/**
+	 * @descriptions 效验后 查询物流信息
+	 *  惠家有：商户；第三方：销售平台。
+	 *  惠家有将物流信息发送给第三方，惠家有查询物流
+	 *   
+	 * @param json 
+	 * @param sellerCode 
+	 * @date 2016年8月26日下午4:47:44
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public JSONObject apiSelectShipments(String json, String sellerCode) {
+		// TODO 
+
+		
+		
+		
+		
+		return null;
 	} 
 	
 	
