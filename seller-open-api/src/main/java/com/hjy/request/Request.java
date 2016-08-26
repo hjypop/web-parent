@@ -36,6 +36,14 @@ public class Request {
 	private String nonce;
 
 	/**
+	 * 开始日期
+	 */
+	private String startDate;
+	/**
+	 * 结束日期
+	 */
+	private String endDate;
+	/**
 	 * 数字签名
 	 */
 	private String sign;
@@ -94,6 +102,22 @@ public class Request {
 
 	public void setAppSecret(String appSecret) {
 		this.appSecret = appSecret;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 
 }

@@ -93,6 +93,18 @@ public class ApiController {
 						log.setClassUrl("com.hjy.service.product.IApiProductService.batchProductsSkuStore");
 						log.setRemark(request.getMethod());
 						result = productService.batchProductsSkuStore(request.getData(), sellerCode);
+					} else if ("pushProduct".equals(method)) {
+						// 推送产品到第三方
+						boolean start = request.getStartDate() != null && !"".equals(request.getStartDate());
+						boolean end = request.getEndDate() != null && !"".equals(request.getEndDate());
+						// 判断开始日期和结束日期是否为空
+						if (start && end) {
+							// 获取产品列表
+							result = productService.pushProduct(seller, request.getStartDate(), request.getEndDate());
+						} else {
+							result.put("code", 3);
+							result.put("desc", "参数错误：未设置获取产品的开始日期和结束日期");
+						}
 					}
 				} else if ("Order".equals(type)) {
 					if ("List".equals(method)) { // 根据传入的json串查询订单信息 - Yangcl

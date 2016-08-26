@@ -1,7 +1,9 @@
 package com.hjy.dao.api;
 
 import java.util.List;
+import java.util.Map;
 
+import com.hjy.dto.product.Productdescription;
 import com.hjy.entity.product.PcProductinfo;
 
 /**
@@ -73,4 +75,39 @@ public interface IApiProductInfoDao {
 	 */
 	String findProductCodeByOutCode(String productCodeOld);
 
+	/**
+	 * 
+	 * 方法: getProductDescByCode <br>
+	 * 描述: 根据商品编号productCode查询描述信息 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月26日 下午1:40:58
+	 * 
+	 * @param productCode
+	 * @return
+	 */
+	Productdescription getProductDescByCode(String productCode);
+
+	/**
+	 * 
+	 * 方法: getProductPicByCode <br>
+	 * 描述: 根据商品编号productCode查询图片列表 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月26日 下午1:40:34
+	 * 
+	 * @param productCode
+	 * @return
+	 */
+	List<String> getProductPicByCode(String productCode);
+
+	/**
+	 * 
+	 * 方法: findProductBySellerProductype <br>
+	 * 描述: 根据开放接口商户权限获取商品列表 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月26日 下午2:22:57
+	 * 
+	 * @param map
+	 * @return
+	 */
+	List<PcProductinfo> findProductBySellerProductype(Map<String, String> map);
 }
