@@ -2,6 +2,7 @@ package com.hjy.service.impl.product;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -853,35 +854,50 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 */
 	@Override
 	public JSONObject pushProduct(WcSellerinfo seller, String startDate, String endDate) {
+		JSONObject response = new JSONObject();
 		List<ProductInfo> responseProduct = new ArrayList<ProductInfo>();
-		// 读取合作商的产品获取权限
-		if (seller.getCommission() != null && !"".equals(seller.getCommission())) {
-			JSONArray commissions = JSONArray.parseArray(seller.getCommission());
-			// 获取参数
-			for (int i = 0; i < commissions.size(); i++) {
-				JSONObject c = commissions.getJSONObject(i);
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("startTime", startDate + " 00:00:00");
-				map.put("endTime", endDate + " 23:59:59");
-				if ("LD".equals(c.getString("type"))) {
-					map.put("LD", "LD");
-				} else {
-					map.put("sellerType", c.getString("type"));
+		String lock = "";
+		try {
+			lock = WebHelper.getInstance().addLock(10, seller.getSellerCode() + "_Product.pushProduct");
+			// 读取合作商的产品获取权限
+			if (seller.getCommission() != null && !"".equals(seller.getCommission())) {
+				JSONArray commissions = JSONArray.parseArray(seller.getCommission());
+				// 获取参数
+				for (int i = 0; i < commissions.size(); i++) {
+					JSONObject c = commissions.getJSONObject(i);
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("startTime", startDate + " 00:00:00");
+					map.put("endTime", endDate + " 23:59:59");
+					if ("LD".equals(c.getString("type"))) {
+						map.put("LD", "LD");
+					} else {
+						map.put("sellerType", c.getString("type"));
+					}
+					List<PcProductinfo> list = productInfoDao.findProductBySellerProductype(map);
+					List<ProductInfo> products = initPcProduct(list, c.getDouble("commission"), seller.getPriceType());
+					if (products != null && products.size() > 0) {
+						responseProduct.addAll(products);
+					}
 				}
-				List<PcProductinfo> list = productInfoDao.findProductBySellerProductype(map);
-				List<ProductInfo> products = initPcProduct(list, c.getDouble("commission"), seller.getPriceType());
-				if (products != null && products.size() > 0) {
-					responseProduct.addAll(products);
-				}
+				response.put("code", 0);
+				response.put("desc", getInfo(0));
+			} else {
+				response.put("code", 10);
+				response.put("desc", getInfo(10));
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("code", 10);
+			response.put("desc", getInfo(10));
+		} finally {
+			WebHelper.getInstance().unLock(lock);
 		}
 		/**
 		 * 生成响应报文
 		 */
-		JSONObject obj = new JSONObject();
-		obj.put("data", responseProduct);
-		obj.put("total", responseProduct.size());
-		return obj;
+		response.put("data", responseProduct);
+		response.put("total", responseProduct.size());
+		return response;
 	}
 
 	/**
@@ -1021,5 +1037,75 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			skuList.add(sku);
 		}
 		return skuList;
+	}
+
+	/**
+	 * 
+	 * 方法: pushSkuStock <br>
+	 * 描述: TODO
+	 * 
+	 * @param seller
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 * @see com.hjy.service.product.IApiProductService#pushSkuStock(com.hjy.entity.webcore.WcSellerinfo,
+	 *      java.lang.String, java.lang.String)
+	 */
+	@Override
+	public JSONObject pushSkuStock(WcSellerinfo seller, String productCodes) {
+		JSONObject response = new JSONObject();
+		String lock = "";
+		try {
+			lock = WebHelper.getInstance().addLock(10, seller.getSellerCode() + "_Product.pushSkuStock");
+			/**
+			 * 根据productCode读取sku库存
+			 */
+			if (productCodes != null && !"".equals(productCodes) && productCodes.split(",").length > 0) {
+				List<String> codes = Arrays.asList(productCodes.split(","));
+				List<PcSkuinfo> skuList = skuInfoDao.findSkuDataByProductCode(codes);
+				if (skuList != null && skuList.size() > 0) {
+					//遍历
+				}
+			} else {
+				response.put("code", 10);
+				response.put("desc", getInfo(10));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("code", 10);
+			response.put("desc", getInfo(10));
+		} finally {
+			WebHelper.getInstance().unLock(lock);
+		}
+		return response;
+	}
+
+	/**
+	 * 
+	 * 方法: pushProductPrice <br>
+	 * 描述: TODO
+	 * 
+	 * @param seller
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 * @see com.hjy.service.product.IApiProductService#pushProductPrice(com.hjy.entity.webcore.WcSellerinfo,
+	 *      java.lang.String, java.lang.String)
+	 */
+	@Override
+	public JSONObject pushProductPrice(WcSellerinfo seller, String startDate, String endDate) {
+		JSONObject response = new JSONObject();
+		String lock = "";
+		try {
+			lock = WebHelper.getInstance().addLock(10, seller.getSellerCode() + "_Product.pushProductPrice");
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("code", 10);
+			response.put("desc", getInfo(10));
+		} finally {
+			WebHelper.getInstance().unLock(lock);
+		}
+		return response;
 	}
 }

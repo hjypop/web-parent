@@ -76,17 +76,48 @@ public interface IApiProductService {
 	 * @return
 	 */
 	JSONObject batchProductsSkuStore(String products, String sellerCode);
-	
+
 	/**
 	 * 
 	 * 方法: pushProduct <br>
 	 * 描述: 推送商品到第三方 <br>
 	 * 作者: zhy<br>
 	 * 时间: 2016年8月25日 下午4:40:30
-	 * @param sellerCode 合作商编号
-	 * @param startDate 开始日期
-	 * @param endDate 结束日期
+	 * 
+	 * @param sellerCode
+	 *            合作商编号
+	 * @param startDate
+	 *            开始日期
+	 * @param endDate
+	 *            结束日期
 	 * @return
 	 */
-	JSONObject pushProduct(WcSellerinfo seller,String startDate,String endDate);
+	JSONObject pushProduct(WcSellerinfo seller, String startDate, String endDate);
+
+
+	/**
+	 * 
+	 * 方法: pushSkuStock <br>
+	 * 描述: 推送sku库存到第三方 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月26日 下午3:59:20
+	 * @param seller
+	 * @param productCodes
+	 * @return
+	 */
+	JSONObject pushSkuStock(WcSellerinfo seller, String productCodes);
+
+	/**
+	 * 
+	 * 方法: pushProductPrice <br>
+	 * 描述: 根据时间区间查询商品价格推送到第三方 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月26日 下午3:52:11
+	 * 
+	 * @param seller
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	JSONObject pushProductPrice(WcSellerinfo seller, String startDate, String endDate);
 }

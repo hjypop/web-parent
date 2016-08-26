@@ -71,15 +71,28 @@ public interface IApiSkuInfoDao {
 	 * @return
 	 */
 	List<PcSkuinfo> findSkuInfoListByProductCodeOld(List<String> productCodeOlds);
-	
+
 	/**
 	 * 
 	 * 方法: findSkuByProductCode <br>
 	 * 描述: 根据商品编号查询sku集合 <br>
 	 * 作者: zhy<br>
 	 * 时间: 2016年8月25日 下午5:45:59
+	 * 
 	 * @param productCode
 	 * @return
 	 */
 	List<PcSkuinfo> findSkuByProductCode(String productCode);
+
+	/**
+	 * 
+	 * 方法: findSkuDataByProductCode <br>
+	 * 描述: 根据商品编号集合查询sku信息列表 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月26日 下午4:10:03
+	 * 
+	 * @param codes
+	 * @return
+	 */
+	List<PcSkuinfo> findSkuDataByProductCode(List<String> codes);
 }

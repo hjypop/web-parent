@@ -167,9 +167,32 @@
 		sku.mini_order
 		FROM
 		productcenter.pc_skuinfo AS sku
-		LEFT JOIN systemcenter.sc_store_skunum AS stock ON sku.sku_code =
+		LEFT JOIN
+		systemcenter.sc_store_skunum AS stock ON sku.sku_code =
 		stock.sku_code
 		where sku.product_code =
 		#{productCode,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 根据商品编号集合查询sku集合 2016-08-25 zhy -->
+	<select id="findSkuDataByProductCode" resultMap="BaseResultMap"
+		parameterType="list">
+		SELECT
+		sku.sku_code,
+		sku.sku_name,
+		sku.sell_price,
+		sku.stock_num,
+		sku.sku_picurl,
+		sku.sku_adv,
+		sku.mini_order
+		FROM
+		productcenter.pc_skuinfo
+		AS sku
+		where sku.product_code in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		order by sku.product_code asc
 	</select>
 </mapper>
