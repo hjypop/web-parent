@@ -50,7 +50,7 @@ body {
 
 input, select, textarea, button {
 	font-size: 12px;
-	ont-family: "Century Schoolbook",
+	font-family: "Century Schoolbook",
 	Arial, Helvetica, sans-serif;
 	outline: none;
 	margin: 0;
