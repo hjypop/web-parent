@@ -157,9 +157,19 @@
 	<!-- 根据商品编号查询sku集合 2016-08-25 zhy -->
 	<select id="findSkuByProductCode" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from productcenter.pc_skuinfo where product_code =
+		SELECT
+		sku.sku_code,
+		sku.sku_name,
+		sku.sell_price,
+		IFNULL(stock.stock_num,0) AS stock_num,
+		sku.sku_picurl,
+		sku.sku_adv,
+		sku.mini_order
+		FROM
+		productcenter.pc_skuinfo AS sku
+		LEFT JOIN systemcenter.sc_store_skunum AS stock ON sku.sku_code =
+		stock.sku_code
+		where sku.product_code =
 		#{productCode,jdbcType=VARCHAR}
 	</select>
 </mapper>
