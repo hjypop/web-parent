@@ -1159,7 +1159,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 									} else {
 										price = Double.valueOf(sku.get("sell_price").toString()) * (1 + commission);
 									}
-									obj.put("price", price);
+									obj.put("sellPrice", price);
 								}
 								productSku.add(obj);
 							}
