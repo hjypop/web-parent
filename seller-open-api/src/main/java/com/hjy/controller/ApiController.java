@@ -138,7 +138,20 @@ public class ApiController {
 						log.setRemark(request.getMethod());
 						result = ocOrderShipmentsService.apiInsertShipments(request.getData(), sellerCode);
 						return result;
+					} else if ("Insert".equals(method)) {
+						// 批量插入订单状态信息，第三方将订单信息发送给惠家有，惠家有插入订单 - Yangcl
+						log.setClassUrl("ApiOcOrderInfoServiceImpl.insertOrder");
+						log.setRemark(request.getMethod());
+						result = service.insertOrder(request.getData(), sellerCode);
+						return result;
+					} else if ("ShipmentQuery".equals(method)) {
+						// 查询物流信息，惠家有将物流信息发送给第三方，惠家有查询物流 - Yangcl
+						log.setClassUrl("ApiOcOrderShipmentsServiceImpl.apiSelectShipments");
+						log.setRemark(request.getMethod());
+						result = ocOrderShipmentsService.apiSelectShipments(request.getData(), sellerCode);
+						return result;
 					}
+					
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
