@@ -52,7 +52,7 @@ public class OrderInfoInsert {
 	
 	// low_order 抄低价订单 
 	// 449747110001 @否  449747110002 是
-	private String lowOrder; // default  449747110001
+//	private String lowOrder; // default  449747110001
 	
 	
 	private List<OrderDetailInsert> list ;  // 一个订单买了多个sku商品 
@@ -148,14 +148,6 @@ public class OrderInfoInsert {
 	}
 
 
-	public String getLowOrder() {
-		return lowOrder;
-	}
-
-
-	public void setLowOrder(String lowOrder) {
-		this.lowOrder = lowOrder;
-	}
 
 
 	public List<OrderDetailInsert> getList() {

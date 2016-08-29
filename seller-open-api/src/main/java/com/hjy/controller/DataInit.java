@@ -1,5 +1,6 @@
 package com.hjy.controller;
 
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
-import com.hjy.common.bill.HexUtil;
-import com.hjy.common.bill.MD5Util;
 import com.hjy.helper.SignHelper;
 import com.hjy.request.Request;
+import com.hjy.request.data.OrderDetailInsert;
+import com.hjy.request.data.OrderInfoInsert;
 import com.hjy.request.data.OrderInfoRequest;
 import com.hjy.request.data.OrderInfoStatus;
 import com.hjy.request.data.OrderShipment;
@@ -48,6 +49,74 @@ public class DataInit {
 		String sign =SignHelper.md5Sign(str.toString());
 		System.out.println(sign); 
 	}
+	
+	
+	public static Request orderInfoBatchInsertTest(){
+		Request r = new Request();
+		r.setMethod("Order.Insert");
+		r.setAppid("SI10182"); 
+		r.setTimestamp("2016-08-30 11:31:58");
+		r.setNonce("4"); 
+		r.setSign("d7e67b07c7983da4603dd467b2cf6f78"); 
+		
+		
+		List<OrderInfoInsert> asdf = new ArrayList<OrderInfoInsert>();
+		String orderCode = "TBI88995";
+		String producdCode = "PC8859-";
+		String skuCode = "SKU12340-";
+		for(int i = 0 ; i < 5000 ; i ++){
+			OrderInfoInsert o = new OrderInfoInsert();
+			o.setOrderCode(orderCode + i);
+			o.setPayType("449716200001");
+			if(i % 9 == 0 ){
+				o.setSendType(""); 
+			}else{
+				o.setSendType("449715210001");
+			}
+			int pm = (int)(Math.random()*100);
+			o.setProductMoney(BigDecimal.valueOf(Long.valueOf(pm))); 
+			o.setTransportMoney(BigDecimal.ONE); 
+			o.setOrderMoney(o.getProductMoney().add(BigDecimal.TEN));
+			o.setProductName("窈窕淑女 - 我好逑！");
+			o.setDueMoney(o.getOrderMoney()); 
+			
+			List<OrderDetailInsert> list = new ArrayList<OrderDetailInsert>();
+			for(int j = 0 ; j < 3 ; j ++){
+				OrderDetailInsert d = new OrderDetailInsert();
+				if(i % 8 == 0 ){
+					d.setSkuCode("");
+				}else{
+					d.setSkuCode(skuCode + pm);
+				}
+				d.setProductCode(producdCode + pm);
+				if(i % 10 == 0 ){
+					d.setSkuName("性感黑丝袜"); 
+				}else{
+					d.setSkuName("振动棒"); 
+				}
+				d.setSkuNmu(1);
+				d.setShowPrice(BigDecimal.valueOf(72.9)); 
+				list.add(d);
+			}
+			o.setList(list);
+			asdf.add(o);
+		}
+		
+		r.setData(JSON.toJSONString(asdf)); 
+		
+		
+		
+		
+		return r; 
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	public static Request apiInsertShipmentsTest(){
