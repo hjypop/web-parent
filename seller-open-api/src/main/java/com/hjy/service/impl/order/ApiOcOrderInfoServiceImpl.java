@@ -405,7 +405,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	             
 	             // 赋值 
 	             String func_ = "set" + name.substring(0,1).toUpperCase()+name.substring(1);
-				 Method m_ = t.getClass().getMethod(func_);
+				 Method m_ = t.getClass().getMethod(func_ , m.invoke(t).getClass());
 				 @SuppressWarnings("rawtypes")
 				Class[] c = m_.getParameterTypes();
 				 if(c[0] == String.class) {
