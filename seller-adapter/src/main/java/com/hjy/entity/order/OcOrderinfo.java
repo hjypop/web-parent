@@ -76,7 +76,6 @@ public class OcOrderinfo extends BaseModel{
 	
 
 	public OcOrderinfo() {
-		super();
 	}
 
 	public OcOrderinfo(String orderCode, String smallSellerCode) {
