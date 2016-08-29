@@ -1,6 +1,7 @@
 package com.hjy.dao.api;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hjy.entity.product.PcSkuinfo;
 
@@ -94,5 +95,17 @@ public interface IApiSkuInfoDao {
 	 * @param codes
 	 * @return
 	 */
-	List<PcSkuinfo> findSkuDataByProductCode(List<String> codes);
+	List<Map<String, Object>> findSkuDataByProductCode(List<String> codes);
+
+	/**
+	 * 
+	 * 方法: findSkuPriceByProducts <br>
+	 * 描述: 根据productcode集合查询sku价格信息 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月29日 下午2:17:10
+	 * 
+	 * @param codes
+	 * @return
+	 */
+	List<Map<String, Object>> findSkuPriceByProducts(List<String> codes);
 }

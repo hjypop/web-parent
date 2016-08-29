@@ -159,26 +159,7 @@
 		resultMap="BaseResultMap">
 		SELECT
 		sku.sku_code,
-		sku.sku_name,
-		sku.sell_price,
-		IFNULL(stock.stock_num,0) AS stock_num,
-		sku.sku_picurl,
-		sku.sku_adv,
-		sku.mini_order
-		FROM
-		productcenter.pc_skuinfo AS sku
-		LEFT JOIN
-		systemcenter.sc_store_skunum AS stock ON sku.sku_code =
-		stock.sku_code
-		where sku.product_code =
-		#{productCode,jdbcType=VARCHAR}
-	</select>
-
-	<!-- 根据商品编号集合查询sku集合 2016-08-25 zhy -->
-	<select id="findSkuDataByProductCode" resultMap="BaseResultMap"
-		parameterType="list">
-		SELECT
-		sku.sku_code,
+		sku.product_code,
 		sku.sku_name,
 		sku.sell_price,
 		sku.stock_num,
@@ -186,13 +167,81 @@
 		sku.sku_adv,
 		sku.mini_order
 		FROM
-		productcenter.pc_skuinfo
-		AS sku
-		where sku.product_code in
+		productcenter.pc_skuinfo AS sku
+		LEFT JOIN
+		productcenter.pc_productinfo AS product ON sku.product_code =
+		product.product_code
+		AND product.product_status = '4497153900060002'
+		AND product.seller_code = 'SI2003'
+		WHERE sku.product_code =
+		#{productCode,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 根据商品编号集合查询sku集合 2016-08-25 zhy -->
+	<select id="findSkuDataByProductCode" resultType="Map"
+		parameterType="list">
+		SELECT
+		sku.sku_code,
+		sku.product_code,
+		sku.sku_name,
+		sku.sell_price,
+		sku.cost_price,
+		sku.stock_num,
+		sku.sku_picurl,
+		sku.sku_adv,
+		sku.mini_order
+		FROM
+		productcenter.pc_skuinfo AS sku
+		LEFT JOIN
+		productcenter.pc_productinfo
+		AS product ON sku.product_code =
+		product.product_code
+		AND
+		product.product_status = '4497153900060002'
+		AND
+		product.seller_code =
+		'SI2003'
+		WHERE sku.product_code in
 		<foreach item="item" index="index" collection="list" open="("
 			separator="," close=")">
 			#{item}
 		</foreach>
 		order by sku.product_code asc
+	</select>
+	<!-- 根据productcode集合查询sku价格信息 2016-08-29 zhy -->
+	<select id="findSkuPriceByProducts" resultType="Map"
+		parameterType="list">
+		SELECT
+		sku.sku_code,
+		sku.product_code,
+		sku.sku_name,
+		sku.sell_price,
+		sku.cost_price,
+		sku.stock_num,
+		sku.sku_picurl,
+		sku.sku_adv,
+		sku.mini_order,
+		product.small_seller_code,
+		ue.uc_seller_type
+		FROM
+		productcenter.pc_skuinfo AS sku
+		LEFT JOIN productcenter.pc_productinfo
+		AS product ON sku.product_code =
+		product.product_code
+		LEFT JOIN
+		usercenter.uc_sellerinfo AS u ON u.small_seller_code =
+		product.small_seller_code
+		LEFT JOIN usercenter.uc_seller_info_extend AS
+		ue ON ue.small_seller_code =
+		u.small_seller_code
+		WHERE
+		product.product_status = '4497153900060002'
+		AND product.seller_code =
+		'SI2003'
+		AND sku.product_code in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
 	</select>
 </mapper>

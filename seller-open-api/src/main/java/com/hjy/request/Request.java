@@ -43,10 +43,24 @@ public class Request {
 	 * 结束日期
 	 */
 	private String endDate;
+
+	/**
+	 * 商品编号数组字符串，用逗号隔开
+	 */
+	private String productCodes;
+
 	/**
 	 * 数字签名
 	 */
 	private String sign;
+
+	public String getProductCodes() {
+		return productCodes;
+	}
+
+	public void setProductCodes(String productCodes) {
+		this.productCodes = productCodes;
+	}
 
 	public String getSign() {
 		return sign;

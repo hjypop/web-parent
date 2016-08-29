@@ -47,7 +47,6 @@ public class PcProductInfoTest {
 		System.out.println(list.size());
 	}
 
-	@Test
 	public void pushProduct() {
 		System.out.println(DateUtil.getSysDateTimeString());
 		WcSellerinfo seller = new WcSellerinfo();
@@ -55,6 +54,26 @@ public class PcProductInfoTest {
 				"[{\"type\":\"LD\",\"commission\":\"12\"},{\"type\":\"4497478100050001\",\"commission\":\"33\"}]");
 		seller.setPriceType(0);
 		JSONObject obj = service.pushProduct(seller, "2016-05-31", "2016-06-31");
+		System.out.println(DateUtil.getSysDateTimeString());
+		System.out.println(obj.toJSONString());
+	}
+
+	public void pushSkuStock() {
+		String productCodes = "101392,100793";
+		WcSellerinfo seller = new WcSellerinfo();
+		seller.setSellerCode("22911");
+		System.out.println(service.pushSkuStock(seller, productCodes));
+	}
+
+	@Test
+	public void pushProductPrice() {
+		System.out.println(DateUtil.getSysDateTimeString());
+		WcSellerinfo seller = new WcSellerinfo();
+		seller.setCommission(
+				"[{\"type\":\"LD\",\"commission\":\"12\"},{\"type\":\"4497478100050001\",\"commission\":\"33\"}]");
+		seller.setPriceType(0);
+		String productCodes = "8016408754,798107";
+		JSONObject obj = service.pushProductPrice(seller, productCodes);
 		System.out.println(DateUtil.getSysDateTimeString());
 		System.out.println(obj.toJSONString());
 	}

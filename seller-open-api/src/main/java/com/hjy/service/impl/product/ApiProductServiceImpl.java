@@ -1060,12 +1060,33 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			/**
 			 * 根据productCode读取sku库存
 			 */
+			JSONArray array = new JSONArray();
 			if (productCodes != null && !"".equals(productCodes) && productCodes.split(",").length > 0) {
 				List<String> codes = Arrays.asList(productCodes.split(","));
-				List<PcSkuinfo> skuList = skuInfoDao.findSkuDataByProductCode(codes);
-				if (skuList != null && skuList.size() > 0) {
-					//遍历
+				List<Map<String, Object>> skuList = skuInfoDao.findSkuDataByProductCode(codes);
+				for (int i = 0; i < codes.size(); i++) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					String productCode = codes.get(i);
+					JSONArray productSku = new JSONArray();
+					if (skuList != null && skuList.size() > 0) {
+						// 遍历SKU信息集合
+						for (int j = 0; j < skuList.size(); j++) {
+							Map<String, Object> sku = skuList.get(j);
+							// 如果sku的productCode与productCode值相同存储到集合表
+							if (sku.get("product_code").toString().equals(productCode)) {
+								JSONObject obj = new JSONObject();
+								obj.put("skuCode", sku.get("sku_code").toString());
+								obj.put("stockNum", sku.get("stock_num").toString());
+								productSku.add(obj);
+							}
+						}
+					}
+					// 存储到map中格式为 productCode:skuStock
+					map.put(productCode, productSku);
+					array.add(map);
 				}
+				response.put("code", 0);
+				response.put("data", array.toJSONString());
 			} else {
 				response.put("code", 10);
 				response.put("desc", getInfo(10));
@@ -1094,11 +1115,66 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 *      java.lang.String, java.lang.String)
 	 */
 	@Override
-	public JSONObject pushProductPrice(WcSellerinfo seller, String startDate, String endDate) {
+	public JSONObject pushProductPrice(WcSellerinfo seller, String productCodes) {
 		JSONObject response = new JSONObject();
 		String lock = "";
 		try {
 			lock = WebHelper.getInstance().addLock(10, seller.getSellerCode() + "_Product.pushProductPrice");
+			/**
+			 * 根据productCode读取sku价格
+			 */
+			JSONArray array = new JSONArray();
+			if (productCodes != null && !"".equals(productCodes) && productCodes.split(",").length > 0) {
+				List<String> codes = Arrays.asList(productCodes.split(","));
+				List<Map<String, Object>> skuList = skuInfoDao.findSkuPriceByProducts(codes);
+				for (int i = 0; i < codes.size(); i++) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					String productCode = codes.get(i);
+					JSONArray productSku = new JSONArray();
+					if (skuList != null && skuList.size() > 0) {
+						// 遍历SKU信息集合
+						for (int j = 0; j < skuList.size(); j++) {
+							Map<String, Object> sku = skuList.get(j);
+							// 如果sku的productCode与productCode值相同存储到集合表
+							if (sku.get("product_code").toString().equals(productCode)) {
+								JSONObject obj = new JSONObject();
+								obj.put("skuCode", sku.get("sku_code").toString());
+								// 根据类型获取商户佣金，计算价格
+								JSONArray commissions = JSONArray.parseArray(seller.getCommission());
+								for (int k = 0; k < commissions.size(); k++) {
+									JSONObject c = commissions.getJSONObject(k);
+									double commission = 0;
+									double price = 0;
+									// 如果是LD商品
+									if (c.getString("type").equals("LD")
+											&& sku.get("small_seller_code").toString().equals("SI2003")) {
+										commission = c.getDoubleValue("commission");
+									} else if (sku.get("uc_seller_type") != null && c.getString("type").toString()
+											.equals(sku.get("uc_seller_type").toString())) {
+										commission = c.getDoubleValue("commission");
+									}
+									// 0 成本价 1 销售价
+									if (seller.getPriceType() == 0) {
+										price = Double.valueOf(sku.get("cost_price").toString()) * (1 + commission);
+									} else {
+										price = Double.valueOf(sku.get("sell_price").toString()) * (1 + commission);
+									}
+									obj.put("price", price);
+								}
+								productSku.add(obj);
+							}
+						}
+					}
+					// 存储到map中格式为 productCode:skuStock
+					map.put(productCode, productSku);
+					array.add(map);
+				}
+				response.put("code", 0);
+				response.put("data", array.toJSONString());
+			} else {
+				response.put("code", 10);
+				response.put("desc", getInfo(10));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.put("code", 10);

@@ -94,13 +94,13 @@ public interface IApiProductService {
 	 */
 	JSONObject pushProduct(WcSellerinfo seller, String startDate, String endDate);
 
-
 	/**
 	 * 
 	 * 方法: pushSkuStock <br>
 	 * 描述: 推送sku库存到第三方 <br>
 	 * 作者: zhy<br>
 	 * 时间: 2016年8月26日 下午3:59:20
+	 * 
 	 * @param seller
 	 * @param productCodes
 	 * @return
@@ -119,5 +119,5 @@ public interface IApiProductService {
 	 * @param endDate
 	 * @return
 	 */
-	JSONObject pushProductPrice(WcSellerinfo seller, String startDate, String endDate);
+	JSONObject pushProductPrice(WcSellerinfo seller, String productCodes);
 }

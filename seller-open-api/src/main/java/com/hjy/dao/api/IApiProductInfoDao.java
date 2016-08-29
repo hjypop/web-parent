@@ -110,4 +110,16 @@ public interface IApiProductInfoDao {
 	 * @return
 	 */
 	List<PcProductinfo> findProductBySellerProductype(Map<String, String> map);
+
+	/**
+	 * 
+	 * 方法: getProdcutCategoryName <br>
+	 * 描述: 获取商品类目名称 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年8月26日 下午5:55:55
+	 * 
+	 * @param productCode
+	 * @return
+	 */
+	String getProdcutCategoryName(String productCode);
 }

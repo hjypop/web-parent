@@ -338,4 +338,20 @@
 		#{endTime,jdbcType=VARCHAR}
 		)
 	</select>
+	<!-- 获取商品类目名称 2016-08-26 zhy -->
+	<select id="getProdcutCategoryName" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT
+		ucs.category_name
+		FROM
+		usercenter.uc_sellercategory AS ucs
+		LEFT
+		JOIN usercenter.uc_sellercategory_product_relation AS ucpr ON
+		ucs.category_code = ucpr.category_code
+		WHERE
+		ucpr.product_code =
+		#{productCode,jdbcType=VARCHAR}
+		AND ucpr.seller_code = 'SI2003'
+		and
+		ucs.seller_code = 'SI2003';
+	</select>
 </mapper>
