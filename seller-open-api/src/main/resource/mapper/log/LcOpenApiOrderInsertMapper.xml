@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.api.ILcOpenApiOrderInsertDao">
+
+	<resultMap id="BaseResultMap" type="com.hjy.entity.log.LcOpenApiOrderInsert">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="seller_code" property="sellerCode" jdbcType="VARCHAR" />
+		<result column="flag" property="flag" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="insert_json" property="insertJson" jdbcType="LONGVARCHAR" />
+		<result column="remark" property="remark" jdbcType="LONGVARCHAR" />
+	</resultMap>
+ 
+	 
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+			*
+		from 
+			logcenter.lc_open_api_order_insert
+		where 
+			zid = #{zid,jdbcType=INTEGER}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from logcenter.lc_open_api_order_insert where zid = #{zid,jdbcType=INTEGER}
+	</delete>
+ 
+	<insert id="insertSelective" parameterType="com.hjy.entity.log.LcOpenApiOrderInsert">
+		insert into logcenter.lc_open_api_order_insert
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="sellerCode != null">
+				seller_code,
+			</if>
+			<if test="flag != null">
+				flag,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="insertJson != null">
+				insert_json,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="sellerCode != null">
+				#{sellerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="flag != null">
+				#{flag,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="insertJson != null">
+				#{insertJson,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	
+	<update id="updateSelective" parameterType="com.hjy.entity.log.LcOpenApiOrderInsert">
+		update logcenter.lc_open_api_order_insert
+		<set>
+			<if test="sellerCode != null">
+				seller_code = #{sellerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="flag != null">
+				flag = #{flag,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="insertJson != null">
+				insert_json = #{insertJson,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where zid = #{zid,jdbcType=INTEGER}
+	</update>
+	
+ 
+ 
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

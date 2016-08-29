@@ -13,7 +13,7 @@ ApiOcOrderShipmentsServiceImpl -> apiInsertShipments 需要加入新的日志表
 open_api_appid
 
 
-
+加入新的日志表 lc_open_api_order_insert 记录订单批量插入情况
  
 
 

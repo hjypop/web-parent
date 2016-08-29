@@ -59,6 +59,17 @@ public interface IOcOrderinfoDao extends BaseDao<OcOrderinfo, Integer>{
 	 * @version 1.0.0.1
 	 */
 	public OcOrderinfo getOrderInfoByCode(OcOrderinfo info);
+	
+	/**
+	 * @descriptions 批量插入
+	 * 
+	 * @param list
+	 * @return 
+	 * @date 2016年8月29日下午3:59:16
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public Integer apiBatchInsert(List<OcOrderinfo> list);
 }
 
 

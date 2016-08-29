@@ -30,53 +30,53 @@ public class OrderDetail  implements Serializable{
 	/**
 	 * 订单明细的zid(创建订单勿传)
 	 */
-	private String zid= "";
+	private Integer zid;
 	
-    private String uid ="";
+    private String uid ;
     
 	/**
 	 * 订单编号(创建接口勿传,此值会被覆盖，请勿传)
 	 */
-	private String orderCode = "";
+	private String orderCode ;
 	/**
 	 * 产品编号
 	 */
-	private String skuCode = "";
+	private String skuCode ;
 	/**
 	 * 商品编号
 	 */
-	private String productCode = "";
+	private String productCode ;
 	
 	/**
 	 * 产品名称
 	 */
-	private String skuName = "";
+	private String skuName ;
 	
-    private String giftCd ="";
+    private String giftCd ;
     
 	/**
 	 * 产品价格
 	 */
-	private BigDecimal skuPrice = new BigDecimal(0.00) ;
+	private BigDecimal skuPrice;
 	
 	/**
 	 * 产品数量
 	 */
-	private int skuNum = 0;
+	private int skuNum;
 
 	
 	/**
 	 * 商品的主图url
 	 */
-	private String productPicurl = "";
+	private String productPicurl ;
 	
-	private String detailCode ="";
+	private String detailCode ;
 	
 	
 	 /**
      * 单个商品所用积分
      */
-    private BigDecimal virtualMoneyDeduction=new BigDecimal(0.00);
+    private BigDecimal virtualMoneyDeduction;
 	
     /** 仓库代码 */
     private String storeCode;
@@ -90,33 +90,36 @@ public class OrderDetail  implements Serializable{
     private String prchType;//一地入库类型
     private String oaSiteNo;//入库仓库编号
     private String dlrId;//供应商编号
-    private String validateFlag="N";//虚拟商品标示   Y：是  N：否
+    private String validateFlag;//虚拟商品标示   Y：是  N：否
     private String  gift_cd;//赠品类别
-    private BigDecimal saveAmt = BigDecimal.ZERO;
+    private BigDecimal saveAmt;
 	
-    private BigDecimal costPrice = BigDecimal.ZERO;//成本价
+    private BigDecimal costPrice;//成本价
     
     private String productCodeOut;
     
-    private BigDecimal groupPrice=BigDecimal.ZERO;//微公社价格
+    private BigDecimal groupPrice;//微公社价格
     
-    private BigDecimal couponPrice=BigDecimal.ZERO;
-    private BigDecimal showPrice=BigDecimal.ZERO;
+    private BigDecimal couponPrice;
+    private BigDecimal showPrice;
     
-    private BigDecimal taxRate=BigDecimal.ZERO;//税率
+    private BigDecimal taxRate;//税率
     
-    private String flagAsale ="";
+    private String flagAsale ;
 
-    private String asaleCode ="";
+    private String asaleCode ;
     
-	public String getZid() {
+    
+    
+	
+	public Integer getZid() {
 		return zid;
 	}
 
-	public void setZid(String zid) {
+	public void setZid(Integer zid) {
 		this.zid = zid;
 	}
-	
+
 	public String getUid() {
 		return uid;
 	}

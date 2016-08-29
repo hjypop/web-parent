@@ -261,6 +261,36 @@
 				and order_code = #{orderCode , jdbcType=VARCHAR} 
 			</if>
 	</select>
+	
+	<!-- open api 批量插入订单信息 - Yangcl  -->
+	<insert id="apiBatchInsert" parameterType="java.util.List">
+		replace into ordercenter.oc_orderdetail
+			( 
+				uid,
+				order_code,
+				sku_code,
+				product_code,
+				sku_name,
+				sku_price,
+				sku_num,
+				gift_flag,
+				show_price 
+			) 
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+				 #{item.uid} , 
+				 #{item.orderCode} ,
+				 #{item.skuCode} , 
+				 #{item.productCode} ,
+				 #{item.skuName} , 
+				 #{item.skuPrice} , 
+				 #{item.skuNum} ,
+				 #{item.giftFlag} , 
+				 #{item.showPrice}  
+			 )
+		</foreach>
+	</insert>
 </mapper>
 
 
