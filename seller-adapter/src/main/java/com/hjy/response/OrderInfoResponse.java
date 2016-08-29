@@ -1,4 +1,4 @@
-package com.hjy.response.data;
+package com.hjy.response;
 
 import java.math.BigDecimal;
 

@@ -40,7 +40,7 @@ import com.hjy.request.data.OrderInfoRequest;
 import com.hjy.request.data.OrderInfoRequestDto;
 import com.hjy.request.data.OrderInfoStatus;
 import com.hjy.request.data.OrderInfoStatusDto;
-import com.hjy.response.data.OrderInfoResponse;
+import com.hjy.response.OrderInfoResponse;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.order.IApiOcOrderInfoService;
 
@@ -260,7 +260,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	}
 
 
-	/**
+	/** Order.Insert
 	 * @descriptions 插入订单状态信息
 	 *  惠家有：商户；第三方：销售平台。
 	 *  第三方将订单信息发送给惠家有，惠家有插入订单

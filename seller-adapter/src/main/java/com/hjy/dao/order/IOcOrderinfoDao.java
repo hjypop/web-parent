@@ -6,7 +6,7 @@ import com.hjy.dao.BaseDao;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.request.data.OrderInfoRequestDto;
 import com.hjy.request.data.OrderInfoStatusDto;
-import com.hjy.response.data.OrderInfoResponse;
+import com.hjy.response.OrderInfoResponse;
 
 /**
  * 

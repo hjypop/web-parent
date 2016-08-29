@@ -5,6 +5,8 @@ import java.util.List;
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.order.OcOrderShipments;
 import com.hjy.request.data.OrderShipment;
+import com.hjy.request.data.OrderShipmentsRequest;
+import com.hjy.response.ApiShipmentsResponse;
 
 public interface IOcOrderShipmentsDao extends BaseDao<OcOrderShipments, Integer>{
 
@@ -30,4 +32,14 @@ public interface IOcOrderShipmentsDao extends BaseDao<OcOrderShipments, Integer>
 	
 	
 	public Integer updateSelectiveByUid(OcOrderShipments info);
+	
+	/**
+	 * @descriptions 根据 small_seller_code startTime endTime查询物流信息
+	 * 
+	 * @param request 
+	 * @date 2016年8月29日下午5:25:11
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public List<ApiShipmentsResponse> apiSelectShipments(OrderShipmentsRequest request);
 }

@@ -279,6 +279,32 @@
 		</set>
 		where uid = #{uid,jdbcType=INTEGER}
 	</update>
+	
+	
+	
+	
+	<resultMap id="apiSelectResultMap" type="com.hjy.response.ApiShipmentsResponse"> 
+		<result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+		<result column="logisticse_code" property="logisticseCode" jdbcType="VARCHAR" />
+		<result column="logisticse_name" property="logisticseName" jdbcType="VARCHAR" />
+		<result column="waybill" property="waybill" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="apiSelectShipments" parameterType="com.hjy.request.data.OrderShipmentsRequest" resultMap="apiSelectResultMap">
+		SELECT 
+				s.order_code as orderCode,
+				s.logisticse_code as logisticseCode,
+				s.logisticse_name as logisticseName,
+				s.waybill as waybill,
+				s.create_time as createTime,
+				s.remark as remark
+		FROM
+				ordercenter.oc_order_shipments s  
+		WHERE 
+				s.create_time between #{startTime , jdbcType=VARCHAR} and #{endTime , jdbcType=VARCHAR} 
+				and s.small_seller_code = #{sellerCode , jdbcType=VARCHAR}  
+	</select>
 </mapper>
 
 

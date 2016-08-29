@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.dao.api.ILcOpenApiQueryLogDao;
 import com.hjy.dao.log.ILcOpenApiShipmentStatusDao;
 import com.hjy.dao.order.IOcOrderShipmentsDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
+import com.hjy.entity.log.LcOpenApiQueryLog;
 import com.hjy.entity.log.LcOpenApiShipmentStatus;
 import com.hjy.entity.order.OcOrderShipments;
 import com.hjy.entity.order.OcOrderinfo;
@@ -23,6 +25,8 @@ import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelpter;
 import com.hjy.helper.WebHelper;
 import com.hjy.request.data.OrderShipment;
+import com.hjy.request.data.OrderShipmentsRequest;
+import com.hjy.response.ApiShipmentsResponse;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.shipment.IApiOcOrderShipmentsService;
 
@@ -46,6 +50,9 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 	
 	@Resource
 	private ILcOpenApiShipmentStatusDao logShipmentStatusDao;
+	
+	@Resource
+	private ILcOpenApiQueryLogDao openApiQueryDao;
 	
 	/**
 	 * @descriptions 效验订单后插入物流信息
@@ -176,8 +183,8 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 	
 	
 	
-	/**
-	 * @descriptions 效验后 查询物流信息
+	/** Order.ShipmentQuery
+	 * @descriptions 查询物流信息
 	 *  惠家有：商户；第三方：销售平台。
 	 *  惠家有将物流信息发送给第三方，惠家有查询物流
 	 *   
@@ -188,13 +195,56 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 	 * @version 1.0.0.1
 	 */
 	public JSONObject apiSelectShipments(String json, String sellerCode) {
-		// TODO 
-
+		JSONObject result = new JSONObject();
+		String responseTime = DateHelper.formatDate(new Date());
+		result.put("responseTime", responseTime);
+		// 解析请求数据
+		OrderShipmentsRequest request = null;
+		try {
+			request = JSON.parseObject(json, OrderShipmentsRequest.class);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("desc", "请求参数错误，请求数据解析异常");
+			return result; 
+		}
+		
+		List<ApiShipmentsResponse> list = null;
+		try {
+			 list = dao.apiSelectShipments(request);
+			 result.put("code", 0);
+			 result.put("desc", "请求成功");
+			 result.put("data", list);
+			 
+			openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
+					sellerCode , 
+					"Order.ShipmentQuery" , 
+					"com.hjy.service.impl.shipment.ApiOcOrderShipmentsServiceImpl.apiSelectShipments" , 
+					new Date(),
+					1 , 
+					json,
+					result.toJSONString(),  
+					"query success"));
+				
+		} catch (Exception ex) { 
+			logger.error("查询物流信息异常|"  , ex);  
+			String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
+			result.put("code", 11);
+			result.put("desc", "查询物流信息异常");
+			
+			openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
+					sellerCode , 
+					"Order.ShipmentQuery" , 
+					"com.hjy.service.impl.shipment.ApiOcOrderShipmentsServiceImpl.apiSelectShipments" , 
+					new Date(),
+					2 , 
+					json,
+					result.toJSONString(),  
+					remark_));
+		}
 		
 		
 		
-		
-		return null;
+		return result;
 	} 
 	
 	

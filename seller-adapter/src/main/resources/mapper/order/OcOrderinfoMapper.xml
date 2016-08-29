@@ -110,7 +110,7 @@
 	
 	
 	<!-- 根据small_seller_code返回订单详细信息列表。seller-open-api项目中使用 2016-08-04 - Yangcl  -->
-	<resultMap id="OrderApiResultMap" type="com.hjy.response.data.OrderInfoResponse"> 
+	<resultMap id="OrderApiResultMap" type="com.hjy.response.OrderInfoResponse"> 
 		<!-- oc_orderinfo 表字段 -->
 		<result column="order_code" jdbcType="VARCHAR" property="orderCode" /> 
 		<result column="product_money" jdbcType="DECIMAL" property="productMoney" />
