@@ -21,7 +21,7 @@ public class DataInit {
 	
 	public static void main(String[] args) {
 		
-		Request request = DataInit.apiInsertShipmentsTest();
+		Request request = DataInit.orderInfoBatchInsertTest();
 		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("appid", request.getAppid());
@@ -57,7 +57,7 @@ public class DataInit {
 		r.setAppid("SI10182"); 
 		r.setTimestamp("2016-08-30 11:31:58");
 		r.setNonce("4"); 
-		r.setSign("d7e67b07c7983da4603dd467b2cf6f78"); 
+		r.setSign("27393b85e8799e57d93b077e93f8489a"); 
 		
 		
 		List<OrderInfoInsert> asdf = new ArrayList<OrderInfoInsert>();
