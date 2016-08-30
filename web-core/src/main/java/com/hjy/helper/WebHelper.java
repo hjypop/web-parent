@@ -3,7 +3,6 @@ package com.hjy.helper;
 import java.util.Date;
 import java.util.UUID;
 
-import org.springframework.stereotype.Component;
 
 import com.hjy.annotation.Inject;
 import com.hjy.base.BaseClass;
@@ -11,41 +10,40 @@ import com.hjy.pojo.entity.system.SysError;
 import com.hjy.service.ISystemService;
 
 public class WebHelper extends BaseClass {
-	
+
 	@Inject
 	private ISystemService systemService;
-	
+
 	private static WebHelper self;
-	
+
 	public static WebHelper getInstance() {
-		if(self == null) {
-			synchronized(WebHelper.class) {
-				if(self == null) 
+		if (self == null) {
+			synchronized (WebHelper.class) {
+				if (self == null)
 					self = new WebHelper();
 			}
 		}
 		return self;
 	}
-	
+
 	/**
-	 * zw_webcode -> sys_webcode
-	 * #SystemService#
+	 * zw_webcode -> sys_webcode #SystemService#
 	 * 
-	 * alias upCode
-	 * 获取唯一编号
+	 * alias upCode 获取唯一编号
 	 * 
 	 * @param sCodeStart
 	 * @return
 	 */
 	public String genUniqueCode(String sCodeStart) {
-//		Map<String, Object> mResultMap = DbUp.upTable("zw_webcode").dataSqlOne("call proc_get_unique_code(:code);" , new MDataMap("code", sCodeStart));
-//		return mResultMap.get("webcode").toString();
+		// Map<String, Object> mResultMap =
+		// DbUp.upTable("zw_webcode").dataSqlOne("call
+		// proc_get_unique_code(:code);" , new MDataMap("code", sCodeStart));
+		// return mResultMap.get("webcode").toString();
 		return systemService.getUniqueCode(sCodeStart);
 	}
 
 	/**
-	 * alias upUuid
-	 * 获取uuid
+	 * alias upUuid 获取uuid
 	 * 
 	 * @return
 	 */
@@ -136,19 +134,19 @@ public class WebHelper extends BaseClass {
 	 * @param lFields
 	 * @return
 	 */
-//	public static String upFieldSql(List<MWebField> lFields) {
-//		List<String> lSqlStrings = new ArrayList<String>();
-//		for (MWebField mField : lFields) {
-//
-//			if (StringUtils.isNotEmpty(mField.getColumnName())) {
-//
-//				lSqlStrings.add(mField.getColumnName() + " as "
-//						+ mField.getFieldName());
-//			}
-//		}
-//		return StringUtils.join(lSqlStrings, ",");
-//
-//	}
+	// public static String upFieldSql(List<MWebField> lFields) {
+	// List<String> lSqlStrings = new ArrayList<String>();
+	// for (MWebField mField : lFields) {
+	//
+	// if (StringUtils.isNotEmpty(mField.getColumnName())) {
+	//
+	// lSqlStrings.add(mField.getColumnName() + " as "
+	// + mField.getFieldName());
+	// }
+	// }
+	// return StringUtils.join(lSqlStrings, ",");
+	//
+	// }
 
 	/**
 	 * 格式化字段并重新返回
@@ -157,78 +155,78 @@ public class WebHelper extends BaseClass {
 	 * @param mDataMap
 	 * @return
 	 */
-//	public static String recheckReplace(String sText, MDataMap mDataMap) {
-//
-//		if (StringUtils.contains(sText, WebConst.CONST_WEB_SET_REPLACE)) {
-//
-//			Pattern p = Pattern.compile("\\[@(.+?)\\$(.*?)\\]");
-//			Matcher m = p.matcher(sText);
-//			while (m.find()) {
-//
-//				String sFull = m.group(0);
-//				String sKey = m.group(1);
-//				String sAttr = m.group(2);
-//
-//				String sReplace = "";
-//
-//				// 如果参数是this 则指向当前的map
-//				if (sKey.equals("this")) {
-//					if (mDataMap.containsKey(sAttr)) {
-//						sReplace = mDataMap.get(sAttr);
-//					}
-//				}
-//				// 如果参数是code 则获取后标记位开始的
-//				else if (sKey.equals("code")) {
-//					sReplace = WebHelper.upCode(sAttr);
-//				}
-//				// 如果参数是datenow 则替换为当前时间
-//				else if (sKey.equals("datenow")) {
-//					sReplace = FormatHelper.upDateTime();
-//					// 如果是Md5 则加密map中的该字段
-//				} else if (sKey.equals("md5")) {
-//					String sValueString = mDataMap.get(sAttr);
-//					if (StringUtils.isNotEmpty(sValueString)) {
-//						sReplace = SecrurityHelper.MD5Customer(sValueString);
-//					}
-//				}
-//				// 获取request请求值
-//				else if (sKey.equals("request")) {
-//					sReplace = WebSessionHelper.create().upRequest(sAttr)
-//							.trim();
-//				}
-//				// 替换config
-//				else if (sKey.equals("config")) {
-//					sReplace = TopUp.upConfig(sAttr);
-//				}
-//				// 如果参数是user 则根据后续参数替换
-//				else if (sKey.equals("user")) {
-//
-//					MUserInfo mUserInfo = UserFactory.INSTANCE.create();
-//					if (mUserInfo.getFlagLogin() == 1) {
-//
-//						if (sAttr.equals("manageCode")) {
-//							sReplace = mUserInfo.getManageCode();
-//						} else if (sAttr.equals("loginName")) {
-//							sReplace = mUserInfo.getLoginName();
-//						} else if (sAttr.equals("realName")) {
-//							sReplace = mUserInfo.getRealName();
-//						} else if (sAttr.equals("userCode")) {
-//							sReplace = mUserInfo.getUserCode();
-//						} else if(sAttr.equals("traderCode")){
-//							sReplace = mUserInfo.getTraderCode();
-//						}
-//
-//					}
-//
-//				}
-//
-//				sText = sText.replace(sFull, sReplace);
-//
-//			}
-//		}
-//		return sText;
-//
-//	}
+	// public static String recheckReplace(String sText, MDataMap mDataMap) {
+	//
+	// if (StringUtils.contains(sText, WebConst.CONST_WEB_SET_REPLACE)) {
+	//
+	// Pattern p = Pattern.compile("\\[@(.+?)\\$(.*?)\\]");
+	// Matcher m = p.matcher(sText);
+	// while (m.find()) {
+	//
+	// String sFull = m.group(0);
+	// String sKey = m.group(1);
+	// String sAttr = m.group(2);
+	//
+	// String sReplace = "";
+	//
+	// // 如果参数是this 则指向当前的map
+	// if (sKey.equals("this")) {
+	// if (mDataMap.containsKey(sAttr)) {
+	// sReplace = mDataMap.get(sAttr);
+	// }
+	// }
+	// // 如果参数是code 则获取后标记位开始的
+	// else if (sKey.equals("code")) {
+	// sReplace = WebHelper.upCode(sAttr);
+	// }
+	// // 如果参数是datenow 则替换为当前时间
+	// else if (sKey.equals("datenow")) {
+	// sReplace = FormatHelper.upDateTime();
+	// // 如果是Md5 则加密map中的该字段
+	// } else if (sKey.equals("md5")) {
+	// String sValueString = mDataMap.get(sAttr);
+	// if (StringUtils.isNotEmpty(sValueString)) {
+	// sReplace = SecrurityHelper.MD5Customer(sValueString);
+	// }
+	// }
+	// // 获取request请求值
+	// else if (sKey.equals("request")) {
+	// sReplace = WebSessionHelper.create().upRequest(sAttr)
+	// .trim();
+	// }
+	// // 替换config
+	// else if (sKey.equals("config")) {
+	// sReplace = TopUp.upConfig(sAttr);
+	// }
+	// // 如果参数是user 则根据后续参数替换
+	// else if (sKey.equals("user")) {
+	//
+	// MUserInfo mUserInfo = UserFactory.INSTANCE.create();
+	// if (mUserInfo.getFlagLogin() == 1) {
+	//
+	// if (sAttr.equals("manageCode")) {
+	// sReplace = mUserInfo.getManageCode();
+	// } else if (sAttr.equals("loginName")) {
+	// sReplace = mUserInfo.getLoginName();
+	// } else if (sAttr.equals("realName")) {
+	// sReplace = mUserInfo.getRealName();
+	// } else if (sAttr.equals("userCode")) {
+	// sReplace = mUserInfo.getUserCode();
+	// } else if(sAttr.equals("traderCode")){
+	// sReplace = mUserInfo.getTraderCode();
+	// }
+	//
+	// }
+	//
+	// }
+	//
+	// sText = sText.replace(sFull, sReplace);
+	//
+	// }
+	// }
+	// return sText;
+	//
+	// }
 
 	/**
 	 * 错误信息类
@@ -246,30 +244,32 @@ public class WebHelper extends BaseClass {
 	 * @param e
 	 *            可传null 如果不为null 则printStackTrace
 	 */
-	public void errorMessage(String sCode, String sErrorType, int iErrorLevel, String sErrorSource, String sMessage, Exception e) {
+	public void errorMessage(String sCode, String sErrorType, int iErrorLevel, String sErrorSource, String sMessage,
+			Exception e) {
 		try {
 			if (e != null) {
 				sMessage = sMessage + " #########" + e.getMessage();
 				e.printStackTrace();
 			}
-			 //* zw_error -> sys_error
-			 //* #SystemService#
-			 
-//			DbUp.upTable("zw_error").insert("error_code", sCode, "error_type",
-//					sErrorType, "error_level", String.valueOf(iErrorLevel),
-//					"error_source", sErrorSource, "error_info", sMessage,
-//					"create_time", FormatHelper.upDateTime());
-			
+			// * zw_error -> sys_error
+			// * #SystemService#
+
+			// DbUp.upTable("zw_error").insert("error_code", sCode,
+			// "error_type",
+			// sErrorType, "error_level", String.valueOf(iErrorLevel),
+			// "error_source", sErrorSource, "error_info", sMessage,
+			// "create_time", FormatHelper.upDateTime());
+
 			SysError entity = new SysError();
-			entity.setUid(genUuid()); 
-			entity.setErrorCode(sCode); 
-			entity.setErrorType(sErrorType); 
-			entity.setErrorLevel(String.valueOf(iErrorLevel)); 
-			entity.setErrorSource(sErrorSource); 
+			entity.setUid(genUuid());
+			entity.setErrorCode(sCode);
+			entity.setErrorType(sErrorType);
+			entity.setErrorLevel(String.valueOf(iErrorLevel));
+			entity.setErrorSource(sErrorSource);
 			entity.setErrorInfo(sMessage);
-			entity.setCreateTime(new Date()); 
+			entity.setCreateTime(new Date());
 			systemService.addSystemError(entity);
-			
+
 		} catch (Exception e2) {
 			e2.printStackTrace();
 		}
@@ -282,27 +282,27 @@ public class WebHelper extends BaseClass {
 	 * @param iStatic
 	 * @return
 	 */
-//	public static String upStaticValue(IWebStatic iStatic) {
-//		String sReturn = iStatic.upDefault();
-//
-//		MDataMap mStaticMap = DbUp.upTable("za_static").oneWhere("", "",
-//				"static_code=:static_code", "static_code", iStatic.upCode());
-//
-//		if (mStaticMap != null) {
-//			sReturn = mStaticMap.get("static_info");
-//		} else {
-//
-//			// 静态定义
-//			DbUp.upTable("za_static").insert("static_code", iStatic.upCode(),
-//					"static_info", iStatic.upDefault(), "create_time",
-//					FormatHelper.upDateTime());
-//
-//		}
-//
-//		return sReturn;
-//
-//	}
-//
+	// public static String upStaticValue(IWebStatic iStatic) {
+	// String sReturn = iStatic.upDefault();
+	//
+	// MDataMap mStaticMap = DbUp.upTable("za_static").oneWhere("", "",
+	// "static_code=:static_code", "static_code", iStatic.upCode());
+	//
+	// if (mStaticMap != null) {
+	// sReturn = mStaticMap.get("static_info");
+	// } else {
+	//
+	// // 静态定义
+	// DbUp.upTable("za_static").insert("static_code", iStatic.upCode(),
+	// "static_info", iStatic.upDefault(), "create_time",
+	// FormatHelper.upDateTime());
+	//
+	// }
+	//
+	// return sReturn;
+	//
+	// }
+	//
 	/**
 	 * 更新标量值
 	 * 
@@ -310,17 +310,18 @@ public class WebHelper extends BaseClass {
 	 * @param sValue
 	 * @return
 	 */
-//	public static boolean updateStaticValue(IWebStatic iStatic, String sValue) {
-//
-//		MDataMap mDataMap = new MDataMap();
-//
-//		mDataMap.inAllValues("static_code", iStatic.upCode(), "update_time",
-//				FormatHelper.upDateTime(), "static_info", sValue);
-//
-//		DbUp.upTable("za_static").dataUpdate(mDataMap,
-//				"update_time,static_info", "static_code");
-//		return true;
-//
-//	}
+	// public static boolean updateStaticValue(IWebStatic iStatic, String
+	// sValue) {
+	//
+	// MDataMap mDataMap = new MDataMap();
+	//
+	// mDataMap.inAllValues("static_code", iStatic.upCode(), "update_time",
+	// FormatHelper.upDateTime(), "static_info", sValue);
+	//
+	// DbUp.upTable("za_static").dataUpdate(mDataMap,
+	// "update_time,static_info", "static_code");
+	// return true;
+	//
+	// }
 
 }
