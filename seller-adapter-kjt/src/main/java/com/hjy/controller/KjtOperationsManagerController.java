@@ -75,10 +75,8 @@ public class KjtOperationsManagerController {
 		if(key.equals("whosyourdaddy")){ 
 			session.setAttribute("kjt-key", "kjt-key"); // 写入session
 			return "redirect:/jsp/sbkjt/index.jsp";    
-		}else{
-			model.put("status", true);
-			model.put("msg", "无效的Key，请重新输入。"); 
-			return "jsp/sbkjt/validate";
+		}else{ 
+			return "redirect:/jsp/sbkjt/validate.jsp";
 		} 
 	}
 	
