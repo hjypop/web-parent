@@ -356,14 +356,20 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			}
 			String json_ = JSON.toJSONString(list);
 			// 准备批量插入数据到oc_orderinfo表 和 oc_orderdetail表
+			String remark_ = "";
 			try {
-				dao.apiBatchInsert(insertList);
-				orderDetailDao.apiBatchInsert(insertOrderDetailList);
-				openApiOrderInsertDao.insertSelective(new LcOpenApiOrderInsert(sellerCode , 1 , new Date() ,  json_ , "batch insert success"));
+				if(insertList.size() != 0){
+					dao.apiBatchInsert(insertList);
+					orderDetailDao.apiBatchInsert(insertOrderDetailList);
+					remark_ = "batch insert success";
+				}else{
+					remark_ = "insert list = 0";
+				}
+				openApiOrderInsertDao.insertSelective(new LcOpenApiOrderInsert(sellerCode , 1 , new Date() ,  json_ , remark_));
 			} catch (Exception ex){
 				String desc_ = "平台内部错误";
 				logger.error(sellerCode + "批量插入订单信息异常|" + desc_ , ex);  
-				String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
+				remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
 				openApiOrderInsertDao.insertSelective(new LcOpenApiOrderInsert(sellerCode , 2 , new Date() ,  json_ , remark_));
 			}finally {
 				WebHelper.getInstance().unLock(lockcode);
@@ -390,58 +396,58 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	 * @version 1.0.0.1
 	 * @param <E>
 	 */
-	private  <T , E> boolean validate(T t , E entity){
-		Field[] field = t.getClass().getDeclaredFields();
+	private  <T , E> boolean validate(T t , E e){
+		Field[] fields = t.getClass().getDeclaredFields();
 		 try {
-			 for(int i = 0 ; i < field.length ; i ++){
-				 String name = field[i].getName();
+			 for(int i = 0 ; i < fields.length ; i ++){
+				 Field field = fields[i];
+				 String name = field.getName();
 				 String func = "get" + name.substring(0,1).toUpperCase()+name.substring(1);
 				 Method m = t.getClass().getMethod(func);
 	             String value = String.valueOf(m.invoke(t)); 
-	             if( !field[i].isAnnotationPresent(ExculdeNullField.class) && StringUtils.isBlank(value) ){    
-	            	 // 如果包含此标签则排除该字段的验证
-	            	 return false;
-	             } 
+	             if(value.equals("null")) {
+	            	 value = null;
+	             }
+	             if( !field.isAnnotationPresent(ExculdeNullField.class) && StringUtils.isBlank(value) ){    
+	            	 // 不包含此标签则是必传字段，如果没传值则认为此条记录错误
+	            	 return false; 
+	             }else if(field.isAnnotationPresent(ExculdeNullField.class) && StringUtils.isBlank(value) ){
+	            	 // ExculdeNullField注解标识的字段为空，则不再对其反射设值。
+	            	 continue;
+	             }
 	             
 	             // 赋值 
-	             String func_ = "set" + name.substring(0,1).toUpperCase()+name.substring(1);
-				 Method m_ = t.getClass().getMethod(func_ , m.invoke(t).getClass());
+	             String func_ = "set" + name.substring(0,1).toUpperCase()+name.substring(1); 
+				 Method m_ = e.getClass().getMethod(func_  , m.invoke(t).getClass());
 				 @SuppressWarnings("rawtypes")
 				Class[] c = m_.getParameterTypes();
 				 if(c[0] == String.class) {
-		 	 		 m_.invoke(entity , value);
-		 	 		 break;
+		 	 		 m_.invoke(e , value);
 		 	 	 }else if(c[0] == BigDecimal.class) {
-		 	 		 m_.invoke(entity , BigDecimal.valueOf(Long.valueOf(value)));
-		 	 		 break;
+		 	 		 m_.invoke(e , BigDecimal.valueOf(Double.valueOf(value)));
 		 	 	 }else if(c[0] == Integer.class) {
-					 m_.invoke(entity ,Integer.valueOf(value));
-					 break;
+					 m_.invoke(e ,Integer.valueOf(value));
 			 	 }else if(c[0] == Boolean.class) {
-		 	 		 m_.invoke(entity , Boolean.valueOf(value));
-		 	 		 break;
+		 	 		 m_.invoke(e , Boolean.valueOf(value));
 		 	 	 }else if(c[0] == Float.class){
-		 		 	 m_.invoke(entity , Float.valueOf(value));
-                     break;
+		 		 	 m_.invoke(e , Float.valueOf(value));
 		 	 	 }else if(c[0] == Double.class) {
-	 	 		 	 m_.invoke(entity , Double.valueOf(value));
-	 	 		 	 break;
+	 	 		 	 m_.invoke(e , Double.valueOf(value));
 		 	 	 }else if(c[0] == Byte.class) {
-		 	 		 m_.invoke(entity , Byte.valueOf(value));
-		 	 		 break;
+		 	 		 m_.invoke(e , Byte.valueOf(value));
 		 	 	 }
 			 }
-		 } catch (NoSuchMethodException e) {
-			 e.printStackTrace();
-		 } catch (SecurityException e) {
-			 e.printStackTrace();
-		 } catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
+		 } catch (NoSuchMethodException ex) {
+//			 ex.printStackTrace();  不做处理即可
+		 } catch (SecurityException ex) {
+			 ex.printStackTrace();
+		 } catch (IllegalAccessException ex) {
+			 ex.printStackTrace();
+		 } catch (IllegalArgumentException ex) {
+			 ex.printStackTrace();
+		 } catch (InvocationTargetException ex) {
+			 ex.printStackTrace();
+		 } 
 		 
 		return true;
 	}

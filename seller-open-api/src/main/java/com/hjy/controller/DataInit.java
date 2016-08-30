@@ -67,7 +67,7 @@ public class DataInit {
 		for(int i = 0 ; i < 5000 ; i ++){
 			OrderInfoInsert o = new OrderInfoInsert();
 			o.setOrderCode(orderCode + i);
-			o.setPayType("449716200001");
+			o.setPayType("449716200009");              // 根据此值删除数据
 			if(i % 9 == 0 ){
 				o.setSendType(""); 
 			}else{
@@ -77,23 +77,23 @@ public class DataInit {
 			o.setProductMoney(BigDecimal.valueOf(Long.valueOf(pm))); 
 			o.setTransportMoney(BigDecimal.ONE); 
 			o.setOrderMoney(o.getProductMoney().add(BigDecimal.TEN));
+			
+			o.setPayedMoney(BigDecimal.valueOf(Double.valueOf(32.99)));   
+			
 			o.setProductName("窈窕淑女 - 我好逑！");
 			o.setDueMoney(o.getOrderMoney()); 
 			
 			List<OrderDetailInsert> list = new ArrayList<OrderDetailInsert>();
 			for(int j = 0 ; j < 3 ; j ++){
 				OrderDetailInsert d = new OrderDetailInsert();
-				if(i % 8 == 0 ){
-					d.setSkuCode("");
-				}else{
-					d.setSkuCode(skuCode + pm);
-				}
+				d.setSkuCode(skuCode + pm);
 				d.setProductCode(producdCode + pm);
-				if(i % 10 == 0 ){
+				if(i % 2 == 0 ){
 					d.setSkuName("性感黑丝袜"); 
 				}else{
 					d.setSkuName("振动棒"); 
 				}
+				d.setSkuPrice(BigDecimal.valueOf(72.9)); 
 				d.setSkuNmu(1);
 				d.setShowPrice(BigDecimal.valueOf(72.9)); 
 				list.add(d);
