@@ -12,15 +12,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.base.BaseTest;
 import com.hjy.common.DateUtil;
 import com.hjy.dao.api.IApiProductInfoDao;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.webcore.WcSellerinfo;
+import com.hjy.helper.WebHelper;
 import com.hjy.service.product.IApiProductService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/applicationContext.xml", "classpath:/mybatis-config.xml" })
-public class PcProductInfoTest {
+public class PcProductInfoTest extends BaseTest {
 
 	@Autowired
 	private IApiProductInfoDao dao;
@@ -65,7 +67,6 @@ public class PcProductInfoTest {
 		System.out.println(service.pushSkuStock(seller, productCodes));
 	}
 
-	@Test
 	public void pushProductPrice() {
 		System.out.println(DateUtil.getSysDateTimeString());
 		WcSellerinfo seller = new WcSellerinfo();
@@ -76,5 +77,14 @@ public class PcProductInfoTest {
 		JSONObject obj = service.pushProductPrice(seller, productCodes);
 		System.out.println(DateUtil.getSysDateTimeString());
 		System.out.println(obj.toJSONString());
+	}
+
+	@Test
+	public void unique() {
+		// MObjMap<String, Object> param = new MObjMap<String, Object>();
+		// param.put("code", "8019");
+		// String code = sysWebcodeDao.callUniqueCode(param);
+		// System.out.println(code);
+		WebHelper.getInstance().genUniqueCode("8016");
 	}
 }
