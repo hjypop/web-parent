@@ -633,6 +633,23 @@
 		</set>
 		where uid = #{uid,jdbcType=CHAR}
 	</update>
+	
+	
+	
+	<update id="updateNullByProductCode" parameterType="java.util.List">
+		update productcenter.pc_productinfo
+		set
+			product_code_old = null 
+		where
+			small_seller_code='SF03KJT'
+		and
+			seller_code='SI2003'
+		and
+			product_code in
+		<foreach item="item" index="index" collection="list" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</update>
 </mapper>
 
 

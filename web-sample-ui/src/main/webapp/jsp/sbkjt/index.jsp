@@ -70,6 +70,16 @@
             }
         }
 
+        function funcFour(){
+            var type_ = 'post';
+            var url_ = '${basePath}kjt/funcFour.do';
+            var data_ = {json:$("#json-str-p").val()};
+            var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+            if(obj.status == 'success'){
+                alert(obj.desc);
+            }
+        }
+
     </script>
 </head>
 
@@ -159,6 +169,24 @@
                         </form>
                     </div>
 
+
+                </div>
+
+                <div id="fuck-four">
+                    <div class="contenttitle2">
+                        <h3>D  根据产品编号Json批量置空跨境通商品编号(pc_productinfo 表 product_code_old 字段将被置空)</h3>
+                    </div>
+                    <div class="statusbox" style="width: 800px">
+                        <form action="#">
+                            <div class="status_thumb">产品编号Json串：</div>
+                            <div style="padding-right:20px;">
+                                <textarea id="json-str-p" name="" cols="" rows="" style="height: 200px;width: 790px"></textarea>
+                            </div>
+                            <div class="submit">
+                                <button class="stdbtn btn_orange" onclick="funcFour()">执 行 任 务</button>
+                            </div>
+                        </form>
+                    </div>
 
                 </div>
 

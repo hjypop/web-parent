@@ -108,7 +108,11 @@ public class KjtOperationsManagerController {
 		return kjtService.funcThree(execTime , remark , session);  
 	}
 	
-	
+	@RequestMapping(value = "funcFour", produces = { "application/json;charset=utf-8" })
+	@ResponseBody
+	public JSONObject funcFour(String json, HttpSession session){
+		return kjtService.funcFour(json , session); 
+	}
 	
 	
 	

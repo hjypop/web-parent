@@ -7,6 +7,8 @@ import javax.servlet.http.HttpSession;
 import com.alibaba.fastjson.JSONObject;
 
 public interface IKjtOperationsManagerService {
+	
+	
 	public JSONObject funcOne(String json , HttpSession session);
 
 	/**
@@ -20,5 +22,7 @@ public interface IKjtOperationsManagerService {
 	 */
 	public JSONObject funcTwo(String s, String e, HttpSession session); 
 	
-	public JSONObject funcThree(String execTime , String remark, HttpSession session); 
+	public JSONObject funcThree(String execTime , String remark, HttpSession session);
+
+	public JSONObject funcFour(String json, HttpSession session);  
 }

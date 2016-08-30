@@ -2,6 +2,8 @@ package com.hjy.dao.product;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.product.PcProductinfo;
 
@@ -83,6 +85,19 @@ public interface IPcProductinfoDao extends BaseDao<PcProductinfo, Integer> {
 	public List<PcProductinfo> getListByProductCodeList(List<String> list);
 
 	Integer updateProductStatus(PcProductinfo pcProductinfo); 
+	
+	
+	/**
+	 * @descriptions 根据产品编号Json批量置空跨境通商品编号(pc_productinfo 表 product_code_old 字段将被置空)
+	 * 
+	 * 危险操作|KjtOperationsManagerController.funcFour(String json, HttpSession session)
+	 * 
+	 * @param list 
+	 * @date 2016年8月30日下午2:46:24
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public int updateNullByProductCode(List<String> list);
 }
 
 
