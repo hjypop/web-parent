@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * @author Yangcl
  * @version 1.0.1
  */
-public class OrderDetailInsert   implements Comparable<OrderDetailInsert> {
+public class OrderDetailInsert{
 	
 //	private String uid;
 //	private String orderCode; // 此字段无需传递
@@ -59,11 +59,6 @@ public class OrderDetailInsert   implements Comparable<OrderDetailInsert> {
 	public void setShowPrice(BigDecimal showPrice) {
 		this.showPrice = showPrice;
 	}
-	@Override
-	public int compareTo(OrderDetailInsert o) {
-		return this.getSkuCode().compareTo(o.getSkuCode());
-	}
-	 
 }
 
 

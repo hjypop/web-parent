@@ -59,13 +59,14 @@ public class DataInit {
 		r.setTimestamp("2016-08-30 11:31:58");
 		r.setNonce("4"); 
 		r.setSign("0f8984d0a7c0a521274d08316dbf20b1"); 
+		r.setAppSecret("83c0e6f4aa5f11e39ee0000c298b20fc");
 		
 		
 		List<OrderInfoInsert> oList = new ArrayList<OrderInfoInsert>();
 		String orderCode = "TBI88995";
 		String producdCode = "PC8859-";
 		String skuCode = "SKU12340-";
-		for(int i = 0 ; i < 5000 ; i ++){
+		for(int i = 0 ; i < 50 ; i ++){
 			OrderInfoInsert o = new OrderInfoInsert();
 			o.setOrderCode(orderCode + i);
 			o.setPayType("449716200009");              // 根据此值删除数据
@@ -74,7 +75,7 @@ public class DataInit {
 			}else{
 				o.setSendType("449715210001");
 			}
-			int pm = (int)(Math.random()*100);
+			int pm =  (int)(Math.random()*100);
 			o.setProductMoney(BigDecimal.valueOf(Long.valueOf(pm))); 
 			o.setTransportMoney(BigDecimal.ONE); 
 			o.setOrderMoney(o.getProductMoney().add(BigDecimal.TEN));
@@ -99,13 +100,9 @@ public class DataInit {
 				d.setShowPrice(BigDecimal.valueOf(72.9)); 
 				list.add(d);
 			}
-			Collections.sort(list);
 			o.setList(list);
 			oList.add(o);
 		}
-		
-		Collections.sort(oList);
-		
 		r.setData(JSON.toJSONString(oList)); 
 		
 		
