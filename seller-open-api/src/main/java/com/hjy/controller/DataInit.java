@@ -22,30 +22,32 @@ public class DataInit {
 	public static void main(String[] args) {
 		
 		Request request = DataInit.orderInfoBatchInsertTest();
-		
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("appid", request.getAppid());
-		try {
+		String sign = "";
+		try { 
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("appid", request.getAppid());
+			map.put("appid", request.getAppid());
 			map.put("data", URLEncoder.encode(request.getData(), "UTF-8"));
+			map.put("method", request.getMethod());
+			map.put("timestamp", request.getTimestamp());
+			map.put("nonce", request.getNonce());
+			List<String> list = new ArrayList<String>();
+			for (Map.Entry<String, String> entry : map.entrySet()) {
+				if (entry.getValue() != "") {
+					list.add(entry.getKey() + "=" + entry.getValue() + "&");
+				}
+			}
+			Collections.sort(list); // 对List内容进行排序
+			StringBuffer str = new StringBuffer();
+			for (String nameString : list) {
+				str.append(nameString);
+			}
+			str.append(request.getAppSecret());
+			sign = SignHelper.md5Sign(str.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		map.put("method", request.getMethod());
-		map.put("timestamp", request.getTimestamp());
-		map.put("nonce", request.getNonce());
-		List<String> list = new ArrayList<String>();
-		for (Map.Entry<String, String> entry : map.entrySet()) {
-			if (entry.getValue() != "") {
-				list.add(entry.getKey() + "=" + entry.getValue() + "&");
-			}
-		}
-		Collections.sort(list); // 对List内容进行排序
-		StringBuffer str = new StringBuffer();
-		for (String nameString : list) {
-			str.append(nameString);
-		}
-		str.append(request.getAppSecret());
-		String sign =SignHelper.md5Sign(str.toString());
+		
 		System.out.println(sign); 
 	}
 	
@@ -79,8 +81,7 @@ public class DataInit {
 			
 			o.setPayedMoney(BigDecimal.valueOf(Double.valueOf(32.99)));   
 			
-//			o.setProductName("窈窕淑女 - 我好逑！");
-			o.setProductName("aaaaaa");
+			o.setProductName("窈窕淑女 - 我好逑！");
 			o.setDueMoney(o.getOrderMoney()); 
 			
 			List<OrderDetailInsert> list = new ArrayList<OrderDetailInsert>();
@@ -89,26 +90,23 @@ public class DataInit {
 				d.setSkuCode(skuCode + pm);
 				d.setProductCode(producdCode + pm);
 				if(i % 2 == 0 ){
-//					d.setSkuName("性感黑丝袜"); 
-					d.setSkuName("bbb"); 
+					d.setSkuName("性感黑丝袜"); 
 				}else{
-//					d.setSkuName("振动棒"); 
-					d.setSkuName("ccc"); 
+					d.setSkuName("振动棒"); 
 				}
 				d.setSkuPrice(BigDecimal.valueOf(72.9)); 
 				d.setSkuNmu(1);
 				d.setShowPrice(BigDecimal.valueOf(72.9)); 
 				list.add(d);
 			}
-//			o.setList(list);
+			Collections.sort(list);
+			o.setList(list);
 			oList.add(o);
 		}
 		
 		Collections.sort(oList);
 		
-//		r.setData(JSON.toJSONString(oList)); 
-		
-		r.setData("asdf"); 
+		r.setData(JSON.toJSONString(oList)); 
 		
 		
 		return r; 
