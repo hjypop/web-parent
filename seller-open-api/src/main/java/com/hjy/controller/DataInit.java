@@ -58,14 +58,12 @@ public class DataInit {
 		r.setAppid("SI10182"); 
 		r.setTimestamp("2016-08-30 11:31:58");
 		r.setNonce("4"); 
-		r.setSign("0f8984d0a7c0a521274d08316dbf20b1"); 
 		r.setAppSecret("83c0e6f4aa5f11e39ee0000c298b20fc");
 		
-		
 		List<OrderInfoInsert> oList = new ArrayList<OrderInfoInsert>();
-		String orderCode = "TBI88995";
-		String producdCode = "PC8859-";
-		String skuCode = "SKU12340-";
+		String orderCode = "TBI88996";
+		String producdCode = "PC88596-";
+		String skuCode = "SKU12340g-";
 		for(int i = 0 ; i < 50 ; i ++){
 			OrderInfoInsert o = new OrderInfoInsert();
 			o.setOrderCode(orderCode + i);
@@ -105,7 +103,7 @@ public class DataInit {
 		}
 		r.setData(JSON.toJSONString(oList)); 
 		
-		
+		r.setSign(getSign(r));  
 		return r; 
 	}
 	
@@ -258,6 +256,35 @@ public class DataInit {
 		r.setData(JSON.toJSONString(list)); 
 		
 		return r; 
+	}
+	
+	private static String getSign(Request request){
+		String sign = "";
+		try { 
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("appid", request.getAppid());
+			map.put("appid", request.getAppid());
+			map.put("data", URLEncoder.encode(request.getData(), "UTF-8"));
+			map.put("method", request.getMethod());
+			map.put("timestamp", request.getTimestamp());
+			map.put("nonce", request.getNonce());
+			List<String> list = new ArrayList<String>();
+			for (Map.Entry<String, String> entry : map.entrySet()) {
+				if (entry.getValue() != "") {
+					list.add(entry.getKey() + "=" + entry.getValue() + "&");
+				}
+			}
+			Collections.sort(list); // 对List内容进行排序
+			StringBuffer str = new StringBuffer();
+			for (String nameString : list) {
+				str.append(nameString);
+			}
+			str.append(request.getAppSecret());
+			sign = SignHelper.md5Sign(str.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return sign;
 	}
 }
 
