@@ -15,7 +15,7 @@ import com.hjy.annotation.ExculdeNullField;
  * @author Yangcl
  * @version 1.0.1
  */
-public class OrderInfoInsert {
+public class OrderInfoInsert  implements Comparable<OrderInfoInsert> {
 	
 	private String orderCode;
 	private String payType; // 付款方式 449716200001 ~ 5  1@在线支付|2@货到付款|4@微信支付  
@@ -134,6 +134,12 @@ public class OrderInfoInsert {
 
 	public void setList(List<OrderDetailInsert> list) {
 		this.list = list;
+	}
+
+
+	@Override
+	public int compareTo(OrderInfoInsert o) {
+		return this.getOrderCode().compareTo(o.getOrderCode());
 	}
 	
 	

@@ -45,7 +45,6 @@ public class DataInit {
 			str.append(nameString);
 		}
 		str.append(request.getAppSecret());
-//		String sign = HexUtil.toHexString(MD5Util.md5(str.toString()));
 		String sign =SignHelper.md5Sign(str.toString());
 		System.out.println(sign); 
 	}
@@ -57,10 +56,10 @@ public class DataInit {
 		r.setAppid("SI10182"); 
 		r.setTimestamp("2016-08-30 11:31:58");
 		r.setNonce("4"); 
-		r.setSign("27393b85e8799e57d93b077e93f8489a"); 
+		r.setSign("0f8984d0a7c0a521274d08316dbf20b1"); 
 		
 		
-		List<OrderInfoInsert> asdf = new ArrayList<OrderInfoInsert>();
+		List<OrderInfoInsert> oList = new ArrayList<OrderInfoInsert>();
 		String orderCode = "TBI88995";
 		String producdCode = "PC8859-";
 		String skuCode = "SKU12340-";
@@ -80,7 +79,8 @@ public class DataInit {
 			
 			o.setPayedMoney(BigDecimal.valueOf(Double.valueOf(32.99)));   
 			
-			o.setProductName("窈窕淑女 - 我好逑！");
+//			o.setProductName("窈窕淑女 - 我好逑！");
+			o.setProductName("aaaaaa");
 			o.setDueMoney(o.getOrderMoney()); 
 			
 			List<OrderDetailInsert> list = new ArrayList<OrderDetailInsert>();
@@ -89,22 +89,26 @@ public class DataInit {
 				d.setSkuCode(skuCode + pm);
 				d.setProductCode(producdCode + pm);
 				if(i % 2 == 0 ){
-					d.setSkuName("性感黑丝袜"); 
+//					d.setSkuName("性感黑丝袜"); 
+					d.setSkuName("bbb"); 
 				}else{
-					d.setSkuName("振动棒"); 
+//					d.setSkuName("振动棒"); 
+					d.setSkuName("ccc"); 
 				}
 				d.setSkuPrice(BigDecimal.valueOf(72.9)); 
 				d.setSkuNmu(1);
 				d.setShowPrice(BigDecimal.valueOf(72.9)); 
 				list.add(d);
 			}
-			o.setList(list);
-			asdf.add(o);
+//			o.setList(list);
+			oList.add(o);
 		}
 		
-		r.setData(JSON.toJSONString(asdf)); 
+		Collections.sort(oList);
 		
+//		r.setData(JSON.toJSONString(oList)); 
 		
+		r.setData("asdf"); 
 		
 		
 		return r; 
