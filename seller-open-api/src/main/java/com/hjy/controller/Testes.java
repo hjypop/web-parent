@@ -18,8 +18,16 @@ public class Testes {
 
 	public static void main(String[] args) { 
 		
-		new Testes().aaa(); 
+//		new Testes().aaa(); 
 		
+		String stime = "2016-08-03 16:09:00";
+		String etime = "2016-08-04 16:09:00";
+		
+		int a = stime.compareTo(etime);
+		System.out.println(a);
+		
+		int b = etime.compareTo(stime);
+		System.out.println(b);
 		
 	}
 	
