@@ -54,9 +54,32 @@ public class KjtOperationsManagerController {
 		return  service.upStorage("");
 	}
 	
+ 
+	/**
+	 * @descriptions 跨境通问题查询
+	 *  
+	 * @date 2016年8月31日下午4:27:17
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	@RequestMapping(value = "query")
+	public String query() { 
+		return "jsp/sbkjt/questionQuery";
+	}
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// ##########################################################################################################
  
 	/**
 	 * @descriptions 跨境通线上临时问题解决页面
@@ -114,7 +137,11 @@ public class KjtOperationsManagerController {
 		return kjtService.funcFour(json , session); 
 	}
 	
-	
+	@RequestMapping(value = "funcFive", produces = { "application/json;charset=utf-8" })
+	@ResponseBody
+	public JSONObject funcFive(String json, HttpSession session){
+		return kjtService.funcFive(json , session); 
+	}
 	
 	
 }

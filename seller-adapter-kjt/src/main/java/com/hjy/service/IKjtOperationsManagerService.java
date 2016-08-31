@@ -24,5 +24,7 @@ public interface IKjtOperationsManagerService {
 	
 	public JSONObject funcThree(String execTime , String remark, HttpSession session);
 
-	public JSONObject funcFour(String json, HttpSession session);  
+	public JSONObject funcFour(String json, HttpSession session);
+
+	public JSONObject funcFive(String json, HttpSession session);   
 }

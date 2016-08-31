@@ -11,6 +11,7 @@
                         	<a href="">二级菜单栏A</a>
                         </li>
                         <li><a href="">二级菜单栏B</a></li>
+                        <li><a href="${basePath}kjt/query.do"  target="_blank">跨境通问题查询</a></li>
                         <li><a href="${basePath}kjt/validate.do">跨境通临时问题维护</a></li>
                         <li><a href="${basePath}seller/index.do">商户管理</a></li>
                         <li><a href="${basePath}api/index.do">商户管理</a></li>

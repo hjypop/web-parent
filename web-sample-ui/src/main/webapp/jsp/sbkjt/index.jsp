@@ -80,6 +80,16 @@
             }
         }
 
+        function funcFive(){
+            var type_ = 'post';
+            var url_ = '${basePath}kjt/funcFive.do';
+            var data_ = {json:$("#json-str-e").val()};
+            var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+            if(obj.status == 'success'){
+                alert(obj.desc);
+            }
+        }
+
     </script>
 </head>
 
@@ -184,6 +194,26 @@
                             </div>
                             <div class="submit">
                                 <button class="stdbtn btn_orange" onclick="funcFour()">执 行 任 务</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+
+                <div id="fuck-five">
+                    <div class="contenttitle2">
+                        <h3>E  批量拉取商品库存信息|跨境通商品库存同步|接口标识：Inventory.ChannelQ4SBatchGet</h3>
+                    </div>
+
+                    <div class="statusbox" style="width: 800px">
+                        <form id="json-post-e" action="#">
+                            <div class="status_thumb">商品编号Json串：</div>
+                            <div style="padding-right:20px;">
+                                <textarea id="json-str-e" name="" cols="" rows="" style="height: 200px;width: 790px"></textarea>
+                            </div>
+                            <div class="submit">
+                                <button class="stdbtn btn_orange" onclick="funcFive()">执 行 任 务</button>
                             </div>
                         </form>
                     </div>

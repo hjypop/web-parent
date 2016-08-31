@@ -15,6 +15,7 @@ import com.hjy.dao.IJobExectimerDao;
 import com.hjy.dao.product.IPcProductinfoDao;
 import com.hjy.helper.DateHelper;
 import com.hjy.pojo.entity.system.JobExectimer;
+import com.hjy.selleradapter.job.JobForInventory;
 import com.hjy.selleradapter.job.JobGetChangeProductFromKJT;
 import com.hjy.service.IKjtOperationsManagerService;
 
@@ -99,6 +100,27 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 		try {
 			List<String> list = JSON.parseArray(json, String.class);
 			pcProductinfoDao.updateNullByProductCode(list);
+			result.put("status", "success");
+			result.put("desc", "请求执行完成");
+		} catch (Exception e) {
+			result.put("status", "success");
+			result.put("desc", "非法的Json数据");
+		}
+		return result;
+	}
+
+	
+	public JSONObject funcFive(String json, HttpSession session) {
+		JSONObject result = new JSONObject();
+		if(session.getAttribute("kjt-key") == null){
+			result.put("status", "success");
+			result.put("desc", "请输入你的秘钥");
+			return result;
+		}
+		
+		try {
+			List<String> list = JSON.parseArray(json, String.class);
+			new JobForInventory(list).doExecute(null); 
 			result.put("status", "success");
 			result.put("desc", "请求执行完成");
 		} catch (Exception e) {

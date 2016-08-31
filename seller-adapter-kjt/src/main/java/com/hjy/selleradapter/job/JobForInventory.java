@@ -24,7 +24,17 @@ import com.hjy.service.product.IPcProductinfoServivce;
  * 时间: 2016年6月27日 下午5:27:16
  */
 public class JobForInventory extends RootJob {
+	
+	private List<String> pcodeList = null;
+	
+	public JobForInventory() {
+	}
+	public JobForInventory(List<String> pcodeList) {
+		this.pcodeList = pcodeList;
+	}
 
+	
+	
 	@Inject
 	private IPcProductinfoServivce service;
 
@@ -38,7 +48,14 @@ public class JobForInventory extends RootJob {
 		PcProductinfo info = new PcProductinfo();
 		info.setSellerCode("SI2003");
 		info.setSmallSellerCode("SF03KJT");
-		List<String> list = service.findProductCodeOld(info);
+		List<String> list = null;
+		if(null != pcodeList){
+			list = pcodeList;
+		}else{
+			list = service.findProductCodeOld(info);  // 跨境通 商品编号
+		}
+		
+		
 		InventoryPageModel cpp = new InventoryPageModel(list, 20);
 		totalpage = cpp.getTotalPages();
 		if (list != null) {
