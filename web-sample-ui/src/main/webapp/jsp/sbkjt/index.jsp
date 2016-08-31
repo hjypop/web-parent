@@ -90,6 +90,16 @@
             }
         }
 
+        function funcSix(){
+            var type_ = 'post';
+            var url_ = '${basePath}kjt/funcSix.do';
+            var data_ = {json:$("#json-str-s").val()};
+            var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+            if(obj.status == 'success'){
+                alert(obj.desc);
+            }
+        }
+
     </script>
 </head>
 
@@ -207,7 +217,7 @@
                     </div>
 
                     <div class="statusbox" style="width: 800px">
-                        <form id="json-post-e" action="#">
+                        <form action="#">
                             <div class="status_thumb">商品编号Json串：</div>
                             <div style="padding-right:20px;">
                                 <textarea id="json-str-e" name="" cols="" rows="" style="height: 200px;width: 790px"></textarea>
@@ -221,6 +231,24 @@
                 </div>
 
 
+                <div id="fuck-six">
+                    <div class="contenttitle2">
+                        <h3>F  批量刷新商品缓存信息</h3>
+                    </div>
+
+                    <div class="statusbox" style="width: 800px">
+                        <form action="#">
+                            <div class="status_thumb"> product_code Json串：</div>
+                            <div style="padding-right:20px;">
+                                <textarea id="json-str-s" name="" cols="" rows="" style="height: 200px;width: 790px"></textarea>
+                            </div>
+                            <div class="submit">
+                                <button class="stdbtn btn_orange" onclick="funcSix()">执 行 任 务</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
 
             </div>
         </div>

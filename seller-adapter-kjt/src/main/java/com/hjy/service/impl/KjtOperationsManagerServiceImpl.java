@@ -13,8 +13,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.dao.IJobExectimerDao;
 import com.hjy.dao.product.IPcProductinfoDao;
+import com.hjy.entity.product.PcSkuinfo;
 import com.hjy.helper.DateHelper;
 import com.hjy.pojo.entity.system.JobExectimer;
+import com.hjy.redis.core.RedisLaunch;
+import com.hjy.redis.srnpr.ERedisSchema;
 import com.hjy.selleradapter.job.JobForInventory;
 import com.hjy.selleradapter.job.JobGetChangeProductFromKJT;
 import com.hjy.service.IKjtOperationsManagerService;
@@ -128,6 +131,39 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 			result.put("desc", "非法的Json数据");
 		}
 		return result;
+	}
+
+	
+	public JSONObject funcSix(String json, HttpSession session) {
+		JSONObject result = new JSONObject();
+		if(session.getAttribute("kjt-key") == null){
+			result.put("status", "success");
+			result.put("desc", "请输入你的秘钥");
+			return result;
+		}
+		
+		try {
+			List<String> list = JSON.parseArray(json, String.class);
+			this.redisReloadProductInfo(list);
+			
+			result.put("status", "success");
+			result.put("desc", "请求执行完成");
+		} catch (Exception e) {
+			result.put("status", "success");
+			result.put("desc", "非法的Json数据");
+		}
+		return result;
+	}
+	
+	
+	// 刷新Sku信息 
+	private boolean redisReloadProductInfo(List<String> list ){ 
+		for(String i : list){ 
+			RedisLaunch.setFactory(ERedisSchema.Product).del(i);
+			RedisLaunch.setFactory(ERedisSchema.ProductSku).del(i);
+			RedisLaunch.setFactory(ERedisSchema.ProductSales).del(i);		//刷新销量缓存
+		}
+		return true;
 	}
 	
 }

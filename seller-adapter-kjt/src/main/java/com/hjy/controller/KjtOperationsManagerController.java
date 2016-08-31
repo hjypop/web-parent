@@ -143,6 +143,18 @@ public class KjtOperationsManagerController {
 		return kjtService.funcFive(json , session); 
 	}
 	
+	/**
+	 * @descriptions 批量刷新商品缓存
+	 *  
+	 * @date 2016年8月31日下午5:56:37
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	@RequestMapping(value = "funcSix", produces = { "application/json;charset=utf-8" })
+	@ResponseBody
+	public JSONObject funcSix(String json, HttpSession session){
+		return kjtService.funcSix(json , session); 
+	}
 	
 }
 

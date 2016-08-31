@@ -26,5 +26,7 @@ public interface IKjtOperationsManagerService {
 
 	public JSONObject funcFour(String json, HttpSession session);
 
-	public JSONObject funcFive(String json, HttpSession session);   
+	public JSONObject funcFive(String json, HttpSession session);
+
+	public JSONObject funcSix(String json, HttpSession session);    
 }
