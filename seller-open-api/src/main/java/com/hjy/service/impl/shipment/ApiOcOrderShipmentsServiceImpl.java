@@ -1,5 +1,9 @@
 package com.hjy.service.impl.shipment;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.annotation.ExculdeNullField;
 import com.hjy.dao.api.ILcOpenApiQueryLogDao;
 import com.hjy.dao.log.ILcOpenApiShipmentStatusDao;
 import com.hjy.dao.order.IOcOrderShipmentsDao;
@@ -207,6 +212,18 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 			result.put("desc", "请求参数错误，请求数据解析异常");
 			return result; 
 		}
+		if(!this.validate(request, null)){
+			result.put("code", 1);
+			result.put("desc", "请求参数错误，必传字段未传值");
+			return result; 
+		}
+		if(request.getStartTime().compareTo(request.getEndTime()) >= 0){
+			result.put("code", 1);
+			result.put("desc", "请求参数错误，开始时间不得大于结束时间");
+			return result; 
+		}
+		request.setSellerCode(sellerCode); 
+		
 		
 		List<ApiShipmentsResponse> list = null;
 		try {
@@ -247,8 +264,77 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 		return result;
 	} 
 	
-	
-	
+	/**
+	 * @descriptions  验证对象中的值是否合法并赋值
+	 * 
+	 * @param t 要验证的对象
+	 * @param entity 要赋值的对象 如果为null，则只验证，不赋值。
+	 * @return entity
+	 * @date 2016年8月29日下午12:10:38
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 * @param <E>
+	 */
+	private  <T , E> boolean validate(T t , E e){
+		if( null == t) 
+			return false; 
+		
+		Field[] fields = t.getClass().getDeclaredFields();
+		 try {
+			 for(int i = 0 ; i < fields.length ; i ++){
+				 Field field = fields[i];
+				 String name = field.getName();
+				 String func = "get" + name.substring(0,1).toUpperCase()+name.substring(1);
+				 Method m = t.getClass().getMethod(func);
+	             String value = String.valueOf(m.invoke(t)); 
+	             if(value.equals("null")) {
+	            	 value = null;
+	             }
+	             if( !field.isAnnotationPresent(ExculdeNullField.class) && StringUtils.isBlank(value) ){    
+	            	 // 不包含此标签则是必传字段，如果没传值则认为此条记录错误
+	            	 return false; 
+	             }else if(field.isAnnotationPresent(ExculdeNullField.class) && StringUtils.isBlank(value) ){
+	            	 // ExculdeNullField注解标识的字段为空，则不再对其反射设值。
+	            	 continue;
+	             }else if(e == null){ // 如果为null，则只验证，不赋值。
+	            	 continue;
+	             }
+	             
+	             // 赋值 
+	             String func_ = "set" + name.substring(0,1).toUpperCase()+name.substring(1); 
+				 Method m_ = e.getClass().getMethod(func_  , m.invoke(t).getClass());
+				 @SuppressWarnings("rawtypes")
+				Class[] c = m_.getParameterTypes();
+				 if(c[0] == String.class) {
+		 	 		 m_.invoke(e , value);
+		 	 	 }else if(c[0] == BigDecimal.class) {
+		 	 		 m_.invoke(e , BigDecimal.valueOf(Double.valueOf(value)));
+		 	 	 }else if(c[0] == Integer.class) {
+					 m_.invoke(e ,Integer.valueOf(value));
+			 	 }else if(c[0] == Boolean.class) {
+		 	 		 m_.invoke(e , Boolean.valueOf(value));
+		 	 	 }else if(c[0] == Float.class){
+		 		 	 m_.invoke(e , Float.valueOf(value));
+		 	 	 }else if(c[0] == Double.class) {
+	 	 		 	 m_.invoke(e , Double.valueOf(value));
+		 	 	 }else if(c[0] == Byte.class) {
+		 	 		 m_.invoke(e , Byte.valueOf(value));
+		 	 	 }
+			 }
+		 } catch (NoSuchMethodException ex) {
+//			 ex.printStackTrace();  不做处理即可
+		 } catch (SecurityException ex) {
+			 ex.printStackTrace();
+		 } catch (IllegalAccessException ex) {
+			 ex.printStackTrace();
+		 } catch (IllegalArgumentException ex) {
+			 ex.printStackTrace();
+		 } catch (InvocationTargetException ex) {
+			 ex.printStackTrace();
+		 } 
+		 
+		return true;
+	}
 }
 
 

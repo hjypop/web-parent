@@ -414,7 +414,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	             }else if(field.isAnnotationPresent(ExculdeNullField.class) && StringUtils.isBlank(value) ){
 	            	 // ExculdeNullField注解标识的字段为空，则不再对其反射设值。
 	            	 continue;
-	             }
+	             } 
 	             
 	             // 赋值 
 	             String func_ = "set" + name.substring(0,1).toUpperCase()+name.substring(1); 

@@ -303,7 +303,7 @@
 				ordercenter.oc_order_shipments s  
 		WHERE 
 				s.create_time between #{startTime , jdbcType=VARCHAR} and #{endTime , jdbcType=VARCHAR} 
-				and s.small_seller_code = #{sellerCode , jdbcType=VARCHAR}  
+				and s.creator = #{sellerCode , jdbcType=VARCHAR}  
 	</select>
 </mapper>
 

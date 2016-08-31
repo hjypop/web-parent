@@ -1,8 +1,12 @@
 package com.hjy.request.data;
 
+import com.hjy.annotation.ExculdeNullField;
 
 public class OrderShipmentsRequest {
-	private String sellerCode; 		// 商家编码| 非空
+	
+	@ExculdeNullField
+	private String sellerCode; 		// 商家编码
+	
 	private String startTime;
 	private String endTime;
 	
