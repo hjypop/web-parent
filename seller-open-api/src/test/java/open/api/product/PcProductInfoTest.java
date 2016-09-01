@@ -1,5 +1,8 @@
 package open.api.product;
 
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +17,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.base.BaseTest;
 import com.hjy.common.DateUtil;
+import com.hjy.controller.DataInit;
 import com.hjy.dao.api.IApiProductInfoDao;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.webcore.WcSellerinfo;
+import com.hjy.helper.SignHelper;
 import com.hjy.helper.WebHelper;
+import com.hjy.request.Request;
 import com.hjy.service.product.IApiProductService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -48,7 +54,7 @@ public class PcProductInfoTest extends BaseTest {
 		List<PcProductinfo> list = dao.findProductBySellerProductype(map);
 		System.out.println(list.size());
 	}
-
+	
 	public void pushProduct() {
 		System.out.println(DateUtil.getSysDateTimeString());
 		WcSellerinfo seller = new WcSellerinfo();
@@ -60,6 +66,7 @@ public class PcProductInfoTest extends BaseTest {
 		System.out.println(obj.toJSONString());
 	}
 
+	@Test
 	public void pushSkuStock() {
 		String productCodes = "101392,100793";
 		WcSellerinfo seller = new WcSellerinfo();
@@ -79,12 +86,39 @@ public class PcProductInfoTest extends BaseTest {
 		System.out.println(obj.toJSONString());
 	}
 
-	@Test
-	public void unique() {
-		// MObjMap<String, Object> param = new MObjMap<String, Object>();
-		// param.put("code", "8019");
-		// String code = sysWebcodeDao.callUniqueCode(param);
-		// System.out.println(code);
-		WebHelper.getInstance().genUniqueCode("8016");
+	public void isSign() {
+		boolean flag = false;
+		try {
+
+			Request request = DataInit.orderInfoBatchInsertTest();
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("appid", request.getAppid());
+			map.put("data", URLEncoder.encode(request.getData(), "UTF-8"));
+			map.put("method", request.getMethod());
+			map.put("timestamp", request.getTimestamp());
+			map.put("nonce", request.getNonce());
+			List<String> list = new ArrayList<String>();
+			for (Map.Entry<String, String> entry : map.entrySet()) {
+				if (entry.getValue() != "") {
+					list.add(entry.getKey() + "=" + entry.getValue() + "&");
+				}
+			}
+			Collections.sort(list); // 对List内容进行排序
+			StringBuffer str = new StringBuffer();
+			for (String nameString : list) {
+				str.append(nameString);
+			}
+			str.append(request.getAppSecret());
+			String sign = SignHelper.md5Sign(str.toString());
+			System.out.println(sign);
+			if (sign.equals(request.getSign())) {
+				System.out.println("sign校验成功");
+			} else {
+				System.out.println("sign校验失败");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+
 }

@@ -1082,7 +1082,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 						}
 					}
 					// 存储到map中格式为 productCode:skuStock
-					map.put(productCode, productSku);
+					map.put("productCode", productCode);
+					map.put("skuList", productSku);
 					array.add(map);
 				}
 				response.put("code", 0);
@@ -1166,7 +1167,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 						}
 					}
 					// 存储到map中格式为 productCode:skuStock
-					map.put(productCode, productSku);
+					map.put("productCode", productCode);
+					map.put("skuList", productSku);
 					array.add(map);
 				}
 				response.put("code", 0);
