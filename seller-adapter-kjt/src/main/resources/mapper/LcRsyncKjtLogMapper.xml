@@ -211,10 +211,10 @@
 			and request_time > #{requestTime , jdbcType=VARCHAR} 
 		</if> 
 	    <if test="requestData != null and requestData != ''">
-			and request_data LIKE cancat('%',  #{requestData , jdbcType=VARCHAR} ,'%') 
+			and request_data LIKE  concat('%',  #{requestData , jdbcType=VARCHAR} ,'%') 
 		</if> 
 		<if test="responseData != null and responseData != ''">
-			and response_data LIKE cancat('%',  #{responseData , jdbcType=VARCHAR} ,'%') 
+			and response_data LIKE concat('%',  #{responseData , jdbcType=VARCHAR} ,'%') 
 		</if>
 		order by zid desc  limit 40 
 	</select>
