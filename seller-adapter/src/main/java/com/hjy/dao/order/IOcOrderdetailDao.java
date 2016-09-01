@@ -3,6 +3,7 @@ package com.hjy.dao.order;
 import java.util.List;
 
 import com.hjy.dao.BaseDao;
+import com.hjy.dto.KjtProductInfo;
 import com.hjy.model.order.OrderDetail;
 
 public interface IOcOrderdetailDao extends BaseDao<OrderDetail , Integer> {
@@ -18,4 +19,19 @@ public interface IOcOrderdetailDao extends BaseDao<OrderDetail , Integer> {
 	 */
 	public Integer apiBatchInsert(List<OrderDetail> list);
 	
+	
+	public KjtProductInfo  findKjtProductInfo(String orderCode);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

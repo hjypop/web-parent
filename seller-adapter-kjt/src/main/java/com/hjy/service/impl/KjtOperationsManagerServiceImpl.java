@@ -12,9 +12,14 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.dao.IJobExectimerDao;
+import com.hjy.dao.ILcRsyncKjtLogDao;
+import com.hjy.dao.order.IOcOrderdetailDao;
 import com.hjy.dao.product.IPcProductinfoDao;
-import com.hjy.entity.product.PcSkuinfo;
+import com.hjy.dto.KjtProductInfo;
+import com.hjy.dto.QueryKjtLog;
+import com.hjy.entity.LcRsyncKjtLog;
 import com.hjy.helper.DateHelper;
+import com.hjy.helper.ExceptionHelpter;
 import com.hjy.pojo.entity.system.JobExectimer;
 import com.hjy.redis.core.RedisLaunch;
 import com.hjy.redis.srnpr.ERedisSchema;
@@ -31,6 +36,11 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 	@Resource
 	private IPcProductinfoDao pcProductinfoDao;
 	
+	@Resource
+	private ILcRsyncKjtLogDao lcRsyncKjtLogDao;  
+	
+	@Resource
+	private IOcOrderdetailDao orderDetailDao;
 	
 	
 	
@@ -164,6 +174,38 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 			RedisLaunch.setFactory(ERedisSchema.ProductSales).del(i);		//刷新销量缓存
 		}
 		return true;
+	}
+
+	
+	public JSONObject queryKjtlog(QueryKjtLog dto) {
+		JSONObject result = new JSONObject();
+		LcRsyncKjtLog kjt = new LcRsyncKjtLog();
+		kjt.setRsyncTarget(dto.getRsyncTarget());
+		kjt.setRequestTime(dto.getRequestTime());
+		kjt.setResponseData(dto.getResponseData());
+		kjt.setRequestData(dto.getRequestData()); 
+		try {
+			List<LcRsyncKjtLog> logList = lcRsyncKjtLogDao.selectLogByType(kjt); 
+			if(logList != null && logList.size() != 0){
+				result.put("logList", logList);
+			}else{
+				result.put("logList", "log-list-null");
+			}
+			
+			KjtProductInfo entity = orderDetailDao.findKjtProductInfo(dto.getOrderCode()); 
+			if(entity != null){
+				result.put("entity", entity);
+			}else{
+				result.put("entity", "entity-null");
+			}
+			result.put("status", "success");
+		} catch (Exception ex) {
+			result.put("status", "error");
+			String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";
+			result.put("msg", remark_); 
+		}
+		
+		return result;
 	}
 	
 }

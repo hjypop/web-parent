@@ -1,8 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hjy.dao.ILcRsyncKjtLogDao">
-	<insert id="insertSelective" parameterType="com.hjy.entity.LcRsyncKjtLog"
-		useGeneratedKeys="true" keyProperty="zid">
+
+	<resultMap id="BaseResultMap" type="com.hjy.entity.LcRsyncKjtLog">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="uid" property="uid" jdbcType="CHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="rsync_target" property="rsyncTarget" jdbcType="VARCHAR" />
+		<result column="rsync_url" property="rsyncUrl" jdbcType="VARCHAR" />
+		<result column="request_time" property="requestTime" jdbcType="CHAR" />
+		<result column="response_time" property="responseTime" jdbcType="CHAR" />
+		<result column="flag_success" property="flagSuccess" jdbcType="INTEGER" />
+		<result column="process_time" property="processTime" jdbcType="CHAR" />
+		<result column="status_data" property="statusData" jdbcType="VARCHAR" />
+		<result column="process_num" property="processNum" jdbcType="INTEGER" />
+		<result column="success_num" property="successNum" jdbcType="INTEGER" />
+		<result column="request_data" property="requestData" jdbcType="LONGVARCHAR" />
+		<result column="response_data" property="responseData" jdbcType="LONGVARCHAR" />
+		<result column="error_expection" property="errorExpection" jdbcType="LONGVARCHAR" />
+		<result column="process_data" property="processData" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	    select 
+		    *
+	    from 
+	    	logcenter.lc_rsync_kjt_log
+	    where 
+	    zid = #{zid,jdbcType=INTEGER}
+	</select>
+  
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+	    delete from logcenter.lc_rsync_kjt_log where zid = #{zid,jdbcType=INTEGER}
+	</delete>
+	 
+	<insert id="insertSelective" parameterType="com.hjy.entity.LcRsyncKjtLog" useGeneratedKeys="true" keyProperty="zid">
 		INSERT INTO logcenter.lc_rsync_kjt_log
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="uid != null and uid != ''">
@@ -99,6 +132,7 @@
 			</if>
 		</trim>
 	</insert>
+	
 	<update id="updateSelective" parameterType="com.hjy.entity.LcRsyncKjtLog">
 		UPDATE logcenter.lc_rsync_kjt_log
 		<set>
@@ -149,20 +183,48 @@
 			`code` = #{code,jdbcType=VARCHAR}
 		</where>
 	</update>
+	
+	
 	<!-- 获取最近一次成功处理的状态数据 2016-06-28 zhy -->
-	<select id="findLatelyStatusData" parameterType="java.lang.String"
-		resultType="java.lang.String">
+	<select id="findLatelyStatusData" parameterType="java.lang.String" resultType="java.lang.String">
 		SELECT
-		status_data
+			status_data
 		FROM
-		logcenter.lc_rsync_kjt_log
+			logcenter.lc_rsync_kjt_log
 		<where>
-			rsync_target = #{rsyncTarget,jdbcType=VARCHAR}
-			AND flag_success
-			= 1
+			rsync_target = #{rsyncTarget,jdbcType=VARCHAR} AND flag_success = 1
 		</where>
-		ORDER BY
-		zid DESC
+		ORDER BY zid DESC
 		LIMIT 1
 	</select>
+	
+	
+	
+	<select id="selectLogByType" resultMap="BaseResultMap" parameterType="com.hjy.entity.LcRsyncKjtLog" >
+	    select 
+		  * 
+		from
+		  logcenter.lc_rsync_kjt_log 
+		where 
+			rsync_target = #{rsyncTarget,jdbcType=VARCHAR}
+		<if test="requestTime != null and requestTime != ''">
+			and request_time > #{requestTime , jdbcType=VARCHAR} 
+		</if> 
+	    <if test="requestData != null and requestData != ''">
+			and request_data LIKE cancat('%',  #{requestData , jdbcType=VARCHAR} ,'%') 
+		</if> 
+		<if test="responseData != null and responseData != ''">
+			and response_data LIKE cancat('%',  #{responseData , jdbcType=VARCHAR} ,'%') 
+		</if>
+		order by zid desc  limit 40 
+	</select>
 </mapper>
+
+
+
+
+
+
+
+
+

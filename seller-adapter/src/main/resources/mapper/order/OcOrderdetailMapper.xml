@@ -291,6 +291,39 @@
 			 )
 		</foreach>
 	</insert>
+	
+	
+	<resultMap id="kjtProductInfoMap" type="com.hjy.dto.KjtProductInfo"></resultMap>
+	<!-- 根据orderCode 取出一条信息|跨境通问题查询页面使用 - Yangcl -->
+	<select id="findKjtProductInfo" resultMap="kjtProductInfoMap" parameterType="java.lang.String">
+		 SELECT 
+		    od.order_code AS orderCode,
+		    od.sku_code AS skuCode,
+		    od.product_code AS productCode,
+		    od.sku_name AS skuName,
+		    od.sku_price AS skuPrice, 			 
+		    od.sku_num AS skuNum, 				 
+		    od.product_picurl AS picurl, 
+		    od.store_code AS storeCode,
+		    od.gift_flag AS giftFlag,
+		    od.cost_price AS costPrice,
+		    od.tax_rate AS taxRate,
+		    p.product_code_old AS kjtCode, # 跨境通商品编号
+		    p.product_name AS productName,
+		    p.product_shortname AS productShortName,
+		    p.seller_code AS sellerCode,
+		    p.small_seller_code AS smallSellerCode,
+		    p.product_weight AS weight,
+		    p.create_time AS productCreateTime,
+		    p.update_time AS productUpdateTime,
+		    p.cost_price AS productCostPrice,
+		    p.tax_rate AS productTaxRate,
+		    p.product_status AS productStatus
+		  FROM
+		    ordercenter.`oc_orderdetail` od LEFT JOIN productcenter.`pc_productinfo` p ON od.product_code = p.product_code
+		  WHERE 
+		  	order_code = #{orderCode , jdbcType=VARCHAR}  AND p.small_seller_code = 'SF03KJT'
+	</select>
 </mapper>
 
 

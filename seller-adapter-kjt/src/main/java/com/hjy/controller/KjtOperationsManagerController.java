@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.dto.QueryKjtLog;
 import com.hjy.request.data.OrderInfoStatus;
 import com.hjy.service.IKjtOperationsManagerService;
 import com.hjy.service.operations.IOperationsManagerService;
@@ -68,7 +69,11 @@ public class KjtOperationsManagerController {
 	}
 	
 	
-	
+	@RequestMapping(value = "queryKjtlog", produces = { "application/json;charset=utf-8" })
+	@ResponseBody
+	public JSONObject queryKjtlog(QueryKjtLog dto){
+		return kjtService.queryKjtlog(dto); 
+	}
 	
 	
 	

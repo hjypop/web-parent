@@ -1,5 +1,7 @@
 package com.hjy.dao;
 
+import java.util.List;
+
 import com.hjy.entity.LcRsyncKjtLog;
 
 /**
@@ -21,4 +23,28 @@ public interface ILcRsyncKjtLogDao extends BaseDao<LcRsyncKjtLog, Integer> {
 	 * @return
 	 */
 	String findLatelyStatusData(String rsyncTarget);
+	
+	/**
+	 * @descriptions 根据右侧4个条件 rsync_target |requestTime|responseData|requestData 查询40条记录
+	 * 
+	 * @param info 
+	 * @date 2016年9月1日下午4:22:42
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public List<LcRsyncKjtLog> selectLogByType(LcRsyncKjtLog info);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

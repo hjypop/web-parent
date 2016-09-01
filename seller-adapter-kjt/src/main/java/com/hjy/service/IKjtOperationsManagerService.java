@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.dto.QueryKjtLog;
 
 public interface IKjtOperationsManagerService {
 	
@@ -28,5 +29,7 @@ public interface IKjtOperationsManagerService {
 
 	public JSONObject funcFive(String json, HttpSession session);
 
-	public JSONObject funcSix(String json, HttpSession session);    
+	public JSONObject funcSix(String json, HttpSession session);
+
+	public JSONObject queryKjtlog(QueryKjtLog dto);     
 }
