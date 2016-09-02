@@ -35,7 +35,7 @@
             var data_ = {json:$("#json-str").val()};
             var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
             if(obj.status == 'success'){
-                alert(obj.desc);
+                jAlert(obj.desc, '网页提示');
             }
         }
 
@@ -51,7 +51,7 @@
             };
             var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
             if(obj.status == 'success'){
-                alert(obj.desc);
+                jAlert(obj.desc, '网页提示');
             }
         }
 
@@ -66,18 +66,23 @@
             };
             var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
             if(obj.status == 'success'){
-                alert(obj.desc);
+                jAlert(obj.desc, '网页提示');
             }
         }
 
         function funcFour(){
-            var type_ = 'post';
-            var url_ = '${basePath}kjt/funcFour.do';
-            var data_ = {json:$("#json-str-p").val()};
-            var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
-            if(obj.status == 'success'){
-                alert(obj.desc);
-            }
+            jConfirm('你确定要批量置空跨境通商品编号吗？', '高危险操作！', function(flag) {
+                if(flag){
+                    var type_ = 'post';
+                    var url_ = '${basePath}kjt/funcFour.do';
+                    var data_ = {json:$("#json-str-p").val()};
+                    var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+                    if(obj.status == 'success'){
+                        jAlert(obj.desc, '网页提示');
+                    }
+                }
+            });
+
         }
 
         function funcFive(){
@@ -86,7 +91,7 @@
             var data_ = {json:$("#json-str-e").val()};
             var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
             if(obj.status == 'success'){
-                alert(obj.desc);
+                jAlert(obj.desc, '网页提示');
             }
         }
 
@@ -96,7 +101,7 @@
             var data_ = {json:$("#json-str-s").val()};
             var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
             if(obj.status == 'success'){
-                alert(obj.desc);
+                jAlert(obj.desc, '网页提示');
             }
         }
 
@@ -194,7 +199,7 @@
 
                 <div id="fuck-four">
                     <div class="contenttitle2">
-                        <h3>D  根据产品编号Json批量置空跨境通商品编号(pc_productinfo 表 product_code_old 字段将被置空)</h3>
+                        <h3>D  根据产品编号(product_code)Json批量置空跨境通商品编号(pc_productinfo 表 product_code_old 字段将被置空)</h3>
                     </div>
                     <div class="statusbox" style="width: 800px">
                         <form action="#">

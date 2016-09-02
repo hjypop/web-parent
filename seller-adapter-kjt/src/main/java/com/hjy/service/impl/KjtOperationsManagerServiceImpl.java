@@ -53,6 +53,11 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 		}
 		try {
 			List<String> list = JSON.parseArray(json, String.class);
+			if(list == null || list.size() == 0){
+				result.put("status", "success");
+				result.put("desc", "可执行数据为空");
+				return result;
+			}
 			new JobGetChangeProductFromKJT(list).doExecute(null); 
 			result.put("status", "success");
 			result.put("desc", "请求执行完成");
@@ -112,6 +117,11 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 		}
 		try {
 			List<String> list = JSON.parseArray(json, String.class);
+			if(list == null || list.size() == 0){
+				result.put("status", "success");
+				result.put("desc", "可执行数据为空");
+				return result;
+			}
 			pcProductinfoDao.updateNullByProductCode(list);
 			result.put("status", "success");
 			result.put("desc", "请求执行完成");
@@ -133,6 +143,11 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 		
 		try {
 			List<String> list = JSON.parseArray(json, String.class);
+			if(list == null || list.size() == 0){
+				result.put("status", "success");
+				result.put("desc", "可执行数据为空");
+				return result;
+			}
 			new JobForInventory(list).doExecute(null); 
 			result.put("status", "success");
 			result.put("desc", "请求执行完成");
@@ -154,6 +169,11 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 		
 		try {
 			List<String> list = JSON.parseArray(json, String.class);
+			if(list == null || list.size() == 0){
+				result.put("status", "success");
+				result.put("desc", "可执行数据为空");
+				return result;
+			}
 			this.redisReloadProductInfo(list);
 			
 			result.put("status", "success");
