@@ -18,7 +18,7 @@ import com.alibaba.fastjson.JSON;
 public class ReadExcel {
 
 	public static void main(String[] args) {
-		List<String> list = readExcel("D:\\6.xlsx"); 
+		List<String> list = readExcel("D:\\7.xlsx"); 
 	}
 	
 	private static List<String> readExcel(String fileName) {

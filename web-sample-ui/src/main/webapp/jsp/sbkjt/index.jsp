@@ -134,7 +134,7 @@
                         <form id="json-post" action="#">
                             <div class="status_thumb">商品编号Json串：</div>
                             <div style="padding-right:20px;">
-                                <textarea id="json-str" name="" cols="" rows="" style="height: 200px;width: 790px"></textarea>
+                                <textarea id="json-str" name="" cols="" rows="" style="height: 200px;width: 790px" placeholder='["032JPB03k440001","032JPB03k440001","AZEJPB06k440005"]'></textarea>
                             </div>
                             <div class="submit">
                                 <button class="stdbtn btn_orange" onclick="funcOne()">执 行 任 务</button>
@@ -205,7 +205,7 @@
                         <form action="#">
                             <div class="status_thumb">产品编号Json串：</div>
                             <div style="padding-right:20px;">
-                                <textarea id="json-str-p" name="" cols="" rows="" style="height: 200px;width: 790px"></textarea>
+                                <textarea id="json-str-p" name="" cols="" rows="" style="height: 200px;width: 790px" placeholder='惠家有编号 ["8016468747","8016468748","8016468749","8016468880"]'></textarea>
                             </div>
                             <div class="submit">
                                 <button class="stdbtn btn_orange" onclick="funcFour()">执 行 任 务</button>
@@ -225,7 +225,7 @@
                         <form action="#">
                             <div class="status_thumb">商品编号Json串：</div>
                             <div style="padding-right:20px;">
-                                <textarea id="json-str-e" name="" cols="" rows="" style="height: 200px;width: 790px"></textarea>
+                                <textarea id="json-str-e" name="" cols="" rows="" style="height: 200px;width: 790px" placeholder='["032JPB03k440001","032JPB03k440001","AZEJPB06k440005"]'></textarea>
                             </div>
                             <div class="submit">
                                 <button class="stdbtn btn_orange" onclick="funcFive()">执 行 任 务</button>
@@ -245,7 +245,7 @@
                         <form action="#">
                             <div class="status_thumb"> product_code Json串：</div>
                             <div style="padding-right:20px;">
-                                <textarea id="json-str-s" name="" cols="" rows="" style="height: 200px;width: 790px"></textarea>
+                                <textarea id="json-str-s" name="" cols="" rows="" style="height: 200px;width: 790px" placeholder='惠家有编号 ["8016468747","8016468748","8016468749","8016468880"]'></textarea>
                             </div>
                             <div class="submit">
                                 <button class="stdbtn btn_orange" onclick="funcSix()">执 行 任 务</button>

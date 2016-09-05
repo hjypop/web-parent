@@ -51,8 +51,12 @@
             var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
             if(obj.entity != 'entity-null'){
                 initEntity(obj.entity, true);
+                $("#picurl").attr('href' , obj.entity.picurl );
+                $("#picurl")[0].innerHTML=' 点 击 查 看 ';
             }else{
                 initEntity(null, false);
+                $("#picurl").attr('href' , 'javascript:void(0)');
+                $("#picurl")[0].innerHTML=' 该商品无主图 ';
             }
 
             if(obj.logList != 'log-list-null'){
@@ -280,6 +284,13 @@
                                     <td class="tdright">product tax rate</td>
                                     <td class="tdleft">
                                         <input type="text" id="productTaxRate">
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="tdright">商品主图</td>
+                                    <td class="tdleft">
+                                        <a id="picurl" style="color:#FB9337" target="_blank" href="javascript:void(0)" >  点 击 查 看 </a>
                                     </td>
                                 </tr>
                             </tbody>
