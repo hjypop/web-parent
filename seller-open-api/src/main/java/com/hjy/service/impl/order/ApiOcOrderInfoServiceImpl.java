@@ -299,56 +299,47 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			List<OcOrderinfo> insertList = new ArrayList<OcOrderinfo>(); // 存放合法的数据记录
 			List<OrderDetail> insertOrderDetailList = new ArrayList<OrderDetail>(); // 存放合法的数据记录
 			List<OrderInfoInsert> errorList = new ArrayList<OrderInfoInsert>(); // 存放数据不完整的记录
-			try {
-				for(OrderInfoInsert i : list){
-					OcOrderinfo e = new OcOrderinfo();
-					if(this.validate(i, e)){
-						List<OrderDetailInsert> dList = i.getList();
-						if(dList != null && dList.size() !=0){
-							List<OrderDetail> odList = new ArrayList<OrderDetail>(); // 临时存储
-							for(OrderDetailInsert d : dList){
-								OrderDetail od = new OrderDetail();
-								if(this.validate(d, od)){
-									od.setUid(UUID.randomUUID().toString().replace("-", "")); 
-									od.setOrderCode(i.getOrderCode()); 
-									od.setGiftFlag("1"); 
-									odList.add(od);
-								}else{ // 如果 list 中的 sku 信息不合法则认为这条数据错误
-									errorList.add(i);
-									break; // 直接跳出循环
-								}
+			for(OrderInfoInsert i : list){
+				OcOrderinfo e = new OcOrderinfo();
+				if(this.validate(i, e)){
+					List<OrderDetailInsert> dList = i.getList();
+					if(dList != null && dList.size() !=0){
+						List<OrderDetail> odList = new ArrayList<OrderDetail>(); // 临时存储
+						for(OrderDetailInsert d : dList){
+							OrderDetail od = new OrderDetail();
+							if(this.validate(d, od)){
+								od.setUid(UUID.randomUUID().toString().replace("-", "")); 
+								od.setOrderCode(i.getOrderCode()); 
+								od.setGiftFlag("1"); 
+								odList.add(od);
+							}else{ // 如果 list 中的 sku 信息不合法则认为这条数据错误
+								errorList.add(i);
+								break; // 直接跳出循环
 							}
-							if(dList.size() == odList.size()){
-								insertOrderDetailList.addAll(odList);
-								e.setUid(UUID.randomUUID().toString().replace("-", "")); 
-								e.setOrderSource("449715190009");
-								e.setOrderType("449715200005"); 
-								e.setOrderStatus("4497153900010002"); 
-								e.setSellerCode("SI2003"); 
-								e.setCreateTime(DateHelper.formatDate(new Date())); 
-								e.setOrderChannel("449747430006"); 
-								e.setOrderStatusExt("4497153900140002");
-								e.setSmallSellerCode(sellerCode); 
-								e.setOrderAuditStatus("449746680003"); 
-								e.setLowOrder("449747110001"); 
-								insertList.add(e);
-							}
-							
-						}else{     // 如果sku list 信息为空，则认为这条数据错误
-							errorList.add(i);
 						}
-					}else{
+						if(dList.size() == odList.size()){
+							insertOrderDetailList.addAll(odList);
+							e.setUid(UUID.randomUUID().toString().replace("-", "")); 
+							e.setOrderSource("449715190009");
+							e.setOrderType("449715200005"); 
+							e.setOrderStatus("4497153900010002"); 
+							e.setSellerCode("SI2003"); 
+							e.setCreateTime(DateHelper.formatDate(new Date())); 
+							e.setOrderChannel("449747430006"); 
+							e.setOrderStatusExt("4497153900140002");
+							e.setSmallSellerCode(sellerCode); 
+							e.setOrderAuditStatus("449746680003"); 
+							e.setLowOrder("449747110001"); 
+							insertList.add(e);
+						}
+						
+					}else{     // 如果sku list 信息为空，则认为这条数据错误
 						errorList.add(i);
 					}
-				} 		// 数据清洗分离完成 
-			} catch (Exception e) {
-				String desc_ = "平台内部错误";
-				logger.error(sellerCode + "合法性验证异常|" + desc_ , e);  
-				String remark_ = "{" + ExceptionHelpter.allExceptionInformation(e)+ "}";  // 记录异常信息到数据库表
-				openApiOrderInsertDao.insertSelective(new LcOpenApiOrderInsert(sellerCode , 2 , new Date() ,  "合法性验证异常" , remark_));
-			}finally {
-				WebHelper.getInstance().unLock(lockcode);
-			}
+				}else{
+					errorList.add(i);
+				}
+			} 		// 数据清洗分离完成 
 			
 			if(errorList.size() != 0){
 				list.removeAll(errorList);
