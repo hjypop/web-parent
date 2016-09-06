@@ -33,3 +33,7 @@
 /seller-open-api/*.classpath
 /seller-open-api/*.project
 /seller-open-api/target
+/seller-adapter-minspc/target/
+/seller-adapter-minspc/.settings/
+/seller-adapter-minspc/.project
+/seller-adapter-minspc/.classpath
