@@ -14,3 +14,6 @@ Secretkey=“adbaf6f4a0f6484fa783564f70a9ba21”
 
 
 
+
+加入同步日志表 lc_rsync_minspc_log 
+
