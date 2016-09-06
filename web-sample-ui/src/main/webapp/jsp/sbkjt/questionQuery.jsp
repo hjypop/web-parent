@@ -53,10 +53,16 @@
                 initEntity(obj.entity, true);
                 $("#picurl").attr('href' , obj.entity.picurl );
                 $("#picurl")[0].innerHTML=' 点 击 查 看 ';
+                if(obj.size == '1'){
+                    $("#q-desc")[0].innerHTML='';
+                }else{
+                	$("#q-desc")[0].innerHTML=' - 问题订单 - 数目：' + obj.size;
+                }
             }else{
                 initEntity(null, false);
                 $("#picurl").attr('href' , 'javascript:void(0)');
                 $("#picurl")[0].innerHTML=' 该商品无主图 ';
+                $("#q-desc")[0].innerHTML='';
             }
 
             if(obj.logList != 'log-list-null'){
@@ -181,7 +187,7 @@
                 <div id="accordion" class="accordion ui-accordion ui-widget ui-helper-reset ui-accordion-icons" role="tablist">
                     <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" aria-selected="false" tabindex="-1">
                         <span class="ui-icon ui-icon-triangle-1-e"></span>
-                        <a href="#">订单详细信息</a>
+                        <a href="#">订单详细信息<span id="q-desc"></span></a>
                     </h3>
                     <div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" role="tabpanel" style="height: 176px; display: none; overflow: hidden; padding-top: 10px; padding-bottom: 10px;">
                         <table id="product-info" class="form-search" style="width: 1000px;">

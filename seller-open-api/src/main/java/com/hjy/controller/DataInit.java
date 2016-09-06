@@ -257,7 +257,6 @@ public class DataInit {
 		try { 
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("appid", request.getAppid());
-			map.put("appid", request.getAppid());
 			map.put("data", URLEncoder.encode(request.getData(), "UTF-8"));
 			map.put("method", request.getMethod());
 			map.put("timestamp", request.getTimestamp());

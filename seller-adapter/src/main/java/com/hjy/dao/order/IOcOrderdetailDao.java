@@ -20,7 +20,7 @@ public interface IOcOrderdetailDao extends BaseDao<OrderDetail , Integer> {
 	public Integer apiBatchInsert(List<OrderDetail> list);
 	
 	
-	public KjtProductInfo  findKjtProductInfo(String orderCode);
+	public List<KjtProductInfo>  findKjtProductInfo(String orderCode);
 }
 
 

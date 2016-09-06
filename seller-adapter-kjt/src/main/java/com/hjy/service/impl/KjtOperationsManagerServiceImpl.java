@@ -212,9 +212,13 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 				result.put("logList", "log-list-null");
 			}
 			
-			KjtProductInfo entity = orderDetailDao.findKjtProductInfo(dto.getOrderCode()); 
-			if(entity != null){
+			// 有可能查出2条，兼容错误数据
+			List<KjtProductInfo> lists = orderDetailDao.findKjtProductInfo(dto.getOrderCode());
+			if(lists != null && lists.size() > 0){
+				KjtProductInfo entity = lists.get(0); 
 				result.put("entity", entity);
+				result.put("size", lists.size());  
+				result.put("lists", JSON.toJSON(lists)); 
 			}else{
 				result.put("entity", "entity-null");
 			}
