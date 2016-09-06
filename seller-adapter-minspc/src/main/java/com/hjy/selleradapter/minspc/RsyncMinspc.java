@@ -4,14 +4,53 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.alibaba.fastjson.JSONObject;
+import com.hjy.annotation.Inject;
 import com.hjy.base.BaseClass;
+import com.hjy.dao.ILcRsyncMinspcLogDao;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.SignHelper;
+import com.hjy.model.MDataMap;
+import com.hjy.support.WebClientSupport;
 
 public abstract class RsyncMinspc extends BaseClass{
+	
+	@Inject
+	private ILcRsyncMinspcLogDao logDao;   // 同步日志记录
+	
+	/**
+	 * @description: minspc 项目中定时任务的核心方法。发送请求数据，获取响应数据并处理  
+	 *								 所有的定时任务的【处理类】需继承此类。
+	 * @throws 
+	 * @author Yangcl
+	 * @date 2016年9月6日 下午5:53:41 
+	 * @version 1.0.0.1
+	 */
+	public JSONObject doRsync(){
+		JSONObject result  = new JSONObject();
+		
+		
+		
+		
+		return result;
+	}
+	
+	/**
+	 * @description: 获取响应数据  
+	 * @throws 
+	 * @author Yangcl
+	 * @date 2016年9月6日 下午3:32:46 
+	 * @version 1.0.0.1
+	 */
+	private String getHttps() throws Exception {
+		MDataMap request = getSignMap();
+		String url = this.getRequestUrl();
+		String response = WebClientSupport.upPost(url, request);
+		return response;
+	}
 	
 	/**
 	 * @description: 拼装消息请求体  
@@ -21,10 +60,10 @@ public abstract class RsyncMinspc extends BaseClass{
 	 * @date 2016年9月6日 下午3:31:29 
 	 * @version 1.0.0.1
 	 */
-	private Map<String, String> getSignMap(){
-		Map<String, String> map = null;
+	private MDataMap getSignMap(){
+		MDataMap map = null;
 		try { 
-			map = new HashMap<String, String>();
+			map = new MDataMap();
 			map.put("appid", getConfig("seller_adapter_minspc.rsync_minspc_appid"));
 			map.put("data", URLEncoder.encode(this.setRequestDataJson(), "UTF-8"));
 			map.put("method", this.getRequestMethod());
@@ -67,22 +106,6 @@ public abstract class RsyncMinspc extends BaseClass{
 		return getConfig("seller_adapter_minspc.rsync_minspc_url");
 	}
 
-	/**
-	 * @description:   
-	 *
-	 * @throws 
-	 * @author Yangcl
-	 * @date 2016年9月6日 下午3:32:46 
-	 * @version 1.0.0.1
-	 */
-	private String getHttps(String sUrl, String sRequestString) throws Exception {
-		Map<String, String> request = getSignMap();
-		String url = this.getRequestUrl();
-		 
-		
-		String sResponseString = ""; // WebClientSupport.upPost(sUrl, mrequest);
-		return sResponseString;
-	}
 	
 	
 	/**
@@ -105,7 +128,15 @@ public abstract class RsyncMinspc extends BaseClass{
 	 */
 	public abstract String setRequestDataJson();
 	
-	
+	/**
+	 * @description: 由具体子类实现|处理响应数据报文的逻辑|在子类中进行增删改查之类的操作
+	 * 
+	 * @throws 
+	 * @author Yangcl
+	 * @date 2016年9月6日 下午5:47:10 
+	 * @version 1.0.0.1
+	 */
+	public abstract JSONObject doProcess(String responseJson);
 	
 }
 

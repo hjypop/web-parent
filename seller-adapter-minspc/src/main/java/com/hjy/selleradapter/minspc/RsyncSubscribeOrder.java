@@ -1,5 +1,8 @@
 package com.hjy.selleradapter.minspc;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hjy.model.RsyncResult;
+
 /**
  * 
  * @title: com.hjy.selleradapter.minspc.RsyncSubscribeOrder.java 
@@ -11,14 +14,20 @@ package com.hjy.selleradapter.minspc;
  */
 public class RsyncSubscribeOrder extends RsyncMinspc{
 
+	public JSONObject doProcess(String responseJson) {
+		
+		
+		return null;
+	}
+
 	public String getRequestMethod() {
 		return "";
 	}
 
-	@Override
 	public String setRequestDataJson() {
-		// TODO Auto-generated method stub
 		return "";
 	}
+
+	
 
 }
