@@ -5,29 +5,17 @@ import java.util.Date;
 public class LcRsyncMinspcLog {
 	
     private Integer id;
-
     private String uid;
-
     private String target;
-
     private String rsyncUrl;
-
     private Date requestTime;
-
     private Date responseTime;
-
     private Integer flag;
-
     private Integer processNum;
-
     private Integer successNum;
-
     private String requestData;
-
     private String responseData;
-
     private String remark;
-
     
     
     

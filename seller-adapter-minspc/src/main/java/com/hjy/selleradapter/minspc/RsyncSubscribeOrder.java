@@ -1,7 +1,7 @@
 package com.hjy.selleradapter.minspc;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hjy.model.RsyncResult;
+
 
 /**
  * 
@@ -15,13 +15,13 @@ import com.hjy.model.RsyncResult;
 public class RsyncSubscribeOrder extends RsyncMinspc{
 
 	public JSONObject doProcess(String responseJson) {
-		
+		// TODO 调用OpenApi 拼装响应数据
 		
 		return null;
 	}
 
 	public String getRequestMethod() {
-		return "";
+		return "SubscribeOrder.Create";
 	}
 
 	public String setRequestDataJson() {

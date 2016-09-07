@@ -6,11 +6,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.annotation.Inject;
 import com.hjy.base.BaseClass;
 import com.hjy.dao.ILcRsyncMinspcLogDao;
+import com.hjy.entity.LcRsyncMinspcLog;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.SignHelper;
 import com.hjy.model.MDataMap;
@@ -30,10 +32,21 @@ public abstract class RsyncMinspc extends BaseClass{
 	 * @version 1.0.0.1
 	 */
 	public JSONObject doRsync(){
-		JSONObject result  = new JSONObject();
+		JSONObject result  = null;
+		LcRsyncMinspcLog log = new LcRsyncMinspcLog();
+		log.setUid(UUID.randomUUID().toString().replace("-", ""));
+		log.setTarget(this.getRequestMethod());
+		log.setRsyncUrl(this.getRequestUrl()); 
+		log.setRequestTime(new Date());
+		log.setRequestData(this.setRequestDataJson()); 
+		String responseJson = this.getHttps();
+		log.setResponseData(responseJson); 
+		log.setResponseTime(new Date());
+		logDao.insertSelective(log);
 		
+		result = this.doProcess(responseJson);
 		
-		
+		// TODO logDao update 
 		
 		return result;
 	}
@@ -45,10 +58,15 @@ public abstract class RsyncMinspc extends BaseClass{
 	 * @date 2016年9月6日 下午3:32:46 
 	 * @version 1.0.0.1
 	 */
-	private String getHttps() throws Exception {
+	private String getHttps()  {
 		MDataMap request = getSignMap();
 		String url = this.getRequestUrl();
-		String response = WebClientSupport.upPost(url, request);
+		String response = null;
+		try {
+			response = WebClientSupport.upPost(url, request);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return response;
 	}
 	

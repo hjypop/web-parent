@@ -5,24 +5,25 @@ import org.quartz.JobExecutionContext;
 
 import com.hjy.helper.WebHelper;
 import com.hjy.quartz.job.RootJob;
-import com.hjy.selleradapter.minspc.RsyncSubscribeOrder;
+import com.hjy.selleradapter.minspc.RsyncVoidOrder;
 
 /**
- * @title: com.hjy.job.JobForCreateSubscribeOrder.java 
- * @description: 生成订阅订单（并发送海关）
+ * 
+ * @title: com.hjy.selleradapter.job.JobForVoidOrder.java 
+ * @description: 订单作废
  *
  * @author Yangcl
- * @date 2016年9月6日 下午2:24:05 
+ * @date 2016年9月7日 下午1:34:02 
  * @version 1.0.0
  */
-public class JobForCreateSubscribeOrder extends RootJob {
-	
-	@Override  
+public class JobForVoidOrder extends RootJob {
+
+	@Override
 	public void doExecute(JobExecutionContext context) {
-		String lockCode = WebHelper.getInstance().addLock(1000 , "JobForCreateSubscribeOrder");	// 分布式锁定
+		String lockCode = WebHelper.getInstance().addLock(1000 , "JobForVoidOrder");	// 分布式锁定
 		if (StringUtils.isNotBlank(lockCode)) {
 			try {
-				new RsyncSubscribeOrder().doRsync();
+				new RsyncVoidOrder().doRsync();
 			} catch (Exception e) {
 				e.printStackTrace();  
 			}finally {
@@ -30,7 +31,5 @@ public class JobForCreateSubscribeOrder extends RootJob {
 			}
 		}
 	}
-
-
 
 }
