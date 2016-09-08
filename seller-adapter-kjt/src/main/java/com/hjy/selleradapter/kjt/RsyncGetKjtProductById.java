@@ -163,9 +163,12 @@ public class RsyncGetKjtProductById
 	}
 
 	/**
-	 * @Description:把商品信息赋值到待插入实体 @param productinfo 上插入商品实体 @param info
-	 *                            商品信息 @author 张海生 @date 2015-7-14
-	 *                            下午3:48:00 @throws
+	 * @Description:把商品信息赋值到待插入实体 
+	 * @param productinfo 上插入商品实体 
+	 * @param info 商品信息 
+	 * @author 张海生 
+	 * @date 2015-7-14下午3:48:00
+	 * @throws
 	 */
 	public void setNewProductInfo(PcProductinfo productinfo, RsyncModelGetKjtProduct info) {
 		String productName = info.getProductName().replaceAll("</?[^>]+>", "");// 过滤html标签
