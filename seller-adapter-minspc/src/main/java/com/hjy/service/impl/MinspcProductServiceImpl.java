@@ -31,6 +31,8 @@ import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductflow;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.product.PcProductinfoExt;
+import com.hjy.entity.product.PcSkuinfo;
+import com.hjy.entity.system.ScStoreSkunum;
 import com.hjy.helper.WebHelper;
 import com.hjy.model.ProductSkuInfo;
 import com.hjy.service.IMinspcProductService;
@@ -125,7 +127,48 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 		// 插入商品图片信息  TODO 我操，这里没有啊？插入轮播图还是描述图啊？需要在productConvertion组织数据
 		
 		
-		
+		// 插入sku信息
+		List<ProductSkuInfo> skuList = e.getProductSkuInfoList();
+		for (ProductSkuInfo sku : skuList) {
+			PcSkuinfo psModel = new PcSkuinfo();
+			psModel.setUid(UUID.randomUUID().toString().replace("-", ""));
+			psModel.setMarketPrice(sku.getMarketPrice());
+			psModel.setProductCode(e.getProductCode());
+			psModel.setProductCodeOld(e.getProductCodeOld());
+			psModel.setQrcodeLink(sku.getQrcodeLink());
+			psModel.setSecurityStockNum(Long.valueOf(sku.getSecurityStockNum()));
+			psModel.setSellerCode(e.getSellerCode());
+			psModel.setSellPrice(sku.getSellPrice());
+			psModel.setSellProductcode(sku.getSellProductcode());
+			psModel.setSkuCode(sku.getSkuCode());
+			psModel.setSkuCodeOld(sku.getSkuCodeOld());
+			psModel.setSkuKey(sku.getSkuKey());
+			psModel.setSkuKeyvalue(sku.getSkuValue());
+			psModel.setSkuPicurl(sku.getSkuPicUrl());
+			psModel.setSkuName(sku.getSkuName());
+			psModel.setSkuAdv(sku.getSkuAdv());
+			
+			psModel.setStockNum(Long.valueOf(sku.getStockNum()));   // TODO ######## 到这里！！
+																															// Long.valueOf(sku.getSecurityStockNum()) ???
+			psModel.setSaleYn(sku.getSaleYn());
+			psModel.setCostPrice(sku.getCostPrice());
+			psModel.setMiniOrder(sku.getMiniOrder());
+			pcsm.insertSelective(psModel);
+
+			// 插入商品sku库存
+			if (sku.getScStoreSkunumList() != null) {
+				List<ScStoreSkunum> skuStoreList = sku.getScStoreSkunumList();
+				for (ScStoreSkunum skuStore : skuStoreList) {
+					ScStoreSkunum sssModel = new ScStoreSkunum();
+					sssModel.setUid(UUID.randomUUID().toString().replace("-", ""));
+					sssModel.setSkuCode(skuStore.getSkuCode());
+					sssModel.setStockNum(skuStore.getStockNum());
+					sssModel.setStoreCode(skuStore.getStoreCode());
+					sssModel.setBatchCode(skuStore.getBatchCode());
+					sssm.insertSelective(sssModel);
+				}
+			}
+		}
 		
 		
 		return null;
@@ -158,6 +201,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			e.setUid(uid);
 			e.setProductCodeOld("minspc-" +p.getProductID()); // 添加标示头，用于区分跨境通中可能存在的编号
 			e.setProductShortname(p.getProductName());
+			e.setStock(Integer.valueOf(p.getStock())); 
 			// 品牌id 和 品牌名称 插入时候默认为空，这两个字段由运营来维护。
 //			e.setBrandCode(String.valueOf(p.getBrandID()));
 //			e.setBrandName(p.getProductBrand()); 
@@ -187,6 +231,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 				img += "<img src='" + s + "'/><br/>";
 				img_ += s + "|";
 			}
+			img_ = img_.substring(9, img_.length()-1);
 			description.setDescriptionInfo(img);
 			description.setDescriptionPic(img_);
 			description.setKeyword(p.getProductKey());
@@ -196,12 +241,14 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			List<ProductSkuInfo> skuInfoList = new ArrayList<ProductSkuInfo>(1);
 			ProductSkuInfo skuInfo = new ProductSkuInfo();
 			skuInfo.setSkuCode(WebHelper.getInstance().genUniqueCode(SKUHead));
-			skuInfo.setProductCode(p.getProductID());
+			skuInfo.setProductCode(e.getProductCode());
 			skuInfo.setSellPrice(price);
 			skuInfo.setMarketPrice(price);
 			skuInfo.setCostPrice(price);// 设置sku的成本价
-			skuInfo.setSkuName(p.getProductName());// 过滤html标签
-			skuInfo.setSellProductcode(p.getProductID());// 设置外部商品id
+			skuInfo.setSkuName(e.getProductName()); 
+			skuInfo.setSkuPicUrl(p.getProductPictures().get(0)); // TODO 默认轮播图的第一张，是否可以？？？？？
+			skuInfo.setSellProductcode(e.getProductCodeOld());// 设置外部商品 id 
+			skuInfo.setSecurityStockNum(Integer.valueOf(e.getStock()));  // 商品库存
 			skuInfo.setSaleYn("Y");// 是否可卖为可买
 			skuInfo.setFlagEnable("1");// 是否可用为可用
 			skuInfo.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS);  // SI2003
@@ -212,7 +259,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			
 			// 设置商品扩展信息
 			PcProductinfoExt ext = new PcProductinfoExt();// 设置扩展信息
-			ext.setProductCodeOld(p.getProductID());
+			ext.setProductCodeOld(e.getProductCodeOld());
 			ext.setProductCode(e.getProductCode());
 			ext.setPrchType("10");  // 一地入库类型
 			// TODO @@@@@@@@@@@@@@@@@@ 供应商编号
