@@ -560,6 +560,7 @@
 	<!-- 可以扩展if中的查询条件 - Yangcl -->
 	<select id="getListBySellerCode" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcProductinfo">
 		SELECT
+		    p.uid as uid,
 			p.product_code AS productCode,
 			p.product_shortname AS productShortname,
 			p.max_sell_price AS maxSellPrice,

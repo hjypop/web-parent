@@ -19,7 +19,7 @@ import com.hjy.dto.KjtProductInfo;
 import com.hjy.dto.QueryKjtLog;
 import com.hjy.entity.LcRsyncKjtLog;
 import com.hjy.helper.DateHelper;
-import com.hjy.helper.ExceptionHelpter;
+import com.hjy.helper.ExceptionHelper;
 import com.hjy.pojo.entity.system.JobExectimer;
 import com.hjy.redis.core.RedisLaunch;
 import com.hjy.redis.srnpr.ERedisSchema;
@@ -225,7 +225,7 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 			result.put("status", "success");
 		} catch (Exception ex) {
 			result.put("status", "error");
-			String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";
+			String remark_ = "{" + ExceptionHelper.allExceptionInformation(ex)+ "}";
 			result.put("msg", remark_); 
 		}
 		

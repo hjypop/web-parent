@@ -132,6 +132,10 @@
 			product_code = #{productCode,jdbcType=VARCHAR}
 		</where>
 	</update>
+	
+	<delete id="deleteByProductCode" parameterType="java.lang.String">
+		delete from productcenter.pc_productpic where product_code = #{productCode,jdbcType=VARCHAR}
+	</delete>
 </mapper>
 
 

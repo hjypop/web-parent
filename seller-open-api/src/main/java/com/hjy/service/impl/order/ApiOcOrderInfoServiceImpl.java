@@ -30,7 +30,7 @@ import com.hjy.entity.log.LcOpenApiOrderStatus;
 import com.hjy.entity.log.LcOpenApiQueryLog;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.DateHelper;
-import com.hjy.helper.ExceptionHelpter;
+import com.hjy.helper.ExceptionHelper;
 import com.hjy.helper.SignHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.model.order.OrderDetail;
@@ -111,7 +111,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			return result; 
 		} catch (Exception ex) {
 			logger.error("查询订单状态信息异常|"  , ex);  
-			String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
+			String remark_ = "{" + ExceptionHelper.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
 			result.put("code", 11);
 			result.put("desc", "查询订单状态信息异常");
 			openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
@@ -196,7 +196,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			} catch (Exception ex) {
 				String desc_ = "平台内部错误，成功 " + successList.size() + " 条，失败 " + (updateList.size() - successList.size()) + " 条";
 				logger.error("更新订单状态信息异常|" + desc_ , ex);  
-				String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
+				String remark_ = "{" + ExceptionHelper.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
 				openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , e.getOrderCode() , e.getOrderStatus() , 2 , new Date() , remark_));
 				if(errorList.size() > 0){
 					result.put("errorSellerCodeList", errorList); // 非此商户订单
@@ -360,7 +360,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			} catch (Exception ex){
 				String desc_ = "平台内部错误";
 				logger.error(sellerCode + "批量插入订单信息异常|" + desc_ , ex);  
-				remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
+				remark_ = "{" + ExceptionHelper.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
 				openApiOrderInsertDao.insertSelective(new LcOpenApiOrderInsert(sellerCode , 2 , new Date() ,  json_ , remark_));
 			}finally {
 				WebHelper.getInstance().unLock(lockcode);

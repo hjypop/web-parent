@@ -27,7 +27,7 @@ import com.hjy.entity.log.LcOpenApiShipmentStatus;
 import com.hjy.entity.order.OcOrderShipments;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.DateHelper;
-import com.hjy.helper.ExceptionHelpter;
+import com.hjy.helper.ExceptionHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.request.data.OrderShipment;
 import com.hjy.request.data.OrderShipmentsRequest;
@@ -163,7 +163,7 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 				// 记录异常信息到数据库表  shipmentUid sellerCode orderCode logisticseName wayBill  flag createTime remark
 				String desc_ = "平台内部错误，成功 " + successList.size() + " 条，失败 " + (insertList.size() + updateList.size() - successList.size()) + " 条";
 				logger.error("插入物流数据异常|" + desc_ , e); 
-				String remark_ = "{" + ExceptionHelpter.allExceptionInformation(e) + "}";
+				String remark_ = "{" + ExceptionHelper.allExceptionInformation(e) + "}";
 				logShipmentStatusDao.insertSelective(new LcOpenApiShipmentStatus(ex.getUid() , sellerCode , ex.getOrderCode() , ex.getLogisticseName() , ex.getWaybill() , 2 , new Date() , remark_));
 				
 				result.put("successList", successList);
@@ -244,7 +244,7 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 				
 		} catch (Exception ex) { 
 			logger.error("查询物流信息异常|"  , ex);  
-			String remark_ = "{" + ExceptionHelpter.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
+			String remark_ = "{" + ExceptionHelper.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
 			result.put("code", 11);
 			result.put("desc", "查询物流信息异常");
 			

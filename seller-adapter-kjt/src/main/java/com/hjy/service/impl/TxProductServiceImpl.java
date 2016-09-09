@@ -165,7 +165,6 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 		// 插入sku信息
 		if (pc.getProductSkuInfoList() != null) {
 			List<ProductSkuInfo> skuList = pc.getProductSkuInfoList();
-
 			for (ProductSkuInfo sku : skuList) {
 				PcSkuinfo psModel = new PcSkuinfo();
 				psModel.setMarketPrice(sku.getMarketPrice());
@@ -206,21 +205,21 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 			}
 		}
 
-		// 插入商品属性信息
-		if (pc.getPcProductpropertyList() != null) {
-			List<PcProductproperty> pppList = pc.getPcProductpropertyList();
-			for (PcProductproperty ppp : pppList) {
-				PcProductproperty pppModel = new PcProductproperty();
-				pppModel.setProductCode(pc.getProductCode());
-				pppModel.setPropertyCode(ppp.getPropertyCode());
-				pppModel.setPropertyKey(ppp.getPropertyKey());
-				pppModel.setPropertyKeycode(ppp.getPropertyKeycode());
-				pppModel.setPropertyType(ppp.getPropertyType());
-				pppModel.setPropertyValue(ppp.getPropertyValue());
-				pppModel.setUid(UUID.randomUUID().toString().replace("-", ""));
-				pppmr.insertSelective(pppModel);
-			}
-		}
+		// 插入商品属性信息        此处是无用操作 整个表就没有数据 2016-09-09注释掉此处代码
+//		if (pc.getPcProductpropertyList() != null) {
+//			List<PcProductproperty> pppList = pc.getPcProductpropertyList();
+//			for (PcProductproperty ppp : pppList) {
+//				PcProductproperty pppModel = new PcProductproperty();
+//				pppModel.setProductCode(pc.getProductCode());
+//				pppModel.setPropertyCode(ppp.getPropertyCode());
+//				pppModel.setPropertyKey(ppp.getPropertyKey());
+//				pppModel.setPropertyKeycode(ppp.getPropertyKeycode());
+//				pppModel.setPropertyType(ppp.getPropertyType());
+//				pppModel.setPropertyValue(ppp.getPropertyValue());
+//				pppModel.setUid(UUID.randomUUID().toString().replace("-", ""));
+//				pppmr.insertSelective(pppModel);
+//			}
+//		}
 
 		// 插入商品扩展信息
 		if (pc.getPcProductinfoExt() != null) {
@@ -668,3 +667,23 @@ public class TxProductServiceImpl extends BaseClass implements ITxProductService
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

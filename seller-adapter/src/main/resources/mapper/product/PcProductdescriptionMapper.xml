@@ -99,12 +99,12 @@
 			)
 		</foreach>
 	</insert>
+	
 	<update id="updateSelective" parameterType="com.hjy.entity.product.PcProductdescription">
-		UPDATE productcenter.pc_productdescription
+		update productcenter.pc_productdescription
 		<set>
 			<if test="descriptionInfo != null">
-				description_info =
-				#{descriptionInfo,jdbcType=LONGVARCHAR},
+				description_info = #{descriptionInfo,jdbcType=LONGVARCHAR},
 			</if>
 			<if test="descriptionPic != null">
 				description_pic = #{descriptionPic,jdbcType=LONGVARCHAR},
@@ -117,6 +117,7 @@
 			product_code = #{productCode,jdbcType=VARCHAR}
 		</where>
 	</update>
+	
 </mapper>
 
 

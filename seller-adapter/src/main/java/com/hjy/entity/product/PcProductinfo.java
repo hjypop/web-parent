@@ -45,7 +45,7 @@ public class PcProductinfo {
 	/**
 	 * 商品重量
 	 */
-	private BigDecimal productWeight = new BigDecimal(0.00);
+	private BigDecimal productWeight ;
 	/**
 	 * 上下架状态
 	 */
@@ -62,23 +62,23 @@ public class PcProductinfo {
 	/**
 	 * 最小销售价
 	 */
-	private BigDecimal minSellPrice = new BigDecimal(0.00);
+	private BigDecimal minSellPrice ;
 	/**
 	 * 最大销售价
 	 */
-	private BigDecimal maxSellPrice = new BigDecimal(0.00);
+	private BigDecimal maxSellPrice ;
 	/**
 	 * 市场价
 	 */
-	private BigDecimal marketPrice = new BigDecimal(0.00);
+	private BigDecimal marketPrice ;
 	/**
 	 * 成本价
 	 */
-	private BigDecimal costPrice = new BigDecimal(0.00);
+	private BigDecimal costPrice ;
 	/**
 	 * 销售价
 	 */
-	private BigDecimal sellPrice = new BigDecimal(0.00);
+	private BigDecimal sellPrice ;
 
 	/**
 	 * 主图的Url
@@ -143,7 +143,7 @@ public class PcProductinfo {
 	/**
 	 * 商品的草稿箱及流程审批信息
 	 */
-	private PcProductflow pcProdcutflow = null;
+	private PcProductflow pcProdcutflow ;
 
 	/**
 	 * 旧的商品编号
@@ -153,7 +153,7 @@ public class PcProductinfo {
 	/**
 	 * 商品体积
 	 */
-	private BigDecimal productVolume = new BigDecimal(0.00);
+	private BigDecimal productVolume ;
 
 	/**
 	 * 运费模板
@@ -196,7 +196,7 @@ public class PcProductinfo {
 	/**
 	 * 税率
 	 */
-	private BigDecimal taxRate = new BigDecimal(0.0);
+	private BigDecimal taxRate;
 
 	/**
 	 * 商品扩展信息
@@ -225,12 +225,12 @@ public class PcProductinfo {
 	/**
 	 * 商品库存
 	 */
-	private int stock = 0;
+	private Integer stock;
 
 	/**
 	 * 保质期
 	 */
-	private int expiryDate = 0;
+	private Integer expiryDate;
 
 	/**
 	 * 保质期单位 4497471600290001:天，4497471600290002:月,4497471600290003:年
@@ -250,6 +250,10 @@ public class PcProductinfo {
 	private String descriptionInfo ;
 
 	 
+	private String picUpdate; // "1" 图片有变动 "0"无变动 |民生品粹用到，描述其商品图片是否编辑过
+	
+	
+	
 	public PcProductinfo() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -634,13 +638,6 @@ public class PcProductinfo {
 		this.adpicUrl = adpicUrl;
 	}
 
-	public int getStock() {
-		return stock;
-	}
-
-	public void setStock(int stock) {
-		this.stock = stock;
-	}
 
 	public String getAreaTemplate() {
 		return areaTemplate;
@@ -658,13 +655,30 @@ public class PcProductinfo {
 		this.productAdv = productAdv;
 	}
 
-	public int getExpiryDate() {
+
+	public Integer getStock() {
+		return stock;
+	}
+
+
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+
+
+
+	public Integer getExpiryDate() {
 		return expiryDate;
 	}
 
-	public void setExpiryDate(int expiryDate) {
+
+
+	public void setExpiryDate(Integer expiryDate) {
 		this.expiryDate = expiryDate;
 	}
+
+
 
 	public String getExpiryUnit() {
 		return expiryUnit;
@@ -689,4 +703,41 @@ public class PcProductinfo {
 	public void setLowGood(String lowGood) {
 		this.lowGood = lowGood;
 	}
+
+
+
+	public String getPicUpdate() {
+		return picUpdate;
+	}
+	public void setPicUpdate(String picUpdate) {
+		this.picUpdate = picUpdate;
+	}
+	
+	
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

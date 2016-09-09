@@ -22,6 +22,8 @@ public class Product {
 	
 	private String ColdStorage; // 存储方式(0:常温，1:冷藏，2:冷冻)
 	
+	private String PicUpdate; // picUpdate="1" 图片有变动；picUpdate="0"无变动 
+	
 	private List<String> ProductPictures ;  // 轮播图
 	private List<String> ProductDescribe ;  // 描述图
 	
@@ -59,6 +61,12 @@ public class Product {
 	
 	
 	
+	public String getPicUpdate() {
+		return PicUpdate;
+	}
+	public void setPicUpdate(String picUpdate) {
+		PicUpdate = picUpdate;
+	}
 	public String getColdStorage() {
 		return ColdStorage;
 	}

@@ -18,4 +18,14 @@ public interface IPcProductpicDao extends BaseDao<PcProductpic , Integer> {
 	 public List<PcProductpic> findListBySkuNull(PcProductpic entity); 
 	 
 	 int deleteByExample(PcProductpicExample example);
+	 
+	 /**
+	  * @description: 根据productCode删除数据 
+	  *
+	  * @throws 
+	  * @author Yangcl
+	  * @date 2016年9月9日 下午6:10:45 
+	  * @version 1.0.0.1
+	  */
+	 public Integer deleteByProductCode(String productCode);
 }

@@ -1,11 +1,13 @@
 package com.hjy.selleradapter.minspc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.annotation.Inject;
 import com.hjy.constant.MemberConst;
+import com.hjy.dto.response.ResultMsg;
 import com.hjy.dto.response.product.Product;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.service.IMinspcProductService;
@@ -32,18 +34,32 @@ public class RsyncProductList extends RsyncMinspc {
 			return result; 
 		}
 		
+		List<PcProductinfo> successList = new ArrayList<PcProductinfo>();
+		List<PcProductinfo> errorList = new ArrayList<PcProductinfo>(); 
+		
 		// 开始清洗数据  响应数据报文与惠家有表实体报文转换。
 		List<PcProductinfo> list = productService.productConvertion(productList);
 		for(PcProductinfo e : list){
+			ResultMsg msg = null;
 			PcProductinfo i = new PcProductinfo();
-			i.setProductCodeOld("minspc-" + e.getProductCode());
+			i.setProductCodeOld(e.getProductCodeOld()); // product_code_old 作为查询依据
 			i.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS); 
 			List<PcProductinfo> pList = productService.getListBySellerCode(i); 
-			if (pList == null || pList.size() < 1) { // 若果不存在，就添加
-				productService.insertProductToTables(e);
+			if (pList == null || pList.size() == 0) { // 若果不存在，就添加
+				msg = productService.insertProductToTables(e);
 			}else{
-				productService.updateProductInTables(e);
+				i = pList.get(0);
+				e.setUid(i.getUid()); // 根据uid更新商品
+				e.setProductCode(i.getProductCode());   
+				msg = productService.updateProductInTables(e); 
 			}
+			if(msg.getCode().equals("1")){
+				successList.add(msg.getEntity());
+			}else{
+				// TODO @@@@@@@@@@@@@@@@@@@@@@
+			}
+			
+			
 		}  // 循环同步数据结束
 		
 		return result;

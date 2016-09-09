@@ -10,7 +10,7 @@ import java.io.StringWriter;
  * @date 2016年8月6日-下午9:53:08
  * @version 1.0.0
  */
-public class ExceptionHelpter {
+public class ExceptionHelper {
 	
 	/**
 	 * @descriptions 获取异常的详细信息 以字符串的形式返回 保持栈堆风格
