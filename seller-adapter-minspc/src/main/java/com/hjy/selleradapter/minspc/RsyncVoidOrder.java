@@ -16,9 +16,7 @@ public class RsyncVoidOrder extends RsyncMinspc {
 	}
 
 	@Override
-	public JSONObject doProcess(String responseJson) {
-		// TODO Auto-generated method stub
-		return null;
+	public void doProcess(String responseJson) {
 	}
 
 }

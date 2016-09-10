@@ -37,10 +37,9 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 	 * @date 2016年9月7日 下午2:58:26 
 	 * @version 1.0.0.1
 	 */
-	public JSONObject doProcess(String responseJson) {
+	public void doProcess(String responseJson) {
 		// TODO 调用OpenApi 拼装响应数据
 		
-		return null;
 	}
 
 	/**

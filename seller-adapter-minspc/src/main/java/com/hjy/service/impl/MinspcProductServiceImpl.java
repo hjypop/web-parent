@@ -265,7 +265,6 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 		} catch (Exception ex) {
 			String exstring = ExceptionHelper.allExceptionInformation(ex);
 			logger.error(exstring);
-			// TODO 是否需要插入日志表中？？？？？？？？？
 			result.setCode("0"); 
 			result.setEntity(e); 
 			result.setMsg(exstring); 
@@ -352,7 +351,6 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 		} catch (Exception ex) {
 			String exstring = ExceptionHelper.allExceptionInformation(ex);
 			logger.error(exstring);
-			// TODO 是否需要插入日志表中？？？？？？？？？
 			result.setCode("0"); 
 			result.setEntity(e); 
 			result.setMsg(exstring); 

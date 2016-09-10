@@ -31,8 +31,7 @@ public abstract class RsyncMinspc extends BaseClass{
 	 * @date 2016年9月6日 下午5:53:41 
 	 * @version 1.0.0.1
 	 */
-	public JSONObject doRsync(){
-		JSONObject result  = null;
+	public void doRsync(){
 		LcRsyncMinspcLog log = new LcRsyncMinspcLog();
 		log.setUid(UUID.randomUUID().toString().replace("-", ""));
 		log.setTarget(this.getRequestMethod());
@@ -44,11 +43,10 @@ public abstract class RsyncMinspc extends BaseClass{
 		log.setResponseTime(new Date());
 		logDao.insertSelective(log);
 		
-		result = this.doProcess(responseJson);
+		this.doProcess(responseJson);
 		
 		// TODO logDao update 
 		
-		return result;
 	}
 	
 	/**
@@ -154,7 +152,7 @@ public abstract class RsyncMinspc extends BaseClass{
 	 * @date 2016年9月6日 下午5:47:10 
 	 * @version 1.0.0.1
 	 */
-	public abstract JSONObject doProcess(String responseJson);
+	public abstract void doProcess(String responseJson);
 	
 }
 
