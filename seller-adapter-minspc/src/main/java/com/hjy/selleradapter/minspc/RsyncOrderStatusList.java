@@ -1,6 +1,5 @@
 package com.hjy.selleradapter.minspc;
 
-import com.alibaba.fastjson.JSONObject;
 
 public class RsyncOrderStatusList extends RsyncMinspc {
 
