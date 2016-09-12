@@ -1,20 +1,15 @@
 package com.hjy.selleradapter.minspc;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.annotation.Inject;
 import com.hjy.dao.IJobExectimerDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
-import com.hjy.dto.minspc.MinspcOrderinfoSelect;
 import com.hjy.dto.request.subscribeOrder.SoRequest;
-import com.hjy.helper.DateHelper;
-import com.hjy.helper.GsonHelper;
+import com.hjy.dto.response.product.Product;
+import com.hjy.dto.response.subscribeOrder.SoResponse;
 import com.hjy.pojo.entity.system.JobExectimer;
 
 
@@ -45,18 +40,30 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 	 * @version 1.0.0.1
 	 */
 	public void doProcess(String responseJson) {
-		// TODO 调用OpenApi 拼装响应数据
 		
+		SoResponse entity = null;
+		try {
+			entity = JSON.parseObject(responseJson, SoResponse.class); 
+		} catch (Exception e) {
+			e.printStackTrace();    
+			// TODO	 插入错误日志信息
+			return;
+		} 
+		if(entity.getCode().equals("0")){
+			
+			// 更新job_exectimer表
+			Date currentTime = new Date();
+			JobExectimer update = new JobExectimer();
+			update.setBeginTime(currentTime); // TODO 这个时间在这里是不对的
+//			update.setEndTime(currentTime);
+//			update.setFlagSuccess(Integer.parseInt(iResult.getCode() == 1 ? "1" : "0"));
+//			update.setRemark(je.getRemark() + GsonHelper.toJson(iResult));
+//			update.setExecNumber(je.getExecNumber() + 1);
+			jobExectimerDao.updateSelectiveByExecCode(update); 
+		}else{
+			// TODO	 插入错误日志信息
+		}
 		
-		// 更新job_exectimer表
-		Date currentTime = new Date();
-		JobExectimer update = new JobExectimer();
-		update.setBeginTime(currentTime); // TODO 这个时间在这里是不对的
-//		update.setEndTime(currentTime);
-//		update.setFlagSuccess(Integer.parseInt(iResult.getCode() == 1 ? "1" : "0"));
-//		update.setRemark(je.getRemark() + GsonHelper.toJson(iResult));
-//		update.setExecNumber(je.getExecNumber() + 1);
-		jobExectimerDao.updateSelectiveByExecCode(update); 
 	}
 
 	/**
