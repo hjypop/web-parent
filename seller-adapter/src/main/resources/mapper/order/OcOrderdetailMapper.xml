@@ -324,6 +324,23 @@
 		  WHERE 
 		  	order_code = #{orderCode , jdbcType=VARCHAR}  AND p.small_seller_code = 'SF03KJT'
 	</select>
+	
+	<!-- JobForCreateSubscribeOrder.java 使用|拼装请求数据的商品列表部分|seller-adapter-minspc(民生品粹项目) - Yangcl -->
+	<resultMap id="minspcOrderdetailOneMap" type="com.hjy.dto.minspc.MinspcOrderdetailOne"></resultMap>
+	<select id="getMinspcOrderdetailOneList" resultMap="minspcOrderdetailOneMap" parameterType="java.lang.String">
+		  SELECT 
+			p.product_code_old AS productID, # minspcCode 
+			de.sku_num AS quantity,#购买数量
+			sku.sell_price AS salePrice,
+			de.tax_rate AS taxRate 
+		  FROM 
+			ordercenter.`oc_orderdetail` de 
+			LEFT JOIN productcenter.`pc_productinfo` p ON de.product_code = p.product_code
+			LEFT JOIN productcenter.`pc_skuinfo` sku ON de.sku_code = sku.sku_code
+		  WHERE 
+			de.order_code= #{orderCode , jdbcType=VARCHAR} AND p.small_seller_code = 'SF03MINSPC'
+	</select>
+	
 </mapper>
 
 

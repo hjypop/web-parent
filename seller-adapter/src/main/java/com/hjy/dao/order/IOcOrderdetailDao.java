@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hjy.dao.BaseDao;
 import com.hjy.dto.KjtProductInfo;
+import com.hjy.dto.minspc.MinspcOrderdetailOne;
 import com.hjy.model.order.OrderDetail;
 
 public interface IOcOrderdetailDao extends BaseDao<OrderDetail , Integer> {
@@ -21,6 +22,15 @@ public interface IOcOrderdetailDao extends BaseDao<OrderDetail , Integer> {
 	
 	
 	public List<KjtProductInfo>  findKjtProductInfo(String orderCode);
+	
+	/**
+	 * @description: com.hjy.job.JobForCreateSubscribeOrder.java 使用
+	 * 	|拼装请求数据的商品列表部分|seller-adapter-minspc(民生品粹项目)
+	 * 
+	 * @author Yangcl
+	 * @date 2016年9月6日 下午2:24:05 
+	 */
+	public List<MinspcOrderdetailOne> getMinspcOrderdetailOneList(String orderCode);
 }
 
 

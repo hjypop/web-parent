@@ -28,33 +28,32 @@
 	</resultMap>
 
 	<!-- 根据order_code查询 订单地址发票表 2016-06-28 zhy -->
-	<select id="findOrderAddressByOrderCode" resultMap="BaseResultMap"
-		parameterType="java.lang.String">
+	<select id="findOrderAddressByOrderCode" resultMap="BaseResultMap" parameterType="java.lang.String">
 		SELECT
-		zid,
-		uid,
-		order_code,
-		area_code,
-		address,
-		postcode,
-		mobilephone,
-		telephone,
-		receive_person,
-		email,
-		invoice_title,
-		invoice_type,
-		invoice_content,
-		flag_invoice,
-		remark,
-		invoice_status,
-		auth_true_name,
-		auth_idcard_type,
-		auth_idcard_number,
-		auth_phone_number,
-		auth_email,
-		auth_address
+			zid,
+			uid,
+			order_code,
+			area_code,
+			address,
+			postcode,
+			mobilephone,
+			telephone,
+			receive_person,
+			email,
+			invoice_title,
+			invoice_type,
+			invoice_content,
+			flag_invoice,
+			remark,
+			invoice_status,
+			auth_true_name,
+			auth_idcard_type,
+			auth_idcard_number,
+			auth_phone_number,
+			auth_email,
+			auth_address
 		FROM
-		ordercenter.oc_orderadress
+			ordercenter.oc_orderadress
 		<where>
 			order_code = #{orderCode,jdbcType=VARCHAR}
 		</where>

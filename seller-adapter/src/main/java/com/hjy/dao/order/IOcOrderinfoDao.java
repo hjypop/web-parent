@@ -3,11 +3,10 @@ package com.hjy.dao.order;
 import java.util.List;
 
 import com.hjy.dao.BaseDao;
+import com.hjy.dto.minspc.MinspcOrderinfoSelect;
 import com.hjy.entity.order.OcOrderinfo;
-import com.hjy.request.data.MinspcOrderinfoRequest;
 import com.hjy.request.data.OrderInfoRequestDto;
 import com.hjy.request.data.OrderInfoStatusDto;
-import com.hjy.response.MinspcOrderinfoResponse;
 import com.hjy.response.OrderInfoResponse;
 
 /**
@@ -45,14 +44,14 @@ public interface IOcOrderinfoDao extends BaseDao<OcOrderinfo, Integer>{
 	
 	
 	/**
-	 * @descriptions 根据small_seller_code、开始时间和结束时间返回订单详细信息列表。seller-adapter-minspc项目中使用
+	 * @descriptions 根据order code 列表，返回订单详细信息列表。seller-adapter-minspc项目中使用
 	 * 
 	 * @param dto 
 	 * @date 2016年8月4日下午3:12:57
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */
-	public List<MinspcOrderinfoResponse> getMinspcOrderinfoList(MinspcOrderinfoRequest dto);
+	public List<MinspcOrderinfoSelect> getMinspcOrderinfoList(List<String> list);
 	
 	
 	/**

@@ -2,8 +2,8 @@ package com.hjy.dto.request.subscribeOrder;
 
 public class AuthenticationInfo {
 	
-	private int IDCardType;
 	private String Name;
+	private int IDCardType;
 	private String IDCardNumber;
 	private String PhoneNumber;
 	private String Email;

@@ -246,35 +246,34 @@
 	</insert>
 	
 	
-	<!-- TODO 这里还不能用                             根据small_seller_code、开始时间和结束时间返回订单详细信息列表。seller-adapter-minspc项目中使用 2016-09-07 - Yangcl  -->
-	<resultMap id="OrderMinspcResultMap" type="com.hjy.response.MinspcOrderinfoResponse"></resultMap>
-	<select id="getMinspcOrderinfoList" parameterType="com.hjy.request.data.MinspcOrderinfoRequest" resultMap="OrderMinspcResultMap">
-		SELECT 
-				info.order_code AS orderCode,
-				info.product_money AS productMoney,
-				info.transport_money AS transportMoney,
-				info.order_money AS orderMoney,
-				info.payed_money AS infoPayedMoney,
-				info.product_name AS productName,
-				detail.sku_code AS skuCode,
-				detail.product_code AS productCode,
-				detail.sku_name AS skuName,
-				detail.sku_price AS skuPrice,
-				detail.sku_num AS skuNum,
-				detail.show_price AS showPrice,
-				detail.tax_rate AS taxRate ,  # 税率
-				address.area_code AS areaCode , # 地区编码
-				address.address AS address , 
-				address.postcode AS postcode ,  
-				remark.remark AS remark 
+	<!--  返回订单详细信息列表。seller-adapter-minspc项目中使用 2016-09-07 - Yangcl  -->
+	<resultMap id="OrderMinspcResultMap" type="com.hjy.dto.minspc.MinspcOrderinfoSelect"></resultMap>
+	<select id="getMinspcOrderinfoList" parameterType="java.util.List" resultMap="OrderMinspcResultMap">
+		SELECT
+			info.order_code AS orderCode,
+			info.product_money AS productMoney,
+			info.transport_money AS transportMoney,
+			info.order_money AS orderMoney,
+			info.payed_money AS payedMoney,
+			info.product_name AS productName,
+			
+			address.area_code AS areaCode, # 地区编码
+			address.address AS address,
+			address.postcode AS postcode,
+			
+			address.mobilephone as mobile,
+			address.auth_true_name as authName,
+			address.auth_idcard_type as idcardType,
+			address.auth_idcard_number as authIdcardNumber,
+			address.auth_email as email,
+			
 		FROM
-				ordercenter.oc_orderinfo info 
-				LEFT JOIN ordercenter.oc_orderdetail detail ON info.order_code = detail.order_code 
-				LEFT JOIN ordercenter.oc_orderadress address ON info.order_code = address.order_code 
-				LEFT JOIN ordercenter.oc_order_remark remark ON info.order_code = remark.order_code
-		WHERE 
-				info.create_time between #{startTime , jdbcType=VARCHAR} and #{endTime , jdbcType=VARCHAR} 
-				and info.small_seller_code = #{sellerCode , jdbcType=VARCHAR}  
+			ordercenter.oc_orderinfo info  LEFT JOIN ordercenter.oc_orderadress address ON info.order_code = address.order_code
+		WHERE
+		    info.order_code in 
+			<foreach  item="item" index="index" collection="list"  open="(" close=")" separator="," >
+	          #{item}
+			</foreach>  
 	</select>
 </mapper>
 
