@@ -9,15 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.alibaba.fastjson.JSON;
 import com.hjy.annotation.Inject;
 import com.hjy.constant.MemberConst;
-import com.hjy.dao.ILcRsyncMinspcProductDao;
 import com.hjy.dto.request.product.ProductRequest;
 import com.hjy.dto.response.ResultMsg;
 import com.hjy.dto.response.product.Product;
-import com.hjy.entity.LcRsyncMinspcProduct;
 import com.hjy.entity.product.PcProductinfo;
+import com.hjy.helper.ExceptionHelper;
 import com.hjy.service.IMinspcProductService;
 
 /**
@@ -28,25 +29,24 @@ import com.hjy.service.IMinspcProductService;
  * @version 1.0.1
  */
 public class RsyncProductList extends RsyncMinspc {
-
+	private static Logger logger = Logger.getLogger(RsyncProductList.class);
+	
 	@Inject
 	private IMinspcProductService productService;
 	
-	@Inject
-	private ILcRsyncMinspcProductDao lcRsyncMinspcProductDao ;
 	
-	public void doProcess(String responseJson) {
+	public String doProcess(String responseJson) {
 		// 解析请求数据
 		List<Product> productList = null;
 		try {
 			productList = JSON.parseArray(responseJson, Product.class);
 		} catch (Exception e) {
-			lcRsyncMinspcProductDao.insertSelective(new LcRsyncMinspcProduct("响应参数错误，请求数据解析异常", responseJson, "", ""));
-			return;
+			String message = "响应消息体错误，响应数据解析异常，请联系民生品粹，异常信息如下：\n" + ExceptionHelper.allExceptionInformation(e); 
+			logger.error(message);
+			return message; 
 		}
 		if(productList == null || productList.size() == 0){
-			lcRsyncMinspcProductDao.insertSelective(new LcRsyncMinspcProduct("响应数据为空", responseJson, "", ""));
-			return;
+			return "响应数据为空";
 		}
 		
 		List<PcProductinfo> successList = new ArrayList<PcProductinfo>();
@@ -77,11 +77,7 @@ public class RsyncProductList extends RsyncMinspc {
 			}
 		}  // 循环同步数据结束
 		
-		// 记录同步日志
-		lcRsyncMinspcProductDao.insertSelective(new LcRsyncMinspcProduct("rsync success", 
-				responseJson, 
-				JSON.toJSONString(successList), 
-				JSON.toJSONString(errorList))); 
+		return "{" + JSON.toJSONString(successList) + "," + JSON.toJSONString(errorList) + "}"; 
 	}
 	
 	

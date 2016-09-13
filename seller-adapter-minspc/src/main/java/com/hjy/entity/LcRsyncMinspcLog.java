@@ -15,6 +15,7 @@ public class LcRsyncMinspcLog {
     private Integer successNum;
     private String requestData;
     private String responseData;
+    private String result;
     private String remark;
     
     
@@ -107,7 +108,15 @@ public class LcRsyncMinspcLog {
         this.responseData = responseData == null ? null : responseData.trim();
     }
 
-    public String getRemark() {
+    public String getResult() {
+		return result;
+	}
+
+	public void setResult(String result) {
+		this.result = result;
+	}
+
+	public String getRemark() {
         return remark;
     }
 

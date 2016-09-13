@@ -216,4 +216,33 @@
 		</set>
 		where flag_success = 0
 	</update>
+	
+	<update id="updateSelectiveByOrderCode" parameterType="com.hjy.pojo.entity.system.JobExectimer">
+		update job_exectimer
+		<set>
+			begin_time = #{beginTime,jdbcType=CHAR},
+			end_time = #{endTime,jdbcType=CHAR},
+			flag_success = #{flagSuccess,jdbcType=INTEGER},
+			remark = remark + #{remark,jdbcType=LONGVARCHAR},
+			exec_number = exec_number + 1 
+		</set>
+		where exec_info = #{execInfo , jdbcType=INTEGER}
+	</update>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -2,14 +2,16 @@ package com.hjy.selleradapter.minspc;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.annotation.Inject;
 import com.hjy.dao.IJobExectimerDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.dto.request.subscribeOrder.SoRequest;
-import com.hjy.dto.response.product.Product;
 import com.hjy.dto.response.subscribeOrder.SoResponse;
+import com.hjy.helper.ExceptionHelper;
 import com.hjy.pojo.entity.system.JobExectimer;
 
 
@@ -23,6 +25,8 @@ import com.hjy.pojo.entity.system.JobExectimer;
  */
 public class RsyncSubscribeOrder extends RsyncMinspc{
 	
+	private static Logger logger = Logger.getLogger(RsyncSubscribeOrder.class);
+	
 	@Inject
 	private IOcOrderinfoDao orderinfoDao;
 	
@@ -31,43 +35,38 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 
 	private SoRequest soRequest;    
 	
-	/**
-	 * @description: TODO  
-	 *
-	 * @throws 
-	 * @author Yangcl
-	 * @date 2016年9月7日 下午2:58:26 
-	 * @version 1.0.0.1
-	 */
-	public void doProcess(String responseJson) {
+
+	public String doProcess(String responseJson) {
+		Date currentTime = new Date();
+		JobExectimer update = new JobExectimer();
+		update.setBeginTime(currentTime); 
 		
 		SoResponse entity = null;
 		try {
 			entity = JSON.parseObject(responseJson, SoResponse.class); 
 		} catch (Exception e) {
-			e.printStackTrace();    
-			// TODO	 插入错误日志信息
-			return;
+			String message = "响应消息体错误，响应数据解析异常，请联系民生品粹，异常信息如下：\n" + ExceptionHelper.allExceptionInformation(e); 
+			logger.error(message);
+			return message; 
 		} 
-		if(entity.getCode().equals("0")){
-			
-			// 更新job_exectimer表
-			Date currentTime = new Date();
-			JobExectimer update = new JobExectimer();
-			update.setBeginTime(currentTime); // TODO 这个时间在这里是不对的
-//			update.setEndTime(currentTime);
-//			update.setFlagSuccess(Integer.parseInt(iResult.getCode() == 1 ? "1" : "0"));
-//			update.setRemark(je.getRemark() + GsonHelper.toJson(iResult));
-//			update.setExecNumber(je.getExecNumber() + 1);
-			jobExectimerDao.updateSelectiveByExecCode(update); 
-		}else{
-			// TODO	 插入错误日志信息
-		}
 		
+		if(entity.getCode().equals("0")){
+			update.setFlagSuccess(1);
+		}else{
+			update.setFlagSuccess(0);
+		}
+		update.setRemark(JSONObject.toJSONString(entity)); 
+		
+		// 更新job_exectimer表
+		update.setEndTime(new Date());
+		jobExectimerDao.updateSelectiveByOrderCode(update); 
+		
+		
+		return "Rsync Subscribe Order Success "; 
 	}
 
 	/**
-	 * @description: TODO  
+	 * @description: 
 	 *
 	 * @throws 
 	 * @author Yangcl

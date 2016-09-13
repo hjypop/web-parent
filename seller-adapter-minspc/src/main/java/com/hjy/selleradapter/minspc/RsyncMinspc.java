@@ -40,13 +40,12 @@ public abstract class RsyncMinspc extends BaseClass{
 		log.setRequestData(this.setRequestDataJson()); 
 		String responseJson = this.getHttps();
 		log.setResponseData(responseJson); 
+		
+		String processResult = this.doProcess(responseJson);
+		
+		log.setResult(processResult); // 处理结果记录日志
 		log.setResponseTime(new Date());
 		logDao.insertSelective(log);
-		
-		this.doProcess(responseJson);
-		
-		// TODO logDao update 
-		
 	}
 	
 	/**
@@ -147,12 +146,13 @@ public abstract class RsyncMinspc extends BaseClass{
 	/**
 	 * @description: 由具体子类实现|处理响应数据报文的逻辑|在子类中进行增删改查之类的操作
 	 * 
+	 * @return 返回子类处理结果，协助记录日志
 	 * @throws 
 	 * @author Yangcl
 	 * @date 2016年9月6日 下午5:47:10 
 	 * @version 1.0.0.1
 	 */
-	public abstract void doProcess(String responseJson);
+	public abstract String doProcess(String responseJson);
 	
 }
 

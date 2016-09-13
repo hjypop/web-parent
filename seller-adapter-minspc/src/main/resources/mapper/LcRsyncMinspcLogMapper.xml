@@ -15,6 +15,7 @@
 		<result column="success_num" property="successNum" jdbcType="INTEGER" />
 		<result column="request_data" property="requestData" jdbcType="LONGVARCHAR" />
 		<result column="response_data" property="responseData" jdbcType="LONGVARCHAR" />
+		<result column="result" property="result" jdbcType="LONGVARCHAR" />
 		<result column="remark" property="remark" jdbcType="LONGVARCHAR" />
 	</resultMap>
 	
@@ -69,6 +70,9 @@
 			<if test="responseData != null">
 				response_data,
 			</if>
+			<if test="result != null">
+				result,
+			</if>
 			<if test="remark != null">
 				remark,
 			</if>
@@ -110,6 +114,9 @@
 			<if test="remark != null">
 				#{remark,jdbcType=LONGVARCHAR},
 			</if>
+			<if test="result != null">
+				#{result , jdbcType=LONGVARCHAR},
+			</if>
 		</trim>
 	</insert>
 	
@@ -149,6 +156,9 @@
 			</if>
 			<if test="remark != null">
 				remark = #{remark,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="result != null">
+				result = #{result , jdbcType=LONGVARCHAR},
 			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}

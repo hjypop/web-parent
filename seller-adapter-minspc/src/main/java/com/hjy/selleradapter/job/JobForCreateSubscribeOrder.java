@@ -10,8 +10,10 @@ import org.quartz.JobExecutionContext;
 
 import com.hjy.annotation.Inject;
 import com.hjy.dao.IJobExectimerDao;
+import com.hjy.dao.order.IOcOrderPayDao;
 import com.hjy.dao.order.IOcOrderdetailDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
+import com.hjy.dao.system.IScTmpDao;
 import com.hjy.dto.minspc.MinspcOrderdetailOne;
 import com.hjy.dto.minspc.MinspcOrderinfoSelect;
 import com.hjy.dto.request.subscribeOrder.AuthenticationInfo;
@@ -19,6 +21,7 @@ import com.hjy.dto.request.subscribeOrder.Item;
 import com.hjy.dto.request.subscribeOrder.PayInfo;
 import com.hjy.dto.request.subscribeOrder.ShippingInfo;
 import com.hjy.dto.request.subscribeOrder.SoRequest;
+import com.hjy.entity.system.ScTmp;
 import com.hjy.helper.WebHelper;
 import com.hjy.pojo.entity.system.JobExectimer;
 import com.hjy.quartz.job.RootJob;
@@ -39,7 +42,10 @@ public class JobForCreateSubscribeOrder extends RootJob {
 	private IJobExectimerDao jobExectimerDao;
 	@Inject
 	private IOcOrderdetailDao orderDetailDao;
-	
+	@Inject
+	private IScTmpDao scTmpDao;
+	@Inject
+	private IOcOrderPayDao ocOrderPayDao; 
 	
 	
 	@Override  
@@ -61,6 +67,7 @@ public class JobForCreateSubscribeOrder extends RootJob {
 				// 多表联查，获取所需信息
 				List<MinspcOrderinfoSelect> morList = orderinfoDao.getMinspcOrderinfoList(orderCodeList_);         
 				for(MinspcOrderinfoSelect mo : morList){
+					Thread.sleep(1000);// 防止接口访问过快
 					RsyncSubscribeOrder rso = new RsyncSubscribeOrder();
 					rso.setSoRequest(this.requestInit(mo));  
 					rso.doRsync();
@@ -91,7 +98,8 @@ public class JobForCreateSubscribeOrder extends RootJob {
 		pi.setTaxAmount(new BigDecimal(0.00)); // 行邮税总金额，不是税率|经过沟通默认为0.00 - Yangcl
 		pi.setCommissionAmount(new BigDecimal(0.00)); // 手续费，可填0.00|经过沟通默认为0.00 - Yangcl
 		pi.setPayTypeSysNo(117);  // 支付方式：112支付宝117银联118微信|默认117，避免对我平台用户行为进行分析 - Yangcl
-		pi.setPaySerialNumber(""); // 支付流水号，不能重复       TODO @@@@@@@@@@@@@@@@@@@@@@@@
+		String paySequenceid = ocOrderPayDao.findListByOrderCode(mo.getOrderCode()).get(0).getPaySequenceid();
+		pi.setPaySerialNumber(paySequenceid); // 支付流水号，不能重复       
 		r.setPayInfo(pi); 
 		
 		ShippingInfo si = new ShippingInfo();
@@ -100,7 +108,7 @@ public class JobForCreateSubscribeOrder extends RootJob {
 		si.setReceiveAddress(mo.getAddress());
 		si.setReceiveAreaCode(mo.getAreaCode()); // 收获地区编号（根据国家统计局的《最新县及县以上行政区划代码》）
 		si.setShipTypeID("375");  // 订单物流运输编号 |经与对接人沟通，统一设置为375：韵达快递
-		si.setReceiveAreaName(""); // TODO systemcenter -> 视图：v_sc_gov_area3|根据areaCode查询
+		si.setReceiveAreaName(this.getAreaName(mo.getAreaCode())); // 根据 oc_orderadress 表的 area_code字段来拼接中文
 		r.setShippingInfo(si); 
 		
 		AuthenticationInfo ai = new AuthenticationInfo();
@@ -128,6 +136,30 @@ public class JobForCreateSubscribeOrder extends RootJob {
 		
 		
 		return r;
+	}
+	
+	/**
+	 * @description:  根据 oc_orderadress 表的 area_code字段来拼接中文
+	 *
+	 * @throws 
+	 * @author Yangcl
+	 * @date 2016年9月13日 上午10:32:21 
+	 * @version 1.0.0.1
+	 */
+	private String getAreaName(String areaCode) {
+		ScTmp p = new ScTmp();
+		p.setCode(areaCode.subSequence(0, 2) + "0000");
+		p = scTmpDao.findByType(p);
+		ScTmp c = new ScTmp();
+		c.setCode(areaCode.subSequence(0, 4) + "00");
+		c = scTmpDao.findByType(c);
+		ScTmp a = new ScTmp();
+		a.setCode(areaCode);
+		a = scTmpDao.findByType(a);
+		String prov = p.getName();
+		String city = c.getName();
+		String area = a.getName();
+		return prov + "," + (StringUtils.startsWith(city, "省直辖县级行政区划") ? area : city) + "," + area;
 	}
 
 

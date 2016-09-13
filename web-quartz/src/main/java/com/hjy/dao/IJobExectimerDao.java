@@ -23,4 +23,6 @@ public interface IJobExectimerDao extends BaseDao<JobExectimer, Integer> {
 	 * @version 1.0.0.1
 	 */
 	public Integer updateSelectiveByFlag(JobExectimer entity);
+	
+	public Integer updateSelectiveByOrderCode(JobExectimer entity);
 }

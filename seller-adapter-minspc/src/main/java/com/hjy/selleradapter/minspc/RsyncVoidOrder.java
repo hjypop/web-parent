@@ -15,8 +15,14 @@ public class RsyncVoidOrder extends RsyncMinspc {
 		return null;
 	}
 
-	@Override
-	public void doProcess(String responseJson) {
+	
+	public String doProcess(String responseJson) {
+		
+		
+		
+		return "";
 	}
+	
+	
 
 }
