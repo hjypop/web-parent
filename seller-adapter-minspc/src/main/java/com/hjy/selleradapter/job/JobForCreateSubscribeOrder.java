@@ -47,6 +47,7 @@ public class JobForCreateSubscribeOrder extends RootJob {
 	@Inject
 	private IOcOrderPayDao ocOrderPayDao; 
 	
+	private List<String> splitInfos = new ArrayList<String>();  // 此处使用全局变量为RsyncSubscribeOrder.java赋值。不得已而用之。
 	
 	@Override  
 	public void doExecute(JobExecutionContext context) {
@@ -70,6 +71,7 @@ public class JobForCreateSubscribeOrder extends RootJob {
 					Thread.sleep(1000);// 防止接口访问过快
 					RsyncSubscribeOrder rso = new RsyncSubscribeOrder();
 					rso.setSoRequest(this.requestInit(mo));  
+					rso.setSplitInfoList(splitInfos); // 注意这句代码在下面，有顺序性
 					rso.doRsync();
 				}
 			} catch (Exception e) {
@@ -130,7 +132,10 @@ public class JobForCreateSubscribeOrder extends RootJob {
 			sku.setSalePrice(e.getSalePrice());
 			sku.setTaxPrice(new BigDecimal(0.00)); // 行邮税 - 单品税费|经过沟通默认为0.00 - Yangcl
 			itemList.add(sku);
-			r.setItemList(itemList);
+			
+			// 减少数据库访问，将信息传递到RsyncSubscribeOrder.java中
+			String splitInfo = e.getProductID() + "@#" + e.getPcode() + "@#" + e.getSkuCode() + "@#" + e.getSkuName(); 
+			splitInfos.add(splitInfo);
 		}
 		r.setItemList(itemList); 
 		

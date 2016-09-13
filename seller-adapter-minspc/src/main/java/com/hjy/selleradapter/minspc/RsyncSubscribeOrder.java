@@ -1,5 +1,6 @@
 package com.hjy.selleradapter.minspc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +45,7 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 	private IOcKjSellerSeparateOrderDao kjSellerSeparateOrderDao; // 拆单  
 
 	private SoRequest soRequest;    
+	private List<String> splitInfoList; // 在调用类中传递信息  productCode@#skuCode@#skuName
 	
 
 	public String doProcess(String responseJson) {
@@ -70,10 +72,9 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 				sor.setPayInfo(this.soRequest.getPayInfo());
 				sor.setShippingInfo(this.soRequest.getShippingInfo());
 				for(Item i : this.soRequest.getItemList()){
-					if(i.getProductID().equals(dr.getProductID())){
-						sor.setItem(i); 
-						break;
-					}
+					sor.setItem(i); 
+			
+					
 				}
 				sor.setOrderType(dr.getOrderType());  // 订单类型，0为保税贸易订单，1为直邮贸易订单，2为一般贸易订单
 				sor.setSOSysNo(dr.getSOSysNo());  // 民生品粹的系统订单号
@@ -115,7 +116,20 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 			e.setStatus("4497153900010002");
 			e.setSellerStatus("null-operat"); 
 			e.setCreateTime(new Date());
-			
+			e.setSkuSellPrice(d.getItem().getSalePrice());
+			e.setTaxPrice(d.getItem().getTaxPrice());
+			e.setQuantity(d.getItem().getQuantity());
+			e.setOrderType(d.getOrderType());
+			e.setFreight(new BigDecimal(0.00)); 
+			e.setUpdateTime(new Date());
+			e.setProductCode("");  // TODO 
+			e.setSkuCode(""); // TODO
+			e.setSkuName(""); // TODO 
+			e.setSellerCode("");  // TODO 
+			e.setSellerProductCode(d.getItem().getProductID()); 
+			e.setSellerSkuCode(e.getSellerProductCode()); // 商户sku编号|如果商户没有sku的概念，则默认为seller_product_code
+			e.setRequestJson(JSON.toJSONString(d)); 
+			e.setRemark("insert success"); 
 			
 			
 			
@@ -158,6 +172,12 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 	}
 	public void setSoRequest(SoRequest soRequest) {
 		this.soRequest = soRequest;
+	}
+	public List<String> getSplitInfoList() {
+		return splitInfoList;
+	}
+	public void setSplitInfoList(List<String> splitInfoList) {
+		this.splitInfoList = splitInfoList;
 	}
 
 	
