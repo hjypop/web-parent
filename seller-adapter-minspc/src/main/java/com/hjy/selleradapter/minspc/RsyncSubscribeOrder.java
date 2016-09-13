@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.annotation.Inject;
 import com.hjy.dao.IJobExectimerDao;
+import com.hjy.dao.order.IOcKjSellerSeparateOrderDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.dto.request.subscribeOrder.SoRequest;
 import com.hjy.dto.response.subscribeOrder.SoResponse;
@@ -32,6 +33,9 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 	
 	@Inject
 	private IJobExectimerDao jobExectimerDao;
+	
+	@Inject 
+	private IOcKjSellerSeparateOrderDao kjSellerSeparateOrderDao; // 拆单  
 
 	private SoRequest soRequest;    
 	
@@ -52,6 +56,10 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 		
 		if(entity.getCode().equals("0")){
 			update.setFlagSuccess(1);
+			
+			
+			
+			
 		}else{
 			update.setFlagSuccess(0);
 		}

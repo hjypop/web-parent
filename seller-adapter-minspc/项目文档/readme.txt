@@ -23,7 +23,7 @@ job_exectimer表需要添加注释：
 
 
 
-	
+加入同步日志表 ：oc_kj_seller_separate_order	|所有外接跨境商户订单都会放入到这个表，涉及到拆单。
 	
 	
 	
