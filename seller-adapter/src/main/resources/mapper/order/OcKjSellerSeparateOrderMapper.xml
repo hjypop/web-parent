@@ -253,6 +253,15 @@
 			and seller_code = #{sellerCode , jdbcType=VARCHAR}
 	</select>
 	
+	<select id="selectByTypes" resultMap="BaseResultMap" parameterType="com.hjy.entity.order.OcKjSellerSeparateOrder">
+		select
+			* 
+		from 
+			ordercenter.oc_kj_seller_separate_order
+		where 
+			seller_status != #{sellerStatus ,  jdbcType=VARCHAR}
+			and seller_code = #{sellerCode , jdbcType=VARCHAR}
+	</select>
 </mapper>
 
 

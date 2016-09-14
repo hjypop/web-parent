@@ -62,11 +62,14 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 			return message; 
 		} 
 		
+		String msg = "Rsync Subscribe Order Success";
 		if(entity.getCode().equals("0")){
 			this.SeparateOrderInit(entity.getData()); // 开始拆分跨境商户订单: List<DataResponse>
 			update.setFlagSuccess(1);
+			msg = "";
 		}else{
 			update.setFlagSuccess(0);
+			msg = entity.getDesc();
 		}
 		update.setRemark(JSONObject.toJSONString(entity)); 
 		
@@ -74,8 +77,7 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 		update.setEndTime(new Date());
 		jobExectimerDao.updateSelectiveByOrderCode(update); 
 		
-		
-		return "Rsync Subscribe Order Success "; 
+		return msg; 
 	}
 
 	/**
