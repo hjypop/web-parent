@@ -175,7 +175,7 @@
 		</trim>
 	</insert>
 	
-	<update id="updateByPrimaryKeySelective" parameterType="com.hjy.entity.order.OcKjSellerSeparateOrder">
+	<update id="updateSelective" parameterType="com.hjy.entity.order.OcKjSellerSeparateOrder">
 		update ordercenter.oc_kj_seller_separate_order
 		<set>
 			<if test="orderCode != null">
@@ -262,6 +262,26 @@
 			seller_status != #{sellerStatus ,  jdbcType=VARCHAR}
 			and seller_code = #{sellerCode , jdbcType=VARCHAR}
 	</select>
+	
+	
+	<update id="updateBySellerOrderCode" parameterType="com.hjy.entity.order.OcKjSellerSeparateOrder">
+		update ordercenter.oc_kj_seller_separate_order
+		<set>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="sellerStatus != null">
+				seller_status = #{sellerStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where seller_order_code = #{sellerOrderCode,jdbcType=VARCHAR}
+	</update>
 </mapper>
 
 

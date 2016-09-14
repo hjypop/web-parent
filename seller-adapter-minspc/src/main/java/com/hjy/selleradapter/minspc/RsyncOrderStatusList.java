@@ -1,7 +1,10 @@
 package com.hjy.selleradapter.minspc;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -22,6 +25,7 @@ public class RsyncOrderStatusList extends RsyncMinspc {
 	@Inject 
 	private IOcKjSellerSeparateOrderDao kjSellerSeparateOrderDao; 
 	
+	private List<OcKjSellerSeparateOrder> list;
 	
 	public String doProcess(String responseJson) {
 		SoResponse entity = null;
@@ -34,7 +38,7 @@ public class RsyncOrderStatusList extends RsyncMinspc {
 		} 
 		String msg = "";
 		if(entity.getCode().equals("0")){
-			
+			this.updateOrderStatus(entity.getData()); 
 			msg = "Rsync Order Status Success";
 		}else{
 			msg = entity.getDesc();
@@ -59,20 +63,47 @@ public class RsyncOrderStatusList extends RsyncMinspc {
 		OcKjSellerSeparateOrder e = new OcKjSellerSeparateOrder();
 		e.setSellerCode(this.getSellerCode()); 
 		e.setSellerStatus("minspc0003"); 
-		List<OcKjSellerSeparateOrder> list = kjSellerSeparateOrderDao.selectByTypes(e);
+		list = kjSellerSeparateOrderDao.selectByTypes(e);
 		List<String> list_ = new ArrayList<>();
-		for(OcKjSellerSeparateOrder o : list ){
+		for(OcKjSellerSeparateOrder o : list){
 			list_.add(o.getSellerOrderCode());
 		}
 		
-		return StringUtils.join(list_, ","); 
+		return StringUtils.join(list_ , ","); 
 	}
 
 	
-	private void updateOrderStatus(List<DataResponse> list){
-		for(DataResponse e : list){
-			
+	/**
+	 * @description: 逐条进行更新操作，同时更新 oc_orderinfo 表  
+	 *
+	 * @throws 
+	 * @author Yangcl
+	 * @date 2016年9月14日 下午4:54:37 
+	 * @version 1.0.0.1
+	 */
+	private void updateOrderStatus(List<DataResponse> list_){
+		Set<String> orderCodeList = new HashSet<>();
+		for(DataResponse e : list_){
+			OcKjSellerSeparateOrder k = new OcKjSellerSeparateOrder();
+			if(e.getSoStatus().equals("minspc0003")){ // 已出关 则认为已经发货 
+				for(OcKjSellerSeparateOrder o : list){    // 保存oc_orderInfo表中的订单编号，等待更新真正的订单状态
+					if(e.getOrderID().equals(o.getSellerOrderCode())){
+						orderCodeList.add(o.getOrderCode());
+					}
+				}
+				k.setStatus("4497153900010003"); // order_status 订单状态 已发货
+			}
+			// TODO 更新拆单表
+			k.setSellerStatus(e.getSoStatus()); 
+			k.setSellerOrderCode(e.getOrderID()); 
+			k.setUpdateTime(new Date());
+			kjSellerSeparateOrderDao.updateBySellerOrderCode(k);
 		}
+		
+		// TODO 批量更新oc_orderInfo表中的状态  
+		
+		
+		
 	}
 	
 	

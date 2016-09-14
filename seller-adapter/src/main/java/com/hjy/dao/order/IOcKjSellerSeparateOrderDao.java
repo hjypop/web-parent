@@ -10,4 +10,6 @@ public interface IOcKjSellerSeparateOrderDao extends BaseDao<OcKjSellerSeparateO
 	public List<String> selectByStatus(OcKjSellerSeparateOrder entity);
 	
 	public List<OcKjSellerSeparateOrder> selectByTypes(OcKjSellerSeparateOrder entity);
+	
+	public Integer updateBySellerOrderCode(OcKjSellerSeparateOrder entity);
 }
