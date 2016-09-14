@@ -83,6 +83,15 @@ public interface IOcOrderinfoDao extends BaseDao<OcOrderinfo, Integer>{
 	 * @version 1.0.0.1
 	 */
 	public Integer apiBatchInsert(List<OcOrderinfo> list);
+	
+	/**
+	 * @descriptions 批量更新
+	 *
+	 * @date 2016年9月14日 下午10:33:47
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public Integer batchUpdateByOrderCode(List<OcOrderinfo> list);
 }
 
 

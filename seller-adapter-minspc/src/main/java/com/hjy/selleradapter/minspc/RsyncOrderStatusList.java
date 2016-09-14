@@ -12,16 +12,19 @@ import org.apache.log4j.Logger;
 import com.alibaba.fastjson.JSON;
 import com.hjy.annotation.Inject;
 import com.hjy.dao.order.IOcKjSellerSeparateOrderDao;
+import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.dto.response.orderStatus.DataResponse;
 import com.hjy.dto.response.orderStatus.SoResponse;
 import com.hjy.entity.order.OcKjSellerSeparateOrder;
+import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.ExceptionHelper;
 
 public class RsyncOrderStatusList extends RsyncMinspc {
 	
 	private static Logger logger = Logger.getLogger(RsyncOrderStatusList.class);
 	
-	
+	@Inject
+	private IOcOrderinfoDao orderinfoDao;
 	@Inject 
 	private IOcKjSellerSeparateOrderDao kjSellerSeparateOrderDao; 
 	
@@ -82,13 +85,16 @@ public class RsyncOrderStatusList extends RsyncMinspc {
 	 * @version 1.0.0.1
 	 */
 	private void updateOrderStatus(List<DataResponse> list_){
-		Set<String> orderCodeList = new HashSet<>();
+		List<OcOrderinfo> orderinfoList = new ArrayList<>(); // 保存已发货的订单信息 
 		for(DataResponse e : list_){
+			OcOrderinfo info = new OcOrderinfo();
 			OcKjSellerSeparateOrder k = new OcKjSellerSeparateOrder();
-			if(e.getSoStatus().equals("minspc0003")){ // 已出关 则认为已经发货 
+			if(e.getSoStatus().equals("1")){ // 已出关 则认为已经发货 
 				for(OcKjSellerSeparateOrder o : list){    // 保存oc_orderInfo表中的订单编号，等待更新真正的订单状态
 					if(e.getOrderID().equals(o.getSellerOrderCode())){
-						orderCodeList.add(o.getOrderCode());
+						info.setOrderCode(o.getOrderCode());
+						info.setOrderStatus("4497153900010003");
+						orderinfoList.add(info);
 					}
 				}
 				k.setStatus("4497153900010003"); // order_status 订单状态 已发货
@@ -100,10 +106,10 @@ public class RsyncOrderStatusList extends RsyncMinspc {
 			kjSellerSeparateOrderDao.updateBySellerOrderCode(k);
 		}
 		
-		// TODO 批量更新oc_orderInfo表中的状态  
-		
-		
-		
+		// 批量更新oc_orderInfo表中的状态  
+		if(orderinfoList.size() != 0){
+			orderinfoDao.batchUpdate(orderinfoList); 
+		}
 	}
 	
 	

@@ -11,8 +11,10 @@ package com.hjy.dto.response.orderStatus;
 public class DataResponse {
 	
 	private String OrderID; // 民生品翠 系统订单号
-	private String SoStatus; // 还未出关：minspc0001 |无对应订单：minspc0002  已出关：minspc0003
+	private String SoStatus; // 还未出关：0 |无对应订单：-1  已出关：1
 	private String ShipTypeID ; // 快递公司编号（可选）
+	private String ExpressBill; // 快递单号（当SoStatus为1时返回）
+	
 	
 	public String getOrderID() {
 		return OrderID;
@@ -31,6 +33,12 @@ public class DataResponse {
 	}
 	public void setShipTypeID(String shipTypeID) {
 		ShipTypeID = shipTypeID;
+	}
+	public String getExpressBill() {
+		return ExpressBill;
+	}
+	public void setExpressBill(String expressBill) {
+		ExpressBill = expressBill;
 	}
 	
 	
