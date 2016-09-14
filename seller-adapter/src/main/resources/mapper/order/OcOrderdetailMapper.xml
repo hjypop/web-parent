@@ -332,7 +332,10 @@
 			p.product_code_old AS productID, # minspcCode 
 			de.sku_num AS quantity,#购买数量
 			sku.sell_price AS salePrice,
-			de.tax_rate AS taxRate 
+			de.tax_rate AS taxRate  ,
+			p.product_code AS pcode,
+			sku.sku_code AS skuCode,
+			sku.sku_name AS skuName
 		  FROM 
 			ordercenter.`oc_orderdetail` de 
 			LEFT JOIN productcenter.`pc_productinfo` p ON de.product_code = p.product_code

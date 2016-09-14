@@ -15,6 +15,10 @@ public class MinspcOrderdetailOne {
 	private BigDecimal salePrice;
 	private BigDecimal taxRate;
 	
+	private String pcode;
+	private String skuCode;
+	private String skuName;
+	
 	public String getProductID() {
 		return productID;
 	}
@@ -38,6 +42,24 @@ public class MinspcOrderdetailOne {
 	}
 	public void setTaxRate(BigDecimal taxRate) {
 		this.taxRate = taxRate;
+	}
+	public String getPcode() {
+		return pcode;
+	}
+	public void setPcode(String pcode) {
+		this.pcode = pcode;
+	}
+	public String getSkuCode() {
+		return skuCode;
+	}
+	public void setSkuCode(String skuCode) {
+		this.skuCode = skuCode;
+	}
+	public String getSkuName() {
+		return skuName;
+	}
+	public void setSkuName(String skuName) {
+		this.skuName = skuName;
 	}
 	
 	
