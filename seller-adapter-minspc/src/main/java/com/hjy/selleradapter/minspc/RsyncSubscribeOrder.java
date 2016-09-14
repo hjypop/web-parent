@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSON;
@@ -13,8 +14,7 @@ import com.hjy.annotation.Inject;
 import com.hjy.dao.IJobExectimerDao;
 import com.hjy.dao.order.IOcKjSellerSeparateOrderDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
-import com.hjy.dto.request.subscribeOrder.Item;
-import com.hjy.dto.request.subscribeOrder.SeparateOrderDto;
+import com.hjy.dto.minspc.MinspcOrderdetailOne;
 import com.hjy.dto.request.subscribeOrder.SoRequest;
 import com.hjy.dto.response.subscribeOrder.DataResponse;
 import com.hjy.dto.response.subscribeOrder.SoResponse;
@@ -45,7 +45,7 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 	private IOcKjSellerSeparateOrderDao kjSellerSeparateOrderDao; // 拆单  
 
 	private SoRequest soRequest;    
-	private List<String> splitInfoList; // 在调用类中传递信息  productCode@#skuCode@#skuName
+	List<MinspcOrderdetailOne> mooList; // 在调用类中传递信息 
 	
 
 	public String doProcess(String responseJson) {
@@ -63,26 +63,7 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 		} 
 		
 		if(entity.getCode().equals("0")){
-			List<SeparateOrderDto> list = new ArrayList<SeparateOrderDto>();
-			List<DataResponse> dataList = entity.getData(); // 开始拆分跨境商户订单。
-			for(DataResponse dr : dataList){
-				SeparateOrderDto sor = new SeparateOrderDto();
-				sor.setAuthenticationInfo(this.soRequest.getAuthenticationInfo());
-				sor.setMerchantOrderID(this.soRequest.getMerchantOrderID());
-				sor.setPayInfo(this.soRequest.getPayInfo());
-				sor.setShippingInfo(this.soRequest.getShippingInfo());
-				for(Item i : this.soRequest.getItemList()){
-					sor.setItem(i); 
-			
-					
-				}
-				sor.setOrderType(dr.getOrderType());  // 订单类型，0为保税贸易订单，1为直邮贸易订单，2为一般贸易订单
-				sor.setSOSysNo(dr.getSOSysNo());  // 民生品粹的系统订单号
-				list.add(sor);
-			}
-			this.SeparateOrderInit(list); 
-			
-			
+			this.SeparateOrderInit(entity.getData()); // 开始拆分跨境商户订单: List<DataResponse>
 			update.setFlagSuccess(1);
 		}else{
 			update.setFlagSuccess(0);
@@ -105,10 +86,9 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 	 * @date 2016年9月13日 下午6:26:08 
 	 * @version 1.0.0.1
 	 */
-	public void SeparateOrderInit(List<SeparateOrderDto> list_){
-		List<OcKjSellerSeparateOrder> list = new ArrayList<OcKjSellerSeparateOrder>();
+	public void SeparateOrderInit(List<DataResponse> list_){
 		int count = 1;
-		for(SeparateOrderDto d : list_){
+		for(DataResponse d : list_){
 			OcKjSellerSeparateOrder e = new OcKjSellerSeparateOrder();
 			e.setOrderCode(d.getMerchantOrderID()); 
 			e.setSellerOrderCode(d.getSOSysNo());
@@ -116,25 +96,44 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 			e.setStatus("4497153900010002");
 			e.setSellerStatus("null-operat"); 
 			e.setCreateTime(new Date());
-			e.setSkuSellPrice(d.getItem().getSalePrice());
-			e.setTaxPrice(d.getItem().getTaxPrice());
-			e.setQuantity(d.getItem().getQuantity());
 			e.setOrderType(d.getOrderType());
 			e.setFreight(new BigDecimal(0.00)); 
 			e.setUpdateTime(new Date());
-			e.setProductCode("");  // TODO 
-			e.setSkuCode(""); // TODO
-			e.setSkuName(""); // TODO 
-			e.setSellerCode("");  // TODO 
-			e.setSellerProductCode(d.getItem().getProductID()); 
 			e.setSellerSkuCode(e.getSellerProductCode()); // 商户sku编号|如果商户没有sku的概念，则默认为seller_product_code
 			e.setRequestJson(JSON.toJSONString(d)); 
 			e.setRemark("insert success"); 
 			
+			if(d.getProductID() != null && d.getProductID().size() != 0){  // 直邮则无此赋值操作 - Yangcl
+				List<String> sspList = new ArrayList<String>();  // SkuSellPrice
+				List<String> pcList = new ArrayList<String>(); // ProductCode
+				List<String> snList = new ArrayList<String>(); // setSkuName
+				List<String> qList = new ArrayList<String>(); // quantity
+				List<String> sList = new ArrayList<String>(); // sku code
+				
+				for(String pco : d.getProductID()){
+					List<MinspcOrderdetailOne> spiList = this.getMooList();  // 获取JobForCreateSubscribeOrder.java中的信息
+					for(MinspcOrderdetailOne s : spiList){
+						if(pco.equals(s.getProductID())){
+							pcList.add(s.getPcode());
+							sList.add(s.getSkuCode());
+							sspList.add(s.getSkuCode() + "@" + s.getSalePrice());
+							snList.add(s.getSkuCode() + "@" + s.getSkuName());
+							qList.add(s.getSkuCode() + "@" + s.getQuantity());
+						}
+					}
+				}
+				
+				e.setSellerProductCode(StringUtils.join(d.getProductID(), ","));  
+				e.setSkuSellPrice(StringUtils.join(sspList , ","));
+				e.setQuantity(StringUtils.join(qList , ","));
+				e.setProductCode(StringUtils.join(pcList , ","));  
+				e.setSkuCode(StringUtils.join(sList , ","));  
+				e.setSkuName(StringUtils.join(snList, ","));  
+			}
 			
-			
+			e.setSellerCode(this.getSellerCode());  
 			count ++;
-			list.add(e);
+			kjSellerSeparateOrderDao.insertSelective(e);
 		}
 		
 	}
@@ -173,12 +172,14 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 	public void setSoRequest(SoRequest soRequest) {
 		this.soRequest = soRequest;
 	}
-	public List<String> getSplitInfoList() {
-		return splitInfoList;
+
+	public List<MinspcOrderdetailOne> getMooList() {
+		return mooList;
 	}
-	public void setSplitInfoList(List<String> splitInfoList) {
-		this.splitInfoList = splitInfoList;
+	public void setMooList(List<MinspcOrderdetailOne> mooList) {
+		this.mooList = mooList;
 	}
+
 
 	
 	

@@ -121,6 +121,9 @@ public abstract class RsyncMinspc extends BaseClass{
 		return getConfig("seller_adapter_minspc.rsync_minspc_url");
 	}
 
+	public String getSellerCode(){
+		return getConfig("seller_adapter_minspc.small_seller_code");
+	}
 	
 	
 	/**

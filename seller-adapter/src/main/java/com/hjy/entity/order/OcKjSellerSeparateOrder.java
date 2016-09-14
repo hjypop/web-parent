@@ -19,11 +19,11 @@ public class OcKjSellerSeparateOrder {
 
     private Date createTime;
 
-    private BigDecimal skuSellPrice;
+    private String skuSellPrice;
 
     private BigDecimal taxPrice;
 
-    private Integer quantity;
+    private String quantity;
 
     private String orderType;
 
@@ -110,13 +110,6 @@ public class OcKjSellerSeparateOrder {
         this.createTime = createTime;
     }
 
-    public BigDecimal getSkuSellPrice() {
-        return skuSellPrice;
-    }
-
-    public void setSkuSellPrice(BigDecimal skuSellPrice) {
-        this.skuSellPrice = skuSellPrice;
-    }
 
     public BigDecimal getTaxPrice() {
         return taxPrice;
@@ -126,13 +119,6 @@ public class OcKjSellerSeparateOrder {
         this.taxPrice = taxPrice;
     }
 
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
 
     public String getOrderType() {
         return orderType;
@@ -221,4 +207,22 @@ public class OcKjSellerSeparateOrder {
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
     }
+
+	public String getSkuSellPrice() {
+		return skuSellPrice;
+	}
+
+	public void setSkuSellPrice(String skuSellPrice) {
+		this.skuSellPrice = skuSellPrice;
+	}
+
+	public String getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(String quantity) {
+		this.quantity = quantity;
+	}
+    
+    
 }

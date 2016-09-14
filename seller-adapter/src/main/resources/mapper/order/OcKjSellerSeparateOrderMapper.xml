@@ -11,9 +11,9 @@
 		<result column="status" property="status" jdbcType="VARCHAR" />
 		<result column="seller_status" property="sellerStatus" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-		<result column="sku_sell_price" property="skuSellPrice" jdbcType="DECIMAL" />
+		<result column="sku_sell_price" property="skuSellPrice" jdbcType="VARCHAR" />
 		<result column="tax_price" property="taxPrice" jdbcType="DECIMAL" />
-		<result column="quantity" property="quantity" jdbcType="INTEGER" />
+		<result column="quantity" property="quantity" jdbcType="VARCHAR" />
 		<result column="order_type" property="orderType" jdbcType="VARCHAR" />
 		<result column="freight" property="freight" jdbcType="DECIMAL" />
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -131,13 +131,13 @@
 				#{createTime,jdbcType=TIMESTAMP},
 			</if>
 			<if test="skuSellPrice != null">
-				#{skuSellPrice,jdbcType=DECIMAL},
+				#{skuSellPrice , jdbcType=VARCHAR},
 			</if>
 			<if test="taxPrice != null">
 				#{taxPrice,jdbcType=DECIMAL},
 			</if>
 			<if test="quantity != null">
-				#{quantity,jdbcType=INTEGER},
+				#{quantity,jdbcType=VARCHAR},
 			</if>
 			<if test="orderType != null">
 				#{orderType,jdbcType=VARCHAR},
@@ -197,13 +197,13 @@
 				create_time = #{createTime,jdbcType=TIMESTAMP},
 			</if>
 			<if test="skuSellPrice != null">
-				sku_sell_price = #{skuSellPrice,jdbcType=DECIMAL},
+				sku_sell_price = #{skuSellPrice,jdbcType=VARCHAR},
 			</if>
 			<if test="taxPrice != null">
 				tax_price = #{taxPrice,jdbcType=DECIMAL},
 			</if>
 			<if test="quantity != null">
-				quantity = #{quantity,jdbcType=INTEGER},
+				quantity = #{quantity,jdbcType=VARCHAR},
 			</if>
 			<if test="orderType != null">
 				order_type = #{orderType,jdbcType=VARCHAR},
@@ -242,8 +242,46 @@
 		where zid = #{zid,jdbcType=INTEGER}
 	</update>
 	
+
+	<select id="selectByStatus" resultMap="java.lang.String" parameterType="com.hjy.entity.order.OcKjSellerSeparateOrder">
+		select
+			seller_order_code
+		from 
+			ordercenter.oc_kj_seller_separate_order
+		where 
+			seller_status != #{sellerStatus ,  jdbcType=VARCHAR}
+			and seller_code = #{sellerCode , jdbcType=VARCHAR}
+	</select>
 	
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
