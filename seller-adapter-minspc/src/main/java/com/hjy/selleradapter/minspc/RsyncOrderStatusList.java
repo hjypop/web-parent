@@ -65,7 +65,7 @@ public class RsyncOrderStatusList extends RsyncMinspc {
 	public String setRequestDataJson() {
 		OcKjSellerSeparateOrder e = new OcKjSellerSeparateOrder();
 		e.setSellerCode(this.getSellerCode()); 
-		e.setSellerStatus("minspc0003"); 
+		e.setSellerStatus("1"); 
 		list = kjSellerSeparateOrderDao.selectByTypes(e);
 		List<String> list_ = new ArrayList<>();
 		for(OcKjSellerSeparateOrder o : list){
