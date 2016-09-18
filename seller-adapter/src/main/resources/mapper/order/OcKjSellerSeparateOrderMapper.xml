@@ -280,7 +280,10 @@
 				remark = #{remark,jdbcType=LONGVARCHAR},
 			</if>
 		</set>
-		where seller_order_code = #{sellerOrderCode,jdbcType=VARCHAR}
+		where 
+			seller_order_code = #{sellerOrderCode,jdbcType=VARCHAR}
+		and 
+			seller_code = #{sellerCode,jdbcType=VARCHAR}
 	</update>
 	
 	<!-- 查询作废的订单 - 20160918 - Yangcl -->

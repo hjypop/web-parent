@@ -37,10 +37,8 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 	
 	@Inject
 	private IOcOrderinfoDao orderinfoDao;
-	
 	@Inject
 	private IJobExectimerDao jobExectimerDao;
-	
 	@Inject 
 	private IOcKjSellerSeparateOrderDao kjSellerSeparateOrderDao; // 拆单  
 
@@ -62,11 +60,11 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 			return message; 
 		} 
 		
-		String msg = "Rsync Subscribe Order Success";
+		String msg = "";
 		if(entity.getCode().equals("0")){
 			this.SeparateOrderInit(entity.getData()); // 开始拆分跨境商户订单: List<DataResponse>
 			update.setFlagSuccess(1);
-			msg = "";
+			msg = "Rsync Subscribe Order Success";
 		}else{
 			update.setFlagSuccess(0);
 			msg = entity.getDesc();
@@ -75,6 +73,7 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 		
 		// 更新job_exectimer表
 		update.setEndTime(new Date());
+		update.setExecInfo(this.getSoRequest().getMerchantOrderID()); // order code 
 		jobExectimerDao.updateSelectiveByOrderCode(update); 
 		
 		return msg; 

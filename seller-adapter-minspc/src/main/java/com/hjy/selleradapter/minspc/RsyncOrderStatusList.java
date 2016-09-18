@@ -96,10 +96,11 @@ public class RsyncOrderStatusList extends RsyncMinspc {
 				}
 				k.setStatus("4497153900010003"); // order_status 订单状态 已发货
 			}
-			// TODO 更新拆单表
+			// 更新拆单表
 			k.setSellerStatus(e.getSoStatus()); 
 			k.setSellerOrderCode(e.getOrderID()); 
 			k.setUpdateTime(new Date());
+			k.setSellerCode(this.getSellerCode()); 
 			kjSellerSeparateOrderDao.updateBySellerOrderCode(k);
 		}
 		

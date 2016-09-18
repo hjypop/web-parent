@@ -49,7 +49,13 @@ public class JobForCreateSubscribeOrder extends RootJob {
 	
 	private List<MinspcOrderdetailOne> mooList;  // 此处使用全局变量为RsyncSubscribeOrder.java赋值。不得已而用之。
 	
-	@Override  
+	/**
+	 * @descriptions 订单同步，一条一条的同步。
+	 *
+	 * @date 2016年9月18日 下午10:07:59
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
 	public void doExecute(JobExecutionContext context) {
 		String lockCode = WebHelper.getInstance().addLock(1000 , "JobForCreateSubscribeOrder");	// 分布式锁定
 		if (StringUtils.isNotBlank(lockCode)) {
