@@ -44,10 +44,10 @@ private static Logger logger = Logger.getLogger(RsyncVoidOrder.class);
 					osr.setUpdateTime(new Date());
 					kjSellerSeparateOrderDao.updateSelective(osr);
 					msg = "Order Void Success";
+				}else{
+					msg = "Order Void False - Response Seller Order Code Is : " + dr.getOrderID() + 
+							" - But Our Seller Order Code Is : " + this.getUpdateInfo().getSellerOrderCode();
 				}
-				
-				msg = "Order Void False - Response Seller Order Code Is : " + dr.getOrderID() + 
-						" - But Our Seller Order Code Is : " + this.getUpdateInfo().getSellerOrderCode();
 			}else{
 				msg = dr.getMessage();  // 订单已出库，不允许取消！
 			}
