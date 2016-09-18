@@ -289,6 +289,19 @@
 	</update> 
 	
 	
+	<!-- 根据商户编号 开始时间和结束时间来查询一个跨境商户的待同步订单  - 201609018 - Yangcl  -->
+	<select id="findExectimerOrderList" parameterType="com.hjy.dto.OrderinfoDto" resultMap="BaseResultMap">
+		select 
+			* 
+		from
+			ordercenter.oc_orderinfo
+		where 
+			small_seller_code = #{smallSellerCode , jdbcType=VARCHAR}
+		and 
+			order_status_ext = '449716200002' 
+		and 
+			create_time between #{startTime , jdbcType=VARCHAR} and #{endTime , jdbcType=VARCHAR}
+	</select>
 	
 </mapper>
 

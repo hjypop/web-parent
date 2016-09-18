@@ -3,7 +3,11 @@ package com.hjy.controller;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,7 +22,12 @@ import com.alibaba.fastjson.JSON;
 public class ReadExcel {
 
 	public static void main(String[] args) {
-		List<String> list = readExcel("D:\\7.xlsx"); 
+//		List<String> list = readExcel("D:\\7.xlsx"); 
+		
+		Date date = new Date();
+		System.out.println("start time = " + getHour(date, -1)); 
+		System.out.println("end   time = " + getHour(date, 0)); 
+		
 	}
 	
 	private static List<String> readExcel(String fileName) {
@@ -51,5 +60,16 @@ public class ReadExcel {
 
 		System.out.println(json); 
 		return list;
+	}
+	
+	
+	private static String getHour(Date date , int flag){
+		 Calendar calendar = new GregorianCalendar();
+		 calendar.setTime(date);
+		 calendar.add(calendar.HOUR , flag); 
+		 date=calendar.getTime();  
+		 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
+		 
+		 return formatter.format(date);
 	}
 }

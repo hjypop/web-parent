@@ -1,5 +1,7 @@
 package com.hjy.dao;
 
+import java.util.List;
+
 import com.hjy.pojo.entity.system.JobExectimer;
 
 public interface IJobExectimerDao extends BaseDao<JobExectimer, Integer> {
@@ -25,4 +27,13 @@ public interface IJobExectimerDao extends BaseDao<JobExectimer, Integer> {
 	public Integer updateSelectiveByFlag(JobExectimer entity);
 	
 	public Integer updateSelectiveByOrderCode(JobExectimer entity);
+	
+	/**
+	 * @description: 根据  exec_type 和 exec_info 来查询一个订单
+	 *
+	 * @author Yangcl
+	 * @date 2016年9月18日 下午5:54:43 
+	 * @version 1.0.0.1
+	 */
+	public List<JobExectimer> findByOrderCode(JobExectimer entity);
 }

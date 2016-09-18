@@ -58,7 +58,7 @@ public class JobForCreateSubscribeOrder extends RootJob {
 			try {
 				JobExectimer entity = new JobExectimer();
 				entity.setExecTime(currentTime);
-				entity.setExecType("449746990004");  // 449746990004 针对民生品粹
+				entity.setExecType(getConfig("seller_adapter_minspc.exec_type"));  // 449746990014 针对民生品粹
 				entity.setExecNumber(20);
 				List<JobExectimer> jobExectimerList = jobExectimerDao.findList(entity);  // 取出民生品粹 等待同步的订单
 				for(JobExectimer job : jobExectimerList){

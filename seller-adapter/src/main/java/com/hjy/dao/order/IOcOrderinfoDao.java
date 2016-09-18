@@ -3,6 +3,7 @@ package com.hjy.dao.order;
 import java.util.List;
 
 import com.hjy.dao.BaseDao;
+import com.hjy.dto.OrderinfoDto;
 import com.hjy.dto.minspc.MinspcOrderinfoSelect;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.request.data.OrderInfoRequestDto;
@@ -92,6 +93,16 @@ public interface IOcOrderinfoDao extends BaseDao<OcOrderinfo, Integer>{
 	 * @version 1.0.0.1
 	 */
 	public Integer batchUpdateByOrderCode(List<OcOrderinfo> list);
+	
+	/**
+	 * @description: 根据商户编号 开始时间和结束时间来查询一个跨境商户的待同步订单  
+	 *
+	 * @throws 
+	 * @author Yangcl
+	 * @date 2016年9月18日 下午4:51:21 
+	 * @version 1.0.0.1
+	 */
+	public List<OcOrderinfo> findExectimerOrderList(OrderinfoDto dto);
 }
 
 
