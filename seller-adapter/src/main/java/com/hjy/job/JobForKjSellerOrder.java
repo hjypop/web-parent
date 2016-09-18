@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
 
 import com.hjy.annotation.Inject;
@@ -56,7 +57,17 @@ public class JobForKjSellerOrder extends RootJob {
 	
 	
 	public void doExecute(JobExecutionContext context) {
-		this.executeByNomal();
+		String lockCode = WebHelper.getInstance().addLock(1000 , "JobForKjSellerOrder");	// 分布式锁定
+		if (StringUtils.isNotBlank(lockCode)) {
+			try {
+				this.executeByNomal();
+			} catch (Exception e) {
+				e.printStackTrace();  
+			}finally {
+				WebHelper.getInstance().unLock(lockCode);
+			}
+		}
+		
 	}
 	
 	
