@@ -11,6 +11,7 @@ import java.util.UUID;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.annotation.Inject;
 import com.hjy.base.BaseClass;
+import com.hjy.common.DateUtil;
 import com.hjy.dao.ILcRsyncMinspcLogDao;
 import com.hjy.entity.LcRsyncMinspcLog;
 import com.hjy.helper.DateHelper;
@@ -80,16 +81,18 @@ public abstract class RsyncMinspc extends BaseClass{
 		try { 
 			map = new MDataMap();
 			map.put("appid", getConfig("seller_adapter_minspc.rsync_minspc_appid"));
-			map.put("data", URLEncoder.encode(this.setRequestDataJson(), "UTF-8"));
+			map.put("data", this.setRequestDataJson());
 			map.put("method", this.getRequestMethod());
-			map.put("timestamp", DateHelper.formatDate(new Date()));
+			map.put("timestamp", DateUtil.getSysDateTimeString(DateUtil.sdfDateTimeTamp) );
 			map.put("nonce", this.getNonce());
 			map.put("format", "json");
 			map.put("version", getConfig("seller_adapter_minspc.rsync_minspc_version"));
 			
 			List<String> list = new ArrayList<String>();
 			for (Map.Entry<String, String> entry : map.entrySet()) {
-				if (entry.getValue() != "") {
+				if (entry.getKey().equals("data")) { 
+					list.add(entry.getKey() + "=" + URLEncoder.encode(entry.getValue(), "UTF-8") + "&");
+				}else{
 					list.add(entry.getKey() + "=" + entry.getValue() + "&");
 				}
 			}

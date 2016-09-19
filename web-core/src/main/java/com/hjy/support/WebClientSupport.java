@@ -260,6 +260,7 @@ public class WebClientSupport extends BaseClass {
 		HttpPost httppost = new HttpPost(sUrl);
 		// 设置成短链接模式 关闭keep-alve
 		httppost.setHeader("Connection", "close");
+//		httppost.setHeader("Content-type", "application/x-www-form-urlencoded");  
 		CloseableHttpResponse response = null;
 
 		try {

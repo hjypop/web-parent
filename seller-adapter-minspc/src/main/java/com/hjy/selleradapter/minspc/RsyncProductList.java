@@ -46,7 +46,7 @@ public class RsyncProductList extends RsyncMinspc {
 			logger.error(message);
 			return message; 
 		}
-		if(entity.getCode() != "0"){
+		if(!entity.getCode().equals("0")){    
 			return entity.getDesc();
 		}
 		List<Product> productList = entity.getProductList(); 

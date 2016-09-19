@@ -1,5 +1,7 @@
 package com.hjy.dto.request.product;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * @descriptions RsyncProductList.java类请求报文封装体
  *
@@ -13,27 +15,33 @@ public class ProductRequest {
 	//	Status：0 （当前有库存的保税贸易订阅产品列表）
 	//	Status：1 （当前有库存的海外直邮订阅产品列表）
 	//	Status：2 （当前有库存的一般贸易订阅产品列表）
-	private String status;
-	private String startTime;
-	private String endTime;
+	private String Status;
+	private String StartTime;
+	private String EndTime;
 	
+	@JSONField(name = "Status")
 	public String getStatus() {
-		return status;
+		return Status;
 	}
 	public void setStatus(String status) {
-		this.status = status;
+		Status = status;
 	}
+	
+	@JSONField(name = "StartTime")
 	public String getStartTime() {
-		return startTime;
+		return StartTime;
 	}
 	public void setStartTime(String startTime) {
-		this.startTime = startTime;
+		StartTime = startTime;
 	}
+	
+	@JSONField(name = "EndTime") 
 	public String getEndTime() {
-		return endTime;
+		return EndTime;
 	}
 	public void setEndTime(String endTime) {
-		this.endTime = endTime;
+		EndTime = endTime;
 	}
+	
 	
 }
