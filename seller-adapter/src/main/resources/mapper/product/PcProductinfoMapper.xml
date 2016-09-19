@@ -575,7 +575,8 @@
 		WHERE
 			p.product_code_old = #{productCodeOld , jdbcType=VARCHAR}
 		AND
-			p.seller_code = #{sellerCode , jdbcType=VARCHAR}
+			p.seller_code = #{sellerCode , jdbcType=VARCHAR} 
+		order by zid desc 
 	</select>
 
 

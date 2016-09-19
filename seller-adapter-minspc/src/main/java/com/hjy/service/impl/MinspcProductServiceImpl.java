@@ -304,7 +304,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			pinfo.setUpdateTime(createTime);
 			pinfo.setTaxRate(e.getTaxRate());
 			if(e.getPicUpdate().equals("1")){
-				pinfo.setProductName(e.getProductName() + " @@ 商品图片信息有变更求修正");  
+				pinfo.setProductName(e.getProductName() + " @@ 商品图片信息有变更-需要修正");  
 			}
 			pcProductInfoDao.updateSelective(pinfo); 
 			
@@ -392,9 +392,8 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			e.setMarketPrice(price);
 			e.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS);  // SI2003
 			e.setMainpicUrl(p.getProductPictures().get(0));   // 主图默认为轮播图的第一张  
-			// TODO @@@@@@@@@@@@@@@@@@ 线上配置文件 small_seller_code 
-			e.setSmallSellerCode(getConfig("seller_adapter_minspc.small_seller_code"));
-			e.setProductStatus("4497153900060003");// 商品下架
+			e.setSmallSellerCode(getConfig("seller_adapter_minspc.small_seller_code"));  // 线上配置文件 small_seller_code 
+			e.setProductStatus("4497153900060002");// 商品下架
 			e.setValidate_flag("Y");//是否是虚拟商品
 			e.setTaxRate(BigDecimal.valueOf(Double.valueOf(p.getProductTaxes())));
 			e.setProductWeight(BigDecimal.valueOf(Double.valueOf(p.getProductWeight())));
@@ -428,7 +427,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			skuInfo.setMarketPrice(price);
 			skuInfo.setCostPrice(price);// 设置sku的成本价
 			skuInfo.setSkuName(e.getProductName()); 
-			skuInfo.setSkuPicUrl(p.getProductPictures().get(0)); // TODO 默认轮播图的第一张，是否可以？？？？？
+			skuInfo.setSkuPicUrl(p.getProductPictures().get(0)); // 默认轮播图的第一张，是否可以？？？？？
 			skuInfo.setSellProductcode(e.getProductCodeOld());// 设置外部商品 id 
 			skuInfo.setSecurityStockNum(Integer.valueOf(e.getStock()));  // 商品库存
 			skuInfo.setSaleYn("Y");// 是否可卖为可买

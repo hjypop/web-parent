@@ -34,7 +34,7 @@ public class JobForVoidOrder extends RootJob {
 		if (StringUtils.isNotBlank(lockCode)) {
 			try {
 				VoidDto dto = new VoidDto();
-				dto.setSellerCode("SF03MINSPC");
+				dto.setSellerCode(getConfig("seller_adapter_minspc.small_seller_code"));   // "SF03MINSPC"
 				dto.setSellerStatus("0");
 				List<OcKjSellerSeparateOrder> voidList = kjSellerSeparateOrderDao.selectVoidOrderInfo(dto);
 				if(voidList != null && voidList.size() != 0){

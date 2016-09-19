@@ -16,6 +16,7 @@ import com.hjy.annotation.Inject;
 import com.hjy.constant.MemberConst;
 import com.hjy.dto.request.product.ProductRequest;
 import com.hjy.dto.response.ResultMsg;
+import com.hjy.dto.response.product.DataResponse;
 import com.hjy.dto.response.product.Product;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.helper.ExceptionHelper;
@@ -37,14 +38,18 @@ public class RsyncProductList extends RsyncMinspc {
 	
 	public String doProcess(String responseJson) {
 		// 解析请求数据
-		List<Product> productList = null;
+		DataResponse entity = null;
 		try {
-			productList = JSON.parseArray(responseJson, Product.class);
+			entity = JSON.parseObject(responseJson, DataResponse.class);
 		} catch (Exception e) {
 			String message = "响应消息体错误，响应数据解析异常，请联系民生品粹，异常信息如下：\n" + ExceptionHelper.allExceptionInformation(e); 
 			logger.error(message);
 			return message; 
 		}
+		if(entity.getCode() != "0"){
+			return entity.getDesc();
+		}
+		List<Product> productList = entity.getProductList(); 
 		if(productList == null || productList.size() == 0){
 			return "响应数据为空";
 		}
@@ -58,8 +63,8 @@ public class RsyncProductList extends RsyncMinspc {
 			ResultMsg msg = null;
 			PcProductinfo i = new PcProductinfo();
 			i.setProductCodeOld(e.getProductCodeOld()); // product_code_old 作为查询依据
-			i.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS); 
-			List<PcProductinfo> pList = productService.getListBySellerCode(i); 
+			i.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS); // SI2003
+			List<PcProductinfo> pList = productService.getListBySellerCode(i); // order by zid desc 倒序第一个
 			if (pList == null || pList.size() == 0) { // 若果不存在，就添加
 				msg = productService.insertProductToTables(e);
 			}else{
