@@ -243,7 +243,7 @@
 	</update>
 	
 
-	<select id="selectByStatus" resultMap="java.lang.String" parameterType="com.hjy.entity.order.OcKjSellerSeparateOrder">
+	<select id="selectByStatus" resultType="java.lang.String" parameterType="com.hjy.entity.order.OcKjSellerSeparateOrder">
 		select
 			seller_order_code
 		from 
