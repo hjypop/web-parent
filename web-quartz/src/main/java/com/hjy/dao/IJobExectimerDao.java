@@ -36,4 +36,31 @@ public interface IJobExectimerDao extends BaseDao<JobExectimer, Integer> {
 	 * @version 1.0.0.1
 	 */
 	public List<JobExectimer> findByOrderCode(JobExectimer entity);
+	
+	/**
+	 * @description: 找到特定商户下等待同步推送的订单
+	 *
+	 * @author Yangcl
+	 * @date 2016年9月20日 下午5:51:20 
+	 * @version 1.0.0.1
+	 */
+	public List<JobExectimer> findRsyncOrderList(JobExectimer entity);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

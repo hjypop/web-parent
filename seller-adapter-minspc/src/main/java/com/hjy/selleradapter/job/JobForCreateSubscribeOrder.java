@@ -1,8 +1,11 @@
 package com.hjy.selleradapter.job;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -59,17 +62,21 @@ public class JobForCreateSubscribeOrder extends RootJob {
 	public void doExecute(JobExecutionContext context) {
 		String lockCode = WebHelper.getInstance().addLock(1000 , "JobForCreateSubscribeOrder");	// 分布式锁定
 		if (StringUtils.isNotBlank(lockCode)) {
-			Date currentTime = new Date();
 			List<String> orderCodeList_ = new ArrayList<String>();
 			try {
+				Date date = new Date();												// 2016-09-18 16:28:26        当前时间 
 				JobExectimer entity = new JobExectimer();
-				entity.setExecTime(currentTime);
+				entity.setStart(this.getHour(date, -1));						// 2016-09-18 15:00:00         带同步订单的开始时间
+				entity.setEnd(this.getHour(date, 0)); 						// 2016-09-18 16:00:00		 带同步订单的结束时间	
 				entity.setExecType(getConfig("seller_adapter_minspc.exec_type"));  // 449746990014 针对民生品粹
 				entity.setExecNumber(20);
-				List<JobExectimer> jobExectimerList = jobExectimerDao.findList(entity);  // 取出民生品粹 等待同步的订单
+				List<JobExectimer> jobExectimerList = jobExectimerDao.findRsyncOrderList(entity);  // 取出民生品粹 等待同步的订单|依据为当前时间 -> 前一个小时创建的记录
 				for(JobExectimer job : jobExectimerList){
 					String orderCode = job.getExecInfo();
 					orderCodeList_.add(orderCode);
+				}
+				if(orderCodeList_ == null || orderCodeList_.size() == 0){
+					throw new RuntimeException("当前时间没有同步数据");  
 				}
 				// 多表联查，获取所需信息
 				List<MinspcOrderinfoSelect> morList = orderinfoDao.getMinspcOrderinfoList(orderCodeList_);         
@@ -87,6 +94,7 @@ public class JobForCreateSubscribeOrder extends RootJob {
 			}
 		}
 	}
+	
 
 	/**
 	 * @description: 请求数据转换
@@ -168,7 +176,15 @@ public class JobForCreateSubscribeOrder extends RootJob {
 		return prov + "," + (StringUtils.startsWith(city, "省直辖县级行政区划") ? area : city) + "," + area;
 	}
 
-
+	private String getHour(Date date , int flag){
+		 Calendar calendar = new GregorianCalendar();
+		 calendar.setTime(date);
+		 calendar.add(calendar.HOUR , flag); 
+		 date=calendar.getTime();  
+		 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
+		 
+		 return formatter.format(date);
+	}
 }
 
 

@@ -218,15 +218,16 @@
 	</update>
 	
 	<update id="updateSelectiveByOrderCode" parameterType="com.hjy.pojo.entity.system.JobExectimer">
-		update job_exectimer
-		<set>
+		update 
+			job_exectimer
+		set
 			begin_time = #{beginTime,jdbcType=CHAR},
 			end_time = #{endTime,jdbcType=CHAR},
-			flag_success = #{flagSuccess,jdbcType=INTEGER},
-			remark = remark + #{remark,jdbcType=LONGVARCHAR},
+			flag_success = #{flagSuccess , jdbcType=INTEGER},
+			remark = #{remark , jdbcType=LONGVARCHAR},
 			exec_number = exec_number + 1 
-		</set>
-		where exec_info = #{execInfo , jdbcType=INTEGER}
+		where 
+			exec_info = #{execInfo , jdbcType=INTEGER}
 	</update>
 	
 	<!-- 根据  exec_type 和 exec_info 来查询一个订单 - 20160918 - Yangcl -->
@@ -234,11 +235,24 @@
 		select 
 			* 
 		from 
-			job_exectimer 
+			webcore.job_exectimer 
 		where 
 			exec_type = #{execType , jdbcType=VARCHAR}
 		and 
 			exec_info = #{execInfo , jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 找到特定商户下等待同步推送的订单 - 20160920 - Yangcl -->
+	<select id="findRsyncOrderList" resultMap="BaseResultMap" parameterType="com.hjy.pojo.entity.system.JobExectimer">
+		select 
+			* 
+		from 
+			webcore.job_exectimer
+		where
+			flag_success = 0
+			and exec_type = #{execType,jdbcType=VARCHAR}
+			and exec_number &lt; #{execNumber,jdbcType=INTEGER}
+			and exec_time between  #{start , jdbcType=VARCHAR}  and  #{end , jdbcType=VARCHAR}
 	</select>
 	
 </mapper>

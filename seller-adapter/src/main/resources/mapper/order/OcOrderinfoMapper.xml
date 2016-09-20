@@ -265,8 +265,7 @@
 			address.auth_true_name as authName,
 			address.auth_idcard_type as idcardType,
 			address.auth_idcard_number as authIdcardNumber,
-			address.auth_email as email,
-			
+			address.auth_email as email 
 		FROM
 			ordercenter.oc_orderinfo info  LEFT JOIN ordercenter.oc_orderadress address ON info.order_code = address.order_code
 		WHERE

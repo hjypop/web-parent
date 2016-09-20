@@ -17,6 +17,11 @@ public class JobExectimer {
     private Date createTime;
     
     
+    // 一下为非表结构字段，作为辅助查询条件字段使用
+    private String start;  // 开始时间点
+    private String end;    // 结束时间点 
+    
+    
 	public Integer getZid() {
 		return zid;
 	}
@@ -88,6 +93,21 @@ public class JobExectimer {
 	}
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+	
+	
+	
+	public String getStart() {
+		return start;
+	}
+	public void setStart(String start) {
+		this.start = start;
+	}
+	public String getEnd() {
+		return end;
+	}
+	public void setEnd(String end) {
+		this.end = end;
 	}
     
     
