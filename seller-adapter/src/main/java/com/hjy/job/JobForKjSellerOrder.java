@@ -80,7 +80,8 @@ public class JobForKjSellerOrder extends RootJob {
 	 * @version 1.0.0.1
 	 */
 	private void executeByNomal(){
-		String kjSellerInfo = getConfig("seller-adapter.kj_seller_info");
+		String kjSellerInfo = getConfig("seller_adapter.kj_seller_info");
+		
 		String [] ksiArray = kjSellerInfo.split(",");
 		for(int i = 0 ; i < ksiArray.length ; i ++){
 			String execType = ksiArray[i].split("@")[1];    // 449746990014 and so on..
@@ -88,6 +89,8 @@ public class JobForKjSellerOrder extends RootJob {
 			Date date = new Date();											// 2016-09-18 16:28:26
 			String startTime = this.getHour(date, -1);				// 2016-09-18 15:00:00
 			String endTime = this.getHour(date, 0);				// 2016-09-18 16:00:00
+			// 定位条件：order_status = '4497153900010002'  下单成功-未发货  即代表我平台已经付款的订单才同步过去
+			// update_time between ''  and '' 
 			List<OcOrderinfo> list = orderinfoDao.findExectimerOrderList(new OrderinfoDto(smallSellerCode , startTime , endTime)); 
 			if(list != null && list.size() != 0){
 				for(OcOrderinfo e : list){

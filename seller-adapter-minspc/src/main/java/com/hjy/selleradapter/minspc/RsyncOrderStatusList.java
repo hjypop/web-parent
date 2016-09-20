@@ -95,6 +95,10 @@ public class RsyncOrderStatusList extends RsyncMinspc {
 					}
 				}
 				k.setStatus("4497153900010003"); // order_status 订单状态 已发货
+				
+				// TODO 插入物流信息
+				String expressBill = e.getExpressBill(); // 民生品粹返回的快递单号
+				
 			}
 			// 更新拆单表
 			k.setSellerStatus(e.getSoStatus()); 

@@ -82,7 +82,7 @@ public class RsyncProductList extends RsyncMinspc {
 			}
 		}  // 循环同步数据结束
 		
-		return "{" + JSON.toJSONString(successList) + "," + JSON.toJSONString(errorList) + "}"; 
+		return "{\"successList\":" + JSON.toJSONString(successList) + ",\"errorList\":" + JSON.toJSONString(errorList) + "}"; 
 	}
 	
 	
@@ -111,8 +111,8 @@ public class RsyncProductList extends RsyncMinspc {
 		String end_ = this.getNextHour(curTime);
 		ProductRequest pr = new ProductRequest();
 		pr.setStatus("-1");
-		pr.setStartTime(start_);
-		pr.setEndTime(end_); 
+//		pr.setStartTime(start_); 
+//		pr.setEndTime(end_); 
 		
 		return JSON.toJSONString(pr); 
 	}

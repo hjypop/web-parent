@@ -412,7 +412,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 				img += "<img src='" + s + "'/><br/>";
 				img_ += s + "|";
 			}
-			img_ = img_.substring(9, img_.length()-1);
+			img_ = img_.substring(0, img_.length()-1);
 			description.setDescriptionInfo(img);
 			description.setDescriptionPic(img_);
 			description.setKeyword(p.getProductKey());
@@ -429,6 +429,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			skuInfo.setSkuName(e.getProductName()); 
 			skuInfo.setSkuPicUrl(p.getProductPictures().get(0)); // 默认轮播图的第一张，是否可以？？？？？
 			skuInfo.setSellProductcode(e.getProductCodeOld());// 设置外部商品 id 
+			skuInfo.setStockNum(Integer.valueOf(e.getStock())); 
 			skuInfo.setSecurityStockNum(Integer.valueOf(e.getStock()));  // 商品库存
 			skuInfo.setSaleYn("Y");// 是否可卖为可买
 			skuInfo.setFlagEnable("1");// 是否可用为可用

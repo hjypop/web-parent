@@ -298,9 +298,11 @@
 		where 
 			small_seller_code = #{smallSellerCode , jdbcType=VARCHAR}
 		and 
-			order_status_ext = '449716200002' 
+			order_status_ext = '4497153900140002' 
 		and 
-			create_time between #{startTime , jdbcType=VARCHAR} and #{endTime , jdbcType=VARCHAR}
+			order_status = '4497153900010002'   # 下单成功-未发货  即代表我平台已经付款的订单才同步过去
+		and 
+			update_time between #{startTime , jdbcType=VARCHAR} and #{endTime , jdbcType=VARCHAR}
 	</select>
 	
 </mapper>
