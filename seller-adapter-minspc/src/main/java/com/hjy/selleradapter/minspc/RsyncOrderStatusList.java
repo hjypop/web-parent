@@ -59,7 +59,7 @@ public class RsyncOrderStatusList extends RsyncMinspc {
 	 * @date 2016年9月14日 下午2:57:32 
 	 * @version 1.0.0.1
 	 */
-	public String setRequestDataJson() {
+	public String getRequestDataJson() {
 		OcKjSellerSeparateOrder e = new OcKjSellerSeparateOrder();
 		e.setSellerCode(this.getSellerCode()); 
 		e.setSellerStatus("1"); 

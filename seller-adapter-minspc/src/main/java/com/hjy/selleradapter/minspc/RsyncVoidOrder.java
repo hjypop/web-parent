@@ -62,7 +62,7 @@ private static Logger logger = Logger.getLogger(RsyncVoidOrder.class);
 		return "Order.SOVoid";
 	}
 	
-	public String setRequestDataJson() {   // 拼接请求Json 
+	public String getRequestDataJson() {   // 拼接请求Json 
 		return "{\"Orderlds\":\"" + this.getUpdateInfo().getSellerOrderCode() + "\",\"OrderType\":\"" + this.getUpdateInfo().getSellerStatus() + "\"}";
 	}
 

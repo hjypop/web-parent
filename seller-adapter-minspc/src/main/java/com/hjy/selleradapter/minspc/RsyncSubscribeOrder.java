@@ -155,13 +155,13 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 
 	
 	/**
-	 * @description: 拼装请求数据 
+	 * @description: 拼装请求数据 | TODO 此处需要执行强制判空操作，每个属性都不得为空
 	 * 
 	 * @author Yangcl
 	 * @date 2016年9月7日 下午2:58:26 
 	 * @version 1.0.0.1
 	 */
-	public String setRequestDataJson() {
+	public String getRequestDataJson() {
 		return JSONObject.toJSONString(this.getSoRequest()); 
 	}
 

@@ -104,7 +104,7 @@ public class RsyncProductList extends RsyncMinspc {
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */ 
-	public String setRequestDataJson() {
+	public String getRequestDataJson() {
 		Date curTime = new Date();
 		SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:00:00");
 		String start_ = sdf.format(curTime);

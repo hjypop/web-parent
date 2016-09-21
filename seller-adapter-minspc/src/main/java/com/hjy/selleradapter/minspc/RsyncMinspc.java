@@ -38,7 +38,7 @@ public abstract class RsyncMinspc extends BaseClass{
 		log.setTarget(this.getRequestMethod());
 		log.setRsyncUrl(this.getRequestUrl()); 
 		log.setRequestTime(new Date());
-		log.setRequestData(this.setRequestDataJson()); 
+		log.setRequestData(this.getRequestDataJson()); 
 		String responseJson = this.getHttps();
 		log.setResponseData(responseJson); 
 		
@@ -81,7 +81,7 @@ public abstract class RsyncMinspc extends BaseClass{
 		try { 
 			map = new MDataMap();
 			map.put("appid", getConfig("seller_adapter_minspc.rsync_minspc_appid"));
-			map.put("data", this.setRequestDataJson());
+			map.put("data", this.getRequestDataJson());
 			map.put("method", this.getRequestMethod());
 			map.put("timestamp", DateUtil.getSysDateTimeString(DateUtil.sdfDateTimeTamp) );
 			map.put("nonce", this.getNonce());
@@ -147,7 +147,7 @@ public abstract class RsyncMinspc extends BaseClass{
 	 * @date 2016年9月6日 下午4:20:04 
 	 * @version 1.0.0.1
 	 */
-	public abstract String setRequestDataJson();
+	public abstract String getRequestDataJson();
 	
 	/**
 	 * @description: 由具体子类实现|处理响应数据报文的逻辑|在子类中进行增删改查之类的操作
