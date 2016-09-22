@@ -295,10 +295,10 @@
 			left join ordercenter.oc_orderinfo i on kj.order_code = i.order_code 
 		where 
 			i.small_seller_code = #{sellerCode , jdbcType=VARCHAR} 
-			and (i.order_status = "4497153900010001" or i.order_status = "4497153900010002") #未付款或未发货
-			and i.order_status_ext != '4497153900140002' # 订单辅助状态|不为正常状态的订单
+			and i.order_status = '4497153900010002'    
+			and i.order_status_ext != '4497153900140002' 
 			and kj.seller_code = #{sellerCode , jdbcType=VARCHAR} 
-		    and kj.seller_status = #{sellerStatus , jdbcType=VARCHAR}    # 商户订单状态|还未出关
+		    and kj.seller_status = #{sellerStatus , jdbcType=VARCHAR}  
 	</select>
 </mapper>
 

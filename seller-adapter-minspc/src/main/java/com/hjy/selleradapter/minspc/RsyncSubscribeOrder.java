@@ -95,7 +95,7 @@ public class RsyncSubscribeOrder extends RsyncMinspc{
 			e.setSellerOrderCode(d.getSOSysNo());
 			e.setOrderCodeSeq(d.getMerchantOrderID() + "#" + count); 
 			e.setStatus("4497153900010002");
-			e.setSellerStatus("null-operat"); 
+			e.setSellerStatus("0"); 
 			e.setCreateTime(new Date());
 			e.setOrderType(d.getOrderType());
 			e.setFreight(new BigDecimal(0.00)); 

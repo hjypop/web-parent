@@ -123,7 +123,7 @@ public class JobForCreateSubscribeOrder extends RootJob {
 		si.setReceivePhone(mo.getMobile());
 		si.setReceiveAddress(mo.getAddress());
 		si.setReceiveAreaCode(mo.getAreaCode()); // 收获地区编号（根据国家统计局的《最新县及县以上行政区划代码》）
-		si.setShipTypeID("375");  // 订单物流运输编号 |经与对接人沟通，统一设置为375：韵达快递
+		si.setShipTypeID(getConfig("seller_adapter_minspc.ship_type_id"));  // 订单物流运输编号 |经与对接人沟通，统一设置为2
 		si.setReceiveAreaName(this.getAreaName(mo.getAreaCode())); // 根据 oc_orderadress 表的 area_code字段来拼接中文
 		r.setShippingInfo(si); 
 		
@@ -140,7 +140,7 @@ public class JobForCreateSubscribeOrder extends RootJob {
 		List<Item> itemList = new ArrayList<Item>();
 		for(MinspcOrderdetailOne e : mooList){
 			Item sku = new Item();
-			sku.setProductID(e.getProductID());
+			sku.setProductID(e.getProductID().split("-")[1]);
 			sku.setQuantity(e.getQuantity());
 			sku.setSalePrice(e.getSalePrice());
 			sku.setTaxPrice(new BigDecimal(0.00)); // 行邮税 - 单品税费|经过沟通默认为0.00 - Yangcl
