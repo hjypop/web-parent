@@ -14,6 +14,9 @@ public class VoidDto {
 	// 商户订单状态，每个商户不同|还未出关，即未发货的订单可以取消
 	private String sellerStatus; 
 	
+	private String startTime;
+	
+	private String endTime;
 	
 	public String getSellerCode() {
 		return sellerCode;
@@ -26,6 +29,18 @@ public class VoidDto {
 	}
 	public void setSellerStatus(String sellerStatus) {
 		this.sellerStatus = sellerStatus;
+	}
+	public String getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+	public String getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 	
 	

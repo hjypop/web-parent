@@ -291,14 +291,17 @@
 		select 
 			* 
 		from
-			ordercenter.oc_kj_seller_separate_order kj 
-			left join ordercenter.oc_orderinfo i on kj.order_code = i.order_code 
+			ordercenter.oc_kj_seller_separate_order kj  left join ordercenter.oc_orderinfo i on kj.order_code = i.order_code 
 		where 
 			i.small_seller_code = #{sellerCode , jdbcType=VARCHAR} 
-			and i.order_status = '4497153900010002'    
-			and i.order_status_ext != '4497153900140002' 
-			and kj.seller_code = #{sellerCode , jdbcType=VARCHAR} 
-		    and kj.seller_status = #{sellerStatus , jdbcType=VARCHAR}  
+		and 
+			i.order_status = '4497153900010006'    
+		and 
+			kj.seller_code = #{sellerCode , jdbcType=VARCHAR} 
+	    and 
+	    	kj.seller_status = #{sellerStatus , jdbcType=VARCHAR}  
+	    and
+	    	i.update_time between   #{startTime , jdbcType=VARCHAR}   and   #{endTime , jdbcType=VARCHAR} 
 	</select>
 </mapper>
 
