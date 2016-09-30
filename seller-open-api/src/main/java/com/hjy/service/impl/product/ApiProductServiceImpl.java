@@ -41,6 +41,7 @@ import com.hjy.entity.product.PcSkuinfo;
 import com.hjy.entity.system.ScStoreSkunum;
 import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.factory.UserFactory;
+import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.request.RequestProduct;
@@ -1215,6 +1216,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 */
 	public JSONObject rsyncProductStatus(WcSellerinfo seller) {
 		JSONObject response = new JSONObject();
+		String responseTime = DateHelper.formatDate(new Date());
+		response.put("responseTime", responseTime);
 		String lockCode = WebHelper.getInstance().addLock(1000 , seller.getSellerCode() +"@com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus");	// 分布式锁定
 		if (StringUtils.isNotBlank(lockCode)) {
 			if(!seller.getStatus().equals("1")){
@@ -1230,7 +1233,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				List<ProductStatus> list = productInfoDao.selectProductByUpdateTime(map);
 				if(list != null && list.size() != 0){
 					response.put("code", 1);
-					response.put("desc", "SUCCESS");
+					response.put("desc", "请求成功");
 					response.put("data", list);
 				}else{
 					response.put("code", 0);
