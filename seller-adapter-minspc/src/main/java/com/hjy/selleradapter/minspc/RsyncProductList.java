@@ -111,8 +111,8 @@ public class RsyncProductList extends RsyncMinspc {
 		String end_ = this.getNextHour(curTime);
 		ProductRequest pr = new ProductRequest();
 		pr.setStatus("-1");
-//		pr.setStartTime(start_); 
-//		pr.setEndTime(end_); 
+		pr.setStartTime(start_); 
+		pr.setEndTime(end_); 
 		
 		return JSON.toJSONString(pr); 
 	}

@@ -121,6 +121,11 @@ public class ApiController {
 						log.setRemark(request.getMethod());
 						// 推送商品和sku价格到第三方
 						result = productService.pushProductPrice(seller, request.getProductCodes());
+					}else if("RsyncProductStatus".equals(method)){
+						// 同步商品上下架状态 - Yangcl
+						log.setClassUrl("com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus");
+						log.setRemark(request.getMethod());
+						result = productService.rsyncProductStatus(seller);
 					}
 				} else if ("Order".equals(type)) {
 					if ("List".equals(method)) { // 根据传入的json串查询订单信息 - Yangcl

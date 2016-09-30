@@ -1,11 +1,16 @@
 package com.hjy.service.impl.product;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -20,12 +25,15 @@ import com.hjy.common.DateUtil;
 import com.hjy.dao.api.IApiProductInfoDao;
 import com.hjy.dao.api.IApiSkuInfoDao;
 import com.hjy.dao.api.ILcOpenApiProductErrorDao;
+import com.hjy.dao.api.ILcOpenApiQueryLogDao;
 import com.hjy.dao.product.IPcProductdescriptionDao;
 import com.hjy.dao.product.IPcProductpicDao;
 import com.hjy.dao.system.IScStoreSkunumDao;
 import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
+import com.hjy.dto.product.ProductStatus;
 import com.hjy.entity.log.LcOpenApiProductError;
+import com.hjy.entity.log.LcOpenApiQueryLog;
 import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.product.PcProductpic;
@@ -33,6 +41,7 @@ import com.hjy.entity.product.PcSkuinfo;
 import com.hjy.entity.system.ScStoreSkunum;
 import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.factory.UserFactory;
+import com.hjy.helper.ExceptionHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.request.RequestProduct;
 import com.hjy.request.RequestProducts;
@@ -62,6 +71,9 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	private IScStoreSkunumDao scStoreSkunumDao;
 	@Resource
 	private ILcOpenApiProductErrorDao errorDao;
+	@Resource
+	private ILcOpenApiQueryLogDao openApiQueryDao;
+	
 
 	/**
 	 * 
@@ -1186,4 +1198,105 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		}
 		return response;
 	}
+
+	
+	
+	
+	/**
+	 * @description: 批量返回时间段内商品上下架状态有变化的商品信息
+	 *  			update_tim between '2016-10-01 15:00:00' and '2016-10-01 16:00:00'
+	 *  			
+	 * @param seller
+	 * @param productCodes
+	 * @return list
+	 * @author Yangcl 
+	 * @date 2016年9月30日 上午11:29:46 
+	 * @version 1.0.0.1
+	 */
+	public JSONObject rsyncProductStatus(WcSellerinfo seller) {
+		JSONObject response = new JSONObject();
+		String lockCode = WebHelper.getInstance().addLock(1000 , seller.getSellerCode() +"@com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus");	// 分布式锁定
+		if (StringUtils.isNotBlank(lockCode)) {
+			if(!seller.getStatus().equals("1")){
+				response.put("code", 0);
+				response.put("desc", "非法的商户合作状态，未开通或已禁用");
+			}
+			Date date = new Date();
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("startTime", this.getHour(date, -1));
+			map.put("endTime", this.getHour(date, 0)); 
+			
+			try {
+				List<ProductStatus> list = productInfoDao.selectProductByUpdateTime(map);
+				if(list != null && list.size() != 0){
+					response.put("code", 1);
+					response.put("desc", "SUCCESS");
+					response.put("data", list);
+				}else{
+					response.put("code", 0);
+					response.put("desc", "没有查询到状态变化的商品");
+				}
+			} catch (Exception ex) {
+				response.put("code", 0);
+				response.put("desc", "平台内部错误，查询失败");
+				
+				String remark_ = "{" + ExceptionHelper.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
+				logger.error("查询订单状态信息异常|"  , ex);  
+				openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
+						seller.getSellerCode() , 
+						"Product.RsyncProductStatus" , 
+						"com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus" , 
+						new Date(),
+						2, 
+						"",
+						response.toJSONString(),  
+						remark_));
+				return response;
+			}finally{
+				WebHelper.getInstance().unLock(lockCode);
+			}
+		}
+		
+		openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
+				seller.getSellerCode() , 
+				"Product.RsyncProductStatus" , 
+				"com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus" , 
+				new Date(),
+				1 , 
+				"",
+				response.toJSONString(),  
+				"query success"));
+		return response;
+	}
+	
+	private String getHour(Date date , int flag){
+		 Calendar calendar = new GregorianCalendar();
+		 calendar.setTime(date);
+		 calendar.add(calendar.HOUR , flag); 
+		 date=calendar.getTime();  
+		 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
+		 
+		 return formatter.format(date);
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

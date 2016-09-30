@@ -3,6 +3,7 @@ package com.hjy.dao.api;
 import java.util.List;
 import java.util.Map;
 
+import com.hjy.dto.product.ProductStatus;
 import com.hjy.dto.product.Productdescription;
 import com.hjy.entity.product.PcProductinfo;
 
@@ -122,4 +123,36 @@ public interface IApiProductInfoDao {
 	 * @return
 	 */
 	String getProdcutCategoryName(String productCode);
+	
+	
+	/**
+	 * @description: 取当前时间上一个小时的，update_time有变化的商品  
+	 * 
+	 * @param map
+	 * @return
+	 * @author Yangcl 
+	 * @date 2016年9月30日 下午2:14:25 
+	 * @version 1.0.0.1
+	 */
+	List<ProductStatus> selectProductByUpdateTime(Map<String , String> map);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
