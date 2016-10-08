@@ -12,6 +12,17 @@ Appid=“huijy”
 Secretkey=“adbaf6f4a0f6484fa783564f70a9ba21” 
 
 
+定时任务业务执行顺序
+	1.	 获取所有订阅产品 | JobForGetProductList
+	2.  将所有跨境商户的订单 从oc_orderinfo表中导入到 job_exectimer 表中 | JobForKjSellerOrder
+	3.  向民生品粹同步我平台的订单 | JobForCreateSubscribeOrder
+	4.  订单状态变化 
+		情况一：订单作废(即：取消订单) | JobForVoidOrder
+		情况二：同步订单出关状态 | JobForGetOrderStatusList
+
+
+
+
 
 TODO 等待升级内容，如下：
 
