@@ -3,6 +3,7 @@ package com.hjy.selleradapter.minspc;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -82,7 +83,7 @@ public class RsyncOrderStatusList extends RsyncMinspc {
 			list_.add(o.getSellerOrderCode());
 		}
 		
-		return StringUtils.join(list_ , ","); 
+		return "{\"OrderIds\": \"" +StringUtils.join(list_ , ",") + "\"}"; 
 	}
 
 	
@@ -130,13 +131,14 @@ public class RsyncOrderStatusList extends RsyncMinspc {
 				oos.setCreator("minspc-job-system"); 
 				oos.setCreateTime(DateHelper.formatDate(new Date())); 
 				oos.setRemark("您的订单已出海关"); 
+				oos.setUid(UUID.randomUUID().toString().replace("-", ""));
 				ocOrderShipmentsDao.insertSelective(oos);
 			}
 		}
 		
 		// 批量更新oc_orderInfo表中的状态  
 		if(orderinfoList.size() != 0){
-			orderinfoDao.batchUpdate(orderinfoList); 
+			orderinfoDao.batchUpdateByOrderCode(orderinfoList); 
 		}
 	}
 	
