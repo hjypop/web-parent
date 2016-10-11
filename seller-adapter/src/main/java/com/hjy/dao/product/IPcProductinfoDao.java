@@ -76,13 +76,35 @@ public interface IPcProductinfoDao extends BaseDao<PcProductinfo, Integer> {
 	 * @descriptions
 	 * 
 	 * @param list
-	 *            productCode list 另一个查询条件是 product_status = '4497153900060003'(已下架的)
+	 *            productCode list 另一个查询条件是 product_status = '4497153900060004'(平台强制下架的)
 	 * @return
 	 * @date 2016年6月30日上午10:05:58
 	 * @author Yangcl
 	 * @version 1.0.0.1
 	 */
 	public List<PcProductinfo> getListByProductCodeList(List<String> list);
+	
+	/**
+	 * @descriptions 查询条件是 product_status = '4497153900060004'(平台强制下架的)
+	 * @return
+	 * @date 2016年6月30日上午10:05:58
+	 * @author Yangcl
+	 * @version 1.0.0.1
+	 */
+	public List<PcProductinfo> getSoldOutProductList(String code);
+	
+	/**
+	 * @description: 获取全部上架商品|查询条件是 product_status = '4497153900060002'(平台强制下架的)
+	 * 
+	 * @return
+	 * @author Yangcl 
+	 * @date 2016年10月9日 下午4:20:41 
+	 * @version 1.0.0.1
+	 */
+	public List<PcProductinfo> getItemUpshelfProductList(String code);
+	
+	
+	
 
 	Integer updateProductStatus(PcProductinfo pcProductinfo); 
 	

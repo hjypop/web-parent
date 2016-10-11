@@ -617,7 +617,7 @@
 		from 
 			productcenter.pc_productinfo
 		where
-			product_status = '4497153900060003'
+			product_status = '4497153900060004' 
 		and
 			product_code in
 		<foreach item="item" index="index" collection="list" open="(" close=")" separator=",">
@@ -625,12 +625,36 @@
 		</foreach>
 	</select>
 	
+	 <!-- 获取全部强制下架商品 -->
+	<select id="getSoldOutProductList" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		select
+			* 
+		from 
+			productcenter.pc_productinfo
+		where
+			product_status = '4497153900060004' 
+		and
+			small_seller_code = #{code}
+	</select>
+	
+	<!-- 获取全部上架商品 - Yancl -->
+	<select id="getItemUpshelfProductList" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		select
+			* 
+		from 
+			productcenter.pc_productinfo
+		where
+			product_status = '4497153900060002' 
+		and
+			small_seller_code = #{code}
+	</select>
+	
 	
 	<update id="updateProductStatus" parameterType="com.hjy.entity.product.PcProductinfo">
 		update productcenter.pc_productinfo
 		<set> 
 			<if test="productStatus != null">
-				product_status = #{productStatus,jdbcType=VARCHAR},
+				product_status = #{productStatus , jdbcType=VARCHAR},
 			</if>
 		</set>
 		where uid = #{uid,jdbcType=CHAR}

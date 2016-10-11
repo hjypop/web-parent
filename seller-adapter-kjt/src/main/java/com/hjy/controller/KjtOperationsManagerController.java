@@ -161,6 +161,23 @@ public class KjtOperationsManagerController {
 		return kjtService.funcSix(json , session); 
 	}
 	
+	
+	/**
+	 * @description: 跨境通产品批量下架 
+	 * 
+	 * @param json
+	 * @param session
+	 * @return
+	 * @author Yangcl 
+	 * @date 2016年10月9日 下午2:20:25 
+	 * @version 1.0.0.1
+	 */
+	@RequestMapping(value = "funcSeven", produces = { "application/json;charset=utf-8" })
+	@ResponseBody
+	public JSONObject funcSeven(String json , String status , String reason , HttpSession session){
+		
+		return kjtService.funcSeven(json, status, reason, session); 
+	}
 }
 
 

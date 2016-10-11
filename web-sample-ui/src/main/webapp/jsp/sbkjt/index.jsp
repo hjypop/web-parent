@@ -105,6 +105,37 @@
             }
         }
 
+        function funcSeven(){
+            var msg = "商品批量上架";
+            var status_ = trim($("#seven-status").val());
+            if(status_ == "4497153900060004"){
+                msg = "商品批量下架";
+            }
+            if(status_.length == 0){
+                jAlert('上下架状态不得为空', '网页提示');
+                return;
+            }
+
+            jConfirm('你确定要批量【' + msg + '】吗？', '高危险操作！', function(flag) {
+                if(flag){
+                    var type_ = 'post';
+                    var url_ = '${basePath}kjt/funcSeven.do';
+                    var data_ = {
+                        json:$("#json-str-seven").val(),
+                        productStatus:status_
+                    };
+                    var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+                    if(obj.status == 'success'){
+                        jAlert(obj.desc, '网页提示');
+                    }
+                }
+            });
+        }
+
+        function trim(str) {
+            return str.replace(/(^\s+$)/g, "");
+        }
+
     </script>
 </head>
 
@@ -249,6 +280,41 @@
                             </div>
                             <div class="submit">
                                 <button class="stdbtn btn_orange" onclick="funcSix()">执 行 任 务</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+                <div id="fuck-seven">
+                    <div class="contenttitle2">
+                        <h3>G  批量上下架商品</h3>
+                    </div>
+
+                    <div class="statusbox" style="width: 800px">
+                        <form action="#">
+                            <div class="status_thumb_list" style="width: 308px">
+                                上下架状态：
+                            </div>
+                            <select id="seven-status" class="radius3" style="margin-top:5px; margin-bottom: 15px;">
+                                <option value="">---请选择---</option>
+                                <option value="4497153900060002">商品批量上架</option>
+                                <option value="4497153900060004">商品批量下架</option>
+                            </select>
+
+                            <div class="status_thumb_list" style="width: 308px"> product_code Json串：</div>
+                            <div style="padding-right:20px; margin-top:5px; margin-bottom: 15px;">
+                                <textarea id="json-str-seven" name="" cols="" rows="" style="height: 200px;width: 790px"
+                                          placeholder='惠家有编号 ["8016468747","8016468748","8016468749","8016468880"]|为空则更新全部商品'></textarea>
+                            </div>
+
+                            <div class="status_thumb_list" style="width: 308px;"> 执行原因说明：</div>
+                            <div style="padding-right:20px; margin-top:5px; ">
+                                <textarea id="json-str-seven-reason" name="" cols="" rows="" style="height: 200px;width: 790px" placeholder='上下架原因描述 + 邮件发送人'></textarea>
+                            </div>
+
+                            <div class="submit">
+                                <button class="stdbtn btn_orange" onclick="funcSeven()">执 行 任 务</button>
                             </div>
                         </form>
                     </div>

@@ -32,4 +32,21 @@ public interface IKjtOperationsManagerService {
 	public JSONObject funcSix(String json, HttpSession session);
 
 	public JSONObject queryKjtlog(QueryKjtLog dto);     
+	
+	
+	public JSONObject funcSeven(String json, String productStatus , String reason , HttpSession session);
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

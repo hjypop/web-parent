@@ -267,6 +267,10 @@ public class PcProductinfo {
 		this.productStatus = productStatus;
 	}
 
+	public PcProductinfo(String uid ,  String productStatus) {
+		this.uid = uid;
+		this.productStatus = productStatus;
+	}
 
 
 	public Integer getZid() {

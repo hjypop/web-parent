@@ -1598,10 +1598,7 @@ blockquote.alignright { width: 300px; float: right; margin: 10px 0 5px 10px; tex
 	border: 1px solid #ddd; padding: 15px; overflow: hidden; -moz-border-radius: 2px; 
 	-webkit-border-radius: 2px; border-radius: 2px; background: #fcfcfc;
 }
-.status_thumb { 
-	float: left; padding: 5px; border: 1px solid #ddd; -moz-border-radius: 2px; -webkit-border-radius: 2px; border-radius: 2px; 
-	vertical-align: middle; background: #fff; -moz-box-shadow: 0 1px 0 #ddd; -webkit-box-shadow: 0 1px 0 #ddd; box-shadow: 0 1px 0 #ddd; 
-}
+
 .status_content { margin-left: 85px; padding-right: 20px; }
 .status_content textarea { 
 	background: #fff; display: block; width: 100%; border: 1px solid #ddd; -moz-border-radius: 2px; 
@@ -2636,10 +2633,34 @@ blockquote.bq2 {
 	color: #666;
 }
 
+.status_thumb { 
+	float: left; 
+	padding: 5px; 
+	border: 1px solid #ddd; 
+	-moz-border-radius: 2px; 
+	-webkit-border-radius: 2px; 
+	border-radius: 2px; 
+	vertical-align: middle; 
+	background: #fff; 
+	-moz-box-shadow: 0 1px 0 #ddd; 
+	-webkit-box-shadow: 0 1px 0 #ddd; 
+	box-shadow: 0 1px 0 #ddd; 
+}
 
 
-
-
+.status_thumb_list {  
+	max-width: 50%;
+	padding: 5px; 
+	border: 1px solid #ddd; 
+	-moz-border-radius: 2px; 
+	-webkit-border-radius: 2px; 
+	border-radius: 2px; 
+	vertical-align: middle; 
+	background: #fff; 
+	-moz-box-shadow: 0 1px 0 #ddd; 
+	-webkit-box-shadow: 0 1px 0 #ddd; 
+	box-shadow: 0 1px 0 #ddd; 
+}
 
 
 

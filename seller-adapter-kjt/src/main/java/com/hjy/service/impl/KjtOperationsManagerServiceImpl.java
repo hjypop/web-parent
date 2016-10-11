@@ -2,11 +2,13 @@ package com.hjy.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -15,11 +17,17 @@ import com.hjy.dao.IJobExectimerDao;
 import com.hjy.dao.ILcRsyncKjtLogDao;
 import com.hjy.dao.order.IOcOrderdetailDao;
 import com.hjy.dao.product.IPcProductinfoDao;
+import com.hjy.dao.product.IPcSkuinfoDao;
+import com.hjy.dao.system.IScFlowBussinessHistoryDao;
 import com.hjy.dto.KjtProductInfo;
 import com.hjy.dto.QueryKjtLog;
 import com.hjy.entity.LcRsyncKjtLog;
+import com.hjy.entity.product.PcProductinfo;
+import com.hjy.entity.product.PcSkuinfo;
+import com.hjy.entity.system.ScFlowBussinessHistory;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelper;
+import com.hjy.helper.WebHelper;
 import com.hjy.pojo.entity.system.JobExectimer;
 import com.hjy.redis.core.RedisLaunch;
 import com.hjy.redis.srnpr.ERedisSchema;
@@ -27,9 +35,10 @@ import com.hjy.selleradapter.job.JobForInventory;
 import com.hjy.selleradapter.job.JobGetChangeProductFromKJT;
 import com.hjy.service.IKjtOperationsManagerService;
 
+
 @Service("kjtOperationsManagerService")
 public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerService {
-
+	private static Logger logger=Logger.getLogger(KjtOperationsManagerServiceImpl.class);
 	@Resource
 	private IJobExectimerDao jobExectimerDao;
 	
@@ -41,6 +50,12 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 	
 	@Resource
 	private IOcOrderdetailDao orderDetailDao;
+	
+	@Resource
+	private IScFlowBussinessHistoryDao scFlowBussinessHistoryDao;
+	
+	@Resource
+	private IPcSkuinfoDao pcSkuinfoDao;
 	
 	
 	
@@ -231,7 +246,123 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 		
 		return result;
 	}
+
+	/**
+	 * @description: 上下架部分跨境通商品|也可以是全部商品的上下架
+	 * 
+	 * @param json 
+	 * @param productStatus 4497153900060002(已上架)|4497153900060004(平台强制下架) 
+	 * @param reason 上下架原因描述 + 邮件发送人
+	 * @param session
+	 * @return
+	 * @author Yangcl 
+	 * @date 2016年10月9日 下午3:14:20 
+	 * @version 1.0.0.1
+	 */
+	public JSONObject funcSeven(String json, String productStatus , String reason , HttpSession session) {
+		JSONObject result = new JSONObject();
+		if(session.getAttribute("kjt-key") == null){
+			result.put("status", "success");
+			result.put("desc", "请输入你的秘钥");
+			return result;
+		}
+		
+		if(StringUtils.isBlank(json)){
+			result.put("status", "success");
+			result.put("desc", "请输入你的秘钥2222");
+			return result;
+		}
+		
+		
+		
+		List<PcProductinfo> list = null;
+		List<String> pcodeList = null;
+		if(productStatus.equals("4497153900060002") && StringUtils.isBlank(json)){  
+			// 准备将强制下架的商品 全部上架
+			list = pcProductinfoDao.getSoldOutProductList("SF03KJT");
+		}else if(productStatus.equals("4497153900060004") && StringUtils.isBlank(json)){  
+			 // 准备将现在所有上架的商品 全部下架
+			list = pcProductinfoDao.getItemUpshelfProductList("SF03KJT");
+		}else{
+			try { // 准备批量上下架商品
+				pcodeList = JSON.parseArray(json, String.class);
+				list = pcProductinfoDao.getListByProductCodeList(pcodeList);
+			} catch (Exception e) {
+				result.put("status", "success");
+				result.put("desc", "非法的Json数据");
+				return result;
+			}
+		}
+		
+		
+		String lockcode = WebHelper.getInstance().addLock(10000 , "seller-adapter-kjt@OperationsManagerServiceImpl.funcSeven");      // 分布式锁
+		if(StringUtils.isNotEmpty(lockcode)) {
+			try { 
+				for(PcProductinfo i : list){
+					String uid=i.getUid();
+					String flowType = "449715390006";
+					String userCode = "kjt -manually - initiated";
+					pcProductinfoDao.updateProductStatus(new PcProductinfo(i.getUid() , productStatus));
+					scFlowBussinessHistoryDao.insertSelective(new ScFlowBussinessHistory(
+							UUID.randomUUID().toString().replace("-", ""),
+							uid,
+							flowType,
+							userCode,
+							DateHelper.formatDate(new Date()),
+							i.getProductCode() + " - 上下架原因描述 - 邮件发送人",
+							productStatus							
+							));
+					boolean flag = this.redisReloadProductInfo(i.getProductCode());
+					logger.info(i.getProductName() + "@"+ i.getProductCode() +"@缓存状态信息：" + flag); 
+				}
+				
+				result.put("status", "success");
+				result.put("desc", "请求执行完成");
+			} catch (Exception e) {
+				logger.error("" , e);
+				result.put("status", "success");
+				result.put("desc", "商品下架异常！");
+			}finally{
+				WebHelper.getInstance().unLock(lockcode);
+			}
+		}else{			// 处理机房断电、服务器宕机
+			String message = "分布式锁生效，请删除锁：" + "seller-adapter-kjt@OperationsManagerServiceImpl.funcSeven";
+			result.put("code", 14);
+			result.put("desc", message);
+			logger.error(message);
+			return result; 
+		}
+		
+		return result;
+	}
 	
+	
+	
+	/**
+	 * @descriptions 刷新Redis 
+	 * 
+	 * @param productCode_ 
+	 * @date 2016年8月16日下午1:37:21
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	private boolean redisReloadProductInfo(String productCode_){
+		// 循环删除所有商品下关联的子活动
+		for(String key : RedisLaunch.setFactory(ERedisSchema.ProductIcChildren).hgetAll(productCode_).keySet()){
+			RedisLaunch.setFactory(ERedisSchema.IcSku).del(key);
+		}
+		// 删除所有Sku相关信息
+		List<PcSkuinfo> skuList = pcSkuinfoDao.findList(new PcSkuinfo(productCode_)); 
+		for(PcSkuinfo i : skuList){
+			RedisLaunch.setFactory(ERedisSchema.IcSku).del(i.getSkuCode()); 
+			RedisLaunch.setFactory(ERedisSchema.Stock).del(i.getSkuCode());
+			RedisLaunch.setFactory(ERedisSchema.SkuStoreStock).del(i.getSkuCode());
+		}
+		RedisLaunch.setFactory(ERedisSchema.Product).del(productCode_);
+		RedisLaunch.setFactory(ERedisSchema.ProductSku).del(productCode_);
+		RedisLaunch.setFactory(ERedisSchema.ProductSales).del(productCode_);		//刷新销量缓存
+		return true;
+	}
 }
 
 

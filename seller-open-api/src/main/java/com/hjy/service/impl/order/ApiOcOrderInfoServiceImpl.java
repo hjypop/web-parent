@@ -353,6 +353,8 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 					dao.apiBatchInsert(insertList);
 					orderDetailDao.apiBatchInsert(insertOrderDetailList);
 					remark_ = "batch insert success";
+					result.put("code", 0);
+					result.put("desc", "SUCCESS");
 				}else{
 					remark_ = "insert list = 0";
 				}
