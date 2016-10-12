@@ -35,10 +35,6 @@ public class WebHelper extends BaseClass {
 	 * @return
 	 */
 	public String genUniqueCode(String sCodeStart) {
-		// Map<String, Object> mResultMap =
-		// DbUp.upTable("zw_webcode").dataSqlOne("call
-		// proc_get_unique_code(:code);" , new MDataMap("code", sCodeStart));
-		// return mResultMap.get("webcode").toString();
 		return systemService.getUniqueCode(sCodeStart);
 	}
 

@@ -319,6 +319,8 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 						}
 						if(dList.size() == odList.size()){
 							insertOrderDetailList.addAll(odList);
+							e.setOutOrderCode(e.getOrderCode()); // 第三方的订单编号
+							e.setOrderCode(WebHelper.getInstance().genUniqueCode("DD")); // 生成我们的订单编号
 							e.setUid(UUID.randomUUID().toString().replace("-", "")); 
 							e.setOrderSource("449715190009");
 							e.setOrderType("449715200005"); 
