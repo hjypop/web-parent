@@ -302,6 +302,8 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 			for(OrderInfoInsert i : list){
 				OcOrderinfo e = new OcOrderinfo();
 				if(this.validate(i, e)){
+					e.setOutOrderCode(e.getOrderCode()); // 第三方的订单编号
+					e.setOrderCode(WebHelper.getInstance().genUniqueCode("DD")); // 生成我们的订单编号
 					List<OrderDetailInsert> dList = i.getList();
 					if(dList != null && dList.size() !=0){
 						List<OrderDetail> odList = new ArrayList<OrderDetail>(); // 临时存储
@@ -309,7 +311,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 							OrderDetail od = new OrderDetail();
 							if(this.validate(d, od)){
 								od.setUid(UUID.randomUUID().toString().replace("-", "")); 
-								od.setOrderCode(i.getOrderCode()); 
+								od.setOrderCode(e.getOrderCode()); 
 								od.setGiftFlag("1"); 
 								odList.add(od);
 							}else{ // 如果 list 中的 sku 信息不合法则认为这条数据错误
@@ -319,8 +321,6 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 						}
 						if(dList.size() == odList.size()){
 							insertOrderDetailList.addAll(odList);
-							e.setOutOrderCode(e.getOrderCode()); // 第三方的订单编号
-							e.setOrderCode(WebHelper.getInstance().genUniqueCode("DD")); // 生成我们的订单编号
 							e.setUid(UUID.randomUUID().toString().replace("-", "")); 
 							e.setOrderSource("449715190009");
 							e.setOrderType("449715200005"); 
