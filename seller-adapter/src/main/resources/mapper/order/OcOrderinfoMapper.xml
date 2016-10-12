@@ -216,7 +216,8 @@
 				order_status_ext,
 				small_seller_code, 
 				order_audit_status,
-				low_order  
+				low_order ,
+				out_order_code
 			) 
 		values
 		<foreach collection="list" item="item" index="index" separator=",">
@@ -240,7 +241,8 @@
 				 #{item.orderStatusExt} ,
 				 #{item.smallSellerCode} , 
 				 #{item.orderAuditStatus} ,
-				 #{item.lowOrder} 
+				 #{item.lowOrder},
+				 #{item.outOrderCode} 
 			 )
 		</foreach>
 	</insert>
@@ -281,9 +283,9 @@
       	<foreach collection="list" item="item" index="index" open="" close="" separator=";">  
             update ordercenter.oc_orderinfo  
             <set>  
-              	order_status = '${item.orderStatus}'
+              	order_status = ${item.orderStatus}
             </set>  
-            	where order_code = '${item.orderCode}'
+            	where order_code = ${item.orderCode}
      	</foreach>  
 	</update> 
 	
