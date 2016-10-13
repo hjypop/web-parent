@@ -132,7 +132,7 @@ public interface IApiProductService {
 	 * @date 2016年9月30日 上午11:29:46 
 	 * @version 1.0.0.1
 	 */
-	public JSONObject rsyncProductStatus(WcSellerinfo seller);
+	public JSONObject rsyncProductStatus(String json , WcSellerinfo seller);
 }
 
 

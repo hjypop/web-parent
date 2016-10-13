@@ -1207,6 +1207,10 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @description: 批量返回时间段内商品上下架状态有变化的商品信息
 	 *  			update_tim between '2016-10-01 15:00:00' and '2016-10-01 16:00:00'
 	 *  			
+	 *  @说明 惠家有：商户；第三方：销售平台。惠家有将有变化的商品的上下架状态信息返回给商户
+	 *  
+	 *  @接口标识 Product.RsyncProductStatus。
+	 *  
 	 * @param seller
 	 * @param productCodes
 	 * @return list
@@ -1214,7 +1218,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @date 2016年9月30日 上午11:29:46 
 	 * @version 1.0.0.1
 	 */
-	public JSONObject rsyncProductStatus(WcSellerinfo seller) {
+	public JSONObject rsyncProductStatus(String json , WcSellerinfo seller) {
 		JSONObject response = new JSONObject();
 		String responseTime = DateHelper.formatDate(new Date());
 		response.put("responseTime", responseTime);
@@ -1223,17 +1227,44 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			if(!seller.getStatus().equals("1")){
 				response.put("code", 0);
 				response.put("desc", "非法的商户合作状态，未开通或已禁用");
+				return response;
 			}
-			Date date = new Date();
 			Map<String, String> map = new HashMap<String, String>();
-			map.put("startTime", this.getHour(date, -1));
-			map.put("endTime", this.getHour(date, 0)); 
+			if(StringUtils.isBlank(json)){
+				Date date = new Date();
+				map.put("startTime", this.getHour(date, -1));
+				map.put("endTime", this.getHour(date, 0)); 
+			}else{
+				JSONObject o = null;
+				Date date = new Date();
+				try {
+					o = JSONObject.parseObject(json);
+					String s = o.getString("startTime");
+					String e = o.getString("endTime");
+					if(StringUtils.isAnyBlank(s , e)){
+						map.put("startTime", this.getHour(date, -1));
+						map.put("endTime", this.getHour(date, 0)); 
+					}else{
+						if(s.compareTo(e) < 0){
+							map.put("startTime", s);
+							map.put("endTime", e); 
+						}else{
+							response.put("code", 0);
+							response.put("desc", "开始时间需要小于结束时间");
+							return response;
+						}
+					}
+				} catch (Exception e) {
+					map.put("startTime", this.getHour(date, -1));
+					map.put("endTime", this.getHour(date, 0)); 
+				}
+			}
 			
 			try {
 				List<ProductStatus> list = productInfoDao.selectProductByUpdateTime(map);
 				if(list != null && list.size() != 0){
 					response.put("code", 1);
-					response.put("desc", "请求成功");
+					response.put("desc", "SUCCESS");
 					response.put("data", list);
 				}else{
 					response.put("code", 0);

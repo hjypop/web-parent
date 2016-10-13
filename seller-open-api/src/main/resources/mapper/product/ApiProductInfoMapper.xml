@@ -357,7 +357,7 @@
 		from 
 			productcenter.pc_productinfo 
 		where 
-		    update_time BETWEEN #{startTime,jdbcType=VARCHAR} and  #{endTime,jdbcType=VARCHAR}
+		    update_time between  #{startTime , jdbcType=VARCHAR} and  #{endTime , jdbcType=VARCHAR}
 	</select>
 </mapper>
 

@@ -50,7 +50,7 @@ public class ApiController {
 	@ResponseBody
 	public JSONObject requestApi(Request request) {
 
-		 request = DataInit.orderInfoBatchInsertTest();
+		 request = DataInit.rsyncProductStatus();
 
 		JSONObject result = new JSONObject();
 		WcSellerinfo seller = sellerInfoService.selectBySellerCodeByApi(request.getAppid());
@@ -125,7 +125,7 @@ public class ApiController {
 						// 同步商品上下架状态 - Yangcl
 						log.setClassUrl("com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus");
 						log.setRemark(request.getMethod());
-						result = productService.rsyncProductStatus(seller);
+						result = productService.rsyncProductStatus(request.getData(), seller);
 					}
 				} else if ("Order".equals(type)) {
 					if ("List".equals(method)) { // 根据传入的json串查询订单信息 - Yangcl

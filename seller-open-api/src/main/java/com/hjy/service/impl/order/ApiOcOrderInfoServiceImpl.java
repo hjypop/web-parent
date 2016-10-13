@@ -65,9 +65,10 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	private ILcOpenApiQueryLogDao openApiQueryDao;
 	
 	/**
-	 * @descriptions 根据Json串查询订单信息|seller-open-api项目中使用
+	 * @descriptions 根据Json串查询订单信息|依据商户编码、开始时间和结束时间来查询一批订单
 	 *
 	 *	签名方式为：sellerCode + JSON.toJSONString(list) + responseTime
+	 * 接口标识：Order.List
 	 *
 	 * @param json
 	 * @date 2016年8月3日上午10:43:17
@@ -130,8 +131,9 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	
 	/**
 	 * @descriptions 订单变更： 更新订单状态信息
-	 * 	包含效验对方传入错误的订单
-	 *  
+	 * 	商户已经发货或用户取消订单后，将订单对应的状态传递给惠家有，惠家有更新库
+	 * 	中的订单
+	 *  接口标识：Order.UpdateOrderStatus
 	 * 
 	 * @param info
 	 * @date 2016年8月3日上午10:23:53

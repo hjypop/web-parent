@@ -26,6 +26,24 @@ public class DataInit {
 	}
 	
 	
+	public static Request rsyncProductStatus(){
+		Request r = new Request();
+		r.setMethod("Product.RsyncProductStatus");
+		r.setAppid("SI10182"); 
+		r.setTimestamp("2016-08-31 10:31:58");
+		r.setNonce("4"); 
+		r.setAppSecret("83c0e6f4aa5f11e39ee0000c298b20fc");
+
+		OrderShipmentsRequest o = new OrderShipmentsRequest();
+		o.setStartTime("2016-07-31 10:31:58");
+		o.setEndTime("2016-08-31 10:31:58");
+		r.setData(JSON.toJSONString(o)); 
+		
+		r.setSign(getSign(r));  
+		return r; 
+	}
+	
+	
 	public static Request ShipmentQuery(){
 		Request r = new Request();
 		r.setMethod("Order.ShipmentQuery");
