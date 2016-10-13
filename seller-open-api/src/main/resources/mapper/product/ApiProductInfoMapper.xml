@@ -353,7 +353,9 @@
 	<resultMap id="statusResultMap" type="com.hjy.dto.product.ProductStatus"></resultMap>
 	<select id="selectProductByUpdateTime" parameterType="Map" resultMap="statusResultMap">
 		select 
-			*
+			product_code as productCode,
+			# product_code_old as productCodeOld,
+			product_status as productStatus
 		from 
 			productcenter.pc_productinfo 
 		where 

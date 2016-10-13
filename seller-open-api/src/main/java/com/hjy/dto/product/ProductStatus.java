@@ -11,7 +11,7 @@ package com.hjy.dto.product;
 public class ProductStatus {
 
 	private String productCode;
-	private String productCodeOld;
+//	private String productCodeOld;
 	private String productStatus;
 	
 	
@@ -21,12 +21,12 @@ public class ProductStatus {
 	public void setProductCode(String productCode) {
 		this.productCode = productCode;
 	}
-	public String getProductCodeOld() {
-		return productCodeOld;
-	}
-	public void setProductCodeOld(String productCodeOld) {
-		this.productCodeOld = productCodeOld;
-	}
+//	public String getProductCodeOld() {
+//		return productCodeOld;
+//	}
+//	public void setProductCodeOld(String productCodeOld) {
+//		this.productCodeOld = productCodeOld;
+//	}
 	public String getProductStatus() {
 		return productStatus;
 	}

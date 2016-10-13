@@ -1224,7 +1224,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		response.put("responseTime", responseTime);
 		String lockCode = WebHelper.getInstance().addLock(1000 , seller.getSellerCode() +"@com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus");	// 分布式锁定
 		if (StringUtils.isNotBlank(lockCode)) {
-			if(!seller.getStatus().equals("1")){
+			if(!seller.getStatus().equals(1)){
 				response.put("code", 0);
 				response.put("desc", "非法的商户合作状态，未开通或已禁用");
 				return response;
