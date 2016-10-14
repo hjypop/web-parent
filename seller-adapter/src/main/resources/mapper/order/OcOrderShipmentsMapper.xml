@@ -293,16 +293,16 @@
 	</resultMap>
 	<select id="apiSelectShipments" parameterType="java.lang.String" resultMap="apiSelectResultMap">
 		SELECT 
-				s.order_code as orderCode,
+				o.out_order_code as orderCode,
 				s.logisticse_code as logisticseCode,
 				s.logisticse_name as logisticseName,
 				s.waybill as waybill,
 				s.create_time as createTime,
 				s.remark as remark
 		FROM
-				ordercenter.oc_order_shipments s  
+				ordercenter.oc_order_shipments s  left join ordercenter.oc_orderinfo o on o.order_code = s.order_code
 		WHERE 
-				order_code in 
+				s.order_code in 
 			<foreach item="item" index="index" collection="list"  open="(" separator="," close=")">
                    #{item}
             </foreach>

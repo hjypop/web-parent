@@ -51,6 +51,7 @@ public class ApiController {
 	public JSONObject requestApi(Request request) {
 
 		 request = DataInit.apiSelectShipmentsTest();
+		 System.out.println(JSONObject.toJSONString(request)); 
 
 		JSONObject result = new JSONObject();
 		WcSellerinfo seller = sellerInfoService.selectBySellerCodeByApi(request.getAppid());
