@@ -50,7 +50,7 @@ public class ApiController {
 	@ResponseBody
 	public JSONObject requestApi(Request request) {
 
-		 request = DataInit.rsyncProductStatus();
+		 request = DataInit.apiSelectShipmentsTest();
 
 		JSONObject result = new JSONObject();
 		WcSellerinfo seller = sellerInfoService.selectBySellerCodeByApi(request.getAppid());

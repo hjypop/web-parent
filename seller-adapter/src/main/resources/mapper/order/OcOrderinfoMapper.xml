@@ -306,11 +306,23 @@
 			update_time between #{startTime , jdbcType=VARCHAR} and #{endTime , jdbcType=VARCHAR}
 	</select>
 	
+	
+	<!-- 根据第三方平台的订单号(惠家有系统中的外部订单号)返回惠家有所有订单号   - 20161014 - Yangcl  -->
+	<select id="findOrdercodeByOut" resultType="java.lang.String" parameterType="com.hjy.request.data.OrderShipmentsRequest" >
+		select 
+			order_code 
+		from
+			ordercenter.oc_orderinfo
+		where 
+			small_seller_code = #{sellerCode , jdbcType=VARCHAR}
+		and 
+			out_order_code in 
+			<foreach item="item" index="index" collection="list"  open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+	</select>
+	
 </mapper>
-
-
-
-
 
 
 

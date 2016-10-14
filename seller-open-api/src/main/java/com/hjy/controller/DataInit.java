@@ -36,8 +36,8 @@ public class DataInit {
 		r.setAppSecret("83c0e6f4aa5f11e39ee0000c298b20fc");
 
 		OrderShipmentsRequest o = new OrderShipmentsRequest();
-		o.setStartTime("2016-07-31 10:31:58");
-		o.setEndTime("2016-08-31 10:31:58");
+//		o.setStartTime("2016-07-31 10:31:58");
+//		o.setEndTime("2016-08-31 10:31:58");
 		r.setData(JSON.toJSONString(o)); 
 		
 		r.setSign(getSign(r));  
@@ -45,18 +45,21 @@ public class DataInit {
 	}
 	
 	
-	public static Request ShipmentQuery(){
+	public static Request apiSelectShipmentsTest(){
 		Request r = new Request();
 		r.setMethod("Order.ShipmentQuery");
-		r.setAppid("SI10182"); 
+		r.setAppid("SI10023"); 
 		r.setTimestamp("2016-08-31 10:31:58");
 		r.setNonce("4"); 
-		r.setAppSecret("83c0e6f4aa5f11e39ee0000c298b20fc");
+		r.setAppSecret("83c0dd9eaa5f11e39ee0000c298bqhsy");
 
-		OrderShipmentsRequest o = new OrderShipmentsRequest();
-		o.setStartTime("2016-07-31 10:31:58");
-		o.setEndTime("2016-08-31 10:31:58");
-		r.setData(JSON.toJSONString(o)); 
+		List<String> list_ = new ArrayList<>();
+		list_.add("11161011210001");
+		list_.add("11161011210002");
+		list_.add("11161011210003");
+		list_.add("11161011210004");
+		list_.add("11161011210005");
+		r.setData(JSON.toJSONString(list_)); 
 		
 		r.setSign(getSign(r));  
 		return r; 

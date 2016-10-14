@@ -291,7 +291,7 @@
 		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
 		<result column="remark" property="remark" jdbcType="VARCHAR" />
 	</resultMap>
-	<select id="apiSelectShipments" parameterType="com.hjy.request.data.OrderShipmentsRequest" resultMap="apiSelectResultMap">
+	<select id="apiSelectShipments" parameterType="java.lang.String" resultMap="apiSelectResultMap">
 		SELECT 
 				s.order_code as orderCode,
 				s.logisticse_code as logisticseCode,
@@ -302,8 +302,10 @@
 		FROM
 				ordercenter.oc_order_shipments s  
 		WHERE 
-				s.create_time between #{startTime , jdbcType=VARCHAR} and #{endTime , jdbcType=VARCHAR} 
-				and s.creator = #{sellerCode , jdbcType=VARCHAR}  
+				order_code in 
+			<foreach item="item" index="index" collection="list"  open="(" separator="," close=")">
+                   #{item}
+            </foreach>
 	</select>
 </mapper>
 

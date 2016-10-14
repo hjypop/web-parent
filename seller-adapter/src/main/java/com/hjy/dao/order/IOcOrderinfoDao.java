@@ -8,6 +8,7 @@ import com.hjy.dto.minspc.MinspcOrderinfoSelect;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.request.data.OrderInfoRequestDto;
 import com.hjy.request.data.OrderInfoStatusDto;
+import com.hjy.request.data.OrderShipmentsRequest;
 import com.hjy.response.OrderInfoResponse;
 
 /**
@@ -103,6 +104,17 @@ public interface IOcOrderinfoDao extends BaseDao<OcOrderinfo, Integer>{
 	 * @version 1.0.0.1
 	 */
 	public List<OcOrderinfo> findExectimerOrderList(OrderinfoDto dto);
+	
+	/**
+	 * @description: 根据第三方平台的订单号(惠家有系统中的外部订单号)返回惠家有所有订单号 
+	 * 
+	 * @param entity
+	 * @return
+	 * @author Yangcl 
+	 * @date 2016年10月14日 上午10:35:29 
+	 * @version 1.0.0.1
+	 */
+	public List<String> findOrdercodeByOut(OrderShipmentsRequest entity);
 }
 
 

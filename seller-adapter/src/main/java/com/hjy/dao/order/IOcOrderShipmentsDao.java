@@ -34,12 +34,36 @@ public interface IOcOrderShipmentsDao extends BaseDao<OcOrderShipments, Integer>
 	public Integer updateSelectiveByUid(OcOrderShipments info);
 	
 	/**
-	 * @descriptions 根据 small_seller_code startTime endTime查询物流信息
+	 * @descriptions 根据order_code查询物流信息
 	 * 
 	 * @param request 
 	 * @date 2016年8月29日下午5:25:11
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */
-	public List<ApiShipmentsResponse> apiSelectShipments(OrderShipmentsRequest request);
+	public List<ApiShipmentsResponse> apiSelectShipments(List<String> list);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

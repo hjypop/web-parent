@@ -12,14 +12,15 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.annotation.ExculdeNullField;
 import com.hjy.dao.api.ILcOpenApiQueryLogDao;
 import com.hjy.dao.log.ILcOpenApiShipmentStatusDao;
+import com.hjy.dao.order.IOcExpressDetailDao;
 import com.hjy.dao.order.IOcOrderShipmentsDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.entity.log.LcOpenApiQueryLog;
@@ -58,6 +59,9 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 	
 	@Resource
 	private ILcOpenApiQueryLogDao openApiQueryDao;
+	
+	@Resource
+	private IOcExpressDetailDao ldDao; // ld的物流信息
 	
 	/**
 	 * @descriptions 效验订单后插入物流信息
@@ -188,10 +192,11 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 	
 	
 	
-	/** Order.ShipmentQuery
+	/** 
 	 * @descriptions 查询物流信息
-	 *  惠家有：商户；第三方：销售平台。
-	 *  惠家有将物流信息发送给第三方，惠家有查询物流
+	 *  
+	 *  @描述 惠家有：商户；第三方：销售平台。惠家有将物流信息发送给第三方，惠家有查询物流
+	 *  @标识 Order.ShipmentQuery
 	 *   
 	 * @param json 
 	 * @param sellerCode 
@@ -204,30 +209,27 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 		String responseTime = DateHelper.formatDate(new Date());
 		result.put("responseTime", responseTime);
 		// 解析请求数据
-		OrderShipmentsRequest request = null;
+		OrderShipmentsRequest request = new OrderShipmentsRequest();
+		List<String> list_ = new ArrayList<>();
 		try {
-			request = JSON.parseObject(json, OrderShipmentsRequest.class);
+			list_ = JSONArray.parseArray(json, String.class);
+			request.setList(list_);
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("desc", "请求参数错误，请求数据解析异常");
 			return result; 
 		}
-		if(!this.validate(request, null)){
-			result.put("code", 1);
-			result.put("desc", "请求参数错误，必传字段未传值");
-			return result; 
-		}
-		if(request.getStartTime().compareTo(request.getEndTime()) >= 0){
-			result.put("code", 1);
-			result.put("desc", "请求参数错误，开始时间不得大于结束时间");
-			return result; 
-		}
+		
 		request.setSellerCode(sellerCode); 
 		
 		
 		List<ApiShipmentsResponse> list = null;
 		try {
-			 list = dao.apiSelectShipments(request);
+			List<String> orderCodeList = orderinfoDao.findOrdercodeByOut(request);
+			
+			 
+			 list = dao.apiSelectShipments(orderCodeList);
+			 list.addAll(ldDao.apiSelectLdShipments(orderCodeList));
 			 result.put("code", 0);
 			 result.put("desc", "请求成功");
 			 result.put("data", list);

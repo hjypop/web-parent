@@ -1,35 +1,26 @@
 package com.hjy.request.data;
 
-import com.hjy.annotation.ExculdeNullField;
+import java.util.List;
+
 
 public class OrderShipmentsRequest {
 	
-	@ExculdeNullField
 	private String sellerCode; 		// 商家编码
 	
-	private String startTime;
-	private String endTime;
-	
-	
-	
+	private List<String> list; // 外部订单编号：第三方平台的订单编号
+
 	public String getSellerCode() {
 		return sellerCode;
 	}
 	public void setSellerCode(String sellerCode) {
 		this.sellerCode = sellerCode;
 	}
-	public String getStartTime() {
-		return startTime;
-	}
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
-	public String getEndTime() {
-		return endTime;
-	}
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
 	
-	
+	public List<String> getList() {
+		return list;
+	}
+	public void setList(List<String> list) {
+		this.list = list;
+	}
+
 }
