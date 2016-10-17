@@ -1,11 +1,7 @@
 package com.hjy.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.http.HttpResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,12 +9,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.dto.QueryKjtLog;
-import com.hjy.request.data.OrderInfoStatus;
 import com.hjy.service.IKjtOperationsManagerService;
-import com.hjy.service.operations.IOperationsManagerService;
 
 /**
  * @descriptions 执行运营人员的线上临时需求，如：一批商品下架、一批商品上架等等。
@@ -35,25 +28,11 @@ public class KjtOperationsManagerController {
 	private static Logger logger=Logger.getLogger(KjtOperationsManagerController.class);
 	
 	
-	@Autowired
-	private IOperationsManagerService service;
 	
 	@Autowired
 	private IKjtOperationsManagerService kjtService;
 	
 	
-	/**
-	 * @descriptions 跨境通商品批量上架
-	 *  
-	 * @date 2016年8月15日下午5:10:43
-	 * @author Yangcl 
-	 * @version 1.0.0.1
-	 */
-	@RequestMapping(value = "up_storage", produces = { "application/json;charset=utf-8" })
-	@ResponseBody
-	public JSONObject upStorage(){
-		return  service.upStorage("");
-	}
 	
  
 	/**
@@ -99,7 +78,7 @@ public class KjtOperationsManagerController {
 	}
 	  
 	@RequestMapping(value = "index")
-	public String index(ModelMap model , String key, HttpSession session ) { 
+	public String index(ModelMap model , String key, HttpSession session) { 
 		if(key.equals("whosyourdaddy")){ 
 			session.setAttribute("kjt-key", "kjt-key"); // 写入session
 			return "redirect:/jsp/sbkjt/index.jsp";    
@@ -174,9 +153,9 @@ public class KjtOperationsManagerController {
 	 */
 	@RequestMapping(value = "funcSeven", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
-	public JSONObject funcSeven(String json , String status , String reason , HttpSession session){
+	public JSONObject funcSeven(String json , String productStatus , String reason , HttpSession session){
 		
-		return kjtService.funcSeven(json, status, reason, session); 
+		return kjtService.funcSeven(json, productStatus, reason, session); 
 	}
 }
 

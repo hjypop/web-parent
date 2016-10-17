@@ -611,13 +611,13 @@
 	</update>
 	
 	<!-- 根据product code list 取出productInfo列表 - Yangcl -->
-	<select id="getListByProductCodeList" resultMap="BaseResultMap" parameterType="java.util.List">
+	<select id="getListByProductCodeList" resultMap="BaseResultMap" parameterType="com.hjy.dto.ProductStatusDto">
 		select
 			* 
 		from 
 			productcenter.pc_productinfo
 		where
-			product_status = '4497153900060004' 
+			product_status = #{productStatus}
 		and
 			product_code in
 		<foreach item="item" index="index" collection="list" open="(" close=")" separator=",">

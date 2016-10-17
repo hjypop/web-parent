@@ -20,6 +20,7 @@ import com.hjy.dao.product.IPcProductinfoDao;
 import com.hjy.dao.product.IPcSkuinfoDao;
 import com.hjy.dao.system.IScFlowBussinessHistoryDao;
 import com.hjy.dto.KjtProductInfo;
+import com.hjy.dto.ProductStatusDto;
 import com.hjy.dto.QueryKjtLog;
 import com.hjy.entity.LcRsyncKjtLog;
 import com.hjy.entity.product.PcProductinfo;
@@ -267,13 +268,6 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 			return result;
 		}
 		
-		if(StringUtils.isBlank(json)){
-			result.put("status", "success");
-			result.put("desc", "请输入你的秘钥2222");
-			return result;
-		}
-		
-		
 		
 		List<PcProductinfo> list = null;
 		List<String> pcodeList = null;
@@ -286,7 +280,14 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 		}else{
 			try { // 准备批量上下架商品
 				pcodeList = JSON.parseArray(json, String.class);
-				list = pcProductinfoDao.getListByProductCodeList(pcodeList);
+				ProductStatusDto dto = new ProductStatusDto();
+				if(productStatus.equals("4497153900060004")){
+					dto.setProductStatus("4497153900060002");
+				}else if(productStatus.equals("4497153900060002")){
+					dto.setProductStatus("4497153900060004");
+				}
+				dto.setList(pcodeList); 
+				list = pcProductinfoDao.getListByProductCodeList(dto);
 			} catch (Exception e) {
 				result.put("status", "success");
 				result.put("desc", "非法的Json数据");
@@ -301,15 +302,15 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 				for(PcProductinfo i : list){
 					String uid=i.getUid();
 					String flowType = "449715390006";
-					String userCode = "kjt -manually - initiated";
+					String userCode = "kjt - manually - initiated";
 					pcProductinfoDao.updateProductStatus(new PcProductinfo(i.getUid() , productStatus));
 					scFlowBussinessHistoryDao.insertSelective(new ScFlowBussinessHistory(
 							UUID.randomUUID().toString().replace("-", ""),
-							uid,
+							uid,    // 关联商品的uuid 
 							flowType,
 							userCode,
 							DateHelper.formatDate(new Date()),
-							i.getProductCode() + " - 上下架原因描述 - 邮件发送人",
+							" 商编：" + i.getProductCode() + "  原因：" + reason,  // " - 上下架原因描述 - 邮件发送人",
 							productStatus							
 							));
 					boolean flag = this.redisReloadProductInfo(i.getProductCode());

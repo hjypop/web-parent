@@ -122,7 +122,8 @@
                     var url_ = '${basePath}kjt/funcSeven.do';
                     var data_ = {
                         json:$("#json-str-seven").val(),
-                        productStatus:status_
+                        productStatus:status_,
+                        reason:$("#json-str-seven-reason").val()
                     };
                     var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
                     if(obj.status == 'success'){

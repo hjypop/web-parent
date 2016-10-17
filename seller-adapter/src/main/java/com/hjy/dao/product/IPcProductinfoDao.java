@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import com.hjy.dao.BaseDao;
+import com.hjy.dto.ProductStatusDto;
 import com.hjy.entity.product.PcProductinfo;
 
 public interface IPcProductinfoDao extends BaseDao<PcProductinfo, Integer> {
@@ -73,16 +74,15 @@ public interface IPcProductinfoDao extends BaseDao<PcProductinfo, Integer> {
 	public int updateByOldProductCode(List<String> list);
 	
 	/**
-	 * @descriptions
+	 * @descriptions 获取平台上架或者下架的产品|条件：List<Strnig> productCodeList ; productStatus
 	 * 
-	 * @param list
-	 *            productCode list 另一个查询条件是 product_status = '4497153900060004'(平台强制下架的)
+	 * @param
 	 * @return
 	 * @date 2016年6月30日上午10:05:58
 	 * @author Yangcl
 	 * @version 1.0.0.1
 	 */
-	public List<PcProductinfo> getListByProductCodeList(List<String> list);
+	public List<PcProductinfo> getListByProductCodeList(ProductStatusDto dto);
 	
 	/**
 	 * @descriptions 查询条件是 product_status = '4497153900060004'(平台强制下架的)
@@ -94,7 +94,7 @@ public interface IPcProductinfoDao extends BaseDao<PcProductinfo, Integer> {
 	public List<PcProductinfo> getSoldOutProductList(String code);
 	
 	/**
-	 * @description: 获取全部上架商品|查询条件是 product_status = '4497153900060002'(平台强制下架的)
+	 * @description: 获取全部上架商品|查询条件是 product_status = '4497153900060002'(平台强制上架的)
 	 * 
 	 * @return
 	 * @author Yangcl 

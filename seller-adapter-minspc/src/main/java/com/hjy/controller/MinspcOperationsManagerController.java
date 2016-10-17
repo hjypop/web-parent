@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.hjy.service.operations.IOperationsManagerService;
 
 /**
  * 
@@ -23,8 +22,6 @@ public class MinspcOperationsManagerController {
 	private static Logger logger=Logger.getLogger(MinspcOperationsManagerController.class);
 	
 	
-	@Autowired
-	private IOperationsManagerService service;
 	
 	
 }
