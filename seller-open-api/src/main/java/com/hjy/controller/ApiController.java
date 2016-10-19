@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -98,18 +99,24 @@ public class ApiController {
 						log.setClassUrl("com.hjy.service.product.IApiProductService.pushProduct");
 						log.setRemark(request.getMethod());
 						// 推送产品到第三方
-						boolean start = request.getStartDate() != null && !"".equals(request.getStartDate());
-						boolean end = request.getEndDate() != null && !"".equals(request.getEndDate());
-						// 判断开始日期和结束日期是否为空
-						if (start && end) {
-							// 获取产品列表
-							result = productService.pushProduct(seller, request.getStartDate(), request.getEndDate());
-						} else {
+						if (StringUtils.isNoneBlank(request.getData())) {
+							JSONObject obj = JSONObject.parseObject(request.getData());
+							// 判断开始日期和结束日期是否为空
+							if (obj != null && StringUtils.isNotBlank(obj.getString("startDate")) && StringUtils.isNotBlank(obj.getString("endDate"))) {
+								// 获取产品列表
+								result = productService.pushProduct(seller, request.getStartDate(), request.getEndDate());
+							} else {
+								result.put("code", 3);
+								result.put("desc", "接口参数错误");
+								log.setRemark(result.toJSONString());
+							}
+						}else{
 							result.put("code", 3);
 							result.put("desc", "接口参数错误");
 							log.setRemark(result.toJSONString());
-							return result;
 						}
+						return result;
+
 					} else if ("pushSkuStock".equals(method)) {
 						log.setClassUrl("com.hjy.service.product.IApiProductService.pushSkuStock");
 						log.setRemark(request.getMethod());
