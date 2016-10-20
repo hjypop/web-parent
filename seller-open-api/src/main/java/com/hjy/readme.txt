@@ -17,7 +17,12 @@ open_api_appid
  
 
 
-
+`lc_open_api_operation`
+`lc_open_api_order_insert`
+`lc_open_api_product_error`
+`lc_open_api_order_status`
+`lc_open_api_query_log`
+`lc_open_api_shipment_status`
 
 
 
