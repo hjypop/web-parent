@@ -878,8 +878,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				for (int i = 0; i < commissions.size(); i++) {
 					JSONObject c = commissions.getJSONObject(i);
 					Map<String, String> map = new HashMap<String, String>();
-					map.put("startTime", startDate + " 00:00:00");
-					map.put("endTime", endDate + " 23:59:59");
+					map.put("startTime", startDate);
+					map.put("endTime", endDate);
 					if ("LD".equals(c.getString("type"))) {
 						map.put("LD", "LD");
 					} else {
