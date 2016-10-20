@@ -95,6 +95,38 @@ public class ProductInfo implements IApiRequest {
 	 * 操作类型 0为添加，1为编辑
 	 */
 	private Integer operate;
+	
+	/**
+	 * 商品编码数组
+	 */
+	private List<String> codes;
+
+	private String LD;
+	private String sellerType;
+	
+	public String getLD() {
+		return LD;
+	}
+
+	public void setLD(String lD) {
+		LD = lD;
+	}
+
+	public String getSellerType() {
+		return sellerType;
+	}
+
+	public void setSellerType(String sellerType) {
+		this.sellerType = sellerType;
+	}
+
+	public List<String> getCodes() {
+		return codes;
+	}
+
+	public void setCodes(List<String> codes) {
+		this.codes = codes;
+	}
 
 	public Integer getOperate() {
 		return operate;

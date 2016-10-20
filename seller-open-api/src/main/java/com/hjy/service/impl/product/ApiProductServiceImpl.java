@@ -74,7 +74,6 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	private ILcOpenApiProductErrorDao errorDao;
 	@Resource
 	private ILcOpenApiQueryLogDao openApiQueryDao;
-	
 
 	/**
 	 * 
@@ -1200,55 +1199,53 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		return response;
 	}
 
-	
-	
-	
 	/**
-	 * @description: 批量返回时间段内商品上下架状态有变化的商品信息
-	 *  			update_tim between '2016-10-01 15:00:00' and '2016-10-01 16:00:00'
-	 *  			
-	 *  @说明 惠家有：商户；第三方：销售平台。惠家有将有变化的商品的上下架状态信息返回给商户
-	 *  
-	 *  @接口标识 Product.RsyncProductStatus。
-	 *  
+	 * @description: 批量返回时间段内商品上下架状态有变化的商品信息 update_tim between '2016-10-01
+	 *               15:00:00' and '2016-10-01 16:00:00'
+	 * 
+	 * @说明 惠家有：商户；第三方：销售平台。惠家有将有变化的商品的上下架状态信息返回给商户
+	 * 
+	 * @接口标识 Product.RsyncProductStatus。
+	 * 
 	 * @param seller
 	 * @param productCodes
 	 * @return list
-	 * @author Yangcl 
-	 * @date 2016年9月30日 上午11:29:46 
+	 * @author Yangcl
+	 * @date 2016年9月30日 上午11:29:46
 	 * @version 1.0.0.1
 	 */
-	public JSONObject rsyncProductStatus(String json , WcSellerinfo seller) {
+	public JSONObject rsyncProductStatus(String json, WcSellerinfo seller) {
 		JSONObject response = new JSONObject();
 		String responseTime = DateHelper.formatDate(new Date());
 		response.put("responseTime", responseTime);
-		String lockCode = WebHelper.getInstance().addLock(1000 , seller.getSellerCode() +"@com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus");	// 分布式锁定
+		String lockCode = WebHelper.getInstance().addLock(1000,
+				seller.getSellerCode() + "@com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus"); // 分布式锁定
 		if (StringUtils.isNotBlank(lockCode)) {
-			if(!seller.getStatus().equals(1)){
+			if (!seller.getStatus().equals(1)) {
 				response.put("code", 0);
 				response.put("desc", "非法的商户合作状态，未开通或已禁用");
 				return response;
 			}
 			Map<String, String> map = new HashMap<String, String>();
-			if(StringUtils.isBlank(json)){
+			if (StringUtils.isBlank(json)) {
 				Date date = new Date();
 				map.put("startTime", this.getHour(date, -1));
-				map.put("endTime", this.getHour(date, 0)); 
-			}else{
+				map.put("endTime", this.getHour(date, 0));
+			} else {
 				JSONObject o = null;
 				Date date = new Date();
 				try {
 					o = JSONObject.parseObject(json);
 					String s = o.getString("startTime");
 					String e = o.getString("endTime");
-					if(StringUtils.isAnyBlank(s , e)){
+					if (StringUtils.isAnyBlank(s, e)) {
 						map.put("startTime", this.getHour(date, -1));
-						map.put("endTime", this.getHour(date, 0)); 
-					}else{
-						if(s.compareTo(e) < 0){
+						map.put("endTime", this.getHour(date, 0));
+					} else {
+						if (s.compareTo(e) < 0) {
 							map.put("startTime", s);
-							map.put("endTime", e); 
-						}else{
+							map.put("endTime", e);
+						} else {
 							response.put("code", 0);
 							response.put("desc", "开始时间需要小于结束时间");
 							return response;
@@ -1256,81 +1253,112 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					}
 				} catch (Exception e) {
 					map.put("startTime", this.getHour(date, -1));
-					map.put("endTime", this.getHour(date, 0)); 
+					map.put("endTime", this.getHour(date, 0));
 				}
 			}
-			
+
 			try {
 				List<ProductStatus> list = productInfoDao.selectProductByUpdateTime(map);
-				if(list != null && list.size() != 0){
+				if (list != null && list.size() != 0) {
 					response.put("code", 1);
 					response.put("desc", "SUCCESS");
 					response.put("data", list);
-				}else{
+				} else {
 					response.put("code", 0);
 					response.put("desc", "没有查询到状态变化的商品");
 				}
 			} catch (Exception ex) {
 				response.put("code", 0);
 				response.put("desc", "平台内部错误，查询失败");
-				
-				String remark_ = "{" + ExceptionHelper.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
-				logger.error("查询订单状态信息异常|"  , ex);  
+
+				String remark_ = "{" + ExceptionHelper.allExceptionInformation(ex) + "}"; // 记录异常信息到数据库表
+				logger.error("查询订单状态信息异常|", ex);
 				openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
-						seller.getSellerCode() , 
-						"Product.RsyncProductStatus" , 
-						"com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus" , 
-						new Date(),
-						2, 
-						"",
-						response.toJSONString(),  
-						remark_));
+						seller.getSellerCode(), "Product.RsyncProductStatus",
+						"com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus", new Date(), 2, "",
+						response.toJSONString(), remark_));
 				return response;
-			}finally{
+			} finally {
 				WebHelper.getInstance().unLock(lockCode);
 			}
 		}
-		
+
 		openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
-				seller.getSellerCode() , 
-				"Product.RsyncProductStatus" , 
-				"com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus" , 
-				new Date(),
-				1 , 
-				"",
-				response.toJSONString(),  
-				"query success"));
+				seller.getSellerCode(), "Product.RsyncProductStatus",
+				"com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus", new Date(), 1, "",
+				response.toJSONString(), "query success"));
 		return response;
 	}
-	
-	private String getHour(Date date , int flag){
-		 Calendar calendar = new GregorianCalendar();
-		 calendar.setTime(date);
-		 calendar.add(calendar.HOUR , flag); 
-		 date=calendar.getTime();  
-		 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
-		 
-		 return formatter.format(date);
+
+	/**
+	 * 根据商品编码数组查询<br>
+	 * 2016-10-20 zhy<br>
+	 * 
+	 * @param codes
+	 * @return
+	 */
+	@Override
+	public JSONObject findProductByProductCodes(WcSellerinfo seller, String data) {
+		JSONObject response = new JSONObject();
+		List<ProductInfo> responseProduct = new ArrayList<ProductInfo>();
+		if (StringUtils.isNotBlank(data)) {
+			String lock = "";
+			try {
+				lock = WebHelper.getInstance().addLock(10, seller.getSellerCode() + "_Product.findProductByProductCodes");
+				JSONObject jsonData = JSON.parseObject(data);
+				String codes = jsonData.getString("codes");
+				// 读取合作商的产品获取权限
+				if (seller.getCommission() != null && !"".equals(seller.getCommission())) {
+					JSONArray commissions = JSONArray.parseArray(seller.getCommission());
+					// 获取参数
+					for (int i = 0; i < commissions.size(); i++) {
+						JSONObject c = commissions.getJSONObject(i);
+						ProductInfo dto = new ProductInfo();
+						dto.setCodes(Arrays.asList(codes.split(",")));
+						if ("LD".equals(c.getString("type"))) {
+							dto.setLD("LD");
+						} else {
+							dto.setSellerType(c.getString("type"));
+						}
+						List<PcProductinfo> list = productInfoDao.findProductByProductCodes(dto);
+						List<ProductInfo> products = initPcProduct(list, c.getDouble("commission"), seller.getPriceType());
+						if (products != null && products.size() > 0) {
+							responseProduct.addAll(products);
+						}
+					}
+					response.put("code", 0);
+					response.put("desc", getInfo(0));
+				} else {
+					response.put("code", 10);
+					response.put("desc", "商家无访问权限");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				response.put("code", 10);
+				response.put("desc", "系统错误，请联系技术人员");
+			} finally {
+				WebHelper.getInstance().unLock(lock);
+			}
+		} else {
+			response.put("code", -1);
+			response.put("desc", "请求参数错误，请检查请求参数");
+		}
+		/**
+		 * 生成响应报文
+		 */
+		response.put("data", responseProduct);
+		response.put("total", responseProduct.size());
+		return response;
 	}
+
+	private String getHour(Date date, int flag) {
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(date);
+		calendar.add(calendar.HOUR, flag);
+		date = calendar.getTime();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
+
+		return formatter.format(date);
+	}
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

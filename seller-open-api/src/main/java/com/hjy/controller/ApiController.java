@@ -24,6 +24,7 @@ import com.hjy.service.order.IApiOcOrderInfoService;
 import com.hjy.service.product.IApiProductService;
 import com.hjy.service.shipment.IApiOcOrderShipmentsService;
 import com.hjy.service.webcore.IWcSellerinfoService;
+import com.hjy.util.PureNetUtil;
 
 /**
  * 
@@ -51,8 +52,8 @@ public class ApiController {
 	@ResponseBody
 	public JSONObject requestApi(Request request) {
 
-		 request = DataInit.apiSelectShipmentsTest();
-		 System.out.println(JSONObject.toJSONString(request)); 
+//		request = DataInit.apiSelectShipmentsTest();
+		System.out.println(JSONObject.toJSONString(request));
 
 		JSONObject result = new JSONObject();
 		WcSellerinfo seller = sellerInfoService.selectBySellerCodeByApi(request.getAppid());
@@ -67,7 +68,7 @@ public class ApiController {
 			LcOpenApiOperation log = new LcOpenApiOperation();
 			log.setApiName(request.getMethod());
 			log.setCreateTime(new Date());
-			log.setRequestJson(request.getData());
+			log.setRequestJson(JSONObject.toJSONString(request));
 			log.setRequestTime(new Date());
 			log.setSellerCode(seller.getSellerCode());
 			try {
@@ -102,15 +103,17 @@ public class ApiController {
 						if (StringUtils.isNoneBlank(request.getData())) {
 							JSONObject obj = JSONObject.parseObject(request.getData());
 							// 判断开始日期和结束日期是否为空
-							if (obj != null && StringUtils.isNotBlank(obj.getString("startDate")) && StringUtils.isNotBlank(obj.getString("endDate"))) {
+							if (obj != null && StringUtils.isNotBlank(obj.getString("startDate"))
+									&& StringUtils.isNotBlank(obj.getString("endDate"))) {
 								// 获取产品列表
-								result = productService.pushProduct(seller, request.getStartDate(), request.getEndDate());
+								result = productService.pushProduct(seller, request.getStartDate(),
+										request.getEndDate());
 							} else {
 								result.put("code", 3);
 								result.put("desc", "接口参数错误");
 								log.setRemark(result.toJSONString());
 							}
-						}else{
+						} else {
 							result.put("code", 3);
 							result.put("desc", "接口参数错误");
 							log.setRemark(result.toJSONString());
@@ -129,11 +132,18 @@ public class ApiController {
 						log.setRemark(request.getMethod());
 						// 推送商品和sku价格到第三方
 						result = productService.pushProductPrice(seller, request.getProductCodes());
-					}else if("RsyncProductStatus".equals(method)){
+					} else if ("RsyncProductStatus".equals(method)) {
 						// 同步商品上下架状态 - Yangcl
 						log.setClassUrl("com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus");
 						log.setRemark(request.getMethod());
 						result = productService.rsyncProductStatus(request.getData(), seller);
+					}
+					//开发根据商品编号数组获取商品信息
+					else if("pushProductByCodes".equals(method)){
+						//根据商品编码数组查询商品信息
+						log.setClassUrl("com.hjy.service.impl.product.ApiProductServiceImpl.findProductByProductCodes");
+						log.setRemark(request.getMethod());
+						result = productService.findProductByProductCodes(seller, request.getData());						
 					}
 				} else if ("Order".equals(type)) {
 					if ("List".equals(method)) { // 根据传入的json串查询订单信息 - Yangcl
@@ -164,7 +174,7 @@ public class ApiController {
 						result = ocOrderShipmentsService.apiSelectShipments(request.getData(), sellerCode);
 						return result;
 					}
-					
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -226,4 +236,36 @@ public class ApiController {
 		}
 		return flag;
 	}
+
+//	public static void main(String[] args) {
+//		try {
+//			Map<String, String> map = new HashMap<String, String>();
+//			map.put("appid", "SI10025");
+//			map.put("data", URLEncoder
+//					.encode("{\"codes\":\"8016410618,8016410641,8016410616\"}", "UTF-8"));
+//			map.put("method", "Product.pushProductByCodes");
+//			map.put("timestamp", "2016-10-20 10:02:50");
+//			map.put("nonce", "785426");
+//			List<String> list = new ArrayList<String>();
+//			for (Map.Entry<String, String> entry : map.entrySet()) {
+//				if (entry.getValue() != "") {
+//					list.add(entry.getKey() + "=" + entry.getValue() + "&");
+//				}
+//			}
+//			Collections.sort(list); // 对List内容进行排序
+//			StringBuffer str = new StringBuffer();
+//			for (String nameString : list) {
+//				str.append(nameString);
+//			}
+//			str.append("83c0de5caa5f11e39ee0000c298b20fc");
+//			System.out.println(str);
+//			String sign = SignHelper.md5Sign(str.toString());
+//			System.out.println(sign);
+//			map.put("sign", sign);
+////			String result = PureNetUtil.post("http://api-open.ycp8.cn/open/openapi.do", map);
+////			System.out.println(result);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 }
