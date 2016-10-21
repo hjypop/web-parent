@@ -1,5 +1,7 @@
 package com.hjy.quartz;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.ClassUtils;
@@ -22,10 +24,16 @@ public class JobInit extends RootInit {
 
 	public boolean onInit() {
 		boolean flag = true;
+		
+		String rglist = this.getConfig("rglist");
+		List<String> rglist_ = new ArrayList<String>(Arrays.asList(rglist.split(",")));
+		
 		SysJob entity = new SysJob();
-		entity.setFlagEnable(1);
-		entity.setRunGroupDid(""); 
+		entity.setFlagEnable(1);        // 定时任务的执行状态
+		entity.setRglist(rglist_); 
 		List<SysJob> list = jobService.findSysJobList(entity);
+		
+		
 		for(SysJob sj : list){
 			String jobTriger = sj.getJobTriger();
 			// 如果事件定义的时间为空 则系统加载时则执行

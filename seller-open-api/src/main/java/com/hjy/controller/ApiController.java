@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +36,8 @@ import com.hjy.util.PureNetUtil;
  */
 @Controller
 public class ApiController {
-
+	private static Logger logger=Logger.getLogger(ApiController.class);
+	
 	@Autowired
 	private IApiProductService productService;
 	@Autowired
@@ -53,7 +55,8 @@ public class ApiController {
 	public JSONObject requestApi(Request request) {
 
 //		request = DataInit.apiSelectShipmentsTest();
-		System.out.println(JSONObject.toJSONString(request));
+//		System.out.println(JSONObject.toJSONString(request));
+		logger.info(JSONObject.toJSONString(request));
 
 		JSONObject result = new JSONObject();
 		WcSellerinfo seller = sellerInfoService.selectBySellerCodeByApi(request.getAppid());
