@@ -106,8 +106,8 @@ public class ApiController {
 							if (obj != null && StringUtils.isNotBlank(obj.getString("startDate"))
 									&& StringUtils.isNotBlank(obj.getString("endDate"))) {
 								// 获取产品列表
-								result = productService.pushProduct(seller, request.getStartDate(),
-										request.getEndDate());
+								result = productService.pushProduct(seller, obj.getString("startDate"),
+										obj.getString("endDate"));
 							} else {
 								result.put("code", 3);
 								result.put("desc", "接口参数错误");
@@ -237,35 +237,35 @@ public class ApiController {
 		return flag;
 	}
 
-//	public static void main(String[] args) {
-//		try {
-//			Map<String, String> map = new HashMap<String, String>();
-//			map.put("appid", "SI10025");
-//			map.put("data", URLEncoder
-//					.encode("{\"codes\":\"8016410618,8016410641,8016410616\"}", "UTF-8"));
-//			map.put("method", "Product.pushProductByCodes");
-//			map.put("timestamp", "2016-10-20 10:02:50");
-//			map.put("nonce", "785426");
-//			List<String> list = new ArrayList<String>();
-//			for (Map.Entry<String, String> entry : map.entrySet()) {
-//				if (entry.getValue() != "") {
-//					list.add(entry.getKey() + "=" + entry.getValue() + "&");
-//				}
-//			}
-//			Collections.sort(list); // 对List内容进行排序
-//			StringBuffer str = new StringBuffer();
-//			for (String nameString : list) {
-//				str.append(nameString);
-//			}
-//			str.append("83c0de5caa5f11e39ee0000c298b20fc");
-//			System.out.println(str);
-//			String sign = SignHelper.md5Sign(str.toString());
-//			System.out.println(sign);
-//			map.put("sign", sign);
-////			String result = PureNetUtil.post("http://api-open.ycp8.cn/open/openapi.do", map);
-////			System.out.println(result);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
+	public static void main(String[] args) {
+		try {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("appid", "SI10025");
+			map.put("data", URLEncoder
+					.encode("{\"startDate\":\"2016-10-21 13:40:57\",\"endDate\":\"2016-10-21 14:41:46\"}", "UTF-8"));
+			map.put("method", "Product.pushProduct");
+			map.put("timestamp", "2016-10-20 10:02:50");
+			map.put("nonce", "785426");
+			List<String> list = new ArrayList<String>();
+			for (Map.Entry<String, String> entry : map.entrySet()) {
+				if (entry.getValue() != "") {
+					list.add(entry.getKey() + "=" + entry.getValue() + "&");
+				}
+			}
+			Collections.sort(list); // 对List内容进行排序
+			StringBuffer str = new StringBuffer();
+			for (String nameString : list) {
+				str.append(nameString);
+			}
+			str.append("83c0de5caa5f11e39ee0000c298b20fc");
+			System.out.println(str);
+			String sign = SignHelper.md5Sign(str.toString());
+			System.out.println(sign);
+			map.put("sign", sign);
+//			String result = PureNetUtil.post("http://api-open.ycp8.cn/open/openapi.do", map);
+//			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
