@@ -1,5 +1,7 @@
 package com.hjy.service.product;
 
+import java.util.List;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.entity.webcore.WcSellerinfo;
 
@@ -120,31 +122,26 @@ public interface IApiProductService {
 	 * @return
 	 */
 	JSONObject pushProductPrice(WcSellerinfo seller, String productCodes);
-	
+
 	/**
-	 * @description: 批量返回时间段内商品上下架状态有变化的商品信息
-	 *  			update_tim between '2016-10-01 15:00:00' and '2016-10-01 16:00:00'
-	 *  			
+	 * @description: 批量返回时间段内商品上下架状态有变化的商品信息 update_tim between '2016-10-01
+	 *               15:00:00' and '2016-10-01 16:00:00'
+	 * 
 	 * @param seller
 	 * @param productCodes
 	 * @return list
-	 * @author Yangcl 
-	 * @date 2016年9月30日 上午11:29:46 
+	 * @author Yangcl
+	 * @date 2016年9月30日 上午11:29:46
 	 * @version 1.0.0.1
 	 */
-	public JSONObject rsyncProductStatus(String json , WcSellerinfo seller);
+	public JSONObject rsyncProductStatus(String json, WcSellerinfo seller);
+
+	/**
+	 * 根据商品编码数组查询<br>
+	 * 2016-10-20 zhy<br>
+	 * 
+	 * @param codes
+	 * @return
+	 */
+	JSONObject findProductByProductCodes(WcSellerinfo seller,String codes);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

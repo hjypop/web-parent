@@ -123,36 +123,23 @@ public interface IApiProductInfoDao {
 	 * @return
 	 */
 	String getProdcutCategoryName(String productCode);
-	
-	
+
 	/**
-	 * @description: 取当前时间上一个小时的，update_time有变化的商品  
+	 * @description: 取当前时间上一个小时的，update_time有变化的商品
 	 * 
 	 * @param map
 	 * @return
-	 * @author Yangcl 
-	 * @date 2016年9月30日 下午2:14:25 
+	 * @author Yangcl
+	 * @date 2016年9月30日 下午2:14:25
 	 * @version 1.0.0.1
 	 */
-	List<ProductStatus> selectProductByUpdateTime(Map<String , String> map);
+	List<ProductStatus> selectProductByUpdateTime(Map<String, String> map);
+
+	/**
+	 * 根据商品编码数组查询商品列表<br>
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	List<PcProductinfo> findProductByProductCodes(com.hjy.dto.product.ProductInfo dto);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

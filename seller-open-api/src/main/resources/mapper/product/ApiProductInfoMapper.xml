@@ -27,7 +27,8 @@
 		<result column="market_price" property="marketPrice" jdbcType="DECIMAL" />
 		<result column="cost_price" property="costPrice" jdbcType="DECIMAL" />
 		<result column="tax_rate" property="taxRate" jdbcType="DECIMAL" />
-		<result column="product_status" property="productStatus" jdbcType="VARCHAR" />
+		<result column="product_status" property="productStatus"
+			jdbcType="VARCHAR" />
 		<result column="product_volume" property="productVolume"
 			jdbcType="DECIMAL" />
 		<result column="transport_template" property="transportTemplate"
@@ -302,41 +303,77 @@
 		WHERE
 		product_code = #{productCode,jdbcType=VARCHAR}
 	</select>
-	
-	
+
+
 	<!-- 根据开放接口商户权限获取商品列表 2016-08-26 zhy -->
-	<select id="findProductBySellerProductype" parameterType="Map" resultMap="BaseResultMap">
+	<select id="findProductBySellerProductype" parameterType="Map"
+		resultMap="BaseResultMap">
 		SELECT
-			p.*
+		p.*
 		FROM
-			usercenter.uc_sellerinfo AS u
+		usercenter.uc_sellerinfo AS u
 		LEFT JOIN
-			usercenter.uc_seller_info_extend AS ue ON u.small_seller_code = ue.small_seller_code
+		usercenter.uc_seller_info_extend AS ue ON u.small_seller_code = ue.small_seller_code
 		LEFT JOIN
-			productcenter.pc_productinfo AS p ON p.small_seller_code = u.small_seller_code
+		productcenter.pc_productinfo AS p ON p.small_seller_code =
+		u.small_seller_code
 		where
-			p.product_status = '4497153900060002'
+		p.product_status = '4497153900060002'
 		AND (
-			<if test="LD != null and LD != ''">
-				p.small_seller_code = 'SI2003'
-				AND p.seller_code = 'SI2003'
-			</if>
-			<if test="sellerType != null and sellerType != ''">
-				u.seller_status = '4497172300040004' AND ue.business_status = '4497471600090001' AND ue.uc_seller_type IN (${sellerType})
-			</if>
+		<if test="LD != null and LD != ''">
+			p.small_seller_code = 'SI2003'
+			AND p.seller_code = 'SI2003'
+		</if>
+		<if test="sellerType != null and sellerType != ''">
+			u.seller_status = '4497172300040004' AND ue.business_status = '4497471600090001' AND
+			ue.uc_seller_type IN (${sellerType})
+		</if>
 		)
 		AND (
-			p.update_time BETWEEN #{startTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR}
+		p.update_time BETWEEN #{startTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR}
 		)
 	</select>
-	
-	
+
+	<!-- 根据商品编号数组获取商品列表 2016-10-20 zhy -->
+	<select id="findProductByProductCodes" parameterType="com.hjy.dto.product.ProductInfo"
+	resultMap="BaseResultMap">
+	SELECT
+	p.*
+	FROM
+	usercenter.uc_sellerinfo AS u
+	LEFT JOIN
+	usercenter.uc_seller_info_extend AS ue ON u.small_seller_code = ue.small_seller_code
+	LEFT JOIN
+	productcenter.pc_productinfo AS p ON p.small_seller_code =
+	u.small_seller_code
+	where
+	p.product_status = '4497153900060002'
+	AND (
+		<if test="LD != null and LD != ''">
+			p.small_seller_code = 'SI2003'
+			AND p.seller_code = 'SI2003'
+		</if>
+		<if test="sellerType != null and sellerType != ''">
+			u.seller_status = '4497172300040004' AND ue.business_status = '4497471600090001' AND
+			ue.uc_seller_type IN (${sellerType})
+		</if>
+		)
+		AND p.product_code IN (
+		<foreach collection="codes" item="item" index="index"
+			separator=",">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+		)
+	</select>
+
 	<!-- 获取商品类目名称 2016-08-26 zhy -->
-	<select id="getProdcutCategoryName" parameterType="java.lang.String" resultType="java.lang.String">
+	<select id="getProdcutCategoryName" parameterType="java.lang.String"
+		resultType="java.lang.String">
 		SELECT
 		ucs.category_name
 		FROM
-		usercenter.uc_sellercategory AS ucs
+		usercenter.uc_sellercategory AS
+		ucs
 		LEFT
 		JOIN usercenter.uc_sellercategory_product_relation AS ucpr ON
 		ucs.category_code = ucpr.category_code
@@ -347,19 +384,21 @@
 		and
 		ucs.seller_code = 'SI2003';
 	</select>
-	
-	
+
+
 	<!-- 取当前时间上一个小时的，update_time有变化的商品 - Yangcl -->
 	<resultMap id="statusResultMap" type="com.hjy.dto.product.ProductStatus"></resultMap>
-	<select id="selectProductByUpdateTime" parameterType="Map" resultMap="statusResultMap">
-		select 
-			product_code as productCode,
-			# product_code_old as productCodeOld,
-			product_status as productStatus
-		from 
-			productcenter.pc_productinfo 
-		where 
-		    update_time between  #{startTime , jdbcType=VARCHAR} and  #{endTime , jdbcType=VARCHAR}
+	<select id="selectProductByUpdateTime" parameterType="Map"
+		resultMap="statusResultMap">
+		select
+		product_code as productCode,
+		# product_code_old as productCodeOld,
+		product_status as productStatus
+		from
+		productcenter.pc_productinfo
+		where
+		update_time between #{startTime , jdbcType=VARCHAR} and #{endTime ,
+		jdbcType=VARCHAR}
 	</select>
 </mapper>
 
