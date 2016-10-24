@@ -165,7 +165,9 @@
 		sku.stock_num,
 		sku.sku_picurl,
 		sku.sku_adv,
-		sku.mini_order
+		sku.mini_order,
+		sku.sku_key,
+		sku.sku_keyvalue
 		FROM
 		productcenter.pc_skuinfo AS sku
 		LEFT JOIN

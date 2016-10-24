@@ -103,7 +103,16 @@ public class ProductInfo implements IApiRequest {
 
 	private String LD;
 	private String sellerType;
+	private String validateFlag;
 	
+	public String getValidateFlag() {
+		return validateFlag;
+	}
+
+	public void setValidateFlag(String validateFlag) {
+		this.validateFlag = validateFlag;
+	}
+
 	public String getLD() {
 		return LD;
 	}

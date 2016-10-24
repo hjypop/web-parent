@@ -43,10 +43,29 @@ public class PcSkuInfo {
 	 */
 	private String qrcodeLink;
 
+	private String skuKey;
+
+	private String skuKeyvalue;
 	/**
 	 * 安全库存
 	 */
 	private long securityStockNum;
+
+	public String getSkuKey() {
+		return skuKey;
+	}
+
+	public void setSkuKey(String skuKey) {
+		this.skuKey = skuKey;
+	}
+
+	public String getSkuKeyvalue() {
+		return skuKeyvalue;
+	}
+
+	public void setSkuKeyvalue(String skuKeyvalue) {
+		this.skuKeyvalue = skuKeyvalue;
+	}
 
 	public long getSecurityStockNum() {
 		return securityStockNum;
