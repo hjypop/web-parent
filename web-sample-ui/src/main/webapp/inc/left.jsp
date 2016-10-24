@@ -4,15 +4,11 @@
         <script type="text/javascript">
             $(function(){
                 $('.vernav2 > ul > li > ul > li').removeClass("current");
-
-                var id_ = "#" + getCookie('liselect');
                 $("#" + getCookie('liselect')).addClass("current");
 
                 $('.vernav2 > ul > li > ul > li').click("onclick" , function(){
                     clearCookie('liselect');
-                    setCookie('liselect' , this.id , '1');
-                    var a = document.cookie;
-                    var b = '0';
+                    setCookie('liselect' , this.id , '1'); 
                 });
 
             });
