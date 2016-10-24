@@ -135,6 +135,8 @@ public class BaseServiceImpl<T, PK extends Serializable> extends BaseClass imple
 		JSONObject result = new JSONObject();
 		String pageNum = request.getParameter("pageNum"); // 当前第几页
 		String pageSize = request.getParameter("pageSize"); // 当前页所显示记录条数
+		
+		// 如果分页参数当前页为空，默认为0，页面最大显示数为空，默认为10
 		int num = 1;
 		int size = 10;
 		if (StringUtils.isNotBlank(pageNum)) {
@@ -142,11 +144,8 @@ public class BaseServiceImpl<T, PK extends Serializable> extends BaseClass imple
 		}
 		if (StringUtils.isNotBlank(pageSize)) {
 			size = Integer.parseInt(pageSize);
-		}
-
-		/*
-		 * 如果分页参数当前页为空，默认为0，页面最大显示数为空，默认为10
-		 */
+		} 
+		
 //		String sortString = "create_time.desc";
 //		Order.formString(sortString); 
 		PageHelper.startPage(num, size);

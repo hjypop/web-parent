@@ -23,18 +23,18 @@
 		select * from sys_job where zid = #{zid,jdbcType=INTEGER}
 	</select>
 	
+	<!-- 根据run_group_did找到可运行的定时任务列表 - Yangcl -->
 	<select id="findList" resultMap="BaseResultMap" parameterType="com.hjy.pojo.entity.system.SysJob">
 		select 
 			* 
 		from 
 			sys_job  
 		where 1=1 
-			<if test="runGroupDid != null and runGroupDid != '' " >
-				and run_group_did = #{runGroupDid , jdbcType=VARCHAR}
-			</if>
-			<if test="flagEnable != null and test = flagEnable != '' ">
+			and run_group_did in 
+			<foreach item="item" index="index" collection="rglist"  open="(" separator="," close=")">
+                   #{item} 
+            </foreach>
 				and flag_enable = #{flagEnable , jdbcType=INTEGER}
-			</if>
 	</select>
 	
 	

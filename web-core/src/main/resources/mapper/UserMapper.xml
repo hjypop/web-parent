@@ -21,7 +21,23 @@
 
 	<!-- select * from user_info where sex=#{sex}  -->
 	<select id="queryPage" parameterType="com.hjy.pojo.entity.login.UserInfo" resultMap="UserResult">
-		select * from user_info 
+		select 
+			* 
+		from 
+			user_info 
+		<where>
+			1 = 1 
+			<if test="userName != null and userName != ''  ">
+				and user_name = #{userName , jdbcType=VARCHAR}
+			</if>
+			<if test="mobile != null and mobile != ''  ">
+				and mobile = #{mobile , jdbcType=VARCHAR}
+			</if>
+			<if test="sex != null and sex != ''  ">
+				and sex = #{sex , jdbcType=INTEGER}
+			</if>
+		</where>
+		
 	</select>
 
 	<select id="find" parameterType="java.lang.Integer" resultMap="UserResult">

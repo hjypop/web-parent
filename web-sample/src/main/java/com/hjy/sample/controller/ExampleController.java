@@ -126,7 +126,7 @@ private static Logger logger=Logger.getLogger(ExampleController.class);
 		}
 		
 		UserInfo entity = new UserInfo();
-		entity.setSex(1); 
+//		entity.setSex(1); 
 		String sortString = "id.desc";
 		Order.formString(sortString);
 		PageHelper.startPage(num, size);
@@ -159,39 +159,9 @@ private static Logger logger=Logger.getLogger(ExampleController.class);
 	
 	@RequestMapping(value = "ajaxPageData", produces = { "application/json;charset=utf-8" })
 	@ResponseBody
-	public JSONObject ajaxPageData(HttpServletRequest request, HttpSession session){
+	public JSONObject ajaxPageData(UserInfo entity , HttpServletRequest request, HttpSession session){
 		logger.info(" to ajaxFormExample.jsp  ... "); 
-		JSONObject result = new JSONObject();
-		
-		String pageNum = request.getParameter("pageNum"); // 当前第几页
-		String pageSize = request.getParameter("pageSize");  // 当前页所显示记录条数
-		int num = 1;
-		int size = 10;
-		if (StringUtils.isNotBlank(pageNum)) {
-			num = Integer.parseInt(pageNum);
-		}
-		if (StringUtils.isNotBlank(pageSize)) {
-			size = Integer.parseInt(pageSize);
-		}
-		
-		UserInfo entity = new UserInfo();
-		entity.setSex(1); 
-		String sortString = "id.desc";
-		Order.formString(sortString);
-		PageHelper.startPage(num, size);
-		
-		List<UserInfo> userList = userInfoService.queryPage(entity);
-		if(userList != null && userList.size() > 0){
-			result.put("status", "success");
-		}else{
-			result.put("status", "error");
-			result.put("msg", "没有查询到可以显示的数据");
-		}
-		
-		PageInfo<UserInfo> pageList = new PageInfo<UserInfo>(userList);
-		result.put("data", pageList);
-		
-		return result; 
+		return userInfoService.ajaxPageData(entity, request);  
 	}
 	
 	

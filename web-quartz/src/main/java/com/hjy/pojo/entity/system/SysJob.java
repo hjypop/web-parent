@@ -1,6 +1,7 @@
 package com.hjy.pojo.entity.system;
 
 import java.util.Date;
+import java.util.List;
 
 public class SysJob {
 	
@@ -18,6 +19,8 @@ public class SysJob {
     private Date endTime;
     private String setExtend;
     private Date nextTime;
+    
+    private List<String> rglist; //  runGroupDid list - Yangcl 
     
     
 	public Integer getZid() {
@@ -103,6 +106,12 @@ public class SysJob {
 	}
 	public void setNextTime(Date nextTime) {
 		this.nextTime = nextTime;
+	}
+	public List<String> getRglist() {
+		return rglist;
+	}
+	public void setRglist(List<String> rglist) {
+		this.rglist = rglist;
 	}
     
     

@@ -15,7 +15,7 @@
          $(function(){
              var type_ = 'post';
              var url_ = '${basePath}example/ajaxPageData.do';
-             var data_ = null;
+             var data_ = null;  // 可以为null，后台会进行默认处理
              var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
              aForm.launch(url_ , 'table-form' , obj).init().drawForm(loadTable);
          });
@@ -28,7 +28,11 @@
              }
              // 这种情况是响应上一页或下一页的触发事件
              var type_ = 'post';
-             var data_ = null;
+             var data_ = {
+                 userName: $("#user-name").val(),
+                 mobile: $("#mobile").val(),
+                 sex: $("#sex").val()
+             }
              var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
              aForm.launch(url_ , 'table-form' , obj).init();
              draw(obj);
@@ -60,9 +64,6 @@
              $('#ajax-tbody-1').append(html_);
          }
 
-
-
-
         function deleteOne(id_){
             if(confirm('您确定要删除这条记录吗？')){
                 var type_ = 'post';
@@ -71,12 +72,28 @@
                 var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
                 if(obj.status == 'success'){
                     alert(obj.msg);
-                    $("#tr-" + id_).remove();
+//                    $("#tr-" + id_).remove();
+                    var currentPageNumber = $(".paginate_active").html();   // 定位到当前分页的页码，然后重新加载数据
+                    aForm.formPaging(currentPageNumber);
                 }else{
                     alert(obj.msg);
                 }
             }
         }
+
+        //搜索
+        function searchUser(){
+            aForm.formPaging(0);
+        }
+
+        // 重置查询条件
+        function searchReset(){
+            $("#user-name").val("");
+            $("#mobile").val("");
+            $("#sex").val("");
+            aForm.formPaging(0);
+        }
+
 
     </script>
 </head>
@@ -104,34 +121,30 @@
                 <div id="table-form" class="dataTables_wrapper" >
                     <div class="contenttitle2">
                         <p style="margin: 0px">
-                            <label>First Name</label>
-                            <span class="field"><input id="name" type="text" name="name"  class="form-search"></span>
+                            <label>姓名：</label>
+							<span class="field">
+								<input id="user-name" type="text" name="userName"  class="form-search"/>
+							</span>
 
-                            <label>First Name2</label>
-                            <span class="field"><input id="name2" type="text" name="name"  class="form-search"></span>
+                            <label>手机号：</label>
+							<span class="field">
+								<input id="mobile" type="text" name="mobile"  class="form-search"/>
+							</span>
 
-                            <label>First Name3</label>
-                            <span class="field"><input id="name3" type="text" name="name"  class="form-search"></span>
+                            <label>性别：</label>
+							<span class="field">
+								<select id="sex" name="sex" class="form-search">
+                                    <option value="">请选择---</option>
+                                    <option value="1">男</option>
+                                    <option value="2">女</option>
+                                </select>
+							</span>
 
-                            <label>First Name4</label>
-                            <span class="field"><input id="name4" type="text" name="name"  class="form-search"></span>
-
-                            <label>First Name4</label>
-                            <span class="field"><input id="name5" type="text" name="name"  class="form-search"></span>
-
-                            <label>First Name6</label>
-                            <span class="field"><input id="name6" type="text" name="name"  class="form-search"></span>
-                        </p>
-                        <p style="margin:5px 0px 0px 0px;">
-                            <label>First Name7</label>
-                            <span class="field"><input id="name7" type="text" name="name"  class="form-search"></span>
-
-                            <label>First Name8</label>
-                            <span class="field"><input id="name8" type="text" name="name"  class="form-search"></span>
-                        </p>
-                        <p style="margin:5px 0px 0px 0px;">
-                            <a href="" class="btn btn_orange btn_search radius50" style="float:right">
-                                <span>Search</span>
+                            <a onclick="searchReset()" class="btn btn_orange btn_search radius50" style="float:right; cursor: pointer; margin-left: 10px">
+                                <span> 重 置 </span>
+                            </a>
+                            <a onclick="searchUser()" class="btn btn_orange btn_search radius50" style="float:right; cursor: pointer;margin-left: 20px">
+                                <span> 查 询 </span>
                             </a>
                         </p>
                     </div>
@@ -179,12 +192,12 @@
                                             <input type="checkbox"/>
                                          </span>
                                 </th>
-                                <th class="head0">Rendering engine</th>
-                                <th class="head1">Browser</th>
-                                <th class="head0">Platform(s)</th>
-                                <th class="head1">Engine version</th>
-                                <th class="head0">CSS grade</th>
-                                <th class="head1">To do it</th>
+                                <th class="head0">tfoot</th>
+                                <th class="head1">tfoot</th>
+                                <th class="head0">tfoot</th>
+                                <th class="head1">tfoot</th>
+                                <th class="head0">tfoot</th>
+                                <th class="head1">tfoot</th>
                             </tr>
                         </tfoot>
 
