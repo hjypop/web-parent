@@ -80,6 +80,9 @@ $(function () {
 
     $('.vernav > ul li a, .vernav2 > ul li a').each(function () {
         var url = $(this).attr('href');
+        if(url.indexOf('#') != 0){  // 修正 - Yangcl
+        	return;
+        }
         $(this).click(function () {
             if ($(url).length > 0) {
                 if ($(url).is(':visible')) {
