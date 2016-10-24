@@ -991,6 +991,11 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				 * 保质期
 				 */
 				product.setExpiryDate(info.getExpiryDate());
+				
+				/**
+				 * 是否是虚拟商品  Y：是  N：否
+				 */
+				product.setValidateFlag(info.getValidate_flag());
 				products.add(product);
 			}
 		}
@@ -1046,6 +1051,10 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			 * 最小购买数
 			 */
 			sku.setMiniOrder(skuInfo.getMiniOrder());
+
+			sku.setSkuKey(skuInfo.getSkuKey());
+			
+			sku.setSkuKeyvalue(skuInfo.getSkuKeyvalue());
 			skuList.add(sku);
 		}
 		return skuList;
@@ -1304,7 +1313,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		if (StringUtils.isNotBlank(data)) {
 			String lock = "";
 			try {
-				lock = WebHelper.getInstance().addLock(10, seller.getSellerCode() + "_Product.findProductByProductCodes");
+				lock = WebHelper.getInstance().addLock(10,
+						seller.getSellerCode() + "_Product.findProductByProductCodes");
 				JSONObject jsonData = JSON.parseObject(data);
 				String codes = jsonData.getString("codes");
 				// 读取合作商的产品获取权限
@@ -1321,7 +1331,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 							dto.setSellerType(c.getString("type"));
 						}
 						List<PcProductinfo> list = productInfoDao.findProductByProductCodes(dto);
-						List<ProductInfo> products = initPcProduct(list, c.getDouble("commission"), seller.getPriceType());
+						List<ProductInfo> products = initPcProduct(list, c.getDouble("commission"),
+								seller.getPriceType());
 						if (products != null && products.size() > 0) {
 							responseProduct.addAll(products);
 						}
