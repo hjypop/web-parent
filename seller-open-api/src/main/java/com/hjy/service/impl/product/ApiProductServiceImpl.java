@@ -886,7 +886,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 						map.put("sellerType", c.getString("type"));
 					}
 					List<PcProductinfo> list = productInfoDao.findProductBySellerProductype(map);
-					List<ProductInfo> products = initPcProduct(list, c.getDouble("commission"), seller.getPriceType());
+					List<ProductInfo> products = initPcProduct(list, c, seller.getPriceType());
 					if (products != null && products.size() > 0) {
 						responseProduct.addAll(products);
 					}
@@ -923,7 +923,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @param commission
 	 * @return
 	 */
-	public List<ProductInfo> initPcProduct(List<PcProductinfo> list, Double commission, Integer priceType) {
+	public List<ProductInfo> initPcProduct(List<PcProductinfo> list, JSONObject commission, Integer priceType) {
 		List<ProductInfo> products = new ArrayList<ProductInfo>();
 		if (list != null && list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
@@ -952,11 +952,11 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				 * 成本价
 				 */
 				if (priceType == 0) {
-					product.setCostPrice(
-							info.getCostPrice().add(info.getCostPrice().multiply(BigDecimal.valueOf(commission))));
+					product.setCostPrice(info.getCostPrice()
+							.add(info.getCostPrice().multiply(BigDecimal.valueOf(commission.getDouble("commission")))));
 				} else {
-					product.setCostPrice(
-							info.getSellPrice().add(info.getSellPrice().multiply(BigDecimal.valueOf(commission))));
+					product.setCostPrice(info.getSellPrice()
+							.add(info.getSellPrice().multiply(BigDecimal.valueOf(commission.getDouble("commission")))));
 				}
 				/**
 				 * 主图的Url
@@ -978,7 +978,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				/**
 				 * sku集合
 				 */
-				product.setSkuInfoList(initSkuList(info.getProductCode(), commission));
+				product.setSkuInfoList(initSkuList(info.getProductCode(), commission.getDouble("commission")));
 				/**
 				 * 广告图的Url
 				 */
@@ -991,11 +991,16 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				 * 保质期
 				 */
 				product.setExpiryDate(info.getExpiryDate());
-				
+
 				/**
-				 * 是否是虚拟商品  Y：是  N：否
+				 * 是否是虚拟商品 Y：是 N：否
 				 */
 				product.setValidateFlag(info.getValidate_flag());
+
+				/**
+				 * 商户类型
+				 */
+				product.setSellerType(commission.getString("type"));
 				products.add(product);
 			}
 		}
@@ -1053,7 +1058,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			sku.setMiniOrder(skuInfo.getMiniOrder());
 
 			sku.setSkuKey(skuInfo.getSkuKey());
-			
+
 			sku.setSkuKeyvalue(skuInfo.getSkuKeyvalue());
 			skuList.add(sku);
 		}
@@ -1331,8 +1336,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 							dto.setSellerType(c.getString("type"));
 						}
 						List<PcProductinfo> list = productInfoDao.findProductByProductCodes(dto);
-						List<ProductInfo> products = initPcProduct(list, c.getDouble("commission"),
-								seller.getPriceType());
+						List<ProductInfo> products = initPcProduct(list, c, seller.getPriceType());
 						if (products != null && products.size() > 0) {
 							responseProduct.addAll(products);
 						}

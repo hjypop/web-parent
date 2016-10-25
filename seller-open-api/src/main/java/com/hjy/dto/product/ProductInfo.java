@@ -95,16 +95,18 @@ public class ProductInfo implements IApiRequest {
 	 * 操作类型 0为添加，1为编辑
 	 */
 	private Integer operate;
-	
+
 	/**
 	 * 商品编码数组
 	 */
 	private List<String> codes;
 
 	private String LD;
-	private String sellerType;
-	private String validateFlag;
 	
+	private String sellerType;
+	
+	private String validateFlag;
+
 	public String getValidateFlag() {
 		return validateFlag;
 	}
