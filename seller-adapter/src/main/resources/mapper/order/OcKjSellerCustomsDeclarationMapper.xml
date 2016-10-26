@@ -161,6 +161,44 @@
 		</set>
 		where zid = #{zid,jdbcType=INTEGER}
 	</update>
+	
+	
+	<insert id="batchInsert" parameterType="java.util.List">  
+	    replace into ordercenter.oc_kj_seller_customs_declaration 
+    	(
+		    	uid, 
+		    	seller_code, 
+			    order_code, 
+			    big_order_code, 
+			    flag, 
+				type, 
+				bank_order_id, 
+				order_amount, 
+				money_type, 
+				create_time, 
+				update_time, 
+				remark,
+				seller_name
+	      )
+	     values 
+	    <foreach collection="list" item="item" index="index" separator="," >  
+	        (
+				#{item.uid,jdbcType=VARCHAR},
+				#{item.sellerCode,jdbcType=VARCHAR}, 
+				#{item.orderCode,jdbcType=VARCHAR}, 
+				#{item.bigOrderCode,jdbcType=VARCHAR}, 
+				#{item.flag,jdbcType=INTEGER}, 
+				#{item.type,jdbcType=VARCHAR}, 
+				#{item.bankOrderId,jdbcType=VARCHAR}, 
+				#{item.orderAmount,jdbcType=DECIMAL}, 
+				#{item.moneyType,jdbcType=INTEGER}, 
+				#{item.createTime,jdbcType=TIMESTAMP}, 
+				#{item.updateTime,jdbcType=TIMESTAMP}, 
+				#{item.remark,jdbcType=LONGVARCHAR},
+				#{item.sellerName,jdbcType=VARCHAR} 
+	        )  
+	    </foreach>  
+	</insert>
 </mapper>
 
 

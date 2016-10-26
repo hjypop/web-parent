@@ -44,11 +44,13 @@ public class JobForKjCustomsDeclaration extends RootJob {
 	private String endTime;
 
 	public JobForKjCustomsDeclaration() {
+//		this.startTime = "2016-08-18 00:00:00";  // 测试数据 
+//		this.endTime = "2016-10-26 00:00:00";
 	}
 
 	public JobForKjCustomsDeclaration(String startTime, String endTime) {
 		this.startTime = startTime;
-		this.endTime = endTime;
+		this.endTime = endTime; 
 	}
 
 
@@ -60,11 +62,12 @@ public class JobForKjCustomsDeclaration extends RootJob {
 			this.startTime = this.getHour(date , -1);  // 2016-09-18 15:00:00         带同步订单的开始时间
 			this.endTime = this.getHour(date , 0);	   // 2016-09-18 16:00:00		 带同步订单的结束时间
 		}
-		if(this.compareDate(this.startTime, this.endTime)){  // 开始时间大于结束时间则返回
+		if(this.compareDate(this.startTime , this.endTime)){  // 开始时间大于结束时间则返回
 			return ;
 		}
 		dto.setStartTime(this.startTime);
 		dto.setEndTime(this.endTime); 
+		// 取出需要去报关的跨境商户列表
 		List<String> sscList = new ArrayList<String>(Arrays.asList(this.getConfig("seller_adapter.kj_customs_declaration").split(","))); 
 		dto.setList(sscList);  
 		List<KjCustomsDeclarationResponse> list =  orderInfoDao.getKjCustomsDeclarationList(dto);
@@ -78,9 +81,9 @@ public class JobForKjCustomsDeclaration extends RootJob {
 			if(this.validate(d, e)){
 				e.setUid(UUID.randomUUID().toString().replace("-", "")); 
 				e.setFlag(0);
-				if(e.getBankOrderId().startsWith("20")){
+				if(e.getBankOrderId() != null && e.getBankOrderId().startsWith("20")){
 					e.setType("alipay");
-				}else if(e.getBankOrderId().startsWith("40")){
+				}else if(e.getBankOrderId() != null && e.getBankOrderId().startsWith("40")){
 					e.setType("wechat");
 				}
 				e.setCreateTime(new Date());
@@ -89,12 +92,8 @@ public class JobForKjCustomsDeclaration extends RootJob {
 				insertList.add(e);
 			}
 		}
-		
-		// TODO batch insert 
-		
-		
-		
-		
+		//batch insert 
+		dao.batchInsert(insertList);
 	}
 
 	
@@ -136,10 +135,10 @@ public class JobForKjCustomsDeclaration extends RootJob {
 				 String name = field.getName();
 				 String func = "get" + name.substring(0,1).toUpperCase()+name.substring(1);
 				 Method m = t.getClass().getMethod(func);
-	             String value = String.valueOf(m.invoke(t)); 
-	             if(value.equals("null")) {
-	            	 value = null;
+	             if(m.invoke(t) == null) {  // 如果getter方法取值为null，则代表T对象该字段为null，不再操作
+	            	 continue;
 	             }
+	             String value = String.valueOf(m.invoke(t)); 
 	             if(field.isAnnotationPresent(ExculdeNullField.class) && StringUtils.isBlank(value) ){
 	            	 // ExculdeNullField 注解标识的字段为空，则不再对其反射设值。
 	            	 continue;

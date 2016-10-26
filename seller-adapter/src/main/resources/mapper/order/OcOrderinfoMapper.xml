@@ -324,7 +324,7 @@
 	
 	
 	<!-- 获取跨境商户报关数据 - Yangcl -->
-	<resultMap id="kjcdMap" type="com.hjy.response.KjCustomsDeclarationResponse">
+	<resultMap id="kjcdMap" type="com.hjy.response.KjCustomsDeclarationResponse"></resultMap>
 	<select id="getKjCustomsDeclarationList" resultMap="kjcdMap" parameterType="com.hjy.dto.KjCustomsDeclarationDto" >
 		select 
 			u.seller_code as sellerCode,
