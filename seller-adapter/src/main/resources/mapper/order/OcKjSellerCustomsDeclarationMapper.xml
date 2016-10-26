@@ -8,6 +8,7 @@
 		<result column="seller_code" property="sellerCode" jdbcType="VARCHAR" />
 		<result column="order_code" property="orderCode" jdbcType="VARCHAR" />
 		<result column="big_order_code" property="bigOrderCode" jdbcType="VARCHAR" />
+		<result column="due_money" property="dueMoney" jdbcType="DECIMAL" />
 		<result column="flag" property="flag" jdbcType="INTEGER" />
 		<result column="type" property="type" jdbcType="VARCHAR" />
 		<result column="bank_order_id" property="bankOrderId" jdbcType="VARCHAR" />
@@ -17,6 +18,7 @@
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="remark" property="remark" jdbcType="LONGVARCHAR" />
 		<result column="seller_name" property="sellerName" jdbcType="VARCHAR" />
+		<result column="trade_no" property="tradeNo" jdbcType="VARCHAR" /> 
 	</resultMap> 
 	
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -119,47 +121,23 @@
 	</insert>
 	
 	
-	<update id="updateByPrimaryKeySelective" parameterType="com.hjy.entity.order.OcKjSellerCustomsDeclaration">
+	<update id="updateSelective" parameterType="com.hjy.entity.order.OcKjSellerCustomsDeclaration">
 		update ordercenter.oc_kj_seller_customs_declaration
-		<set>
-			<if test="uid != null">
-				uid = #{uid,jdbcType=VARCHAR},
-			</if>
-			<if test="sellerCode != null">
-				seller_code = #{sellerCode,jdbcType=VARCHAR},
-			</if>
-			<if test="orderCode != null">
-				order_code = #{orderCode,jdbcType=VARCHAR},
-			</if>
-			<if test="bigOrderCode != null">
-				big_order_code = #{bigOrderCode,jdbcType=VARCHAR},
-			</if>
-			<if test="flag != null">
+		<set> 
+			<if test="flag != null and flag != '' ">
 				flag = #{flag,jdbcType=INTEGER},
-			</if>
-			<if test="type != null">
-				type = #{type,jdbcType=VARCHAR},
-			</if>
-			<if test="bankOrderId != null">
-				bank_order_id = #{bankOrderId,jdbcType=VARCHAR},
-			</if>
-			<if test="orderAmount != null">
-				order_amount = #{orderAmount,jdbcType=DECIMAL},
-			</if>
-			<if test="moneyType != null">
-				money_type = #{moneyType,jdbcType=INTEGER},
-			</if>
-			<if test="createTime != null">
-				create_time = #{createTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="updateTime != null">
+			</if> 
+			<if test="updateTime != null and updateTime != '' ">
 				update_time = #{updateTime,jdbcType=TIMESTAMP},
 			</if>
-			<if test="remark != null">
+			<if test="remark != null and remark != '' ">
 				remark = #{remark,jdbcType=LONGVARCHAR},
 			</if>
+			<if test="tradeNo != null and tradeNo != '' ">
+				trade_no = #{tradeNo , jdbcType=VARCHAR},
+			</if>
 		</set>
-		where zid = #{zid,jdbcType=INTEGER}
+		where uid = #{uid,jdbcType=VARCHAR}
 	</update>
 	
 	
@@ -170,6 +148,7 @@
 		    	seller_code, 
 			    order_code, 
 			    big_order_code, 
+			    due_money,
 			    flag, 
 				type, 
 				bank_order_id, 
@@ -187,6 +166,7 @@
 				#{item.sellerCode,jdbcType=VARCHAR}, 
 				#{item.orderCode,jdbcType=VARCHAR}, 
 				#{item.bigOrderCode,jdbcType=VARCHAR}, 
+				#{item.dueMoney , jdbcType=DECIMAL},  
 				#{item.flag,jdbcType=INTEGER}, 
 				#{item.type,jdbcType=VARCHAR}, 
 				#{item.bankOrderId,jdbcType=VARCHAR}, 
@@ -199,6 +179,17 @@
 	        )  
 	    </foreach>  
 	</insert>
+	
+	<!-- 获取报关数据集合 - Yangcl -->
+	<select id="getRequestList" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+			*
+		from 
+			ordercenter.oc_kj_seller_customs_declaration
+		where 
+			update_time between #{startTime} and #{endTime} 
+			and type = #{type} 
+	</select>
 </mapper>
 
 

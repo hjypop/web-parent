@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.entity.log.LcOpenApiOperation;
 import com.hjy.entity.webcore.WcSellerinfo;
+import com.hjy.helper.PureNetUtil;
 import com.hjy.helper.SignHelper;
 import com.hjy.request.Request;
 import com.hjy.service.operation.IApiLcOpenApiOperationService;
@@ -25,7 +26,6 @@ import com.hjy.service.order.IApiOcOrderInfoService;
 import com.hjy.service.product.IApiProductService;
 import com.hjy.service.shipment.IApiOcOrderShipmentsService;
 import com.hjy.service.webcore.IWcSellerinfoService;
-import com.hjy.util.PureNetUtil;
 
 /**
  * 

@@ -327,10 +327,11 @@
 	<resultMap id="kjcdMap" type="com.hjy.response.KjCustomsDeclarationResponse"></resultMap>
 	<select id="getKjCustomsDeclarationList" resultMap="kjcdMap" parameterType="com.hjy.dto.KjCustomsDeclarationDto" >
 		select 
-			u.seller_code as sellerCode,
+			u.small_seller_code as sellerCode,
 			u.seller_name as sellerName,
 			o.order_code as orderCode,
 			o.big_order_code as bigOrderCode,
+			o.due_money as dueMoney,
 			p.bankorderid as bankOrderId,
 			p.c_orderamount as orderAmount,
 			p.c_moneytype as moneyType

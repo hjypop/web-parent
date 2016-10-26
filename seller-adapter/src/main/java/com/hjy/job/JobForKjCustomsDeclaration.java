@@ -44,8 +44,8 @@ public class JobForKjCustomsDeclaration extends RootJob {
 	private String endTime;
 
 	public JobForKjCustomsDeclaration() {
-//		this.startTime = "2016-08-18 00:00:00";  // 测试数据 
-//		this.endTime = "2016-10-26 00:00:00";
+		this.startTime = "2016-08-18 00:00:00";  // 测试数据 
+		this.endTime = "2016-10-26 00:00:00";
 	}
 
 	public JobForKjCustomsDeclaration(String startTime, String endTime) {
@@ -69,7 +69,11 @@ public class JobForKjCustomsDeclaration extends RootJob {
 		dto.setEndTime(this.endTime); 
 		// 取出需要去报关的跨境商户列表
 		List<String> sscList = new ArrayList<String>(Arrays.asList(this.getConfig("seller_adapter.kj_customs_declaration").split(","))); 
-		dto.setList(sscList);  
+		List<String> list_= new ArrayList<String>();
+		for(String s : sscList){
+			list_.add(s.split("@")[0]);
+		}
+		dto.setList(list_);  
 		List<KjCustomsDeclarationResponse> list =  orderInfoDao.getKjCustomsDeclarationList(dto);
 		if(list == null || list.size() == 0){
 			return;

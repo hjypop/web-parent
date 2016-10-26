@@ -7,6 +7,7 @@ public class KjCustomsDeclarationResponse {
 	private String sellerName;
 	private String orderCode;
 	private String bigOrderCode;
+	private BigDecimal dueMoney;
 	private String bankOrderId;
 	private BigDecimal orderAmount;
 	private Integer moneyType;
@@ -53,6 +54,12 @@ public class KjCustomsDeclarationResponse {
 	}
 	public void setMoneyType(Integer moneyType) {
 		this.moneyType = moneyType;
+	}
+	public BigDecimal getDueMoney() {
+		return dueMoney;
+	}
+	public void setDueMoney(BigDecimal dueMoney) {
+		this.dueMoney = dueMoney;
 	}
 	
 	

@@ -14,6 +14,8 @@ public class OcKjSellerCustomsDeclaration {
 
     private String bigOrderCode;
 
+    private BigDecimal dueMoney;
+    
     private Integer flag;
 
     private String type;
@@ -32,12 +34,31 @@ public class OcKjSellerCustomsDeclaration {
     
     private String sellerName;
     
-    public String getSellerName() {
+    private String tradeNo;
+    
+    
+    public String getTradeNo() {
+		return tradeNo;
+	}
+
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
+	}
+
+	public String getSellerName() {
 		return sellerName;
 	}
 
 	public void setSellerName(String sellerName) {
 		this.sellerName = sellerName;
+	}
+
+	public BigDecimal getDueMoney() {
+		return dueMoney;
+	}
+
+	public void setDueMoney(BigDecimal dueMoney) {
+		this.dueMoney = dueMoney;
 	}
 
 	public Integer getZid() {
