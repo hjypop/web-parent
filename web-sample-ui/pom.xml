@@ -15,22 +15,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.huijiayou</groupId>
-			<artifactId>seller-adapter-kjt</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.huijiayou</groupId>
-			<artifactId>seller-adapter-minspc</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.huijiayou</groupId>
 			<artifactId>web-sample</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.huijiayou</groupId>
-			<artifactId>seller-open-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

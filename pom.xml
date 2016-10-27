@@ -12,10 +12,6 @@
 		<module>web-sample</module>
 		<module>web-sample-ui</module>
 		<module>web-quartz</module>
-		<module>seller-adapter</module>
-		<module>seller-adapter-kjt</module>
-    	<module>seller-open-api</module>
-    	<module>seller-adapter-minspc</module>
     </modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
