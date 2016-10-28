@@ -48,27 +48,17 @@ public class RsyncAcquireSOPayDeclare extends RsyncKjtMaster{
 		AcquireSOPayDeclareResponse entity = null;
 		try {
 			entity = JSON.parseObject(responseJson, AcquireSOPayDeclareResponse.class); 
-			if(entity.getCode().equals("0")){
-				for(KjSellerCustomsDeclarationModel e : this.list){
-					OcKjSellerCustomsDeclaration d = new OcKjSellerCustomsDeclaration();
-					d.setUid(e.getUid()); 
-					d.setFlag(1);
-					d.setUpdateTime(new Date());
-					d.setRemark("rsync kjt success"); 
-					this.cdDao.updateSelective(d);
-				}
-				r.setSuccessNum(this.list.size()); 
-			}else{ // 取出错误的报关数据 
-				List<OcKjSellerCustomsDeclaration> ulist = new ArrayList<OcKjSellerCustomsDeclaration>();
-				for(KjSellerCustomsDeclarationModel e : this.list){
-					OcKjSellerCustomsDeclaration d = new OcKjSellerCustomsDeclaration();
-					d.setUid(e.getUid()); 
-					d.setFlag(1);
-					d.setUpdateTime(new Date());
-					d.setRemark("rsync kjt success"); 
-					ulist.add(d);
-				}
-				
+			List<OcKjSellerCustomsDeclaration> ulist = new ArrayList<OcKjSellerCustomsDeclaration>();
+			for(KjSellerCustomsDeclarationModel e : this.list){
+				OcKjSellerCustomsDeclaration d = new OcKjSellerCustomsDeclaration();
+				d.setUid(e.getUid()); 
+				d.setFlag(4);
+				d.setUpdateTime(new Date());
+				d.setRemark("rsync kjt success"); 
+				ulist.add(d);
+			}
+			r.setSuccessNum(this.list.size()); 
+			if(!entity.getCode().equals("0")){ // 取出错误的报关数据 
 				List<ErrorEntity> date = entity.getDate();
 				if(date != null && date.size() != 0){
 					for(ErrorEntity err : date){
@@ -76,7 +66,7 @@ public class RsyncAcquireSOPayDeclare extends RsyncKjtMaster{
 							if(m.getKjtOrderCode().equals(err.getSOSysNo())){
 								for(int i = 0 ; i < ulist.size(); i ++){
 									if(m.getOrderCode().equals(ulist.get(i).getOrderCode())){ 
-										ulist.get(i).setFlag(2); 
+										ulist.get(i).setFlag(3); 
 										ulist.get(i).setRemark(err.getDesc()); 
 									}
 								}
@@ -84,10 +74,11 @@ public class RsyncAcquireSOPayDeclare extends RsyncKjtMaster{
 						}
 					}
 				}	// 归纳错误数据完成
-				for(OcKjSellerCustomsDeclaration u : ulist	){
-					this.cdDao.updateSelective(u);
-				}
 				r.setSuccessNum(this.list.size() - date.size()); 
+			}
+			
+			for(OcKjSellerCustomsDeclaration u : ulist	){
+				this.cdDao.updateSelective(u);
 			}
 			r.setProcessData(JSONObject.toJSONString(entity)); 
 		} catch (Exception e) {

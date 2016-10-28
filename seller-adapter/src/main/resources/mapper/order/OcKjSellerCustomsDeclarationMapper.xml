@@ -223,7 +223,7 @@
 			and 
 				scd.update_time between #{startTime} and #{endTime} 
 			and 
-				 scd.flag = 1
+				 scd.flag = 1 or scd.flag=3
 	</select>
 </mapper>
 

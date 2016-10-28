@@ -85,6 +85,13 @@ public class JobForWechatCustomsDeclaration extends RootJob{
 				r.setIdcard(e.getIdcard());
 				r.setAuthName(e.getAuthName()); 
 				WechatResponse wr = this.getResponse(this.sendRequest(r));
+				
+				
+				
+				
+				
+				
+				
 				OcKjSellerCustomsDeclaration u = new OcKjSellerCustomsDeclaration();
 				u.setUid(e.getUid()); 
 				u.setUpdateTime(new Date()); 
