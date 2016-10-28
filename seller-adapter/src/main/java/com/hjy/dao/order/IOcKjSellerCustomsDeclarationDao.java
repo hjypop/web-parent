@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.order.OcKjSellerCustomsDeclaration;
+import com.hjy.model.KjSellerCustomsDeclarationModel;
 
 public interface IOcKjSellerCustomsDeclarationDao extends BaseDao<OcKjSellerCustomsDeclaration, Integer> {
 	
@@ -19,4 +20,14 @@ public interface IOcKjSellerCustomsDeclarationDao extends BaseDao<OcKjSellerCust
 	 */
 	public List<OcKjSellerCustomsDeclaration> getRequestList(Map<String , String> map);
 
+	/**
+	 * @description: 获取指定跨境商户将要报关的数据集合 
+	 * 
+	 * @param map
+	 * @return
+	 * @author Yangcl 
+	 * @date 2016年10月28日 上午11:22:23 
+	 * @version 1.0.0.1
+	 */
+	public List<KjSellerCustomsDeclarationModel> getKjSellerCustomsDeclarationList(Map<String , String> map);
 }

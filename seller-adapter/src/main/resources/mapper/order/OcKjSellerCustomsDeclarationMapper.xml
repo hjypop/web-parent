@@ -205,6 +205,26 @@
 			update_time between #{startTime} and #{endTime} 
 			and type = #{type} 
 	</select>
+	
+	<resultMap id="kjcdMap" type="com.hjy.model.KjSellerCustomsDeclarationModel"></resultMap>
+	<select id="getKjSellerCustomsDeclarationList" resultMap="kjcdMap" parameterType="java.util.Map">
+		select 
+			scd.uid as uid,
+			scd.trade_no as tradeNo,
+			scd.type as payType,
+			scd.update_time as updateTime,
+			scd.order_code as orderCode,
+			l.order_code_out as kjtOrderCode 
+		from 
+			ordercenter.oc_kj_seller_customs_declaration scd 
+			left join ordercenter.oc_order_kjt_list l on scd.order_code = l.order_code
+		where
+			scd.seller_code = #{sellerCode} 
+			and 
+				scd.update_time between #{startTime} and #{endTime} 
+			and 
+				 scd.flag = 1
+	</select>
 </mapper>
 
 
