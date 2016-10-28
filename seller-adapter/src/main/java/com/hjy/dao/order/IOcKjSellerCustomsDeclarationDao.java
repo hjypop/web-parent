@@ -22,7 +22,7 @@ public interface IOcKjSellerCustomsDeclarationDao extends BaseDao<OcKjSellerCust
 
 	/**
 	 * @description: 获取指定跨境商户将要报关的数据集合 
-	 * 
+	 * 	JobForAcquireSOPayDeclare.java使用
 	 * @param map
 	 * @return
 	 * @author Yangcl 

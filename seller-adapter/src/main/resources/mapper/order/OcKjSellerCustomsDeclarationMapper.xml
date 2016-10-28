@@ -203,7 +203,10 @@
 			ordercenter.oc_kj_seller_customs_declaration
 		where 
 			update_time between #{startTime} and #{endTime} 
-			and type = #{type} 
+			and (flag = 0 or flag = 2) 
+			<if test="type != null and type != '' ">
+				and type = #{type} 
+			</if> 
 	</select>
 	
 	<resultMap id="kjcdMap" type="com.hjy.model.KjSellerCustomsDeclarationModel"></resultMap>
