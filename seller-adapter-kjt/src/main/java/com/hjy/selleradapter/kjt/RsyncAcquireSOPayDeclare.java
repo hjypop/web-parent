@@ -68,8 +68,10 @@ public class RsyncAcquireSOPayDeclare extends RsyncKjtMaster{
 									if(m.getOrderCode().equals(ulist.get(i).getOrderCode())){ 
 										ulist.get(i).setFlag(3); 
 										ulist.get(i).setRemark(err.getDesc()); 
+										break;
 									}
 								}
+								break;
 							}
 						}
 					}

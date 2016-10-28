@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 
 import com.hjy.annotation.ExculdeNullField;
@@ -22,6 +23,7 @@ import com.hjy.dao.order.IOcKjSellerCustomsDeclarationDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.dto.KjCustomsDeclarationDto;
 import com.hjy.entity.order.OcKjSellerCustomsDeclaration;
+import com.hjy.helper.WebHelper;
 import com.hjy.quartz.job.RootJob;
 import com.hjy.response.KjCustomsDeclarationResponse;
 
@@ -34,6 +36,8 @@ import com.hjy.response.KjCustomsDeclarationResponse;
  * @version 1.0.0
  */
 public class JobForKjCustomsDeclaration extends RootJob {
+	
+	private static Logger logger = Logger.getLogger(JobForKjCustomsDeclaration.class);
 	
 	@Inject
 	private IOcKjSellerCustomsDeclarationDao dao;
@@ -56,48 +60,60 @@ public class JobForKjCustomsDeclaration extends RootJob {
 
 
 	public void doExecute(JobExecutionContext context) {
-		KjCustomsDeclarationDto dto = new KjCustomsDeclarationDto();
-		if(StringUtils.isAnyBlank(this.startTime , this.endTime)){  // 非手动执行该定时任务 
-			Date date = new Date(); 								 // 2016-09-18 16:26:08
-			this.startTime = this.getHour(date , -1);  // 2016-09-18 15:00:00         带同步订单的开始时间
-			this.endTime = this.getHour(date , 0);	   // 2016-09-18 16:00:00		 带同步订单的结束时间
-		}
-		if(this.compareDate(this.startTime , this.endTime)){  // 开始时间大于结束时间则返回
-			return ;
-		}
-		dto.setStartTime(this.startTime);
-		dto.setEndTime(this.endTime); 
-		// 取出需要去报关的跨境商户列表
-		List<String> sscList = new ArrayList<String>(Arrays.asList(this.getConfig("seller_adapter.kj_customs_declaration").split(","))); 
-		List<String> list_= new ArrayList<String>();
-		for(String s : sscList){
-			list_.add(s.split("@")[0]);
-		}
-		dto.setList(list_);  
-		List<KjCustomsDeclarationResponse> list =  orderInfoDao.getKjCustomsDeclarationList(dto);
-		if(list == null || list.size() == 0){
-			return;
-		}
-		
-		List<OcKjSellerCustomsDeclaration> insertList = new ArrayList<OcKjSellerCustomsDeclaration>();
-		for(KjCustomsDeclarationResponse d : list){
-			OcKjSellerCustomsDeclaration e = new OcKjSellerCustomsDeclaration();
-			if(this.validate(d, e)){
-				e.setUid(UUID.randomUUID().toString().replace("-", "")); 
-				e.setFlag(0);
-				if(e.getBankOrderId() != null && e.getBankOrderId().startsWith("20")){
-					e.setType("alipay");
-				}else if(e.getBankOrderId() != null && e.getBankOrderId().startsWith("40")){
-					e.setType("wechat");
+		String lockCode = WebHelper.getInstance().addLock(1000 , "JobForKjCustomsDeclaration");	// 分布式锁定
+		if (StringUtils.isNotBlank(lockCode)) {
+			try {
+				KjCustomsDeclarationDto dto = new KjCustomsDeclarationDto();
+				if(StringUtils.isAnyBlank(this.startTime , this.endTime)){  // 非手动执行该定时任务 
+					Date date = new Date(); 								 // 2016-09-18 16:26:08
+					this.startTime = this.getHour(date , -1);   // 2016-09-18 15:00:00         带同步订单的开始时间
+					this.endTime = this.getHour(date , 0);	     // 2016-09-18 16:00:00		  带同步订单的结束时间
 				}
-				e.setCreateTime(new Date());
-				e.setUpdateTime(new Date());
-				e.setRemark("insert");
-				insertList.add(e);
+				if(this.compareDate(this.startTime , this.endTime)){  // 开始时间大于结束时间则返回
+					return ;
+				}
+				dto.setStartTime(this.startTime);
+				dto.setEndTime(this.endTime); 
+				// 取出需要去报关的跨境商户列表
+				List<String> sscList = new ArrayList<String>(Arrays.asList(this.getConfig("seller_adapter.kj_customs_declaration").split(","))); 
+				List<String> list_= new ArrayList<String>();
+				for(String s : sscList){
+					list_.add(s.split("@")[0]);
+				}
+				dto.setList(list_);  
+				List<KjCustomsDeclarationResponse> list =  orderInfoDao.getKjCustomsDeclarationList(dto);
+				if(list == null || list.size() == 0){
+					return;
+				}
+				
+				List<OcKjSellerCustomsDeclaration> insertList = new ArrayList<OcKjSellerCustomsDeclaration>();
+				for(KjCustomsDeclarationResponse d : list){
+					OcKjSellerCustomsDeclaration e = new OcKjSellerCustomsDeclaration();
+					if(this.validate(d, e)){
+						e.setUid(UUID.randomUUID().toString().replace("-", "")); 
+						e.setFlag(0);
+						if(e.getBankOrderId() != null && e.getBankOrderId().startsWith("20")){
+							e.setType("alipay");
+						}else if(e.getBankOrderId() != null && e.getBankOrderId().startsWith("40")){
+							e.setType("wechat");
+						}
+						e.setCreateTime(new Date());
+						e.setUpdateTime(new Date());
+						e.setRemark("insert");
+						insertList.add(e);
+					}
+				}
+				//batch insert 
+				dao.batchInsert(insertList);
+			}catch (Exception e) {
+				e.printStackTrace();  
+			}finally {
+				WebHelper.getInstance().unLock(lockCode);
 			}
+		}else{
+			// 分布式锁定中，请解锁
+			logger.error("JobForKjCustomsDeclaration.java  分布式锁定中，请解锁"); 
 		}
-		//batch insert 
-		dao.batchInsert(insertList);
 	}
 
 	
