@@ -19,6 +19,11 @@
 		<result column="remark" property="remark" jdbcType="LONGVARCHAR" />
 		<result column="seller_name" property="sellerName" jdbcType="VARCHAR" />
 		<result column="trade_no" property="tradeNo" jdbcType="VARCHAR" /> 
+		<result column="trans_num" property="transNum" jdbcType="VARCHAR" /> 
+		<result column="transport_money" property="transportMoney" jdbcType="DECIMAL" /> 
+		<result column="auth_name" property="authName" jdbcType="VARCHAR" /> 
+		<result column="idcard" property="idcard" jdbcType="VARCHAR" />
+		<result column="pay_gate" property="payGate" jdbcType="VARCHAR" />  
 	</resultMap> 
 	
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -157,7 +162,12 @@
 				create_time, 
 				update_time, 
 				remark,
-				seller_name
+				seller_name,
+				trans_num,
+				transport_money,
+				auth_name,
+				idcard,
+				pay_gate
 	      )
 	     values 
 	    <foreach collection="list" item="item" index="index" separator="," >  
@@ -175,7 +185,12 @@
 				#{item.createTime,jdbcType=TIMESTAMP}, 
 				#{item.updateTime,jdbcType=TIMESTAMP}, 
 				#{item.remark,jdbcType=LONGVARCHAR},
-				#{item.sellerName,jdbcType=VARCHAR} 
+				#{item.sellerName,jdbcType=VARCHAR}, 
+				#{item.transNum , jdbcType=VARCHAR}, 
+				#{item.transportMoney , jdbcType=DECIMAL}, 
+				#{item.authName,jdbcType=VARCHAR}, 
+				#{item.idcard,jdbcType=VARCHAR},
+				#{item.payGate , jdbcType=VARCHAR} 
 	        )  
 	    </foreach>  
 	</insert>

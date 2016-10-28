@@ -334,10 +334,18 @@
 			o.due_money as dueMoney,
 			p.bankorderid as bankOrderId,
 			p.c_orderamount as orderAmount,
-			p.c_moneytype as moneyType
+			p.c_moneytype as moneyType,
+			
+			p.c_transnum as transNum,
+			o.transport_money as transportMoney,
+			address.auth_true_name as authName,
+			address.auth_idcard_number as idcard, 
+			p.c_paygate as payGate
 		from
-			ordercenter.oc_orderinfo o left join ordercenter.oc_payment_paygate p on o.big_order_code = p.c_order 
-			left join usercenter.`uc_sellerinfo` u on o.small_seller_code = u.small_seller_code 
+			ordercenter.oc_orderinfo o 
+			left join ordercenter.oc_payment_paygate p on o.big_order_code = p.c_order 
+			left join usercenter.uc_sellerinfo u on o.small_seller_code = u.small_seller_code  
+			left join ordercenter.oc_orderadress address on address.order_code = o.order_code 
 		where 
 			o.small_seller_code in 
 			<foreach item="item" index="index" collection="list"  open="(" separator="," close=")">

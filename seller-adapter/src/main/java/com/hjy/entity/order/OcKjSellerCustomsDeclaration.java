@@ -36,8 +36,55 @@ public class OcKjSellerCustomsDeclaration {
     
     private String tradeNo;
     
+	private String transNum;  // 支付网关订单号  oc_payment_paygate -> c_transnum
+	private BigDecimal transportMoney; //  运费 oc_orderinfo-> transport_money
+	private String authName;  // 支付人姓名  oc_orderadress -> auth_true_name 
+	private String idcard;  // 支付人的身份证编号 oc_orderadress -> auth_idcard_number
+	private String payGate; // 支付网关类型 oc_payment_paygate -> c_paygate
+	
+	
     
-    public String getTradeNo() {
+    public String getPayGate() {
+		return payGate;
+	}
+
+	public void setPayGate(String payGate) {
+		this.payGate = payGate;
+	}
+
+	public String getTransNum() {
+		return transNum;
+	}
+
+	public void setTransNum(String transNum) {
+		this.transNum = transNum;
+	}
+
+	public BigDecimal getTransportMoney() {
+		return transportMoney;
+	}
+
+	public void setTransportMoney(BigDecimal transportMoney) {
+		this.transportMoney = transportMoney;
+	}
+
+	public String getAuthName() {
+		return authName;
+	}
+
+	public void setAuthName(String authName) {
+		this.authName = authName;
+	}
+
+	public String getIdcard() {
+		return idcard;
+	}
+
+	public void setIdcard(String idcard) {
+		this.idcard = idcard;
+	}
+
+	public String getTradeNo() {
 		return tradeNo;
 	}
 

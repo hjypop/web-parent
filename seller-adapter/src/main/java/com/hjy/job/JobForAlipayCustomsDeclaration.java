@@ -111,7 +111,7 @@ public class JobForAlipayCustomsDeclaration extends RootJob{
 	 * @version 1.0.0.1
 	 */
 	private String sendRequest(AlipayParamRequest req){
-		String response = PureNetUtil.post(this.getRequestUrl() , this.initRequesParamt(req));
+		String response = PureNetUtil.post(this.getRequestUrl() , this.initRequestParam(req));
 		return response;
 	}
 	
@@ -147,7 +147,7 @@ public class JobForAlipayCustomsDeclaration extends RootJob{
 	 * @date 2016年10月26日 下午3:53:16 
 	 * @version 1.0.0.1
 	 */
-	private Map<String , String> initRequesParamt(AlipayParamRequest req){
+	private Map<String , String> initRequestParam(AlipayParamRequest req){
 		Map<String , String> param = new HashMap<String , String>();
 		param.put("service" , this.getConfig("seller_adapter.alipay_api")); // 支付宝接口名称
         param.put("partner",this.getConfig("seller_adapter.alipay_partner"));  // 合作者身份ID
