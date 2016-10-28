@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 
 import com.hjy.annotation.Inject;
@@ -28,6 +29,8 @@ import com.hjy.selleradapter.kjt.RsyncAcquireSOPayDeclare;
  */
 public class JobForAcquireSOPayDeclare extends RootJob {
 
+	private static Logger logger = Logger.getLogger(JobForAcquireSOPayDeclare.class);
+	
 	@Inject
 	private IOcKjSellerCustomsDeclarationDao dao;
 	
@@ -74,8 +77,8 @@ public class JobForAcquireSOPayDeclare extends RootJob {
 			}finally {
 				WebHelper.getInstance().unLock(lockCode);
 			}
-		}else{
-			// 分布式锁定中，请解锁
+		}else{  // 分布式锁定中，请解锁
+			logger.error("JobForAcquireSOPayDeclare.java  分布式锁定中，请解锁"); 
 		}
 		
 	}

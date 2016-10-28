@@ -110,8 +110,7 @@ public class JobForKjCustomsDeclaration extends RootJob {
 			}finally {
 				WebHelper.getInstance().unLock(lockCode);
 			}
-		}else{
-			// 分布式锁定中，请解锁
+		}else{  // 分布式锁定中，请解锁
 			logger.error("JobForKjCustomsDeclaration.java  分布式锁定中，请解锁"); 
 		}
 	}
