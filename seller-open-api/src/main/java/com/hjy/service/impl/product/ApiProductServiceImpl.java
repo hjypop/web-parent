@@ -1113,7 +1113,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					array.add(map);
 				}
 				response.put("code", 0);
-				response.put("data", array.toJSONString());
+				response.put("data", array);
 			} else {
 				response.put("code", 10);
 				response.put("desc", getInfo(10));
@@ -1198,7 +1198,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					array.add(map);
 				}
 				response.put("code", 0);
-				response.put("data", array.toJSONString());
+				response.put("data", array);
 			} else {
 				response.put("code", 10);
 				response.put("desc", getInfo(10));
