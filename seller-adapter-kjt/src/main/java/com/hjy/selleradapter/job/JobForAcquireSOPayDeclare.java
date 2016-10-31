@@ -20,7 +20,7 @@ import com.hjy.quartz.job.RootJob;
 import com.hjy.selleradapter.kjt.RsyncAcquireSOPayDeclare;
 
 /**
- * @description: sb跨境通分销订单支付申报上报接口
+ * @description: sb跨境通分销订单支付申报上报接口|将报关成功的订单的tradeNo发送给跨境通
  * @接口标识 Order.AcquireSOPayDeclare 
  * 
  * @author Yangcl
@@ -53,8 +53,8 @@ public class JobForAcquireSOPayDeclare extends RootJob {
 			try {
 				if(StringUtils.isAnyBlank(this.startTime , this.endTime)){  // 非手动执行该定时任务 
 					Date date = new Date(); 								 // 2016-09-18 16:26:08
-					this.startTime = this.getHour(date , -1);  // 2016-09-18 15:00:00         带同步订单的开始时间
-					this.endTime = this.getHour(date , 0);	   // 2016-09-18 16:00:00		 带同步订单的结束时间
+					this.startTime = this.getHour(date , -1);   // 2016-09-18 15:00:00         带同步订单的开始时间
+					this.endTime = this.getHour(date , 0);	     // 2016-09-18 16:00:00		 带同步订单的结束时间
 				}
 				if(this.compareDate(this.startTime , this.endTime)){  // 开始时间大于结束时间则返回
 					return ;

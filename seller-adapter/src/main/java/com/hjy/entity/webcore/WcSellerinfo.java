@@ -61,14 +61,39 @@ public class WcSellerinfo extends BaseModel {
 	 */
 	private String updateTime;
 	
-	/*
-	 * 1：对内；2：对外
-	 */
 	private Integer type;
 
+	private Integer flag;
+
+    private String sellerCustomNumber;  // 商户的【商户海关备案编号】
+
+    private String sellerCustomLocation;   // 商户报关地点|支付网关柄春做了2次封装后的对应码
 	
 	
-	
+	public Integer getFlag() {
+		return flag;
+	}
+
+	public void setFlag(Integer flag) {
+		this.flag = flag;
+	}
+
+	public String getSellerCustomNumber() {
+		return sellerCustomNumber;
+	}
+
+	public void setSellerCustomNumber(String sellerCustomNumber) {
+		this.sellerCustomNumber = sellerCustomNumber;
+	}
+
+	public String getSellerCustomLocation() {
+		return sellerCustomLocation;
+	}
+
+	public void setSellerCustomLocation(String sellerCustomLocation) {
+		this.sellerCustomLocation = sellerCustomLocation;
+	}
+
 	public Integer getType() {
 		return type;
 	}

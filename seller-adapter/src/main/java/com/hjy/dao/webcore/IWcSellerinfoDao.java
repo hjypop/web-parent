@@ -1,5 +1,7 @@
 package com.hjy.dao.webcore;
 
+import java.util.List;
+
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.webcore.WcSellerinfo;
 
@@ -46,4 +48,30 @@ public interface IWcSellerinfoDao extends BaseDao<WcSellerinfo, Integer> {
 	 * @return
 	 */
 	WcSellerinfo selectBySellerCodeByApi(String sellerCode);
+
+	/**
+	 * @description: 获取惠家有要进行报关的商户列表    
+	 * 需要惠家有去报关的跨境商户 small_seller_code@商户海关备案编号@报关地点，多个跨境商户以英文逗号分隔  | 报关地点固定13个
+	 * JobForKjCustomsDeclaration.java报关的定时任务需要使用这个配置
+	 * JobForSendCustomsDeclaration.java报关的定时任务需要使用这个配置
+	 * @return
+	 * @author Yangcl 
+	 * @date 2016年10月31日 下午4:49:37 
+	 * @version 1.0.0.1
+	 */
+	public List<WcSellerinfo> getCustomsDeclarationSellerList();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

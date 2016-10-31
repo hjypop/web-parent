@@ -21,8 +21,10 @@ import com.hjy.annotation.ExculdeNullField;
 import com.hjy.annotation.Inject;
 import com.hjy.dao.order.IOcKjSellerCustomsDeclarationDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
+import com.hjy.dao.webcore.IWcSellerinfoDao;
 import com.hjy.dto.KjCustomsDeclarationDto;
 import com.hjy.entity.order.OcKjSellerCustomsDeclaration;
+import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.helper.WebHelper;
 import com.hjy.quartz.job.RootJob;
 import com.hjy.response.KjCustomsDeclarationResponse;
@@ -43,6 +45,8 @@ public class JobForKjCustomsDeclaration extends RootJob {
 	private IOcKjSellerCustomsDeclarationDao dao;
 	@Inject 
 	private IOcOrderinfoDao orderInfoDao;
+	@Inject 
+	private IWcSellerinfoDao wcSellerinfoDao;
 	
 	private String startTime;
 	private String endTime;
@@ -75,10 +79,13 @@ public class JobForKjCustomsDeclaration extends RootJob {
 				dto.setStartTime(this.startTime);
 				dto.setEndTime(this.endTime); 
 				// 取出需要去报关的跨境商户列表
-				List<String> sscList = new ArrayList<String>(Arrays.asList(this.getConfig("seller_adapter.kj_customs_declaration").split(","))); 
+				List<WcSellerinfo> sscList = wcSellerinfoDao.getCustomsDeclarationSellerList();  
+				if(sscList == null || sscList.size() == 0){
+					return ; 
+				}
 				List<String> list_= new ArrayList<String>();
-				for(String s : sscList){
-					list_.add(s.split("@")[0]);
+				for(WcSellerinfo s : sscList){
+					list_.add(s.getSellerCode());
 				}
 				dto.setList(list_);  
 				List<KjCustomsDeclarationResponse> list =  orderInfoDao.getKjCustomsDeclarationList(dto);

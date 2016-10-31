@@ -16,7 +16,9 @@ import org.quartz.JobExecutionContext;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.annotation.Inject;
 import com.hjy.dao.order.IOcKjSellerCustomsDeclarationDao;
+import com.hjy.dao.webcore.IWcSellerinfoDao;
 import com.hjy.entity.order.OcKjSellerCustomsDeclaration;
+import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.helper.PureNetUtil;
 import com.hjy.helper.SignHelper;
 import com.hjy.helper.WebHelper;
@@ -26,7 +28,7 @@ import com.hjy.request.customsDeclaration.RequestParam;
 
 /**
  * @description: 跨境商户的订单进行报关处理|处理oc_kj_seller_customs_declaration表中
- * 	的所有记录，对其进行报关处理
+ * 	的所有记录，对其进行报关处理|此处调用.net组王炳春负责的字符网关接口
  * 	
  * @author Yangcl
  * @date 2016年10月26日 下午2:29:14 
@@ -38,7 +40,10 @@ public class JobForSendCustomsDeclaration extends RootJob{
 	
 	@Inject
 	private IOcKjSellerCustomsDeclarationDao dao;
-
+	@Inject 
+	private IWcSellerinfoDao wcSellerinfoDao;
+	
+	
 	private String startTime;
 	private String endTime;
 	
@@ -63,11 +68,13 @@ public class JobForSendCustomsDeclaration extends RootJob{
 				if(this.compareDate(this.startTime , this.endTime)){  // 开始时间大于结束时间则返回
 					return ;
 				}
-				List<String> sscList = new ArrayList<String>(Arrays.asList(this.getConfig("seller_adapter.kj_customs_declaration").split(","))); 
+				List<WcSellerinfo> sscList = wcSellerinfoDao.getCustomsDeclarationSellerList();  
+				if(sscList == null || sscList.size() == 0){
+					return ; 
+				}
 				Map<String , String> kjsellerMap = new HashMap<String , String>();
-				for(String s : sscList){
-					String [] arr = s.split("@");
-					kjsellerMap.put(arr[0] , arr[1] + "@" + arr[2]);
+				for(WcSellerinfo s : sscList){
+					kjsellerMap.put(s.getSellerCode() , s.getSellerCustomNumber() + "@" + s.getSellerCustomLocation());  
 				}
 				
 				Map<String , String> map = new HashMap<String , String>(3);

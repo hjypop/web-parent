@@ -6,10 +6,8 @@
 		<result column="uid" property="uid" jdbcType="CHAR" />
 		<result column="seller_code" property="sellerCode" jdbcType="VARCHAR" />
 		<result column="seller_name" property="sellerName" jdbcType="VARCHAR" />
-		<result column="seller_telephone" property="sellerTelephone"
-			jdbcType="VARCHAR" />
-		<result column="seller_descrption" property="sellerDescrption"
-			jdbcType="LONGVARCHAR" />
+		<result column="seller_telephone" property="sellerTelephone" jdbcType="VARCHAR" />
+		<result column="seller_descrption" property="sellerDescrption" jdbcType="LONGVARCHAR" />
 		<result column="seller_email" property="sellerEmail" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="INTEGER" />
 		<result column="price_type" property="priceType" jdbcType="INTEGER" />
@@ -19,7 +17,11 @@
 		<result column="updator" property="updator" jdbcType="VARCHAR" />
 		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
 		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="flag" property="flag" jdbcType="INTEGER" />
+	    <result column="seller_custom_number" property="sellerCustomNumber" jdbcType="VARCHAR" />
+	    <result column="seller_custom_location" property="sellerCustomLocation" jdbcType="VARCHAR" />
 	</resultMap>
+	
 	<sql id="Base_Column_List">
 		zid, uid, seller_code, seller_name,seller_descrption,
 		seller_telephone,
@@ -149,5 +151,37 @@
 		</set>
 		where seller_code = #{sellerCode,jdbcType=VARCHAR}
 	</update>
-
+	
+	
+	<!-- 获取惠家有要进行报关的商户列表 - Yangcl -->
+	<select id="getCustomsDeclarationSellerList" resultMap="BaseResultMap">
+		select
+			*
+		from
+			webcore.wc_sellerinfo
+		where
+			status = 1
+		and 
+			type = 1
+		and 
+			flag = 1 
+	</select>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
