@@ -129,12 +129,14 @@ public class ApiController {
 						/**
 						 * 根据productcode数组集合查询sku库存，推送sku库存到第三方
 						 */
-						result = productService.pushSkuStock(seller, request.getProductCodes());
+						JSONObject obj = JSONObject.parseObject(request.getData());
+						result = productService.pushSkuStock(seller, obj.getString("productCodes"));
 					} else if ("pushProductPrice".equals(method)) {
 						log.setClassUrl("com.hjy.service.product.IApiProductService.pushProductPrice");
 						log.setRemark(request.getMethod());
 						// 推送商品和sku价格到第三方
-						result = productService.pushProductPrice(seller, request.getProductCodes());
+						JSONObject obj = JSONObject.parseObject(request.getData());
+						result = productService.pushProductPrice(seller, obj.getString("productCodes"));
 					} else if ("RsyncProductStatus".equals(method)) {
 						// 同步商品上下架状态 - Yangcl
 						log.setClassUrl("com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus");
