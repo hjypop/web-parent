@@ -123,7 +123,7 @@
 			this.drawCle(this.arr[i].x, this.arr[i].y);
 		}
 
-		this.drawPoint(this.lastPoint);// 每帧花轨迹
+		this.drawPoint(this.lastPoint);// 每帧画轨迹
 		this.drawLine(po, this.lastPoint);// 每帧画圆心
 
 		for (var i = 0; i < this.restPoint.length; i++) {
@@ -190,9 +190,8 @@
 	H5lock.prototype.initDom = function() {
 		var wrap = document.createElement('div');
 		var str = '<h4 id="title" class="title">绘制签到图案</h4>'
-				+ '<canvas id="canvas" width="400" height="400" style="background-color: #f7d99c;display: inline-block;margin-top: 15px;"></canvas>';
-		wrap.setAttribute('style',
-				'position: absolute;top:0;left:0;right:0;bottom:0;');
+				+ '<canvas id="canvas" width="400" height="400" style="background-color: transparent;display: inline-block;margin-top: 15px;"></canvas>';
+		wrap.setAttribute('style', 'position: absolute;top:0;left:0;right:0;bottom:0;');
 		wrap.innerHTML = str;
 		document.body.appendChild(wrap);
 	}

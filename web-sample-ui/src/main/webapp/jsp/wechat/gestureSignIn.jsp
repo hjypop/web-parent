@@ -6,14 +6,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>H5lock</title>
-    <style type="text/css">
-        body {
-            text-align: center;
-            background-color: #f7d99c;  // c960dc
-        }
+    <style type="text/css"> 
         .title {
-            color: #22C3AA;
+            color: #000000;
         }
+        
+        body {
+        	text-align: center;
+		    background-image: url(../images/html5/bg.png);
+		    z-index: 0; 
+		}
     </style>
 </head>
 <body>
