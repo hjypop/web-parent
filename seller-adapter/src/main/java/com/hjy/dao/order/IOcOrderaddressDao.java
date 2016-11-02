@@ -1,5 +1,7 @@
 package com.hjy.dao.order;
 
+import java.util.List;
+
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.order.OcOrderaddress;
 
@@ -23,4 +25,15 @@ public interface IOcOrderaddressDao extends BaseDao<OcOrderaddress, Integer> {
 	 * @return
 	 */
 	OcOrderaddress findOrderAddressByOrderCode(String orderCode);
+	
+	/**
+	 * @description: 批量插入订单地址  
+	 * 
+	 * @param list
+	 * @return
+	 * @author Yangcl 
+	 * @date 2016年11月2日 下午5:37:11 
+	 * @version 1.0.0.1
+	 */
+	public Integer apiBatchInsert(List<OcOrderaddress> list);
 }

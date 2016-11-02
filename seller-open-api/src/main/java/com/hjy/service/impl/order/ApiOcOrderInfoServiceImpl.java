@@ -23,11 +23,13 @@ import com.hjy.annotation.ExculdeNullField;
 import com.hjy.dao.api.ILcOpenApiOrderInsertDao;
 import com.hjy.dao.api.ILcOpenApiQueryLogDao;
 import com.hjy.dao.log.ILcOpenApiOrderStatusDao;
+import com.hjy.dao.order.IOcOrderaddressDao;
 import com.hjy.dao.order.IOcOrderdetailDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.entity.log.LcOpenApiOrderInsert;
 import com.hjy.entity.log.LcOpenApiOrderStatus;
 import com.hjy.entity.log.LcOpenApiQueryLog;
+import com.hjy.entity.order.OcOrderaddress;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelper;
@@ -47,7 +49,7 @@ import com.hjy.service.order.IApiOcOrderInfoService;
 @Service("apiOcOrderInfoService")
 public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Integer> implements IApiOcOrderInfoService{
 	
-	private static Integer COUNT = 5000;       // 一次性批处理的数据数量 
+	private static Integer COUNT = 1000;       // 一次性批处理的数据数量 
 
 	@Resource
 	private IOcOrderinfoDao dao;
@@ -63,6 +65,9 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	
 	@Resource
 	private ILcOpenApiQueryLogDao openApiQueryDao;
+	
+	@Resource
+	private IOcOrderaddressDao addressDao;
 	
 	/**
 	 * @descriptions 根据Json串查询订单信息|依据商户编码、开始时间和结束时间来查询一批订单
@@ -300,12 +305,29 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 		if(StringUtils.isNotEmpty(lockcode)) {
 			List<OcOrderinfo> insertList = new ArrayList<OcOrderinfo>(); // 存放合法的数据记录
 			List<OrderDetail> insertOrderDetailList = new ArrayList<OrderDetail>(); // 存放合法的数据记录
+			List<OcOrderaddress> addressList = new ArrayList<OcOrderaddress>(); // 存放合法的数据记录
 			List<OrderInfoInsert> errorList = new ArrayList<OrderInfoInsert>(); // 存放数据不完整的记录
 			for(OrderInfoInsert i : list){
 				OcOrderinfo e = new OcOrderinfo();
 				if(this.validate(i, e)){
 					e.setOutOrderCode(e.getOrderCode()); // 第三方的订单编号
 					e.setOrderCode(WebHelper.getInstance().genUniqueCode("DD")); // 生成我们的订单编号
+					
+					// oc_orderadress
+					if(i.getAddress() == null){
+						errorList.add(i);
+						continue;
+					}
+					OcOrderaddress a = new OcOrderaddress();
+					if(this.validate(i.getAddress(), a)){
+						a.setUid(UUID.randomUUID().toString().replace("-", ""));
+						a.setInvoiceContent("449747240001"); 
+					}else{
+						errorList.add(i);
+						continue;
+					}
+					
+					// oc_orderdetail
 					List<OrderDetailInsert> dList = i.getList();
 					if(dList != null && dList.size() !=0){
 						List<OrderDetail> odList = new ArrayList<OrderDetail>(); // 临时存储
@@ -334,7 +356,8 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 							e.setSmallSellerCode(sellerCode); 
 							e.setOrderAuditStatus("449746680003"); 
 							e.setLowOrder("449747110001"); 
-							insertList.add(e);
+							insertList.add(e);  // oc_orderinfo
+							addressList.add(a); // oc_orderadress 全部条件满足则加入否则不加入地址信息
 						}
 						
 					}else{     // 如果sku list 信息为空，则认为这条数据错误
@@ -356,8 +379,13 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 				if(insertList.size() != 0){
 					dao.apiBatchInsert(insertList);
 					orderDetailDao.apiBatchInsert(insertOrderDetailList);
+					addressDao.apiBatchInsert(addressList);
 					remark_ = "batch insert success";
-					result.put("code", 0);
+					if(errorList.size() == 0){
+						result.put("code", 0);
+					}else{
+						result.put("code", 1);
+					}
 					result.put("desc", "SUCCESS");
 				}else{
 					remark_ = "insert list = 0";

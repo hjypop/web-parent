@@ -59,4 +59,52 @@
 		</where>
 	</select>
 
+	<!-- open api 批量插入订单信息 - Yangcl  -->
+	<insert id="apiBatchInsert" parameterType="java.util.List">
+		replace into ordercenter.oc_orderadress
+			( 
+				uid,
+				order_code,
+				area_code,
+				address,
+				postcode,
+				mobilephone,
+				receive_person,
+				email,
+				invoice_title,
+				invoice_type,
+				invoice_content,
+				flag_invoice,
+				remark,
+				invoice_status,
+				auth_true_name,
+				auth_idcard_type,
+				auth_idcard_number,
+				auth_phone_number,
+				auth_email,
+				auth_address
+			) 
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+				 #{item.uid} , 
+				 #{item.orderCode}
+				 // TODO 
+			 )
+		</foreach>
+	</insert>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

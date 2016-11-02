@@ -30,17 +30,23 @@ public class OrderInfoInsert {
 	private String productName;
 	private BigDecimal dueMoney; // 应付款
 	
-	
-	
+	private OrderAddressInsert address; 
+
+
 	private List<OrderDetailInsert> list ;  // 一个订单买了多个sku商品 
 
 
 
+	public OrderAddressInsert getAddress() {
+		return address;
+	}
+	public void setAddress(OrderAddressInsert address) {
+		this.address = address;
+	}
+	
 	public String getOrderCode() {
 		return orderCode;
 	}
-
-
 	public void setOrderCode(String orderCode) {
 		this.orderCode = orderCode;
 	}
