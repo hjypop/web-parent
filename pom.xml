@@ -12,7 +12,8 @@
 		<module>web-sample</module>
 		<module>web-sample-ui</module>
 		<module>web-quartz</module>
-    </modules>
+    <module>school_educational</module>
+  </modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>4.2.6.RELEASE</spring.version>
