@@ -2,7 +2,8 @@ package com.hjy.dao;
 
 import java.util.List;
 
-import com.hjy.pojo.entity.system.JobExectimer;
+import com.core.dao.BaseDao;
+import com.core.pojo.entity.system.JobExectimer;
 
 public interface IJobExectimerDao extends BaseDao<JobExectimer, Integer> {
 

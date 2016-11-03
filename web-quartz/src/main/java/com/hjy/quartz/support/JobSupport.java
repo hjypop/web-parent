@@ -15,10 +15,10 @@ import org.quartz.SchedulerFactory;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
-import com.hjy.base.BaseClass;
-import com.hjy.iface.IBaseJob;
+import com.core.base.BaseClass;
+import com.core.iface.IBaseJob;
+import com.core.system.TopConst;
 import com.hjy.quartz.model.MJobInfo;
-import com.hjy.system.TopConst;
 
 public class JobSupport extends BaseClass {
 

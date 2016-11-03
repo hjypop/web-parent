@@ -1,6 +1,6 @@
 package com.hjy.quartz.model;
 
-import com.hjy.iface.IBaseResult;
+import com.core.iface.IBaseResult;
 
 public class JobResult implements IBaseResult {
 	private int code;

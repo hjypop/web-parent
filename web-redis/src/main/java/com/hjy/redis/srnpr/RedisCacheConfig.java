@@ -1,6 +1,6 @@
 package com.hjy.redis.srnpr;
 
-import com.hjy.cache.RootCache;
+import com.core.cache.RootCache;
 import com.hjy.redis.srnpr.iface.IRedisCall;
 
 /**

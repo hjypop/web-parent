@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hjy.dao.ISysWebcodeDao">
+<mapper namespace="com.core.dao.ISysWebcodeDao">
 	<parameterMap id="uniqueParam" type="java.util.Map">
 		<parameter property="code" mode="IN" jdbcType="VARCHAR" />
 	</parameterMap>
 	<select id="callUniqueCode" parameterMap="uniqueParam" statementType="CALLABLE" resultType="String">
-		call zapdata.proc_zw_getcode(?)
+		call webcore.proc_get_unique_code(?)
 	</select>
 </mapper>
 

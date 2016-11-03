@@ -6,11 +6,11 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
 
-import com.hjy.helper.GsonHelper;
-import com.hjy.helper.LogHelper;
-import com.hjy.helper.WebHelper;
-import com.hjy.iface.IBaseResult;
-import com.hjy.pojo.entity.system.JobExectimer;
+import com.core.helper.GsonHelper;
+import com.core.helper.LogHelper;
+import com.core.helper.WebHelper;
+import com.core.iface.IBaseResult;
+import com.core.pojo.entity.system.JobExectimer;
 import com.hjy.quartz.model.ConfigJobExec;
 import com.hjy.quartz.model.JobResult;
 

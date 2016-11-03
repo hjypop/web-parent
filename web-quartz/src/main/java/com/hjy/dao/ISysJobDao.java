@@ -1,5 +1,6 @@
 package com.hjy.dao;
 
+import com.core.dao.BaseDao;
 import com.hjy.pojo.entity.system.SysJob;
 
 public interface ISysJobDao extends BaseDao<SysJob, Integer> {

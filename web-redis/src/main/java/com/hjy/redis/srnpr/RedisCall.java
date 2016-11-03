@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.hjy.model.MDataMap;
+import com.core.model.MDataMap;
 import com.hjy.redis.srnpr.iface.IRedisCall;
 
 import redis.clients.jedis.HostAndPort;

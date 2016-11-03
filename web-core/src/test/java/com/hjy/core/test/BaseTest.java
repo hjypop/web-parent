@@ -4,7 +4,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import com.hjy.system.SpringCtxUtil;
+import com.core.system.SpringCtxUtil;
 
 /**
  * 

@@ -9,19 +9,19 @@ import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hjy.annotation.Inject;
-import com.hjy.base.BaseClass;
-import com.hjy.helper.DateHelper;
-import com.hjy.helper.FormatHelper;
-import com.hjy.helper.LogHelper;
-import com.hjy.helper.WebHelper;
-import com.hjy.iface.IBaseJob;
-import com.hjy.model.MDataMap;
+import com.core.annotation.Inject;
+import com.core.base.BaseClass;
+import com.core.helper.DateHelper;
+import com.core.helper.FormatHelper;
+import com.core.helper.LogHelper;
+import com.core.helper.WebHelper;
+import com.core.iface.IBaseJob;
+import com.core.model.MDataMap;
+import com.core.system.TopConst;
 import com.hjy.pojo.entity.system.SysJob;
 import com.hjy.quartz.model.MJobInfo;
 import com.hjy.quartz.model.MLogJob;
 import com.hjy.service.IJobService;
-import com.hjy.system.TopConst;
 // properties配置信息核对完成 
 public abstract class RootJobForLock extends BaseClass implements Job, IBaseJob {
 

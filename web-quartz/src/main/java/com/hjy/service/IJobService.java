@@ -2,7 +2,8 @@ package com.hjy.service;
 
 import java.util.List;
 
-import com.hjy.pojo.entity.system.JobExectimer;
+import com.core.pojo.entity.system.JobExectimer;
+import com.core.service.IBaseService;
 import com.hjy.pojo.entity.system.SysJob;
 
 public interface IJobService  extends IBaseService<JobExectimer , Integer> {

@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.hjy.helper.WebHelper;
-import com.hjy.service.ISystemService;
+import com.core.helper.WebHelper;
+import com.core.service.ISystemService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/applicationContext.xml", "classpath:/mybatis-config.xml" })
@@ -29,7 +29,7 @@ public class LockTest {
 		
 //		Exception e = new RuntimeException("TestException");
 //		WebHelper.getInstance().errorMessage("sCode", "sErrorType", 20, "sErrorSource", "setErrorInfo", e);
-		
+		System.out.println("-------->");
 	}
 }
 

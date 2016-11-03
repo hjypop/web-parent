@@ -1,6 +1,6 @@
 package com.hjy.redis.srnpr.iface;
 
-import com.hjy.model.MDataMap;
+import com.core.model.MDataMap;
 
 /**
  * @descriptions Redis接口行为封装

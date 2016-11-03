@@ -6,9 +6,10 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.core.pojo.entity.system.JobExectimer;
+import com.core.service.impl.BaseServiceImpl;
 import com.hjy.dao.IJobExectimerDao;
 import com.hjy.dao.ISysJobDao;
-import com.hjy.pojo.entity.system.JobExectimer;
 import com.hjy.pojo.entity.system.SysJob;
 import com.hjy.service.IJobService;
 

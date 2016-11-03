@@ -1,6 +1,6 @@
 package com.hjy.redis.srnpr;
 
-import com.hjy.model.MDataMap;
+import com.core.model.MDataMap;
 import com.hjy.redis.srnpr.iface.IRedisCall;
 import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 

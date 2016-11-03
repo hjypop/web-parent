@@ -1,6 +1,6 @@
 package com.hjy.redis.srnpr;
 
-import com.hjy.base.BaseClass;
+import com.core.base.BaseClass;
 import com.hjy.redis.srnpr.iface.IRedisCall;
 
 /**

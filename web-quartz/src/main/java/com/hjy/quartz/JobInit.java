@@ -7,14 +7,14 @@ import java.util.List;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 
-import com.hjy.annotation.Inject;
-import com.hjy.iface.IBaseJob;
-import com.hjy.model.MDataMap;
+import com.core.annotation.Inject;
+import com.core.iface.IBaseJob;
+import com.core.model.MDataMap;
+import com.core.system.init.RootInit;
 import com.hjy.pojo.entity.system.SysJob;
 import com.hjy.quartz.model.MJobInfo;
 import com.hjy.quartz.support.JobSupport;
 import com.hjy.service.IJobService;
-import com.hjy.system.init.RootInit;
 
 // properties配置信息核对完成
 public class JobInit extends RootInit {
