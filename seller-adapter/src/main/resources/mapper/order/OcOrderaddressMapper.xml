@@ -59,7 +59,7 @@
 		</where>
 	</select>
 
-	<!-- open api 批量插入订单信息 - Yangcl  -->
+	<!-- open api 批量插入订单地址信息 - Yangcl  -->
 	<insert id="apiBatchInsert" parameterType="java.util.List">
 		replace into ordercenter.oc_orderadress
 			( 
@@ -88,8 +88,25 @@
 		<foreach collection="list" item="item" index="index" separator=",">
 			(
 				 #{item.uid} , 
-				 #{item.orderCode}
-				 // TODO 
+				 #{item.orderCode} , 
+				 #{item.areaCode} , 
+				 #{item.address} , 
+				 #{item.postcode} , 
+				 #{item.mobilephone} , 
+				 #{item.receivePerson} , 
+				 #{item.email} , 
+				 #{item.invoiceTitle} , 
+				 #{item.invoiceType} , 
+				 #{item.invoiceContent} , 
+				 #{item.flagInvoice} , 
+				 #{item.remark} , 
+				 #{item.invoiceStatus} , 
+				 #{item.authTrueName} , 
+				 #{item.authIdcardType} , 
+				 #{item.authIdcardNumber} , 
+				 #{item.authPhoneNumber} , 
+				 #{item.authEmail} , 
+				 #{item.authAddress} 
 			 )
 		</foreach>
 	</insert>

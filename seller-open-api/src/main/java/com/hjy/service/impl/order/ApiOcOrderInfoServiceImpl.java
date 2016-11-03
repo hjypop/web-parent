@@ -268,7 +268,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 
 
 	/** Order.Insert
-	 * @descriptions 插入订单状态信息
+	 * @descriptions 插入订单状态信息                                        TODO 此处拆单还有问题，OS大订单号还没有加，需要小强的拆单逻辑 ！！！！！
 	 *  惠家有：商户；第三方：销售平台。
 	 *  第三方将订单信息发送给惠家有，惠家有插入订单
 	 * 
@@ -321,7 +321,8 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 					OcOrderaddress a = new OcOrderaddress();
 					if(this.validate(i.getAddress(), a)){
 						a.setUid(UUID.randomUUID().toString().replace("-", ""));
-						a.setInvoiceContent("449747240001"); 
+						a.setOrderCode(e.getOrderCode()); 
+						a.setInvoiceStatus("449747240001"); 
 					}else{
 						errorList.add(i);
 						continue;

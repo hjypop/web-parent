@@ -11,6 +11,7 @@ import java.util.Map;
 import com.alibaba.fastjson.JSON;
 import com.hjy.helper.SignHelper;
 import com.hjy.request.Request;
+import com.hjy.request.data.OrderAddressInsert;
 import com.hjy.request.data.OrderDetailInsert;
 import com.hjy.request.data.OrderInfoInsert;
 import com.hjy.request.data.OrderInfoRequest;
@@ -77,11 +78,28 @@ public class DataInit {
 		r.setAppSecret("83c0e6f4aa5f11e39ee0000c298b20fc");
 		
 		List<OrderInfoInsert> oList = new ArrayList<OrderInfoInsert>();
-		String orderCode = "TBI88996";
+		String orderCode = "TBI88997";
 		String producdCode = "PC88596-";
 		String skuCode = "SKU12340g-";
 		for(int i = 0 ; i < 50 ; i ++){
 			OrderInfoInsert o = new OrderInfoInsert();
+			
+			OrderAddressInsert a = new OrderAddressInsert();
+			a.setAreaCode("123456");
+			a.setAddress("address");
+			a.setPostcode("101109");
+			a.setMobilephone("13500000000");
+			a.setReceivePerson("receive-person");
+			a.setFlagInvoice(0);
+			a.setAuthTrueName("auth-name");
+			a.setAuthIdcardType("4497465200090001");
+			a.setAuthIdcardNumber("110223198906669999");
+			a.setAuthPhoneNumber("13900000000"); 
+			a.setAuthEmail("AuthEmail");
+			a.setAuthAddress("authAddress");
+			
+			o.setAddress(a); 
+			
 			o.setOrderCode(orderCode + i);
 			o.setPayType("449716200009");              // 根据此值删除数据
 			if(i % 9 == 0 ){
@@ -93,9 +111,7 @@ public class DataInit {
 			o.setProductMoney(BigDecimal.valueOf(Long.valueOf(pm))); 
 			o.setTransportMoney(BigDecimal.ONE); 
 			o.setOrderMoney(o.getProductMoney().add(BigDecimal.TEN));
-			
 			o.setPayedMoney(BigDecimal.valueOf(Double.valueOf(32.99)));   
-			
 			o.setProductName("窈窕淑女 - 我好逑！");
 			o.setDueMoney(o.getOrderMoney()); 
 			

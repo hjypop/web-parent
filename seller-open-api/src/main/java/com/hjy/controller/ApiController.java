@@ -54,8 +54,8 @@ public class ApiController {
 	@ResponseBody
 	public JSONObject requestApi(Request request) {
 
-//		request = DataInit.apiSelectShipmentsTest();
-//		System.out.println(JSONObject.toJSONString(request));
+//		request = DataInit.orderInfoBatchInsertTest();
+		System.out.println(JSONObject.toJSONString(request));
 		logger.info(JSONObject.toJSONString(request));
 
 		JSONObject result = new JSONObject();

@@ -3,25 +3,24 @@ package com.hjy.request.data;
 import com.hjy.annotation.ExculdeNullField;
 
 public class OrderAddressInsert {
-	private String orderCode; 
 	@ExculdeNullField  // 标识此字段为非必传字段
-	private String areaCode;
+	private String areaCode = "";
 	private String address;
 	private String postcode; // 邮政编码 
 	private String mobilephone; // 收件人电话 
 	private String receivePerson;  // 收货人
 	@ExculdeNullField 
-	private String email;  // 电子邮箱
+	private String email = "";  // 电子邮箱
 	@ExculdeNullField 
-	private String invoiceTitle; // 发票抬头
+	private String invoiceTitle = ""; // 发票抬头
 	@ExculdeNullField 
-	private String invoiceType; // 发票类型
+	private String invoiceType = ""; // 发票类型
 	@ExculdeNullField 
-	private String invoiceContent; // 发票内容
+	private String invoiceContent = ""; // 发票内容
 	private Integer flagInvoice; // 是否开发票 0不开 1开 默认1
 	@ExculdeNullField 
-	private String remark;
-	private String invoiceStatus; // 发票状态 449747240001:未开发票(默认) | 449747240002:已开发票
+	private String remark = "";
+//	private String invoiceStatus; // 发票状态 449747240001:未开发票(默认) | 449747240002:已开发票
 	private String authTrueName; // 真实姓名
 	private String authIdcardType; // 证件类型 4497465200090001 身份证
 	private String authIdcardNumber; // 证件编号 
@@ -35,12 +34,6 @@ public class OrderAddressInsert {
 	}
 	public void setMobilephone(String mobilephone) {
 		this.mobilephone = mobilephone;
-	}
-	public String getOrderCode() {
-		return orderCode;
-	}
-	public void setOrderCode(String orderCode) {
-		this.orderCode = orderCode;
 	}
 	public String getAreaCode() {
 		return areaCode;
@@ -102,12 +95,12 @@ public class OrderAddressInsert {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	public String getInvoiceStatus() {
-		return invoiceStatus;
-	}
-	public void setInvoiceStatus(String invoiceStatus) {
-		this.invoiceStatus = invoiceStatus;
-	}
+//	public String getInvoiceStatus() {
+//		return invoiceStatus;
+//	}
+//	public void setInvoiceStatus(String invoiceStatus) {
+//		this.invoiceStatus = invoiceStatus;
+//	}
 	public String getAuthTrueName() {
 		return authTrueName;
 	}
