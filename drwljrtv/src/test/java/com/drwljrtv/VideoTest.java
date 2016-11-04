@@ -21,6 +21,7 @@ public class VideoTest {
 	@Test
 	public void getVideos() {
 		GetVideos request = new GetVideos();
+		request.setTag(1);
 		JSONArray array = service.getVideos(request);
 		System.out.println(array);
 	}
