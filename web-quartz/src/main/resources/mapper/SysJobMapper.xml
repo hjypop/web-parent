@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hjy.dao.ISysJobDao">
+<mapper namespace="com.quartz.dao.ISysJobDao">
 
-	<resultMap id="BaseResultMap" type="com.hjy.pojo.entity.system.SysJob">
+	<resultMap id="BaseResultMap" type="com.quartz.pojo.entity.system.SysJob">
 		<id column="zid" property="zid" jdbcType="INTEGER" />
 		<result column="uid" property="uid" jdbcType="CHAR" />
 		<result column="job_title" property="jobTitle" jdbcType="VARCHAR" />
@@ -23,7 +23,7 @@
 		select * from sys_job where zid = #{zid,jdbcType=INTEGER}
 	</select>
 	
-	<select id="findList" resultMap="BaseResultMap" parameterType="com.hjy.pojo.entity.system.SysJob">
+	<select id="findList" resultMap="BaseResultMap" parameterType="com.quartz.pojo.entity.system.SysJob">
 		select 
 			* 
 		from 
@@ -43,7 +43,7 @@
 	</delete>
 	
 	
-	<insert id="insertSelective" parameterType="com.hjy.pojo.entity.system.SysJob">
+	<insert id="insertSelective" parameterType="com.quartz.pojo.entity.system.SysJob">
 		insert into sys_job
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
@@ -135,7 +135,7 @@
 		</trim>
 	</insert>
 	
-	<update id="updateSelective" parameterType="com.hjy.pojo.entity.system.SysJob">
+	<update id="updateSelective" parameterType="com.quartz.pojo.entity.system.SysJob">
 		update sys_job
 		<set>
 			<if test="uid != null">
@@ -181,7 +181,7 @@
 		where zid = #{zid,jdbcType=INTEGER}
 	</update>
 	
-	<update id="updateSelectiveByUuid" parameterType="com.hjy.pojo.entity.system.SysJob">
+	<update id="updateSelectiveByUuid" parameterType="com.quartz.pojo.entity.system.SysJob">
 		update sys_job
 		<set>
 			<if test="uid != null">

@@ -14,9 +14,9 @@
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">    
         
 	<!-- 自动扫描 使用注解的包，包括子集 -->
-	<context:component-scan base-package="com.hjy.dao" />
-	<context:component-scan base-package="com.hjy.service" />
-	<context:component-scan base-package="com.hjy.helper" />
+	<context:component-scan base-package="com.*.dao" />
+	<context:component-scan base-package="com.*.service" />
+	<context:component-scan base-package="com.*.helper" />
 	
 	<!-- 配置数据源 -->
 	<context:property-placeholder location="classpath:properties/jdbc.properties" />   
@@ -55,7 +55,7 @@
 	
 	
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.hjy.dao" />
+		<property name="basePackage" value="com.*.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 	</bean>
 	
@@ -96,7 +96,7 @@
     </tx:advice>  
     
     <aop:config>  
-        <aop:pointcut id="serviceOperation"  expression="execution(* com.hjy.service.impl.*.*(..))" />  
+        <aop:pointcut id="serviceOperation"  expression="execution(* com.*.service.impl.*.*(..))" />  
         <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation" />  
     </aop:config>  
     
@@ -109,7 +109,7 @@
 	<bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut" scope="prototype">
 		<property name="patterns">
 			<list>
-				<value>com.hjy.service.impl.*</value>
+				<value>com.*.service.impl.*</value>
 			</list>
 		</property>
 	</bean>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hjy.dao.IJobExectimerDao">
+<mapper namespace="com.quartz.dao.IJobExectimerDao">
 	
-	<resultMap id="BaseResultMap" type="com.hjy.pojo.entity.system.JobExectimer">
+	<resultMap id="BaseResultMap" type="com.quartz.pojo.entity.system.JobExectimer">
 		<id column="zid" property="zid" jdbcType="INTEGER" />
 		<result column="uid" property="uid" jdbcType="CHAR" />
 		<result column="exec_code" property="execCode" jdbcType="VARCHAR" />
@@ -26,7 +26,7 @@
 	</delete>
 	
 
-	<insert id="insertSelective" parameterType="com.hjy.pojo.entity.system.JobExectimer">
+	<insert id="insertSelective" parameterType="com.quartz.pojo.entity.system.JobExectimer">
 		insert into job_exectimer
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="zid != null">
@@ -106,7 +106,7 @@
 		</trim>
 	</insert>
 	
-	<update id="updateSelective" parameterType="com.hjy.pojo.entity.system.JobExectimer">
+	<update id="updateSelective" parameterType="com.quartz.pojo.entity.system.JobExectimer">
 		update job_exectimer
 		<set>
 			<if test="uid != null">
@@ -146,7 +146,7 @@
 		where zid = #{zid,jdbcType=INTEGER}
 	</update>
 	
-	<update id="updateSelectiveByExecCode" parameterType="com.hjy.pojo.entity.system.JobExectimer">
+	<update id="updateSelectiveByExecCode" parameterType="com.quartz.pojo.entity.system.JobExectimer">
 		update job_exectimer
 		<set>
 			<if test="uid != null">

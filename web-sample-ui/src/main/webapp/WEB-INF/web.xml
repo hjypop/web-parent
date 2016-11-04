@@ -19,7 +19,7 @@
 	
 	<!-- system initializer -->
 	<listener>
-		<listener-class>com.hjy.system.init.ServerletListener</listener-class>
+		<listener-class>com.core.system.init.ServerletListener</listener-class>
 	</listener>
 	
 	<!-- spring dispatcher -->

@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.core.controller.BaseController;
+import com.core.pojo.entity.login.UserInfo;
+import com.core.pojo.entity.system.Company;
+import com.core.service.ICompanyService;
+import com.core.service.ILoginService;
+import com.core.service.IUserInfoService;
 import com.github.miemiedev.mybatis.paginator.domain.Order;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.hjy.controller.BaseController;
-import com.hjy.pojo.entity.login.UserInfo;
-import com.hjy.pojo.entity.system.Company;
-import com.hjy.service.ICompanyService;
-import com.hjy.service.ILoginService;
-import com.hjy.service.IUserInfoService;
 
 /**
  * @descriptions 所有【示例】相关的后台方法都在这里 
