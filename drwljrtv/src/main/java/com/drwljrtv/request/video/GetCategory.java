@@ -11,4 +11,30 @@ import com.drwljrtv.request.BaseRequest;
  */
 public class GetCategory extends BaseRequest {
 
+	/**
+	 * 分类id
+	 */
+	private Integer categoryId;
+
+	/**
+	 * 分类标记（1：首页显示，2：主导航显示，3：移动端推荐）
+	 */
+	private Integer tag;
+
+	public Integer getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Integer categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public Integer getTag() {
+		return tag;
+	}
+
+	public void setTag(Integer tag) {
+		this.tag = tag;
+	}
+
 }
