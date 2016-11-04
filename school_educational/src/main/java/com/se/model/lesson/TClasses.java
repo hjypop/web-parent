@@ -11,14 +11,32 @@ import com.se.model.BaseModel;
  */
 public class TClasses extends BaseModel {
 
-	private String name;
+	private String schoolName;
+	private String gradeName;
+	private String className;
 
-	public String getName() {
-		return name;
+	public String getSchoolName() {
+		return schoolName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+
+	public String getGradeName() {
+		return gradeName;
+	}
+
+	public void setGradeName(String gradeName) {
+		this.gradeName = gradeName;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
 	}
 
 }

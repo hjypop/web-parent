@@ -5,14 +5,17 @@
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="uuid" property="uuid" jdbcType="VARCHAR" />
 		<result column="code" property="code" jdbcType="VARCHAR" />
-		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="school_name" property="schoolName" jdbcType="VARCHAR" />
+		<result column="grade_name" property="gradeName" jdbcType="VARCHAR" />
+		<result column="class_name" property="className" jdbcType="VARCHAR" />
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
 		<result column="update_user" property="updateUser" jdbcType="VARCHAR" />
 		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, uuid, code, name,create_user,
+		id, uuid, code,
+		school_name,grade_name,class_name,create_user,
 		DATE_FORMAT(
 		create_time,
 		'%Y-%m-%d %H:%i:%s'
@@ -41,7 +44,9 @@
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			uuid,
 			code,
-			name,
+			school_name,
+			grade_name,
+			class_name,
 			create_user,
 			create_time,
 			update_user,
@@ -50,7 +55,9 @@
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			#{uuid,jdbcType=VARCHAR},
 			#{code,jdbcType=VARCHAR},
-			#{name,jdbcType=VARCHAR},
+			#{schoolName,jdbcType=VARCHAR},
+			#{gradeName,jdbcType=VARCHAR},
+			#{className,jdbcType=VARCHAR},
 			#{createUser,jdbcType=VARCHAR},
 			STR_TO_DATE(
 			#{createTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
@@ -62,8 +69,14 @@
 	<update id="updateByCode" parameterType="com.se.model.lesson.TClasses">
 		update t_classes
 		<set>
-			<if test="name != null">
-				name = #{name,jdbcType=VARCHAR},
+			<if test="schoolName != null and schoolName != ''">
+				school_name = #{schoolName,jdbcType=VARCHAR},
+			</if>
+			<if test="gradeName != null and gradeName != ''">
+				grade_name = #{gradeName,jdbcType=VARCHAR},
+			</if>
+			<if test="className != null and className != ''">
+				class_name = #{className,jdbcType=VARCHAR},
 			</if>
 			update_user = #{updateUser,jdbcType=VARCHAR},
 			update_time =
@@ -71,5 +84,4 @@
 		</set>
 		where code = #{code,jdbcType=VARCHAR}
 	</update>
-	<select id="findEntityAll" resultMap="BaseResultMap"></select>
 </mapper>
