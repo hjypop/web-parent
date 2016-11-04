@@ -29,9 +29,7 @@ public class LoadProperties extends BaseClass {
 	 */
 	public MStringMap loadMap(String sDir) {
 
-		@SuppressWarnings({ "unchecked" })
-		Collection<File> files = FileUtils.listFiles((new File(sDir)),
-				new String[] { "properties" }, true);
+		Collection<File> files = FileUtils.listFiles((new File(sDir)), new String[] { "properties" }, true);
 
 		return loadMapFromFiles(files);
 
@@ -57,8 +55,7 @@ public class LoadProperties extends BaseClass {
 				Iterator<String> em = pConfiguration.getKeys();
 
 				// 定义命名空间
-				String sNameSpace = StringUtils.defaultString(
-						pConfiguration.getString("@this$namespace"), "");
+				String sNameSpace = StringUtils.defaultString(pConfiguration.getString("@this$namespace"), "");
 
 				while (em.hasNext()) {
 					String sKeyString = em.next();
@@ -68,21 +65,18 @@ public class LoadProperties extends BaseClass {
 					// 定义是否强制覆盖
 					boolean bOverWrite = false;
 
-					String sValueString = StringUtils.join(
-							pConfiguration.getStringArray(sKeyString), ",");
+					String sValueString = StringUtils.join(pConfiguration.getStringArray(sKeyString), ",");
 
 					if (StringUtils.isNotEmpty(sNameSpace)) {
 						if (!StringUtils.startsWith(sKeyString, "@")
-								&& !StringUtils.startsWith(sKeyString,
-										sNameSpace)) {
+								&& !StringUtils.startsWith(sKeyString, sNameSpace)) {
 							sKeyString = sNameSpace + "." + sKeyString;
 						}
 					}
 
 					// 进行特殊判断模式
 					if (StringUtils.startsWith(sKeyString, "@")) {
-						String sTarget = StringUtils.substringBetween(
-								sKeyString, "@", "$");
+						String sTarget = StringUtils.substringBetween(sKeyString, "@", "$");
 
 						// 覆写配置
 						if (sTarget.equals("override")) {
@@ -94,8 +88,7 @@ public class LoadProperties extends BaseClass {
 
 						}
 
-						sKeyString = StringUtils
-								.substringAfter(sKeyString, "$");
+						sKeyString = StringUtils.substringAfter(sKeyString, "$");
 
 					}
 

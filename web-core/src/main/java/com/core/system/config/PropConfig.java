@@ -8,9 +8,9 @@ import com.core.system.SysWorkDir;
 import com.core.system.TopConst;
 
 /**
- * alias TopConfig
- * 初始化加载配置
- * @author HJY 
+ * alias TopConfig 初始化加载配置
+ * 
+ * @author HJY
  */
 public class PropConfig extends RootCache<String, String> {
 
@@ -18,14 +18,11 @@ public class PropConfig extends RootCache<String, String> {
 
 	public synchronized void refresh() {
 		SysWorkDir topDir = new SysWorkDir();
-		String sTempConfigString = topDir
-				.getTempDir(TopConst.CONST_TOP_CUSTOM_CONFIG_PATH);
+		String sTempConfigString = topDir.getTempDir(TopConst.CONST_TOP_CUSTOM_CONFIG_PATH);
 		// topDir.upZapDir();
 		getLogger().logInfo(0, "refresh " + sTempConfigString);
 		IoHelper ioHelper = new IoHelper();
-		ioHelper.copyResources(
-				"classpath*:META-INF/hjy/config/*.properties",
-				sTempConfigString, "/hjy/config/");
+		ioHelper.copyResources("classpath*:META-INF/module/config/*.properties", sTempConfigString, "/hjy/config/");
 		LoadProperties loadProperties = new LoadProperties();
 
 		// 开始读取配置
@@ -39,8 +36,7 @@ public class PropConfig extends RootCache<String, String> {
 
 		// 开始扫描扩展自定义的设置
 		{
-			String sCustom = topDir
-					.getCustomPath(TopConst.CONST_TOP_CUSTOM_CONFIG_PATH);
+			String sCustom = topDir.getCustomPath(TopConst.CONST_TOP_CUSTOM_CONFIG_PATH);
 			getLogger().logInfo(0, "scan custom config " + sCustom + "");
 
 			MStringMap mCustomMap = loadProperties.loadMap(sCustom);
