@@ -75,7 +75,11 @@ public class VideoServiceImpl extends BaseClass implements IVideoService {
 			}
 
 		}
-		JSONArray array = ApiHelper.getInstance().getData(param);
+		JSONObject result = ApiHelper.getInstance().getResult(param);
+		JSONArray array = null;
+		if (StringUtils.equals(result.getString("state"), "ok")) {
+			array = ApiHelper.getInstance().getResult(param).getJSONArray("data");
+		}
 		if (array != null && array.size() > 0) {
 			for (int i = 0; i < array.size(); i++) {
 				JSONObject obj = array.getJSONObject(i);
@@ -107,23 +111,28 @@ public class VideoServiceImpl extends BaseClass implements IVideoService {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_video");
 		param.put("videoid", String.valueOf(videoId));
-		JSONObject obj = ApiHelper.getInstance().getObj(param);
-		if (StringUtils.isNotBlank(obj.getString("thumb"))) {
-			obj.put("thumb", Constant.URL + obj.getString("thumb"));
-		} else {
-			obj.put("thumb", Constant.NO_THUMB);
-		}
-		if (StringUtils.isNotBlank(obj.getString("big_thumb"))) {
-			obj.put("big_thumb", Constant.URL + obj.getString("big_thumb"));
-		} else {
-			obj.put("big_thumb", Constant.NO_THUMB);
-		}
-		if (StringUtils.isNoneBlank(obj.getString("streams"))) {
-			JSONObject streams = JSONObject.parseObject(obj.getString("streams"));
-			if (StringUtils.isNotBlank(streams.getString("hd"))) {
-				obj.put("video_href", streams.getString("hd"));
-				obj.put("video_size", streams.getString("hd_size"));
+		JSONObject obj = ApiHelper.getInstance().getResult(param);
+		if (StringUtils.equals(obj.getString("state"), "ok")) {
+			obj = obj.getJSONObject("data");
+			if (StringUtils.isNotBlank(obj.getString("thumb"))) {
+				obj.put("thumb", Constant.URL + obj.getString("thumb"));
+			} else {
+				obj.put("thumb", Constant.NO_THUMB);
 			}
+			if (StringUtils.isNotBlank(obj.getString("big_thumb"))) {
+				obj.put("big_thumb", Constant.URL + obj.getString("big_thumb"));
+			} else {
+				obj.put("big_thumb", Constant.NO_THUMB);
+			}
+			if (StringUtils.isNoneBlank(obj.getString("streams"))) {
+				JSONObject streams = JSONObject.parseObject(obj.getString("streams"));
+				if (StringUtils.isNotBlank(streams.getString("hd"))) {
+					obj.put("video_href", streams.getString("hd"));
+					obj.put("video_size", streams.getString("hd_size"));
+				}
+			}
+		} else {
+			obj = null;
 		}
 		return obj;
 	}

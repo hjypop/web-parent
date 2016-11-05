@@ -36,7 +36,11 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_category");
 		param.put("tag", String.valueOf(request.getTag()));
-		JSONArray array = ApiHelper.getInstance().getData(param);
+		JSONObject result = ApiHelper.getInstance().getResult(param);
+		JSONArray array = null;
+		if (StringUtils.equals(result.getString("state"), "ok")) {
+			array = ApiHelper.getInstance().getResult(param).getJSONArray("data");
+		}
 		if (array != null && array.size() > 0) {
 			for (int i = 0; i < array.size(); i++) {
 				JSONObject obj = array.getJSONObject(i);
@@ -63,7 +67,11 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_category");
 		param.put("tag", String.valueOf(request.getTag()));
-		JSONArray array = ApiHelper.getInstance().getData(param);
+		JSONObject result = ApiHelper.getInstance().getResult(param);
+		JSONArray array = null;
+		if (StringUtils.equals(result.getString("state"), "ok")) {
+			array = ApiHelper.getInstance().getResult(param).getJSONArray("data");
+		}
 		if (array != null && array.size() > 0) {
 			for (int i = 0; i < array.size(); i++) {
 				JSONObject obj = array.getJSONObject(i);
