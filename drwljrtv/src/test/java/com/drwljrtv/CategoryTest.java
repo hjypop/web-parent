@@ -17,19 +17,19 @@ public class CategoryTest {
 	@Autowired
 	private ICategoryService service;
 
+	@Test
 	public void getCategorys() {
 		GetCategory request = new GetCategory();
 		request.setTag(1);
-		JSONArray array = service.getCategorys(request);
-		System.out.println(array);
+		JSONArray obj = service.getCategorys(request);
+		System.out.println(obj);
 	}
 
-	@Test
 	public void getSubCategorys() {
 		GetCategory request = new GetCategory();
 		request.setTag(1);
 		request.setCategoryId(58);
-		JSONArray array = service.getSubCategorys(request);
-		System.out.println(array);
+		JSONArray obj = service.getSubCategorys(request);
+		System.out.println(obj);
 	}
 }

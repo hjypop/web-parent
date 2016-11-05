@@ -13,6 +13,7 @@
 		<module>web-sample-ui</module>
 		<module>web-quartz</module>
     <module>drwljrtv</module>
+    <module>web-drwljrtv</module>
   </modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

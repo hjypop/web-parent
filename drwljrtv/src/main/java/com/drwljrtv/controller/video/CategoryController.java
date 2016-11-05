@@ -21,7 +21,6 @@ public class CategoryController {
 	public JSONArray getCategory() {
 		GetCategory request = new GetCategory();
 		request.setTag(1);
-		JSONArray array = service.getCategorys(request);
-		return array;
+		return service.getCategorys(request);
 	}
 }

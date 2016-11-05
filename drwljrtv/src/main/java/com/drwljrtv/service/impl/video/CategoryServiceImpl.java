@@ -1,17 +1,18 @@
-package com.drwljrtv.service.video.impl.video;
+package com.drwljrtv.service.impl.video;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.core.base.BaseClass;
-import com.core.system.PureNetUtil;
 import com.drwljrtv.request.video.GetCategory;
 import com.drwljrtv.service.video.ICategoryService;
+import com.drwljrtv.util.ApiHelper;
+import com.drwljrtv.util.Constant;
 
 /**
  * 
@@ -23,8 +24,6 @@ import com.drwljrtv.service.video.ICategoryService;
 @Service
 public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 
-	private static final String URL = "http://www.bdysgz.net/actions/mobile_api.php";
-
 	/**
 	 * 
 	 * 方法: getCategorys <br>
@@ -34,16 +33,16 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 	 */
 	@Override
 	public JSONArray getCategorys(GetCategory request) {
-		JSONArray array = null;
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_category");
 		param.put("tag", String.valueOf(request.getTag()));
-		String response = PureNetUtil.post(URL, param);
-		JSONObject result = JSONObject.parseObject(response);
-		if (result.getInteger("ret") == 0) {
-			JSONObject obj = result.getJSONObject("data");
-			if (StringUtils.equals(obj.getString("state"), "ok")) {
-				array = JSONArray.parseArray(obj.getString("data"));
+		JSONArray array = ApiHelper.getInstance().getData(param);
+		if (array != null && array.size() > 0) {
+			for (int i = 0; i < array.size(); i++) {
+				JSONObject obj = array.getJSONObject(i);
+				if (StringUtils.isNotBlank(obj.getString("thumb"))) {
+					obj.put("thumb", Constant.URL + obj.get("thumb"));
+				}
 			}
 		}
 		return array;
@@ -59,21 +58,15 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 	 */
 	@Override
 	public JSONArray getSubCategorys(GetCategory request) {
-		JSONArray array = null;
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_category");
 		param.put("tag", String.valueOf(request.getTag()));
-		String response = PureNetUtil.post(URL, param);
-		JSONObject result = JSONObject.parseObject(response);
-		if (result.getInteger("ret") == 0) {
-			JSONObject obj = result.getJSONObject("data");
-			if (StringUtils.equals(obj.getString("state"), "ok")) {
-				array = JSONArray.parseArray(obj.getString("data"));
-				for (int i = 0; i < array.size(); i++) {
-					JSONObject sub = array.getJSONObject(i);
-					if (sub.getInteger("category_id") == request.getCategoryId()) {
-						array = JSONArray.parseArray(sub.getString("sunclass"));
-					}
+		JSONArray array = ApiHelper.getInstance().getData(param);
+		if (array != null && array.size() > 0) {
+			for (int i = 0; i < array.size(); i++) {
+				JSONObject obj = array.getJSONObject(i);
+				if (StringUtils.isNotBlank(obj.getString("thumb"))) {
+					obj.put("thumb", Constant.URL + obj.getString("thumb"));
 				}
 			}
 		}

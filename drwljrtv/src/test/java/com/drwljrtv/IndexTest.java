@@ -6,22 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.alibaba.fastjson.JSONArray;
-import com.drwljrtv.request.video.GetVideos;
-import com.drwljrtv.service.video.IVideoService;
+import com.drwljrtv.service.IndexService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/applicationContext.xml" })
-public class VideoTest {
+public class IndexTest {
 
 	@Autowired
-	private IVideoService service;
+	private IndexService service;
 
 	@Test
-	public void getVideos() {
-		GetVideos request = new GetVideos();
-		request.setTag(1);
-		JSONArray array = service.getVideos(request);
-		System.out.println(array);
+	public void getShufflingImages() {
+		System.out.println(service.getShufflingImages());
 	}
 }

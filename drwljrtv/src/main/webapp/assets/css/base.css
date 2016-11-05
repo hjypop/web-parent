@@ -1,0 +1,578 @@
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+ul li {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+
+a,
+button,
+input,
+textarea {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+}
+
+input,
+textarea {
+　　border: 0;
+　　-webkit-appearance: none;
+}
+/*@font-face {
+	font-family: heiti;
+	font-weight: normal;
+	font-style: normal;
+	src: url('mui.ttf') format('truetype');
+}*/
+
+html {
+　　      -webkit-text-size-adjust: 100%;
+}
+html,body {
+	font-size: 14px;
+	font-family: '微软雅黑';
+	-webkit-overflow-scrolling: touch;
+	background: #eeeeee;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #a6a6a6;  
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #a6a6a6;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+    color: #a6a6a6;
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+    color: #a6a6a6;
+}
+
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0 1000px white inset;
+}
+
+@media screen and (min-width:480px) and (max-width:639px) {
+	
+}
+
+@media screen and (min-width:640px) and (max-width:719px) {
+
+}
+
+@media screen and (min-width:720px) and (max-width:749px) {
+
+}
+
+@media screen and (min-width:750px) and (max-width:799px) {
+
+}
+
+@media screen and (min-width:800px) and (max-width:959px) {
+	
+}
+
+
+img{
+	display: block;
+	width: 100%;
+	border: none;
+}
+
+
+.left{
+	float: left;
+}
+.right{
+	float: right;
+}
+.clearfix:after {
+	content: "";
+	height: 0;
+	display: block;
+	clear: both;
+}
+
+.clearfix {
+	zoom: 1;
+}
+
+*:focus {
+ outline: none;
+}
+
+.wrapper{
+	width: 100%;
+	max-width: 640px;
+	margin: 0 auto;
+}
+
+textarea{
+	resize: none;
+}
+
+
+header{
+	width: 100%;
+	max-width: 640px;
+	position: fixed;
+    z-index: 10;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 44px;
+    border-bottom: 0;
+    background-color: #3a9be0;
+}
+
+header a{
+	width: 60px;
+	height: 44px;
+	line-height: 44px;
+	text-align:center;
+	font-size: 14px;
+	color: #fff;
+}
+
+header a img{
+	margin: 0 auto;
+	width:20px;
+	margin-top: 12px;
+}
+
+
+header h2{
+	position: absolute;
+    display: block;
+    padding: 0;
+    text-align: center;
+    white-space: nowrap;
+    color: #FFF;
+    right: 40px;
+    left: 40px;
+    overflow: hidden;
+    width: auto;
+    text-overflow: ellipsis;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 44px;
+    
+}
+
+header span{
+	position: absolute;
+    display: block;
+    padding: 0;
+    white-space: nowrap;
+    color: #FFF;
+    right: 40px;
+    left: 40px;
+    overflow: hidden;
+    text-indent: 1em;
+    width: auto;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 44px;
+    
+}
+
+
+
+.main{
+	    padding:45px 0 1rem 0;
+}
+
+.banner {
+    height:3.2rem;
+
+    overflow: hidden;
+    position: relative;
+}
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.swiper-slide img{
+	width: 100%;
+}
+.swiper-container-horizontal>.swiper-pagination{
+	bottom: .1rem;
+}
+.swiper-container-horizontal>.swiper-pagination span{
+	width: .06rem;
+	height: .06rem;
+	border: 1px solid #fff;
+	border-radius: 50%;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	background: none;
+}
+.swiper-container-horizontal>.swiper-pagination span.swiper-pagination-bullet-active {
+	background: #fff;
+}
+
+
+nav{
+	height: .9rem;
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	background: #3a9be0;
+	overflow: hidden;
+	z-index: 9999;
+}
+nav a{
+	width: 20%;
+	text-align: center;
+	float: left;
+	padding: .1rem 0;
+	font-size: .2rem;
+	color: #fff;
+	cursor: pointer;
+}
+nav a i{
+	display: block;
+	width: .4rem;
+	margin: 0 auto;
+	padding-bottom: .05rem;
+}
+nav a.active,nav a:hover{
+	background: #3cb0e6;
+}
+
+
+
+
+
+
+
+
+
+.listVideo{
+	width: 100%;
+	padding-top:10px ;
+}
+.title{
+	width: 100%;
+	height: 46px;
+	line-height: 46px;
+	background: #fff;
+}
+.title h2{
+	font-size: 14px;
+	color: #333;
+	padding: 0 10px;
+	position: relative;
+}
+.title h2:before{
+	content: "";
+	position: absolute;
+	width: 0;
+	height: 15px;
+	top:15px;
+	left: 0;
+	border-left: 3px solid #007AFF;
+}
+
+.list{
+	width: 100%;
+}
+.list li{
+	float: left;
+	width: 49.8%;
+	height: 2.7rem;
+	overflow: hidden;
+	background: #fff;
+}
+.list li:nth-child(2n){
+	float: right;
+}
+.list li a{
+	float: left;
+	width: 100%;
+}
+.list li span{
+	display: block;
+	width: 100%;
+	height: 2rem;
+	overflow: hidden;
+}
+.list li p{
+	font-size: 14px;
+	color: #333;
+	padding: 5px 5px 0 5px;
+}
+.list li strong{
+	display: block;
+	font-size: 12px;
+	color: #666;
+	font-weight: normal;
+	padding: 0 5px;
+}
+
+
+.videoTitle{
+	font-size: 14px;
+	color: #333;
+	font-weight: normal;
+	line-height: 24px;
+	padding: 0 10px;
+}
+.videoTxt{
+	font-size: 12px;
+	color: #666;
+	line-height: 20px;
+	padding: 0 10px;
+	text-indent: 2em;
+}
+
+.pinList{
+	padding: .4rem 0 0 0;
+	background: #fff;
+}
+
+.pinList li{
+	float: left;
+	width: 25%;
+	padding-bottom: .3rem;
+}
+.pinList li a{
+	float: left;
+	width: 100%;
+	text-align: center;
+}
+.pinList li a span{
+	display: block;
+	width: 40%;
+	margin: 0 auto;
+	
+}
+.pinList li a strong{
+	display: block;
+	width: 100%;
+	text-align: center;
+	font-size: 14px;
+	color: #666;
+	padding: .1rem 0;
+}
+
+
+/*denglu*/
+.login{
+	width: 100%;
+}
+
+.loginTitle{
+	padding: 0 10px;
+	height: 44px;
+	line-height: 44px;
+	font-size: 14px;
+	color: #333;
+	font-weight: normal;
+}
+
+.LoginInput{
+	width: 100%;
+	background: #fff;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+.LoginInput li{
+	float: left;
+	width: 100%;
+	position: relative;
+}
+.LoginInput li label{
+	float: left;
+	width: 20%;
+	height: 44px;
+	line-height: 44px;
+	color: #333333;
+	font-size: 14px;
+	text-align: center;
+}
+.LoginInput li input{
+	float: left;
+	width: 80%;
+	height: 44px;
+	line-height: 44px;
+	color: #333333;
+	font-size: 14px;
+	border: none;
+	border-bottom: 1px solid #ccc;
+}
+.LoginInput li.bor input{
+	border: none;
+}      
+.LoginInput li  a{
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	height: 24px;
+	padding: 0 5px;
+	line-height: 24px;
+	font-size: 12px;
+	color: #fff;
+	background: #8ddb59;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	overflow:hidden;
+} 
+
+.loginBtn{
+	display: block;
+	width: 90%;
+	height: 44px;
+	line-height: 44px;
+	font-size: 16px;
+	color: #fff;
+	margin: 0 auto;
+	text-align: center;
+	background: #3A9BE0;
+	margin-top: 10px;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	overflow: hidden;
+}
+
+.loginTip{
+	padding: 20px 5%;
+	font-size: 12px;
+	color: #666;
+}
+.loginTip input{
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+
+/*我的*/
+.myTitle{
+	padding: .3rem;
+	background: #fff;
+}
+.MyHead{
+	float: left;
+	width: .8rem;
+	height: .8rem;
+	overflow: hidden;
+	border-radius: 50%;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	
+}
+.denglu{
+	float: left;
+	padding-left: .2rem;
+}
+.denglu a:nth-child(1){
+	display: block;
+	font-size: .24rem;
+	color: #333;
+	margin-bottom: .1rem;
+}
+.denglu a:nth-child(2){
+	display: block;
+	font-size: .2rem;
+	color: #51c3f1;
+	padding: 0 0.1rem;
+	border: 1px solid #eee;
+	border-radius: .5rem;
+	-webkit-border-radius: .5rem;
+	-moz-border-radius: .5rem;
+	overflow: hidden;
+	
+}
+.denglu a:nth-child(2) i{
+	display: inline-block;
+	width: .3rem;
+	vertical-align: middle;
+}
+.zipindao{
+	float: right;
+	
+}
+.zipindao i{
+	display: inline-block;
+	width: .23rem;
+	margin: 0 .05rem;
+	vertical-align: middle;
+}
+.zipindao a{
+	display: inline-block;
+	font-size: .22rem;
+	color: #a8a8a8;
+}
+
+
+.MyList{
+	width: 94%;
+	padding:0 3%;
+	background: #fff;
+	margin-top: 10px;
+}
+.MyList li{
+	float: left;
+	width: 100%;
+	border-top: 1px solid #eee;
+}
+.MyList li.active strong:before{
+	content: "·";
+	color: red;
+}
+.MyList li:nth-child(1){
+	border: none;
+}
+.MyList li a{
+	float: left;
+	width: 100%;
+	height: 44px;
+	line-height: 44px;
+}
+.MyList li a i{
+	float: left;
+	width: 20px;
+	margin-top: 12px;
+	margin-right: 5px;
+}
+.MyList li a span{
+	float: left;
+	font-size: 14px;
+	color: #333;
+}
+.MyList li a strong{
+	float: right;
+	font-size: 14px;
+	color: #bdbdbd;
+}
