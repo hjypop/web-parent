@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
@@ -30,51 +30,19 @@
 
 <body>
 	<header class="wrapper">
-		<a class="left"></a> <a></a>
-		<h2>
-			首页
-			</h1>
+		<a href="javascript:history.back()" class="left">返回</a> <a></a>
+		<h2>首页</h2>
 	</header>
 	<div class="wrapper main">
-		<div class="banner">
-			<div class="swiper-wrapper">
-				<c:forEach var="s" items="${shuffling}">
-					<div class="swiper-slide">
-						<img src="${s.image}">
-					</div> 
-				</c:forEach>
-			</div>
-			<!-- Add Pagination -->
-			<div class="swiper-pagination"></div>
-		</div>
-		<ul id="category" class="pinList clearfix">
-			<c:forEach var="c" items="${category}">
-				<li>
-					<a>
-						<span><img src="${c.thumb }"></span>
-						<strong>${c.category_name }</strong>
-					</a>
-				</li>
-			</c:forEach>
-		</ul>
-		<div class="listVideo">
-			<div class="title">
-				<h2>视频</h2>
-			</div>
-			<ul class="list clearfix">
-				<c:forEach var="v" items="${video}">
-					<li>
-						<a href="video/detail.do?videoId=${v.videoid }">
-							<span><img src="${v.thumb }"></span>
-							<p>${v.title }</p>
-							<strong>${v.views }人想看</strong>
-						</a>
-					</li>
-				</c:forEach>
-			</ul>
-		</div>
+		<video width="100%;" height="" controls poster="${video.big_thumbs}">
+			<source src="${video.video_href }" type="video/mp4"></source>
+		</video>
 
+		<h3 class="videoTitle">${video.title }</h3>
+		<p class="videoTxt">${video.description }</p>
 	</div>
+
+
 	<!--导航-->
 	<nav class="wrapper clearfix">
 		<a class="active"> <i><img
@@ -88,6 +56,10 @@
 		</a> <a href="my.html"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_topic.png"></i> 我的
 		</a>
+
 	</nav>
+
+
 </body>
+
 </html>

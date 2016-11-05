@@ -40,7 +40,7 @@ public class ApiHelper {
 		if (StringUtils.isNotBlank(response)) {
 			JSONObject result = JSONObject.parseObject(response);
 			if (result != null) {
-				obj = result.getJSONObject("data");
+				obj = result.getJSONObject("data").getJSONObject("data");
 			}
 		}
 		return obj;

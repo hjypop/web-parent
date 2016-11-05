@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.core.base.BaseClass;
-import com.drwljrtv.request.video.GetVideo;
 import com.drwljrtv.request.video.GetVideos;
 import com.drwljrtv.service.video.IVideoService;
 import com.drwljrtv.util.ApiHelper;
@@ -104,11 +103,10 @@ public class VideoServiceImpl extends BaseClass implements IVideoService {
 	 * @see com.drwljrtv.service.video.IVideoService#getVideo(com.drwljrtv.request.video.GetVideo)
 	 */
 	@Override
-	public JSONObject getVideo(GetVideo request) {
+	public JSONObject getVideo(Integer videoId) {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_video");
-		param.put("videoid", String.valueOf(request.getVideoId()));
-		param.put("video_password", request.getVideoPassword());
+		param.put("videoid", String.valueOf(videoId));
 		JSONObject obj = ApiHelper.getInstance().getObj(param);
 		if (StringUtils.isNotBlank(obj.getString("thumb"))) {
 			obj.put("thumb", Constant.URL + obj.getString("thumb"));
@@ -119,6 +117,13 @@ public class VideoServiceImpl extends BaseClass implements IVideoService {
 			obj.put("big_thumb", Constant.URL + obj.getString("big_thumb"));
 		} else {
 			obj.put("big_thumb", Constant.NO_THUMB);
+		}
+		if (StringUtils.isNoneBlank(obj.getString("streams"))) {
+			JSONObject streams = JSONObject.parseObject(obj.getString("streams"));
+			if (StringUtils.isNotBlank(streams.getString("hd"))) {
+				obj.put("video_href", streams.getString("hd"));
+				obj.put("video_size", streams.getString("hd_size"));
+			}
 		}
 		return obj;
 	}

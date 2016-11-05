@@ -2,7 +2,6 @@ package com.drwljrtv.service.video;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.drwljrtv.request.video.GetVideo;
 import com.drwljrtv.request.video.GetVideos;
 
 /**
@@ -36,5 +35,5 @@ public interface IVideoService {
 	 * @param request
 	 * @return
 	 */
-	JSONObject getVideo(GetVideo request);
+	JSONObject getVideo(Integer videoId);
 }
