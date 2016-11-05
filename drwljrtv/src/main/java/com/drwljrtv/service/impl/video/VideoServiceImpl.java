@@ -82,9 +82,13 @@ public class VideoServiceImpl extends BaseClass implements IVideoService {
 				JSONObject obj = array.getJSONObject(i);
 				if (StringUtils.isNotBlank(obj.getString("thumb"))) {
 					obj.put("thumb", Constant.URL + obj.getString("thumb"));
+				} else {
+					obj.put("thumb", Constant.NO_THUMB);
 				}
 				if (StringUtils.isNotBlank(obj.getString("big_thumb"))) {
 					obj.put("big_thumb", Constant.URL + obj.getString("big_thumb"));
+				} else {
+					obj.put("big_thumb", Constant.NO_THUMB);
 				}
 			}
 		}
@@ -108,9 +112,13 @@ public class VideoServiceImpl extends BaseClass implements IVideoService {
 		JSONObject obj = ApiHelper.getInstance().getObj(param);
 		if (StringUtils.isNotBlank(obj.getString("thumb"))) {
 			obj.put("thumb", Constant.URL + obj.getString("thumb"));
+		} else {
+			obj.put("thumb", Constant.NO_THUMB);
 		}
 		if (StringUtils.isNotBlank(obj.getString("big_thumb"))) {
 			obj.put("big_thumb", Constant.URL + obj.getString("big_thumb"));
+		} else {
+			obj.put("big_thumb", Constant.NO_THUMB);
 		}
 		return obj;
 	}

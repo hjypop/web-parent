@@ -42,6 +42,8 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 				JSONObject obj = array.getJSONObject(i);
 				if (StringUtils.isNotBlank(obj.getString("thumb"))) {
 					obj.put("thumb", Constant.URL + obj.get("thumb"));
+				} else {
+					obj.put("thumb", Constant.NO_THUMB);
 				}
 			}
 		}
@@ -67,6 +69,8 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 				JSONObject obj = array.getJSONObject(i);
 				if (StringUtils.isNotBlank(obj.getString("thumb"))) {
 					obj.put("thumb", Constant.URL + obj.getString("thumb"));
+				} else {
+					obj.put("thumb", Constant.NO_THUMB);
 				}
 			}
 		}
