@@ -29,24 +29,22 @@
 </head>
 
 
-	<body>
-		<header class="wrapper">
-			<a href="javascript:history.back()" class="left">返回</a>
-			<a></a>
-			<h2>首页</h2>
-		</header>
-		<div class="wrapper main">
-			<ul class="pinList clearfix">
-				<c:forEach var="c" items="${category}">
-					<li>
-						<a href="">
-							<span><img src="${c.thumb }"></span>
-							<strong>${c.category_name }</strong>
-						</a>
-					</li>
-				</c:forEach>
-			</ul>
-		</div>
+<body>
+	<header class="wrapper">
+		<a href="javascript:history.back()" class="left">返回</a> <a></a>
+		<h2>订阅</h2>
+	</header>
+	<div class="wrapper main">
+		<ul class="pinList clearfix">
+			<c:forEach var="c" items="${category}">
+				<li>
+				<a href="category/subindex.do?category_id=${c.category_id}">
+				 <span><img src="${c.thumb }"></span>
+						<strong>${c.category_name }</strong>
+				</a></li>
+			</c:forEach>
+		</ul>
+	</div>
 
 	<!--导航-->
 	<nav class="wrapper clearfix">
@@ -56,14 +54,14 @@
 				src="assets/img/01_index_bottom_bar_icon_information.png"></i> 频道
 		</a> <a class="active" href="category/subscription.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_subject.png"></i> 订阅
-		</a> <a> <i><img
+		</a> <a href="user/memberinfo.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_review.png"></i> vip会员
 		</a> <a href="user/info.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_topic.png"></i> 我的
 		</a>
 	</nav>
-		
-	
-	</body>
+
+
+</body>
 
 </html>

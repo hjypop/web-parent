@@ -123,6 +123,6 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 				data.add(obj);
 			}
 		}
-		return array;
+		return data;
 	}
 }

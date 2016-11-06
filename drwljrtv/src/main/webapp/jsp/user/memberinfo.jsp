@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
@@ -26,70 +26,66 @@
 <script type="text/javascript" src="assets/js/swiper.jquery.min.js"></script>
 <script type="text/javascript" src="assets/js/fastclick.js"></script>
 <script type="text/javascript" src="assets/js/base.js"></script>
+<script type="text/javascript" src="assets/js/user.js"></script>
 </head>
 
 <body>
 	<header class="wrapper">
-		<a class="left"></a> <a></a>
-		<h2>
-			首页
-			</h1>
+		<a class="left"><img src="assets/img/lBtn1.png"></a> <a class="right"><img
+			src="assets/img/close.png"></a> <span>你的地盘你做主，做主怎能不登录</span>
 	</header>
 	<div class="wrapper main">
-		<div class="banner">
-			<div class="swiper-wrapper">
-				<c:forEach var="s" items="${shuffling}">
-					<div class="swiper-slide">
-						<a href="video/detail.do?videoId=${s.videoid }">
-							<img src="${s.image}">
-						</a>
-					</div> 
-				</c:forEach>
+		<div class="myTitle clearfix">
+			<a class="MyHead"><img
+				src="assets/img/01_index_list_topic_icon_icon.png"></a>
+			<div class="left denglu">
+				<a href="user/loginindex.do">登录/注册</a> <a>
+					<!--<i><img src="img/01_index_bottom_bar_icon_subject.png"></i>-->开通会员
+				</a>
 			</div>
-			<!-- Add Pagination -->
-			<div class="swiper-pagination"></div>
+			<div class="zipindao">
+				<i><img src="assets/img/zipindao.png"></i><a>自频道></a>
+			</div>
 		</div>
-		<ul id="category" class="pinList clearfix">
-			<c:forEach var="c" items="${category}">
-				<li>
-					<a href="category/subindex.do?category_id=${c.category_id}">
-						<span><img src="${c.thumb }"></span>
-						<strong>${c.category_name }</strong>
-					</a>
-				</li>
-			</c:forEach>
+		<ul class="MyList clearfix">
+			<li class="active"><a> <i><img src="assets/img/xiaoxi.jpg"></i>
+					<span>消息中心</span> <strong>></strong>
+			</a></li>
 		</ul>
-		<div class="listVideo">
-			<div class="title">
-				<h2>视频</h2>
-			</div>
-			<ul class="list clearfix">
-				<c:forEach var="v" items="${video}">
-					<li>
-						<a href="video/detail.do?videoId=${v.videoid }">
-							<span><img src="${v.thumb }"></span>
-							<p>${v.title }</p>
-							<strong>${v.views }人想看</strong>
-						</a>
-					</li>
-				</c:forEach>
-			</ul>
-		</div>
+		<ul class="MyList clearfix">
+			<li><a> <i><img src="assets/img/xiazai.jpg"></i> <span>我的缓存</span>
+					<strong>></strong>
+			</a></li>
+			<li><a> <i><img src="assets/img/shijian.jpg"></i> <span>观看记录</span>
+					<strong>></strong>
+			</a></li>
+			<li><a> <i><img src="assets/img/shoucang.jpg"></i> <span>我的收藏</span>
+					<strong>></strong>
+			</a></li>
+			<li><a> <i><img src="assets/img/dingyue.jpg"></i> <span>我的订阅</span>
+					<strong>></strong>
+			</a></li>
+			<li><a> <i><img src="assets/img/dingdan.jpg"></i> <span>我的订单</span>
+					<strong>></strong>
+			</a></li>
+		</ul>
 
 	</div>
+
 	<!--导航-->
 	<nav class="wrapper clearfix">
-		<a class="active"> <i><img
+		<a href="index.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_homepage.png"></i> 首页
 		</a> <a href="category/index.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_information.png"></i> 频道
-		</a> <a href="category/subscription.do"> <i><img
+		</a> <a  href="category/subscription.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_subject.png"></i> 订阅
-		</a> <a href="user/memberinfo.do"> <i><img
+		</a> <a class="active" href="user/memberinfo.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_review.png"></i> vip会员
-		</a> <a href="user/info.do"> <i><img
+		</a> <a  href="user/info.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_topic.png"></i> 我的
 		</a>
 	</nav>
 </body>
+
 </html>

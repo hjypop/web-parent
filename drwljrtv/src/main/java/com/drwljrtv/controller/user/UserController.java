@@ -50,5 +50,10 @@ public class UserController {
 	public String info(){
 		return "jsp/user/info";
 	}
+	
+	@RequestMapping("memberinfo")
+	public String memberinfo(){
+		return "jsp/user/memberinfo";
+	}	
 
 }

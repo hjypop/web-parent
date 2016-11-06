@@ -33,7 +33,7 @@
 		<header class="wrapper">
 			<a href="javascript:history.back()" class="left">返回</a>
 			<a></a>
-			<h2>首页</h2>
+			<h2>频道</h2>
 		</header>
 		<div class="wrapper main">
 			<ul class="pinList clearfix">
@@ -73,7 +73,7 @@
 				src="assets/img/01_index_bottom_bar_icon_information.png"></i> 频道
 		</a> <a href="category/subscription.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_subject.png"></i> 订阅
-		</a> <a href="user/info.do"> <i><img
+		</a> <a href="user/memberinfo.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_review.png"></i> vip会员
 		</a> <a href="user/info.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_topic.png"></i> 我的
