@@ -38,7 +38,7 @@
 	<div class="wrapper main">
 		<div class="login">
 			<h3 class="loginTitle">欢迎登陆</h3>
-			<form action="" method="post">
+			<form id="register" method="post">
 				<ul class="LoginInput clearfix">
 					<li><label>手机号：</label> <input type="tel" name="username"
 						id="username" value="" placeholder="输入您的手机号" /> <a href="">获取验证码</a>
@@ -49,7 +49,7 @@
 						name="password" id="password" value="" placeholder="密码由字母、数字、符号混合" />
 					</li>
 				</ul>
-				<a class="loginBtn">注册</a>
+				<a href="javascript:void(0)" onclick="User.register()" class="loginBtn">注册</a>
 				<p class="loginTip">
 					<input type="checkbox" name="" id="" value="" />我已阅读并接受注册协议>
 				</p>

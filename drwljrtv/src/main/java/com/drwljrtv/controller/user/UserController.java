@@ -43,7 +43,7 @@ public class UserController {
 	@RequestMapping("register")
 	@ResponseBody
 	public JSONObject register(UserRequest request, HttpSession session) {
-		JSONObject obj = service.login(request);
+		JSONObject obj = service.register(request);
 		return obj;
 	}
 	@RequestMapping("info")
