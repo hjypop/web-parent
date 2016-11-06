@@ -67,6 +67,7 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 	public JSONArray getSubCategorys(GetCategory request) {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_category");
+		param.put("category_id", String.valueOf(request.getCategoryId()));
 		param.put("tag", String.valueOf(request.getTag()));
 		JSONObject result = ApiHelper.getInstance().getResult(param);
 		JSONArray array = null;
