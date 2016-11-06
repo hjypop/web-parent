@@ -14,6 +14,18 @@ public interface ICategoryService {
 
 	/**
 	 * 
+	 * 方法: getSubscriptionCategorys <br>
+	 * 描述: 订阅视频分类 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年11月6日 下午8:38:35
+	 * 
+	 * @param request
+	 * @return
+	 */
+	JSONArray getSubscriptionCategorys(GetCategory request);
+
+	/**
+	 * 
 	 * 方法: getCategorys <br>
 	 * 描述: 获取视频分类 <br>
 	 * 作者: zhy<br>

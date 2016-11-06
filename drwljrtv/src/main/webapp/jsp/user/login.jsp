@@ -30,7 +30,7 @@
 </head>
 <body>
 	<header class="wrapper">
-		<a href="javascript:history.back()" class="left">返回</a> <a class="right" href="register.do">注册</a>
+		<a href="javascript:history.back()" class="left">返回</a> <a class="right" href="user/registerindex.do">注册</a>
 		<h2>首页</h2>
 	</header>
 	<div class="wrapper main">

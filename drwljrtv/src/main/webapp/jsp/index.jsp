@@ -40,7 +40,9 @@
 			<div class="swiper-wrapper">
 				<c:forEach var="s" items="${shuffling}">
 					<div class="swiper-slide">
-						<img src="${s.image}">
+						<a href="video/detail.do?videoId=${s.videoid }">
+							<img src="${s.image}">
+						</a>
 					</div> 
 				</c:forEach>
 			</div>
@@ -50,7 +52,7 @@
 		<ul id="category" class="pinList clearfix">
 			<c:forEach var="c" items="${category}">
 				<li>
-					<a>
+					<a href="category/subindex.do?category_id=${c.category_id}">
 						<span><img src="${c.thumb }"></span>
 						<strong>${c.category_name }</strong>
 					</a>
@@ -79,13 +81,13 @@
 	<nav class="wrapper clearfix">
 		<a class="active"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_homepage.png"></i> 首页
-		</a> <a href="pin.html"> <i><img
+		</a> <a href="category/index.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_information.png"></i> 频道
-		</a> <a> <i><img
+		</a> <a href="category/subscription.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_subject.png"></i> 订阅
-		</a> <a> <i><img
+		</a> <a href="user/info.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_review.png"></i> vip会员
-		</a> <a href="my.html"> <i><img
+		</a> <a href="user/info.do"> <i><img
 				src="assets/img/01_index_bottom_bar_icon_topic.png"></i> 我的
 		</a>
 	</nav>

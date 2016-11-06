@@ -28,10 +28,10 @@ public class IndexController {
 	public String index(ModelMap model) {
 		model.addAttribute("shuffling", service.getShufflingImages());
 		GetVideos vidoeRequest = new GetVideos();
-		vidoeRequest.setTag(1);
+		vidoeRequest.setTag(3);
 		model.addAttribute("video", videoService.getVideos(vidoeRequest));
 		GetCategory categoryRequest = new GetCategory();
-		categoryRequest.setTag(1);
+		categoryRequest.setTag(2);
 		model.addAttribute("category", categoryService.getCategorys(categoryRequest));
 		return "jsp/index";
 	}
