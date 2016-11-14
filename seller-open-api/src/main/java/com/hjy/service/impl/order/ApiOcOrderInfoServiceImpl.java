@@ -96,8 +96,21 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 		}
 		 
 		try {
-			String startTime = DateHelper.formatDateZero(new Date());  
-			String endTime = this.getNextDate(new Date()); 
+			String startTime = "";
+			String endTime = "";
+			if(StringUtils.isAnyBlank(request.getStartTime() , request.getEndTime())){
+				startTime = this.getNextDate(new Date());  
+				endTime = DateHelper.formatDateZero(new Date()); 
+			}else{
+				startTime = request.getStartTime();
+				endTime = request.getEndTime();
+				if(!this.compareDate(startTime, endTime)){
+					result.put("code", 1);
+					result.put("desc", "请求参数错误，开始时间不得大于结束时间");
+					return result; 
+				}
+			}
+			
 			List<OrderInfoResponse> list = dao.getOpenApiOrderinfoList(new OrderInfoRequestDto(sellerCode, request.getOrderCode(), startTime, endTime));
 			
 			String sign = SignHelper.md5Sign(sellerCode + JSON.toJSONString(list) + responseTime);
@@ -259,7 +272,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	private String getNextDate(Date date){
 		 Calendar calendar = new GregorianCalendar();
 		 calendar.setTime(date);
-		 calendar.add(calendar.DATE , 1);//把日期往后增加一天.整数往后推,负数往前移动
+		 calendar.add(calendar.DATE , -1);//把日期往后增加一天.整数往后推,负数往前移动
 		 date=calendar.getTime(); //这个时间就是日期往后推一天的结果 
 		 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
 		 
@@ -478,6 +491,26 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 		return true;
 	}
 	
+	/**
+	 * @descriptions 比较两个时间的大小 如果两个时间相等则返回false
+	 * 
+	 * @tips 如果两个时间相等则a.compareTo(b) = 0
+	 * 
+	 * @param a not null
+	 * @param b not null 
+	 * @return boolean 
+	 * 
+	 * @refactor 
+	 * @author Yangcl
+	 * @date 2016-5-5-下午2:52:13
+	 * @version 1.0.0.1
+	 */
+	private boolean compareDate(String a , String b){
+		if(StringUtils.isAnyBlank(a , b)){
+			return false;
+		}
+		return a.compareTo(b) < 0;
+	}
 }
 
 

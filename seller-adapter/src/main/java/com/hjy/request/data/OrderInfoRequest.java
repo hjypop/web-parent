@@ -9,11 +9,30 @@ import com.hjy.request.ApiRequest;
  * @author Yangcl
  * @version 1.0.1
  */
-public class OrderInfoRequest extends ApiRequest {
+public class OrderInfoRequest {
 	
-	private String sellerCode; 		// 商家编码| 非空
 	private String orderCode; 		// 订单编号
-
+	private String startTime; // 订单表create_time的区间段
+	private String endTime; // 订单表create_time的区间段
+	
+	public String getOrderCode() {
+		return orderCode;
+	}
+	public void setOrderCode(String orderCode) {
+		this.orderCode = orderCode;
+	}
+	public String getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+	public String getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
 
 	/**
 	 * 4497153900010001 下单成功-未付款 
@@ -25,30 +44,12 @@ public class OrderInfoRequest extends ApiRequest {
 	 * 4497153900010006 交易失败 
 	 * 4497153900010007 交易无效
 	 */
-	private String orderStatus;  // 订单状态      此字段保留          
+//	private String orderStatus;  // 订单状态      此字段保留          
 	
 	 
 	
 	
 	
-	public String getOrderCode() {
-		return orderCode;
-	}
-	public void setOrderCode(String orderCode) {
-		this.orderCode = orderCode;
-	}
-	public String getOrderStatus() {
-		return orderStatus;
-	}
-	public void setOrderStatus(String orderStatus) {
-		this.orderStatus = orderStatus;
-	}
-	public String getSellerCode() {
-		return sellerCode;
-	}
-	public void setSellerCode(String sellerCode) {
-		this.sellerCode = sellerCode;
-	}
 	 
 }
 

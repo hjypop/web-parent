@@ -54,7 +54,7 @@ public class ApiController {
 	@ResponseBody
 	public JSONObject requestApi(Request request) {
 
-//		request = DataInit.orderInfoBatchInsertTest();
+		request = DataInit.getOrderInfoByJsonTest();
 		System.out.println(JSONObject.toJSONString(request));
 		logger.info(JSONObject.toJSONString(request));
 

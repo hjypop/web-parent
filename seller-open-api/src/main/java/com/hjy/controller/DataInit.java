@@ -65,10 +65,7 @@ public class DataInit {
 		r.setSign(getSign(r));  
 		return r; 
 	}
-	
-	
-	
-	
+	 
 	public static Request orderInfoBatchInsertTest(){
 		Request r = new Request();
 		r.setMethod("Order.Insert");
@@ -138,16 +135,7 @@ public class DataInit {
 		r.setSign(getSign(r));  
 		return r; 
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	  
 	public static Request apiInsertShipmentsTest(){
 		Request r = new Request();
 		r.setMethod("Order.Shipments");
@@ -237,19 +225,27 @@ public class DataInit {
 		return r; 
 	}
 	
+	/**
+	 * @description: 订单列表测试数据 
+	 * 
+	 * @return
+	 * @author Yangcl 
+	 * @date 2016年11月14日 上午11:20:16 
+	 * @version 1.0.0.1
+	 */
 	public static Request getOrderInfoByJsonTest(){
 		Request r = new Request();
 		r.setMethod("Order.List");
-		r.setAppid("appid-order-list");
-		r.setAppSecret("1122334");
+		r.setAppid("SI10182");
+		r.setAppSecret("83c0e6f4aa5f11e39ee0000c298b20fc");
 		r.setTimestamp("2016-08-11 11:31:58");
 		r.setNonce("4"); 
-		r.setSign("d7e67b07c7983da4603dd467b2cf6f78"); 
-		
 		OrderInfoRequest info = new OrderInfoRequest();
-		
+		info.setStartTime("2016-10-11 00:00:00");
+		info.setEndTime("2016-11-11 00:00:00");
+		info.setOrderCode("TBI8899610");  
 		r.setData(JSON.toJSONString(info)); 
-		
+		r.setSign(getSign(r)); 
 		return r; 
 	}
  
