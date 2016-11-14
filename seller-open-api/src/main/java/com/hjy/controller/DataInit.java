@@ -241,9 +241,9 @@ public class DataInit {
 		r.setTimestamp("2016-08-11 11:31:58");
 		r.setNonce("4"); 
 		OrderInfoRequest info = new OrderInfoRequest();
-		info.setStartTime("2016-10-11 00:00:00");
-		info.setEndTime("2016-11-11 00:00:00");
-		info.setOrderCode("TBI8899610");  
+//		info.setStartTime("2016-10-11 00:00:00");
+//		info.setEndTime("2016-11-11 00:00:00");
+//		info.setOrderCode("TBI8899610");  
 		r.setData(JSON.toJSONString(info)); 
 		r.setSign(getSign(r)); 
 		return r; 
