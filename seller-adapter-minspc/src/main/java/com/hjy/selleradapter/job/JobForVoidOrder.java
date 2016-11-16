@@ -39,7 +39,7 @@ public class JobForVoidOrder extends RootJob {
 			try {
 				Date date = new Date();												// 2016-09-18 16:28:26        当前时间  			
 				VoidDto dto = new VoidDto();
-				dto.setSellerCode(getConfig("seller_adapter_minspc.small_seller_code"));   // "SF03MINSPC"
+				dto.setSellerCode(getConfig("seller_adapter_minspc.small_seller_code"));   // "SF03100646"
 				dto.setSellerStatus("0");
 				dto.setStartTime(this.getHour(date, -1));		// 2016-09-18 15:00:00   当前时间点向前推一小时
 				dto.setEndTime(this.getHour(date, 0)); 		// 2016-09-18 16:00:00   当前时间点，取整点时间

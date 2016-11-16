@@ -341,7 +341,7 @@
 			LEFT JOIN productcenter.`pc_productinfo` p ON de.product_code = p.product_code
 			LEFT JOIN productcenter.`pc_skuinfo` sku ON de.sku_code = sku.sku_code
 		  WHERE 
-			de.order_code= #{orderCode , jdbcType=VARCHAR} AND p.small_seller_code = 'SF03MINSPC'
+			de.order_code= #{orderCode , jdbcType=VARCHAR} AND p.small_seller_code = 'SF03100646'
 	</select>
 	
 </mapper>
