@@ -59,6 +59,6 @@ public interface ICategoryService {
 	 * @param request
 	 * @return
 	 */
-	List<Category> getCategorysAndVideos(GetCategory request);
+	List<Category> getCategorysAndVideos(GetCategory request,Integer videoTag);
 
 }

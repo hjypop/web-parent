@@ -24,7 +24,7 @@ public class CategoryController {
 	@RequestMapping("index")
 	public String index(ModelMap model) {
 		GetCategory request = new GetCategory();
-		request.setTag(3);
+		request.setTag(1);
 		model.addAttribute("category", service.getCategorys(request));
 		return "/jsp/category/index";
 	}

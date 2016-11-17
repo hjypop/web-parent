@@ -39,7 +39,7 @@ public class CategoryTest {
 	public void getCategorysAndVideos() {
 		GetCategory request = new GetCategory();
 		request.setTag(1);
-		List<Category> list = service.getCategorysAndVideos(request);
+		List<Category> list = service.getCategorysAndVideos(request,3);
 		System.out.println(JSON.toJSON(list));
 	}
 }

@@ -147,7 +147,7 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 	 * @see com.drwljrtv.service.video.ICategoryService#getCategorysAndVideos(com.drwljrtv.request.video.GetCategory)
 	 */
 	@Override
-	public List<Category> getCategorysAndVideos(GetCategory request) {
+	public List<Category> getCategorysAndVideos(GetCategory request,Integer videoTag) {
 		List<Category> list = new ArrayList<Category>();
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_category");
@@ -160,7 +160,7 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 				for (int i = 0; i < array.size(); i++) {
 					JSONObject obj = array.getJSONObject(i);
 					Category c = JSONObject.toJavaObject(obj, Category.class);
-					List<Video> videos = getVideoByCategory(c.getCategoryId());
+					List<Video> videos = getVideoByCategory(c.getCategoryId(),videoTag);
 					if (videos != null && videos.size() > 0) {
 						c.setVideos(videos);
 						list.add(c);
@@ -181,12 +181,12 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 	 * @param categoryId
 	 * @return
 	 */
-	private static List<Video> getVideoByCategory(Integer categoryId) {
+	private static List<Video> getVideoByCategory(Integer categoryId,Integer videoTag) {
 		List<Video> list = new ArrayList<Video>();
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_videos");
 		param.put("category_id", String.valueOf(categoryId));
-		// param.put("tag", String.valueOf(1));
+		param.put("tag", String.valueOf(videoTag));
 		param.put("page_size", String.valueOf(4));
 		// param.put("page", String.valueOf(0));
 		JSONObject result = ApiHelper.getInstance().getResult(param);

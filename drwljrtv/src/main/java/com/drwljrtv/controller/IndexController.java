@@ -26,7 +26,8 @@ public class IndexController {
 		GetCategory categoryRequest = new GetCategory();
 		categoryRequest.setTag(1);
 		model.addAttribute("category", categoryService.getCategorys(categoryRequest));
-		model.addAttribute("categoryVideos", categoryService.getCategorysAndVideos(categoryRequest));
+		Integer videoTag = 3;
+		model.addAttribute("categoryVideos", categoryService.getCategorysAndVideos(categoryRequest, videoTag));
 		return "jsp/index";
 	}
 
