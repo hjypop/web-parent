@@ -393,7 +393,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			e.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS);  // SI2003
 			e.setMainpicUrl(p.getProductPictures().get(0));   // 主图默认为轮播图的第一张  
 			e.setSmallSellerCode(getConfig("seller_adapter_minspc.small_seller_code"));  // 线上配置文件 small_seller_code 
-			e.setProductStatus("4497153900060002");// 商品下架
+			e.setProductStatus("4497153900060003");// 商品下架
 			e.setValidate_flag("Y");//是否是虚拟商品
 			e.setTaxRate(BigDecimal.valueOf(Double.valueOf(p.getProductTaxes())));
 			e.setProductWeight(BigDecimal.valueOf(Double.valueOf(p.getProductWeight())));
