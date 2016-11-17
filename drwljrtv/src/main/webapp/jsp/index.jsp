@@ -50,7 +50,7 @@
 		<ul id="category" class="pinList clearfix">
 			<c:forEach var="c" items="${category}">
 				<li>
-					<a href="category/subindex.do?categoryId=${c.categoryId}">
+					<a href="category/subindex.do?categoryId=${c.categoryId}&categoryName=${c.categoryName}">
 						<span><img src="${c.thumb }"></span>
 						<strong>${c.categoryName }</strong>
 					</a>
@@ -61,7 +61,7 @@
 			<c:forEach var="c" items="${categoryVideos}">
 				<div class="title">
 					<h2>
-						<a href="category/subindex.do?categoryId=${c.categoryId}">
+						<a href="category/subindex.do?categoryId=${c.categoryId}&categoryName=${c.categoryName}">
 							${c.categoryName}
 						</a>
 					</h2>

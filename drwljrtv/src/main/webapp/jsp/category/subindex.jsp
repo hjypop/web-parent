@@ -33,7 +33,7 @@
 		<header class="wrapper">
 			<a href="javascript:history.back()" class="left">返回</a>
 			<a></a>
-			<h2>频道</h2>
+			<h2>${categoryName}</h2>
 		</header>
 		<div class="wrapper main">
 			<ul class="pinList clearfix">

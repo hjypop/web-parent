@@ -17,9 +17,22 @@ public class GetCategory extends BaseRequest {
 	private Integer categoryId;
 
 	/**
+	 * 视频名称
+	 */
+	private String categoryName;
+
+	/**
 	 * 分类标记（1：首页显示，2：主导航显示，3：移动端推荐）
 	 */
 	private Integer tag;
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
 
 	public Integer getCategoryId() {
 		return categoryId;

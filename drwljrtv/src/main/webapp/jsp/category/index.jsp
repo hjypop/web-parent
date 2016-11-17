@@ -39,7 +39,7 @@
 			<ul class="pinList clearfix">
 				<c:forEach var="c" items="${category}">
 					<li>
-						<a href="category/subindex.do?categoryId=${c.categoryId}">
+						<a href="category/subindex.do?categoryId=${c.categoryId}&categoryName=${c.categoryName}">
 							<span><img src="${c.thumb }"></span>
 							<strong>${c.categoryName }</strong>
 						</a>
