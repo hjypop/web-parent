@@ -12,7 +12,7 @@
 <head>
 <base href="<%=basePath%>">
 <meta charset="utf-8">
-<title></title>
+<title>首页</title>
 <meta content="yes" name="apple-mobile-web-app-capable">
 <meta content="black" name="apple-mobile-web-app-status-bar-style">
 <meta content="telephone=no" name="format-detection">
@@ -39,9 +39,9 @@
 			<ul class="pinList clearfix">
 				<c:forEach var="c" items="${category}">
 					<li>
-						<a href="category/subindex.do?categoryId=${c.category_id}">
+						<a href="category/subindex.do?categoryId=${c.categoryId}">
 							<span><img src="${c.thumb }"></span>
-							<strong>${c.category_name }</strong>
+							<strong>${c.categoryName }</strong>
 						</a>
 					</li>
 				</c:forEach>

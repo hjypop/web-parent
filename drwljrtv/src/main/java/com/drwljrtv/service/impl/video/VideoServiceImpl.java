@@ -1,6 +1,8 @@
 package com.drwljrtv.service.impl.video;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.core.base.BaseClass;
+import com.drwljrtv.model.Video;
 import com.drwljrtv.request.video.GetVideos;
 import com.drwljrtv.service.video.IVideoService;
 import com.drwljrtv.util.ApiHelper;
@@ -33,7 +36,8 @@ public class VideoServiceImpl extends BaseClass implements IVideoService {
 	 * @see com.drwljrtv.service.video.IVideoService#getVideos(com.drwljrtv.request.video.GetVideos)
 	 */
 	@Override
-	public JSONArray getVideos(GetVideos request) {
+	public List<Video> getVideos(GetVideos request) {
+		List<Video> list = new ArrayList<Video>();
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_videos");
 		if (request != null) {
@@ -93,9 +97,11 @@ public class VideoServiceImpl extends BaseClass implements IVideoService {
 				} else {
 					obj.put("big_thumb", Constant.NO_THUMB);
 				}
+				Video v = JSONObject.toJavaObject(obj, Video.class);
+				list.add(v);
 			}
 		}
-		return array;
+		return list;
 	}
 
 	/**
@@ -107,7 +113,8 @@ public class VideoServiceImpl extends BaseClass implements IVideoService {
 	 * @see com.drwljrtv.service.video.IVideoService#getVideo(com.drwljrtv.request.video.GetVideo)
 	 */
 	@Override
-	public JSONObject getVideo(Integer videoId) {
+	public Video getVideo(Integer videoId) {
+		Video model = new Video();
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_video");
 		param.put("videoid", String.valueOf(videoId));
@@ -131,9 +138,8 @@ public class VideoServiceImpl extends BaseClass implements IVideoService {
 					obj.put("video_size", streams.getString("hd_size"));
 				}
 			}
-		} else {
-			obj = null;
+			model = JSONObject.toJavaObject(obj, Video.class);
 		}
-		return obj;
+		return model;
 	}
 }

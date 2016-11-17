@@ -34,8 +34,8 @@
 		<h2>首页</h2>
 	</header>
 	<div class="wrapper main">
-		<video width="100%;" height="" controls poster="${video.big_thumbs}">
-			<source src="${video.video_href }" type="video/mp4"></source>
+		<video width="100%;" height="" controls poster="${video.bigThumbs}">
+			<source src="${video.videoHref }" type="video/mp4"></source>
 		</video>
 
 		<h3 class="videoTitle">${video.title }</h3>

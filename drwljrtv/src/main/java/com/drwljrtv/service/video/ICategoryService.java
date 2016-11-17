@@ -1,6 +1,8 @@
 package com.drwljrtv.service.video;
 
-import com.alibaba.fastjson.JSONArray;
+import java.util.List;
+
+import com.drwljrtv.model.Category;
 import com.drwljrtv.request.video.GetCategory;
 
 /**
@@ -22,7 +24,7 @@ public interface ICategoryService {
 	 * @param request
 	 * @return
 	 */
-	JSONArray getSubscriptionCategorys(GetCategory request);
+	List<Category> getSubscriptionCategorys(GetCategory request);
 
 	/**
 	 * 
@@ -33,7 +35,7 @@ public interface ICategoryService {
 	 * 
 	 * @return
 	 */
-	JSONArray getCategorys(GetCategory request);
+	List<Category> getCategorys(GetCategory request);
 
 	/**
 	 * 
@@ -45,5 +47,18 @@ public interface ICategoryService {
 	 * @param categoryId
 	 * @return
 	 */
-	JSONArray getSubCategorys(GetCategory request);
+	List<Category> getSubCategorys(GetCategory request);
+
+	/**
+	 * 
+	 * 方法: getCategorysAndVideos <br>
+	 * 描述: 获取视频分类及分类下的视频 <br>
+	 * 作者: zhy<br>
+	 * 时间: 2016年11月17日 下午2:46:11
+	 * 
+	 * @param request
+	 * @return
+	 */
+	List<Category> getCategorysAndVideos(GetCategory request);
+
 }

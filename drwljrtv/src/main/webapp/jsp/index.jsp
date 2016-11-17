@@ -31,9 +31,7 @@
 <body>
 	<header class="wrapper">
 		<a class="left"></a> <a></a>
-		<h2>
-			首页
-			</h1>
+		<h2>首页</h2>
 	</header>
 	<div class="wrapper main">
 		<div class="banner">
@@ -52,28 +50,34 @@
 		<ul id="category" class="pinList clearfix">
 			<c:forEach var="c" items="${category}">
 				<li>
-					<a href="category/subindex.do?categoryId=${c.category_id}">
+					<a href="category/subindex.do?categoryId=${c.categoryId}">
 						<span><img src="${c.thumb }"></span>
-						<strong>${c.category_name }</strong>
+						<strong>${c.categoryName }</strong>
 					</a>
 				</li>
 			</c:forEach>
 		</ul>
 		<div class="listVideo">
-			<div class="title">
-				<h2>视频</h2>
-			</div>
-			<ul class="list clearfix">
-				<c:forEach var="v" items="${video}">
-					<li>
-						<a href="video/detail.do?videoId=${v.videoid }">
-							<span><img src="${v.thumb }"></span>
-							<p>${v.title }</p>
-							<strong>${v.views }人想看</strong>
+			<c:forEach var="c" items="${categoryVideos}">
+				<div class="title">
+					<h2>
+						<a href="category/subindex.do?categoryId=${c.categoryId}">
+							${c.categoryName}
 						</a>
-					</li>
-				</c:forEach>
-			</ul>
+					</h2>
+				</div>
+				<ul class="list clearfix">
+					<c:forEach var="v" items="${c.videos}">
+						<li>
+							<a href="video/detail.do?videoId=${v.videoid }">
+								<span><img src="${v.thumb }"></span>
+								<p>${v.title }</p>
+								<strong>${v.views }人想看</strong>
+							</a>
+						</li>
+					</c:forEach>
+				</ul>
+			</c:forEach>
 		</div>
 
 	</div>

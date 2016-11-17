@@ -1,12 +1,15 @@
 package com.drwljrtv;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSON;
+import com.drwljrtv.model.Video;
 import com.drwljrtv.request.video.GetVideos;
 import com.drwljrtv.service.video.IVideoService;
 
@@ -21,7 +24,7 @@ public class VideoTest {
 	public void getVideos() {
 		GetVideos request = new GetVideos();
 		request.setTag(1);
-		JSONArray array = service.getVideos(request);
-		System.out.println(array);
+		List<Video> array = service.getVideos(request);
+		System.out.println(JSON.toJSON(array));
 	}
 }
