@@ -187,7 +187,7 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 		param.put("cmd", "get_videos");
 		param.put("category_id", String.valueOf(categoryId));
 //		param.put("tag", String.valueOf(1));
-//		param.put("page_size", String.valueOf(6));
+		param.put("page_size", String.valueOf(4));
 //		param.put("page", String.valueOf(0));
 		JSONObject result = ApiHelper.getInstance().getResult(param);
 		JSONArray array = null;
