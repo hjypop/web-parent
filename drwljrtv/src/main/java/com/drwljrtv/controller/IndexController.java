@@ -24,7 +24,7 @@ public class IndexController {
 	public String index(ModelMap model) {
 		model.addAttribute("shuffling", service.getShufflingImages());
 		GetCategory categoryRequest = new GetCategory();
-		categoryRequest.setTag(2);
+		categoryRequest.setTag(1);
 		model.addAttribute("category", categoryService.getCategorys(categoryRequest));
 		model.addAttribute("categoryVideos", categoryService.getCategorysAndVideos(categoryRequest));
 		return "jsp/index";

@@ -41,7 +41,7 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 		List<Category> list = new ArrayList<Category>();
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_category");
-//		param.put("tag", String.valueOf(request.getTag()));
+		param.put("tag", String.valueOf(request.getTag()));
 		JSONObject result = ApiHelper.getInstance().getResult(param);
 		JSONArray array = null;
 		if (StringUtils.equals(result.getString("state"), "ok")) {
@@ -76,7 +76,7 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_category");
 		param.put("category_id", String.valueOf(request.getCategoryId()));
-//		param.put("tag", String.valueOf(request.getTag()));
+		// param.put("tag", String.valueOf(request.getTag()));
 		JSONObject result = ApiHelper.getInstance().getResult(param);
 		JSONArray array = null;
 		if (StringUtils.equals(result.getString("state"), "ok")) {
@@ -116,7 +116,7 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 		List<Category> list = new ArrayList<Category>();
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_category");
-//		param.put("tag", String.valueOf(request.getTag()));
+		// param.put("tag", String.valueOf(request.getTag()));
 		JSONObject result = ApiHelper.getInstance().getResult(param);
 		JSONArray array = null;
 		if (StringUtils.equals(result.getString("state"), "ok")) {
@@ -151,7 +151,7 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 		List<Category> list = new ArrayList<Category>();
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_category");
-//		param.put("tag", String.valueOf(request.getTag()));
+		param.put("tag", String.valueOf(request.getTag()));
 		JSONObject result = ApiHelper.getInstance().getResult(param);
 		JSONArray array = null;
 		if (StringUtils.equals(result.getString("state"), "ok")) {
@@ -161,9 +161,9 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 					JSONObject obj = array.getJSONObject(i);
 					Category c = JSONObject.toJavaObject(obj, Category.class);
 					List<Video> videos = getVideoByCategory(c.getCategoryId());
-					if(videos != null && videos.size()>0){
+					if (videos != null && videos.size() > 0) {
 						c.setVideos(videos);
-						list.add(c);						
+						list.add(c);
 					}
 				}
 			}
@@ -186,9 +186,9 @@ public class CategoryServiceImpl extends BaseClass implements ICategoryService {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("cmd", "get_videos");
 		param.put("category_id", String.valueOf(categoryId));
-//		param.put("tag", String.valueOf(1));
+		// param.put("tag", String.valueOf(1));
 		param.put("page_size", String.valueOf(4));
-//		param.put("page", String.valueOf(0));
+		// param.put("page", String.valueOf(0));
 		JSONObject result = ApiHelper.getInstance().getResult(param);
 		JSONArray array = null;
 		if (StringUtils.equals(result.getString("state"), "ok")) {
