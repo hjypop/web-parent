@@ -9,6 +9,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 
 import com.hjy.annotation.Inject;
@@ -39,6 +40,8 @@ import com.hjy.selleradapter.minspc.RsyncSubscribeOrder;
  * @version 1.0.0
  */
 public class JobForCreateSubscribeOrder extends RootJob {
+	private static Logger logger = Logger.getLogger(JobForCreateSubscribeOrder.class);
+	
 	@Inject
 	private IOcOrderinfoDao orderinfoDao;
 	@Inject
@@ -76,7 +79,9 @@ public class JobForCreateSubscribeOrder extends RootJob {
 					orderCodeList_.add(orderCode);
 				}
 				if(orderCodeList_ == null || orderCodeList_.size() == 0){
-					throw new RuntimeException("当前时间没有同步数据");  
+//					throw new RuntimeException("当前时间没有同步数据");  
+					logger.info("定时任务：民生品粹 【生成订阅订单（并发送海关） 】当前时间没有同步数据"); 
+					return ;
 				}
 				// 多表联查，获取所需信息
 				List<MinspcOrderinfoSelect> morList = orderinfoDao.getMinspcOrderinfoList(orderCodeList_);         

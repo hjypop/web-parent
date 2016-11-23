@@ -1,6 +1,7 @@
 package com.hjy.dao.order;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hjy.dao.BaseDao;
 import com.hjy.dto.KjtProductInfo;
@@ -21,7 +22,7 @@ public interface IOcOrderdetailDao extends BaseDao<OrderDetail , Integer> {
 	public Integer apiBatchInsert(List<OrderDetail> list);
 	
 	
-	public List<KjtProductInfo>  findKjtProductInfo(String orderCode);
+	public List<KjtProductInfo>  findKjtProductInfo(Map<String , String> map);
 	
 	/**
 	 * @description: com.hjy.job.JobForCreateSubscribeOrder.java 使用

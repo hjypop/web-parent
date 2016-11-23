@@ -1,7 +1,9 @@
 package com.hjy.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -15,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.dao.IJobExectimerDao;
 import com.hjy.dao.ILcRsyncKjtLogDao;
+import com.hjy.dao.ILockDao;
 import com.hjy.dao.order.IOcOrderdetailDao;
 import com.hjy.dao.product.IPcProductinfoDao;
 import com.hjy.dao.product.IPcSkuinfoDao;
@@ -58,6 +61,8 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 	@Resource
 	private IPcSkuinfoDao pcSkuinfoDao;
 	
+	@Resource
+	private ILockDao sysLockDao;
 	
 	
 	public JSONObject funcOne(String json, HttpSession session) {
@@ -120,6 +125,34 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 		result.put("status", "success");
 		result.put("desc", "请求执行完成");
 		
+		return result;
+	}
+	
+	public JSONObject funcThreePlus(String uuids, HttpSession session) {
+		JSONObject result = new JSONObject();
+		if(session.getAttribute("kjt-key") == null){
+			result.put("status", "success");
+			result.put("desc", "请输入你的秘钥");
+			return result;
+		}
+		
+		if(StringUtils.isBlank(uuids)){
+			result.put("status", "success");
+			result.put("desc", "参数不可为空");
+			return result;
+		}
+		
+		String [] darray = uuids.split(",");
+		if(darray.length != 0){
+			for(int i = 0 ; i < darray.length ; i ++){
+				sysLockDao.deleteByUuid(darray[i]); 
+			}
+			result.put("status", "success");
+			result.put("desc", "请求执行完成");
+		}else{
+			result.put("status", "success");
+			result.put("desc", "参数不可为空");
+		}
 		return result;
 	}
 
@@ -228,8 +261,11 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 				result.put("logList", "log-list-null");
 			}
 			
+			Map<String , String> dtoMap =  new HashMap<>();
+			dtoMap.put("orderCode", dto.getOrderCode());
+			dtoMap.put("sellerCode" , dto.getSellerCode());
 			// 有可能查出2条，兼容错误数据
-			List<KjtProductInfo> lists = orderDetailDao.findKjtProductInfo(dto.getOrderCode());
+			List<KjtProductInfo> lists = orderDetailDao.findKjtProductInfo(dtoMap);
 			if(lists != null && lists.size() > 0){
 				KjtProductInfo entity = lists.get(0); 
 				result.put("entity", entity);
@@ -364,6 +400,8 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 		RedisLaunch.setFactory(ERedisSchema.ProductSales).del(productCode_);		//刷新销量缓存
 		return true;
 	}
+
+	
 }
 
 

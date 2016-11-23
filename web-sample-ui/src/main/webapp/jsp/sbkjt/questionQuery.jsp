@@ -166,6 +166,14 @@
                                         <td class="tdleft">
                                             <input type="text" name="orderCode" placeholder="如：DD4555980102">
                                         </td>
+                                        <td class="tdright">跨境商户</td>
+                                        <td class="tdleft">
+                                            <!-- <input type="text" name="sellerCode" placeholder="如：DD4555980102"> -->
+                                            <select id="seven-status" name="sellerCode" class="radius3" style="margin-left:0px; width:370px">
+											    <option value="SF03KJT">跨境通</option>
+											    <option value="SF03100646">民生品粹</option>
+											</select>
+                                        </td>
                                     </tr>
                                     </tbody>
                                     <tfoot>

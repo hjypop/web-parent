@@ -35,6 +35,8 @@ public interface IKjtOperationsManagerService {
 	
 	
 	public JSONObject funcSeven(String json, String productStatus , String reason , HttpSession session);
+
+	public JSONObject funcThreePlus(String uuid, HttpSession session); 
 	
 }
 

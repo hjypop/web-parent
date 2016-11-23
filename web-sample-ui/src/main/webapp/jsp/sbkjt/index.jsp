@@ -69,6 +69,19 @@
                 jAlert(obj.desc, '网页提示');
             }
         }
+        
+        function funcThreePlus(){
+            var e = $("#sys-lock-uuid").val();
+            var type_ = 'post';
+            var url_ = '${basePath}kjt/funcThreePlus.do';
+            var data_ = {
+                uuids:e
+            };
+            var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+            if(obj.status == 'success'){
+                jAlert(obj.desc, '网页提示');
+            }
+        }
 
         function funcFour(){
             jConfirm('你确定要批量置空跨境通商品编号吗？', '高危险操作！', function(flag) {
@@ -199,8 +212,6 @@
                             </div>
                         </form>
                     </div>
-
-
                 </div>
 
                 <div id="fuck-three">
@@ -225,9 +236,29 @@
                             </div>
                         </form>
                     </div>
-
-
                 </div>
+                <div id="fuck-three-plus">
+                    <div class="contenttitle2">
+                        <h3>C+  删除sys_lock表指定的锁</h3>
+                    </div>
+                    <div class="statusbox" style="width: 800px">
+                        <form id="form-fuck-three-plus" action="#">
+                            <div style="padding-right:20px;">
+                                
+                                <div class="status_thumb">sys-lock-uuid：</div>
+	                            <div style="padding-right:20px;margin-bottom: 20px">
+	                                <textarea id="sys-lock-uuid" name="" cols="" rows="" style="height: 100px;width: 790px" placeholder="支持多个uid逗号连接：d83a89bbb14311,e6af5bb083fee37d16"></textarea>
+	                            </div>
+                            
+                            </div>
+                            <div class="submit">
+                                <button class="stdbtn btn_orange" onclick="funcThreePlus()">执 行 任 务</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                
 
                 <div id="fuck-four">
                     <div class="contenttitle2">

@@ -6,7 +6,7 @@ public class QueryKjtLog {
 	private String responseData;
 	private String requestData;
 	private String orderCode;
-	
+	private String sellerCode;
 	
 	public String getRsyncTarget() {
 		return rsyncTarget;
@@ -38,4 +38,11 @@ public class QueryKjtLog {
 	public void setOrderCode(String orderCode) {
 		this.orderCode = orderCode;
 	}
+	public String getSellerCode() {
+		return sellerCode;
+	}
+	public void setSellerCode(String sellerCode) {
+		this.sellerCode = sellerCode;
+	}
+	
 }

@@ -295,7 +295,7 @@
 	
 	<resultMap id="kjtProductInfoMap" type="com.hjy.dto.KjtProductInfo"></resultMap>
 	<!-- 根据orderCode 取出一条信息|跨境通问题查询页面使用 - Yangcl -->
-	<select id="findKjtProductInfo" resultMap="kjtProductInfoMap" parameterType="java.lang.String">
+	<select id="findKjtProductInfo" resultMap="kjtProductInfoMap" parameterType="java.util.Map">
 		 SELECT 
 		    od.order_code AS orderCode,
 		    od.sku_code AS skuCode,
@@ -322,7 +322,7 @@
 		  FROM
 		    ordercenter.`oc_orderdetail` od LEFT JOIN productcenter.`pc_productinfo` p ON od.product_code = p.product_code
 		  WHERE 
-		  	order_code = #{orderCode , jdbcType=VARCHAR}  AND p.small_seller_code = 'SF03KJT'
+		  	order_code = #{orderCode}  AND p.small_seller_code = #{sellerCode}
 	</select>
 	
 	<!-- JobForCreateSubscribeOrder.java 使用|拼装请求数据的商品列表部分|seller-adapter-minspc(民生品粹项目) - Yangcl -->

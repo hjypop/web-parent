@@ -13,7 +13,9 @@
 		CALL webcore.proc_lock_or_unlock_somekey(?,?,?,?,?)
 	</select>
 	
-	
+	<delete id="deleteByUuid" parameterType="java.lang.String" >
+	    delete from webcore.sys_lock where uid = #{uuid , jdbcType=VARCHAR} 
+	</delete>
 </mapper>
 
 
