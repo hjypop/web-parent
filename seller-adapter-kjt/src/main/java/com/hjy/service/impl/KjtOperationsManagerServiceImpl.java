@@ -151,7 +151,7 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 			result.put("desc", "请求执行完成");
 		}else{
 			result.put("status", "success");
-			result.put("desc", "参数不可为空");
+			result.put("desc", "参数不可为空");  
 		}
 		return result;
 	}
