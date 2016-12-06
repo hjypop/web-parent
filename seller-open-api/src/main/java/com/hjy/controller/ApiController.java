@@ -54,7 +54,7 @@ public class ApiController {
 	@ResponseBody
 	public JSONObject requestApi(Request request) {
 
-		request = DataInit.getOrderInfoByJsonTest();
+		request = DataInit.rsyncProductStatus();
 		System.out.println(JSONObject.toJSONString(request));
 		logger.info(JSONObject.toJSONString(request));
 

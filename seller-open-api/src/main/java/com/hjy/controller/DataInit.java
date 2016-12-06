@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hjy.helper.SignHelper;
 import com.hjy.request.Request;
 import com.hjy.request.data.OrderAddressInsert;
@@ -36,10 +37,11 @@ public class DataInit {
 		r.setNonce("4"); 
 		r.setAppSecret("83c0e6f4aa5f11e39ee0000c298b20fc");
 
-		OrderShipmentsRequest o = new OrderShipmentsRequest();
-//		o.setStartTime("2016-07-31 10:31:58");
-//		o.setEndTime("2016-08-31 10:31:58");
-		r.setData(JSON.toJSONString(o)); 
+		JSONObject request = new JSONObject();
+		request.put("startTime" , "2016-07-31 10:31:58");
+		request.put("endTime" , "2016-08-31 10:31:58");
+		request.put("productCode" , "119575");
+		r.setData(request.toJSONString() ); 
 		
 		r.setSign(getSign(r));  
 		return r; 

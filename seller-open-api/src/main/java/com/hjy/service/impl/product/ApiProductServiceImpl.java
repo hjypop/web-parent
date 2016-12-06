@@ -1232,14 +1232,14 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		JSONObject response = new JSONObject();
 		String responseTime = DateHelper.formatDate(new Date());
 		response.put("responseTime", responseTime);
-		String lockCode = WebHelper.getInstance().addLock(1000,
-				seller.getSellerCode() + "@com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus"); // 分布式锁定
+		String lockCode = WebHelper.getInstance().addLock(1000, seller.getSellerCode() + "@com.hjy.service.impl.product.ApiProductServiceImpl.rsyncProductStatus"); // 分布式锁定
 		if (StringUtils.isNotBlank(lockCode)) {
 			if (!seller.getStatus().equals(1)) {
 				response.put("code", 0);
 				response.put("desc", "非法的商户合作状态，未开通或已禁用");
 				return response;
 			}
+			String pcode = ""; // 商品编号
 			Map<String, String> map = new HashMap<String, String>();
 			if (StringUtils.isBlank(json)) {
 				Date date = new Date();
@@ -1252,6 +1252,10 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					o = JSONObject.parseObject(json);
 					String s = o.getString("startTime");
 					String e = o.getString("endTime");
+					
+					if(StringUtils.isNotBlank(o.getString("productCode"))){
+						pcode = o.getString("productCode");
+					}
 					if (StringUtils.isAnyBlank(s, e)) {
 						map.put("startTime", this.getHour(date, -1));
 						map.put("endTime", this.getHour(date, 0));
@@ -1270,6 +1274,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					map.put("endTime", this.getHour(date, 0));
 				}
 			}
+			map.put("pcode", pcode);
 
 			try {
 				List<ProductStatus> list = productInfoDao.selectProductByUpdateTime(map);

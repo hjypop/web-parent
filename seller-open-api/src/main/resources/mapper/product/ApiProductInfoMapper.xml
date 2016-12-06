@@ -388,17 +388,19 @@
 
 	<!-- 取当前时间上一个小时的，update_time有变化的商品 - Yangcl -->
 	<resultMap id="statusResultMap" type="com.hjy.dto.product.ProductStatus"></resultMap>
-	<select id="selectProductByUpdateTime" parameterType="Map"
-		resultMap="statusResultMap">
+	<select id="selectProductByUpdateTime" parameterType="Map" resultMap="statusResultMap">
 		select
-		product_code as productCode,
-		# product_code_old as productCodeOld,
-		product_status as productStatus
+			product_code as productCode, # product_code_old as productCodeOld,
+			product_status as productStatus
 		from
-		productcenter.pc_productinfo
+			productcenter.pc_productinfo
 		where
-		update_time between #{startTime , jdbcType=VARCHAR} and #{endTime ,
-		jdbcType=VARCHAR}
+			<if test="pcode != null and pcode != ''">
+				product_code = #{pcode , jdbcType=VARCHAR}
+			</if>
+			<if test="pcode == null or pcode == ''">
+				update_time between #{startTime , jdbcType=VARCHAR} and #{endTime , jdbcType=VARCHAR}
+			</if>
 	</select>
 </mapper>
 
