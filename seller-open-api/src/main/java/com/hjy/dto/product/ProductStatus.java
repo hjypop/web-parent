@@ -11,8 +11,9 @@ package com.hjy.dto.product;
 public class ProductStatus {
 
 	private String productCode;
-//	private String productCodeOld;
 	private String productStatus;
+	private String skuCode; 
+	private String saleYn;  // 是否可卖 Y可卖 N不可卖
 	
 	
 	public String getProductCode() {
@@ -21,12 +22,18 @@ public class ProductStatus {
 	public void setProductCode(String productCode) {
 		this.productCode = productCode;
 	}
-//	public String getProductCodeOld() {
-//		return productCodeOld;
-//	}
-//	public void setProductCodeOld(String productCodeOld) {
-//		this.productCodeOld = productCodeOld;
-//	}
+	public String getSkuCode() {
+		return skuCode;
+	}
+	public void setSkuCode(String skuCode) {
+		this.skuCode = skuCode;
+	}
+	public String getSaleYn() {
+		return saleYn;
+	}
+	public void setSaleYn(String saleYn) {
+		this.saleYn = saleYn;
+	}
 	public String getProductStatus() {
 		return productStatus;
 	}

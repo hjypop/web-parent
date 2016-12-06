@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.hjy.dto.product.ProductStatus;
 import com.hjy.dto.product.Productdescription;
+import com.hjy.dto.product.Property;
 import com.hjy.entity.product.PcProductinfo;
 
 /**
@@ -142,4 +143,15 @@ public interface IApiProductInfoDao {
 	 * @return
 	 */
 	List<PcProductinfo> findProductByProductCodes(com.hjy.dto.product.ProductInfo dto);
+	
+	public List<Property> getProductPropertyByCode(String pcode);
 }
+
+
+
+
+
+
+
+
+

@@ -32,6 +32,7 @@ import com.hjy.dao.system.IScStoreSkunumDao;
 import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
 import com.hjy.dto.product.ProductStatus;
+import com.hjy.dto.product.Property;
 import com.hjy.entity.log.LcOpenApiProductError;
 import com.hjy.entity.log.LcOpenApiQueryLog;
 import com.hjy.entity.product.PcProductdescription;
@@ -855,7 +856,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	/**
 	 * 
 	 * 方法: pushProduct <br>
-	 * 描述: TODO
+	 * 描述: 根据日期范围推送产品
 	 * 
 	 * @param seller
 	 * @param startDate
@@ -888,6 +889,12 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					List<PcProductinfo> list = productInfoDao.findProductBySellerProductype(map);
 					List<ProductInfo> products = initPcProduct(list, c, seller.getPriceType());
 					if (products != null && products.size() > 0) {
+						for(int n = 0 ; n < products.size() ; n ++){
+							String pcode =  products.get(i).getProductCode();
+							List<Property> prolist = productInfoDao.getProductPropertyByCode(pcode);
+							products.get(i).setPropertys(prolist); 
+						}
+						
 						responseProduct.addAll(products);
 					}
 				}
@@ -1323,8 +1330,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		if (StringUtils.isNotBlank(data)) {
 			String lock = "";
 			try {
-				lock = WebHelper.getInstance().addLock(10,
-						seller.getSellerCode() + "_Product.findProductByProductCodes");
+				lock = WebHelper.getInstance().addLock(10 , seller.getSellerCode() + "_Product.findProductByProductCodes");
 				JSONObject jsonData = JSON.parseObject(data);
 				String codes = jsonData.getString("codes");
 				// 读取合作商的产品获取权限
@@ -1343,6 +1349,11 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 						List<PcProductinfo> list = productInfoDao.findProductByProductCodes(dto);
 						List<ProductInfo> products = initPcProduct(list, c, seller.getPriceType());
 						if (products != null && products.size() > 0) {
+							for(int n = 0 ; n < products.size() ; n ++){
+								String pcode =  products.get(i).getProductCode();
+								List<Property> prolist = productInfoDao.getProductPropertyByCode(pcode);
+								products.get(i).setPropertys(prolist); 
+							}
 							responseProduct.addAll(products);
 						}
 					}

@@ -306,19 +306,17 @@
 
 
 	<!-- 根据开放接口商户权限获取商品列表 2016-08-26 zhy -->
-	<select id="findProductBySellerProductype" parameterType="Map"
-		resultMap="BaseResultMap">
-		SELECT
-		p.*
-		FROM
-		usercenter.uc_sellerinfo AS u
-		LEFT JOIN
-		usercenter.uc_seller_info_extend AS ue ON u.small_seller_code = ue.small_seller_code
-		LEFT JOIN
-		productcenter.pc_productinfo AS p ON p.small_seller_code =
-		u.small_seller_code
+	<select id="findProductBySellerProductype" parameterType="Map" resultMap="BaseResultMap">
+		select
+			p.*
+		from
+			usercenter.uc_sellerinfo AS u
+		left join
+			usercenter.uc_seller_info_extend AS ue ON u.small_seller_code = ue.small_seller_code
+		left join
+			productcenter.pc_productinfo AS p ON p.small_seller_code = u.small_seller_code
 		where
-		p.product_status = '4497153900060002'
+			p.product_status = '4497153900060002'
 		AND (
 		<if test="LD != null and LD != ''">
 			p.small_seller_code = 'SI2003'
@@ -390,17 +388,31 @@
 	<resultMap id="statusResultMap" type="com.hjy.dto.product.ProductStatus"></resultMap>
 	<select id="selectProductByUpdateTime" parameterType="Map" resultMap="statusResultMap">
 		select
-			product_code as productCode, # product_code_old as productCodeOld,
-			product_status as productStatus
+			p.product_code as productCode,  
+			p.product_status as productStatus,
+			s.sku_code as skuCode,			
+			s.sale_yn as saleYn
 		from
-			productcenter.pc_productinfo
+			productcenter.pc_productinfo p left join productcenter.pc_skuinfo s on p.product_code = s.product_code 
 		where
 			<if test="pcode != null and pcode != ''">
-				product_code = #{pcode , jdbcType=VARCHAR}
+				p.product_code = #{pcode , jdbcType=VARCHAR}
 			</if>
 			<if test="pcode == null or pcode == ''">
-				update_time between #{startTime , jdbcType=VARCHAR} and #{endTime , jdbcType=VARCHAR}
+				p.update_time between #{startTime , jdbcType=VARCHAR} and #{endTime , jdbcType=VARCHAR}
 			</if>
+	</select>
+	
+	<resultMap id="propertyResultMap" type="com.hjy.dto.product.Property"></resultMap>
+	<select id="getProductPropertyByCode" parameterType="java.lang.String" resultMap="propertyResultMap">
+		select
+			p.property_key as 'key',
+			p.property_value as 'value',
+			p.property_type as 'type'
+		from
+			productcenter.pc_productinfo i left join productcenter.pc_productproperty p on i.product_code = p.product_code
+		where
+			i.product_code = #{pcode}
 	</select>
 </mapper>
 

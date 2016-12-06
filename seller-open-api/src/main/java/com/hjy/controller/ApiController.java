@@ -54,7 +54,7 @@ public class ApiController {
 	@ResponseBody
 	public JSONObject requestApi(Request request) {
 
-		request = DataInit.rsyncProductStatus();
+		request = DataInit.pushProduct();
 		System.out.println(JSONObject.toJSONString(request));
 		logger.info(JSONObject.toJSONString(request));
 
@@ -106,11 +106,9 @@ public class ApiController {
 						if (StringUtils.isNoneBlank(request.getData())) {
 							JSONObject obj = JSONObject.parseObject(request.getData());
 							// 判断开始日期和结束日期是否为空
-							if (obj != null && StringUtils.isNotBlank(obj.getString("startDate"))
-									&& StringUtils.isNotBlank(obj.getString("endDate"))) {
+							if (obj != null && StringUtils.isNotBlank(obj.getString("startDate")) && StringUtils.isNotBlank(obj.getString("endDate"))) {
 								// 获取产品列表
-								result = productService.pushProduct(seller, obj.getString("startDate"),
-										obj.getString("endDate"));
+								result = productService.pushProduct(seller, obj.getString("startDate") , obj.getString("endDate"));
 							} else {
 								result.put("code", 3);
 								result.put("desc", "接口参数错误");

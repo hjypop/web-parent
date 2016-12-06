@@ -47,6 +47,22 @@ public class DataInit {
 		return r; 
 	}
 	
+	public static Request pushProduct(){
+		Request r = new Request();
+		r.setMethod("Product.pushProduct");
+		r.setAppid("SI10182"); 
+		r.setTimestamp("2016-08-31 10:31:58");
+		r.setNonce("4"); 
+		r.setAppSecret("83c0e6f4aa5f11e39ee0000c298b20fc");
+
+		JSONObject request = new JSONObject();
+		request.put("startDate" , "2016-12-05 00:00:00");
+		request.put("endDate" , "2016-12-07 00:00:00");
+		r.setData(request.toJSONString() ); 
+		
+		r.setSign(getSign(r));  
+		return r; 
+	}
 	
 	public static Request apiSelectShipmentsTest(){
 		Request r = new Request();

@@ -107,6 +107,17 @@ public class ProductInfo implements IApiRequest {
 	
 	private String validateFlag;
 
+	private List<Property> propertys;
+	
+	
+	public List<Property> getPropertys() {
+		return propertys;
+	}
+
+	public void setPropertys(List<Property> propertys) {
+		this.propertys = propertys;
+	}
+
 	public String getValidateFlag() {
 		return validateFlag;
 	}
