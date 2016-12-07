@@ -145,6 +145,16 @@ public interface IApiProductInfoDao {
 	List<PcProductinfo> findProductByProductCodes(com.hjy.dto.product.ProductInfo dto);
 	
 	public List<Property> getProductPropertyByCode(String pcode);
+	
+	/**
+	 * @description:  验证订单中的商品是否为我公司数据库中的记录 
+	 * 
+	 * @param map
+	 * @author Yangcl 
+	 * @date 2016年12月7日 下午2:53:20 
+	 * @version 1.0.0.1
+	 */
+	public Integer validateOrderProductInfo(Map<String , String> map);
 }
 
 

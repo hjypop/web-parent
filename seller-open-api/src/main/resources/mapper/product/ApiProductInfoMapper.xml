@@ -414,6 +414,18 @@
 		where
 			i.product_code = #{pcode}
 	</select>
+	
+	<!-- 验证订单中的商品是否为我公司数据库中的记录 -->
+	<select id="validateOrderProductInfo" parameterType="Map" resultType="java.lang.Integer">
+		select 
+			count(*) 
+		from
+			productcenter.pc_skuinfo s left join productcenter.pc_productinfo p on p.product_code = s.product_code 
+		where 
+			p.product_code = #{pcode , jdbcType=VARCHAR}
+		and
+			s.sku_code = #{scode , jdbcType=VARCHAR}
+	</select>
 </mapper>
 
 

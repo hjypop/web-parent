@@ -1,15 +1,13 @@
 package com.hjy.service.impl.order;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -19,29 +17,29 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hjy.annotation.ExculdeNullField;
+import com.google.gson.JsonObject;
+import com.hjy.dao.api.IApiProductInfoDao;
 import com.hjy.dao.api.ILcOpenApiOrderInsertDao;
 import com.hjy.dao.api.ILcOpenApiQueryLogDao;
 import com.hjy.dao.log.ILcOpenApiOrderStatusDao;
 import com.hjy.dao.order.IOcOrderaddressDao;
 import com.hjy.dao.order.IOcOrderdetailDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
+import com.hjy.dto.order.BillInfo;
+import com.hjy.dto.order.OrderInfoInsert;
 import com.hjy.entity.log.LcOpenApiOrderInsert;
 import com.hjy.entity.log.LcOpenApiOrderStatus;
 import com.hjy.entity.log.LcOpenApiQueryLog;
-import com.hjy.entity.order.OcOrderaddress;
 import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelper;
 import com.hjy.helper.SignHelper;
 import com.hjy.helper.WebHelper;
-import com.hjy.model.order.OrderDetail;
-import com.hjy.request.data.OrderDetailInsert;
-import com.hjy.request.data.OrderInfoInsert;
 import com.hjy.request.data.OrderInfoRequest;
 import com.hjy.request.data.OrderInfoRequestDto;
 import com.hjy.request.data.OrderInfoStatus;
 import com.hjy.request.data.OrderInfoStatusDto;
+import com.hjy.request.data.OrderProductInfo;
 import com.hjy.response.OrderInfoResponse;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.order.IApiOcOrderInfoService;
@@ -49,7 +47,7 @@ import com.hjy.service.order.IApiOcOrderInfoService;
 @Service("apiOcOrderInfoService")
 public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Integer> implements IApiOcOrderInfoService{
 	
-	private static Integer COUNT = 1000;       // 一次性批处理的数据数量 
+	private static Integer COUNT = 20;       // 一次性批处理的数据数量 
 
 	@Resource
 	private IOcOrderinfoDao dao;
@@ -61,13 +59,16 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	private ILcOpenApiOrderStatusDao openApiOrderStatusDao;
 	
 	@Resource
-	private ILcOpenApiOrderInsertDao openApiOrderInsertDao; 
+	private ILcOpenApiOrderInsertDao lcOpenApiOrderInsertDao; 
 	
 	@Resource
 	private ILcOpenApiQueryLogDao openApiQueryDao;
 	
 	@Resource
 	private IOcOrderaddressDao addressDao;
+	
+	@Resource
+	private IApiProductInfoDao apiProductInfoDao; 
 	
 	/**
 	 * @descriptions 根据Json串查询订单信息|依据商户编码、开始时间和结束时间来查询一批订单
@@ -281,7 +282,7 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 
 
 	/** Order.Insert
-	 * @descriptions 插入订单状态信息                                        TODO 此处拆单还有问题，OS大订单号还没有加，需要小强的拆单逻辑 ！！！！！
+	 * @descriptions 插入订单状态信息       
 	 *  惠家有：商户；第三方：销售平台。
 	 *  第三方将订单信息发送给惠家有，惠家有插入订单
 	 * 
@@ -292,8 +293,6 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 	 */
 	public JSONObject insertOrder(String json, String sellerCode) {
 		JSONObject result = new JSONObject();
-		String responseTime = DateHelper.formatDate(new Date());
-		result.put("responseTime", responseTime);
 		// 解析请求数据
 		List<OrderInfoInsert> list = null;
 		try {
@@ -316,180 +315,131 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 		}
 		String lockcode = WebHelper.getInstance().addLock(10000 , sellerCode + "@ApiOcOrderInfoServiceImpl.insertOrder");      // 分布式锁
 		if(StringUtils.isNotEmpty(lockcode)) {
-			List<OcOrderinfo> insertList = new ArrayList<OcOrderinfo>(); // 存放合法的数据记录
-			List<OrderDetail> insertOrderDetailList = new ArrayList<OrderDetail>(); // 存放合法的数据记录
-			List<OcOrderaddress> addressList = new ArrayList<OcOrderaddress>(); // 存放合法的数据记录
-			List<OrderInfoInsert> errorList = new ArrayList<OrderInfoInsert>(); // 存放数据不完整的记录
+			List<OrderInfoInsert> rightList = new ArrayList<OrderInfoInsert>();   // 保存正确的数据
+			List<OrderInsertError> errorList = new ArrayList<OrderInsertError>();   // 保存错误的数据
 			for(OrderInfoInsert i : list){
-				OcOrderinfo e = new OcOrderinfo();
-				if(this.validate(i, e)){
-					e.setOutOrderCode(e.getOrderCode()); // 第三方的订单编号
-					e.setOrderCode(WebHelper.getInstance().genUniqueCode("DD")); // 生成我们的订单编号
-					
-					// oc_orderadress
-					if(i.getAddress() == null){
-						errorList.add(i);
-						continue;
-					}
-					OcOrderaddress a = new OcOrderaddress();
-					if(this.validate(i.getAddress(), a)){
-						a.setUid(UUID.randomUUID().toString().replace("-", ""));
-						a.setOrderCode(e.getOrderCode()); 
-						a.setInvoiceStatus("449747240001"); 
-					}else{
-						errorList.add(i);
-						continue;
-					}
-					
-					// oc_orderdetail
-					List<OrderDetailInsert> dList = i.getList();
-					if(dList != null && dList.size() !=0){
-						List<OrderDetail> odList = new ArrayList<OrderDetail>(); // 临时存储
-						for(OrderDetailInsert d : dList){
-							OrderDetail od = new OrderDetail();
-							if(this.validate(d, od)){
-								od.setUid(UUID.randomUUID().toString().replace("-", "")); 
-								od.setOrderCode(e.getOrderCode()); 
-								od.setGiftFlag("1"); 
-								odList.add(od);
-							}else{ // 如果 list 中的 sku 信息不合法则认为这条数据错误
-								errorList.add(i);
-								break; // 直接跳出循环
-							}
-						}
-						if(dList.size() == odList.size()){
-							insertOrderDetailList.addAll(odList);
-							e.setUid(UUID.randomUUID().toString().replace("-", "")); 
-							e.setOrderSource("449715190009");
-							e.setOrderType("449715200005"); 
-							e.setOrderStatus("4497153900010002"); 
-							e.setSellerCode("SI2003"); 
-							e.setCreateTime(DateHelper.formatDate(new Date())); 
-							e.setOrderChannel("449747430006"); 
-							e.setOrderStatusExt("4497153900140002");
-							e.setSmallSellerCode(sellerCode); 
-							e.setOrderAuditStatus("449746680003"); 
-							e.setLowOrder("449747110001"); 
-							insertList.add(e);  // oc_orderinfo
-							addressList.add(a); // oc_orderadress 全部条件满足则加入否则不加入地址信息
-						}
-						
-					}else{     // 如果sku list 信息为空，则认为这条数据错误
-						errorList.add(i);
-					}
+				JSONObject validate = this.orderInfoValidate(i);
+				if(validate.getBoolean("flag")){
+					i.setOrder_souce(i.getOrder_souce() + sellerCode);
+					rightList.add(i);
 				}else{
-					errorList.add(i);
+					errorList.add(new OrderInsertError(validate.getString("msg") , i)); 
 				}
-			} 		// 数据清洗分离完成 
+			} 		 
 			
-			if(errorList.size() != 0){
-				list.removeAll(errorList);
-				result.put("errorList", errorList); 
-			}
 			String json_ = JSON.toJSONString(list);
-			// 准备批量插入数据到oc_orderinfo表 和 oc_orderdetail表
 			String remark_ = "";
 			try {
-				if(insertList.size() != 0){
-					dao.apiBatchInsert(insertList);
-					orderDetailDao.apiBatchInsert(insertOrderDetailList);
-					addressDao.apiBatchInsert(addressList);
-					remark_ = "batch insert success";
-					if(errorList.size() == 0){
-						result.put("code", 0);
-					}else{
-						result.put("code", 1);
-					}
-					result.put("desc", "SUCCESS");
+				// TODO 调用接口|准备循环插入订单
+				String api = this.getConfig("openapi.com_cmall_familyhas_api_APiCreateOrde");
+				
+				
+				
+				if(errorList.size() == 0){
+					remark_ = "insert success";
 				}else{
-					remark_ = "insert list = 0";
+					remark_ = JSON.toJSONString(errorList);
 				}
-				openApiOrderInsertDao.insertSelective(new LcOpenApiOrderInsert(sellerCode , 1 , new Date() ,  json_ , remark_));
+				lcOpenApiOrderInsertDao.insertSelective(new LcOpenApiOrderInsert(sellerCode , 1 , new Date() ,  json_ , remark_));
 			} catch (Exception ex){
 				String desc_ = "平台内部错误";
 				logger.error(sellerCode + "批量插入订单信息异常|" + desc_ , ex);  
 				remark_ = "{" + ExceptionHelper.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
-				openApiOrderInsertDao.insertSelective(new LcOpenApiOrderInsert(sellerCode , 2 , new Date() ,  json_ , remark_));
+				lcOpenApiOrderInsertDao.insertSelective(new LcOpenApiOrderInsert(sellerCode , 2 , new Date() ,  json_ , remark_));
 			}finally {
 				WebHelper.getInstance().unLock(lockcode);
 			}
 			
-		}else{             // 处理机房断电、服务器宕机
+		}else{    // 处理机房断电、服务器宕机
 			result.put("code", 14);
 			result.put("desc", "分布式锁生效，插入订单状态信息已锁定，请联系HJY删除锁" + sellerCode + "@ApiOcOrderInfoServiceImpl.insertOrder");
 			return result; 
 		}
 		
+		result.put("responseTime", DateHelper.formatDate(new Date()));
 		return result;
 	}
 	
-	
 	/**
-	 * @descriptions  验证对象中的值是否合法并赋值
+	 * @description: 效验订单信息的合法性 
 	 * 
-	 * @param t 要验证的对象
-	 * @param entity 要赋值的对象
-	 * @return entity
-	 * @date 2016年8月29日下午12:10:38
+	 * @param e
 	 * @author Yangcl 
+	 * @date 2016年12月7日 下午2:01:33 
 	 * @version 1.0.0.1
-	 * @param <E>
 	 */
-	private  <T , E> boolean validate(T t , E e){
-		Field[] fields = t.getClass().getDeclaredFields();
-		 try {
-			 for(int i = 0 ; i < fields.length ; i ++){
-				 Field field = fields[i];
-				 String name = field.getName();
-				 String func = "get" + name.substring(0,1).toUpperCase()+name.substring(1);
-				 Method m = t.getClass().getMethod(func);
-	             String value = String.valueOf(m.invoke(t)); 
-	             if(value.equals("null")) {
-	            	 value = null;
-	             }
-	             if( !field.isAnnotationPresent(ExculdeNullField.class) && StringUtils.isBlank(value) ){    
-	            	 // 不包含此标签则是必传字段，如果没传值则认为此条记录错误
-	            	 return false; 
-	             }else if(field.isAnnotationPresent(ExculdeNullField.class) && StringUtils.isBlank(value) ){
-	            	 // ExculdeNullField注解标识的字段为空，则不再对其反射设值。
-	            	 continue;
-	             } 
-	             
-	             // 赋值 
-	             String func_ = "set" + name.substring(0,1).toUpperCase()+name.substring(1); 
-				 Method m_ = e.getClass().getMethod(func_  , m.invoke(t).getClass());
-				 @SuppressWarnings("rawtypes")
-				Class[] c = m_.getParameterTypes();
-				 if(c[0] == String.class) {
-		 	 		 m_.invoke(e , value);
-		 	 	 }else if(c[0] == BigDecimal.class) {
-		 	 		 m_.invoke(e , BigDecimal.valueOf(Double.valueOf(value)));
-		 	 	 }else if(c[0] == Integer.class) {
-					 m_.invoke(e ,Integer.valueOf(value));
-			 	 }else if(c[0] == Boolean.class) {
-		 	 		 m_.invoke(e , Boolean.valueOf(value));
-		 	 	 }else if(c[0] == Float.class){
-		 		 	 m_.invoke(e , Float.valueOf(value));
-		 	 	 }else if(c[0] == Double.class) {
-	 	 		 	 m_.invoke(e , Double.valueOf(value));
-		 	 	 }else if(c[0] == Byte.class) {
-		 	 		 m_.invoke(e , Byte.valueOf(value));
-		 	 	 }
-			 }
-		 } catch (NoSuchMethodException ex) {
-//			 ex.printStackTrace();  不做处理即可
-		 } catch (SecurityException ex) {
-			 ex.printStackTrace();
-		 } catch (IllegalAccessException ex) {
-			 ex.printStackTrace();
-		 } catch (IllegalArgumentException ex) {
-			 ex.printStackTrace();
-		 } catch (InvocationTargetException ex) {
-			 ex.printStackTrace();
-		 } 
-		 
-		return true;
+	private JSONObject orderInfoValidate(OrderInfoInsert e){
+		JSONObject result = new JSONObject();
+		result.put("flag", true);
+		if(StringUtils.isAnyBlank(
+				e.getBuyer_name(),e.getBuyer_mobile() , e.getBuyer_address() , 
+				e.getRemark() , e.getPay_type() , e.getApp_vision() , 
+				e.getOrder_souce(), e.getOrder_type() )){ 
+			result.put("flag", false);
+			result.put("msg", "请求字段信息不全");
+			return result;
+		}
+		if(!e.getPay_type().equals("449716200001") && !e.getPay_type().equals("449716200002")){
+			result.put("flag", false);
+			result.put("msg", "pay_type效验错误");
+			return result;
+		}
+		if(e.getOrder_souce().equals("449715190001")){ 
+			result.put("flag", false);
+			result.put("msg", "order_souce效验错误");
+			return result;
+		}
+		if(e.getOrder_type().equals("449715200005")){ 
+			result.put("flag", false);
+			result.put("msg", "order_type效验错误");
+			return result;
+		}
+		if(e.getCheck_pay_money() <= 0){
+			result.put("flag", false);
+			result.put("msg", "应付款为非法数字");
+			return result;
+		}
+		
+		BillInfo b = e.getBillInfo();
+		if(StringUtils.isAnyBlank(b.getBill_title() , b.getBill_detail() , b.getBill_Type())){
+			result.put("flag", false);
+			result.put("msg", "发票关键信息为空");
+			return result;
+		}
+		if(!b.getBill_Type().equals("449746310001")){
+			result.put("flag", false);
+			result.put("msg", "错误的发票类型");
+			return result;
+		}
+		
+		
+		List<OrderProductInfo> list = e.getGoods();
+		if(list.size() == 0){
+			result.put("flag", false);
+			result.put("msg", "商品列表为空");
+			return result;
+		}
+		
+		for(OrderProductInfo i : list){
+			if(StringUtils.isAnyBlank(i.getSku_code(),i.getProduct_code(),i.getChooseFlag(),i.getSku_code())){
+				result.put("flag", false);
+				result.put("msg", "商品列表关键字段非法");
+				return result;
+			}
+			Map<String , String> map = new HashMap<String, String>();
+			map.put("pcode", i.getProduct_code());
+			map.put("scode", i.getSku_code());  
+			int count = apiProductInfoDao.validateOrderProductInfo(map);
+			if(count == 0){
+				result.put("flag", false);
+				result.put("msg", "该订单包含非惠家有平台商品信息");
+				return result;
+			}
+		}
+		
+		return result;
 	}
+	
 	
 	/**
 	 * @descriptions 比较两个时间的大小 如果两个时间相等则返回false
@@ -515,6 +465,36 @@ public class ApiOcOrderInfoServiceImpl extends BaseServiceImpl<OcOrderinfo, Inte
 
 
 
+/**
+ * @description: 描述订单插入时候出现的效验失败的第三方订单信息
+ * 	为防止暴类，这里采用内部类。 
+ * 
+ * @author Yangcl
+ * @date 2016年12月7日 下午3:31:13 
+ * @version 1.0.0
+ */
+class OrderInsertError{
+	private String msg;
+	private OrderInfoInsert entity;
+	
+	public OrderInsertError(String msg, OrderInfoInsert entity) {
+		this.msg = msg;
+		this.entity = entity;
+	}
+	
+	public String getMsg() {
+		return msg;
+	}
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+	public OrderInfoInsert getEntity() {
+		return entity;
+	}
+	public void setEntity(OrderInfoInsert entity) {
+		this.entity = entity;
+	}
+}
 
 
 

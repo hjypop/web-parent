@@ -10,11 +10,11 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.dto.order.OrderInfoInsert;
 import com.hjy.helper.SignHelper;
 import com.hjy.request.Request;
 import com.hjy.request.data.OrderAddressInsert;
 import com.hjy.request.data.OrderDetailInsert;
-import com.hjy.request.data.OrderInfoInsert;
 import com.hjy.request.data.OrderInfoRequest;
 import com.hjy.request.data.OrderInfoStatus;
 import com.hjy.request.data.OrderShipment;
@@ -92,63 +92,8 @@ public class DataInit {
 		r.setNonce("4"); 
 		r.setAppSecret("83c0e6f4aa5f11e39ee0000c298b20fc");
 		
-		List<OrderInfoInsert> oList = new ArrayList<OrderInfoInsert>();
-		String orderCode = "TBI88997";
-		String producdCode = "PC88596-";
-		String skuCode = "SKU12340g-";
-		for(int i = 0 ; i < 50 ; i ++){
-			OrderInfoInsert o = new OrderInfoInsert();
-			
-			OrderAddressInsert a = new OrderAddressInsert();
-			a.setAreaCode("123456");
-			a.setAddress("address");
-			a.setPostcode("101109");
-			a.setMobilephone("13500000000");
-			a.setReceivePerson("receive-person");
-			a.setFlagInvoice(0);
-			a.setAuthTrueName("auth-name");
-			a.setAuthIdcardType("4497465200090001");
-			a.setAuthIdcardNumber("110223198906669999");
-			a.setAuthPhoneNumber("13900000000"); 
-			a.setAuthEmail("AuthEmail");
-			a.setAuthAddress("authAddress");
-			
-			o.setAddress(a); 
-			
-			o.setOrderCode(orderCode + i);
-			o.setPayType("449716200009");              // 根据此值删除数据
-			if(i % 9 == 0 ){
-				o.setSendType(""); 
-			}else{
-				o.setSendType("449715210001");
-			}
-			int pm =  (int)(Math.random()*100);
-			o.setProductMoney(BigDecimal.valueOf(Long.valueOf(pm))); 
-			o.setTransportMoney(BigDecimal.ONE); 
-			o.setOrderMoney(o.getProductMoney().add(BigDecimal.TEN));
-			o.setPayedMoney(BigDecimal.valueOf(Double.valueOf(32.99)));   
-			o.setProductName("窈窕淑女 - 我好逑！");
-			o.setDueMoney(o.getOrderMoney()); 
-			
-			List<OrderDetailInsert> list = new ArrayList<OrderDetailInsert>();
-			for(int j = 0 ; j < 3 ; j ++){
-				OrderDetailInsert d = new OrderDetailInsert();
-				d.setSkuCode(skuCode + pm);
-				d.setProductCode(producdCode + pm);
-				if(i % 2 == 0 ){
-					d.setSkuName("性感黑丝袜"); 
-				}else{
-					d.setSkuName("振动棒"); 
-				}
-				d.setSkuPrice(BigDecimal.valueOf(72.9)); 
-				d.setSkuNmu(1);
-				d.setShowPrice(BigDecimal.valueOf(72.9)); 
-				list.add(d);
-			}
-			o.setList(list);
-			oList.add(o);
-		}
-		r.setData(JSON.toJSONString(oList)); 
+		 
+//		r.setData(JSON.toJSONString(oList)); 
 		
 		r.setSign(getSign(r));  
 		return r; 

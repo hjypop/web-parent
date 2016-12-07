@@ -11,8 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.hjy.annotation.ExculdeNullField;
+import com.hjy.dto.order.OrderInfoInsert;
 import com.hjy.entity.order.OcOrderinfo;
-import com.hjy.request.data.OrderInfoInsert;
 
 public class Testes {
 
