@@ -1,83 +1,56 @@
 <%@ include file="/inc/resource.inc"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <head>
-<%@ include file="/inc/head.jsp"%>
-<script type="text/javascript" src="${js}/jquery/1.12.2/jquery-1.12.2.js"></script>
-<script type="text/javascript" src="${js}/plugins/jquery.validate.min.js"></script>
-<script type="text/javascript" src="${js}/plugins/jquery-ui-1.8.16.custom.min.js"></script>
-<script type="text/javascript" src="${js}/plugins/jquery.uniform.js"></script>
-<script type="text/javascript" src="${js }/system/usepublic.js"></script>
-<script type="text/javascript">
-function add(){
-	var obj = JSON.parse(ajaxs.sendAjax("post", "add.do", $("#addSeller").serialize()));
-	if (obj.status == 'success') {
-		alert(obj.msg);
-	} else {
-		alert(obj.msg);
-	}
-	window.open("index.do","_self");
-	
-}
-function cancel(){
-	window.open("index.do","_self");
-}
-$(document).ready(function(){
-	jQuery('input:checkbox, input:radio, select.uniformselect, input:file').uniform();
-	//设置验证信息
-	jQuery("#addSeller").validate({
-		rules: {
-			sellerName: "required",
-			sellerType: "required",
-			sellerTelephone: "required",
-			priceType: "required"
-		},
-		messages: {
-			sellerName: "请填写商户名称",
-			sellerTelephone:"请填写商户联系电话",
-			priceType:"请选择商户同步价格类型"
-		},
-		debug:true,
-		submitHandler:function(){
-			var commissions = new Array();
-			//读取佣金设置
-			if($("input[name=ucSellerType]").parent(".checked").length>0){
-				//读取佣金设置
-				$("input[name=ucSellerType]").each(function(){
-						if($(this).parent().hasClass("checked")){
-							var val = $(this).val();
-							var ucSellerCommission = $("#"+val).val();
-							if(UsePublic.isNull(ucSellerCommission)){
-								alert("请添加佣金设置");
-								return false;
-							}else if(!UsePublic.isNumber(ucSellerCommission)){
-								alert("佣金设置只能是数字");
-								return false;
-							}else if(parseInt(ucSellerCommission)>100){
-								alert("佣金设置不能大于100");
-								return false;
-							}else{
-								var commission = {
-										type:$(this).val(),
-										commission:ucSellerCommission
-								};
-								commissions.push(commission);
-							}
-						}
+	<%@ include file="/inc/head.jsp"%>
+
+	<style type="text/css">
+		.table-show,td{
+			border-bottom: solid #808080 1px;
+			border-spacing: 10px;
+			border-collapse: collapse;
+			padding-top: 5px;
+			padding-bottom: 5px;
+		}
+		.table-show td{
+			width: 150px;
+		}
+	</style>
+
+	<script type="text/javascript">
+		function addSellerInfo(){
+			var url_ = '${basePath}seller/add.do';
+			var data_ = $("#add-seller").serializeArray();
+			var arr = new Array();
+			for(var i = 0 ; i < 5 ; i ++){
+				var s = '449747810005000' + i ;
+				for(var o in data_){
+					if(s === data_[o].name){
+						var v = new Object();
+						v.type= data_[o].name;
+						v.commission = data_[o].value;
+						arr.push(v);
+					}
+				}
+			}
+			var c = new Object();
+			c.name = 'commission';
+			c.value = JSON.stringify(arr);
+			data_.push(c);
+			var obj = JSON.parse(ajaxs.sendAjax('post' , url_ , data_));
+			if(obj.status === 'success'){
+				jConfirm('您下一步是否返回列表页?', '记录添加成功!', function(flag) {
+					if(flag){
+						window.location = '${basePath}seller/index.do';
+					}
 				});
 			}else{
-				alert("请添加佣金设置");
-				return false;
+				jAlert('记录添加失败!', '警告');
 			}
-			if(commissions.length >0 && $("input[name=ucSellerType]").parent(".checked").length ==commissions.length ){
-				$("#commission").val(JSON.stringify(commissions));	
-				add();
-			}
+
 		}
-	});
-});
-</script>
+
+	</script>
 </head>
 
 <body class="withvernav">
@@ -88,64 +61,129 @@ $(document).ready(function(){
 			<div class="pageheader notab">
 				<h1 class="pagetitle">商户管理-添加商户</h1>
 			</div>
-                <form id="addSeller" class="stdform" method="post" action="add.do">
-                	<input type="hidden"  id="commission" name="commission" value=""></input>
-                	<p>
-                    	<label>商户名称</label>
-                        <span class="field">
-                        	<input maxlength="20" type="text" name="sellerName" id="sellerName" class="smallinput" />
-                        </span>
-                    </p>
-                    
-                    <p>
-                    	<label>商户描述</label>
-                        <span class="field">
-                        	<textarea cols="80" rows="5" name="sellerDescrption" class="smallinput" id="sellerDescrption"></textarea>
-                        </span> 
-                    </p>
-                    <p>
-                    	<label>联系电话</label>
-                        <span class="field">
-                        	<input maxlength="20" type="text" name="sellerTelephone" id="sellerTelephone" class="smallinput" />
-                        </span>
-                    </p>
-                    <p>
-                    	<label>商家信箱</label>
-                        <span class="field">
-                        	<input type="text" name="sellerEmail" id="sellerEmail" class="smallinput" />
-                        </span>
-                    </p>
-                    <p>
-                    	<label>商户同步价格类型</label>
-                        <span class="field">
-                        	<select id="priceType" name="priceType">
-                        		<option value="">请选择</option>
-                        		<option value="0">成本价</option>
-                        		<option value="1">销售价</option>
-                        	</select>
-                        </span>
-                    </p>
-                    <p>
-                    	<label>佣金设置</label>
-                    	<span class="field">
-								<input type="checkbox" name="ucSellerType" value="LD" /> LD商品
-								<input id="LD" style="width:40px;margin:5px;" class="commission" type="text" name="ucSellerCommission" value=""/>%
-								<br />
-                    		<c:forEach var="type" items="${ucSellerType}">
-								<input type="checkbox" name="ucSellerType" value="${type.defineCode}" /> ${type.defineName}
-								<input id="${type.defineCode }" style="width:40px;margin:5px;" class="commission" type="text" name="ucSellerCommission" value=""/>%
-								<br />
-                    		</c:forEach>
-                    	</span>
-                    </p>
-                    <br />
-                    <p class="stdformbutton">
-                    	<span class="field">
-                     	<button type="submit" style="width: 100px;margin-right: 10px;" class="submit radius2">添加</button>
-                     	<button type="button" style="width: 100px;margin-left: 10px;" onclick="cancel();" class="stdbtn" >取消</button>
-                    	</span>
-                    </p>
-                </form>
+
+			<form id="add-seller" class="stdform" method="post" action="#">
+				<p>
+					<label>商家名称</label>
+					<span class="field">
+						<input maxlength="20" type="text" name="sellerName" id="sellerName" class="smallinput" />
+					</span>
+				</p>
+				<p>
+					<label>商家编号</label>
+					<span class="field">
+						<input maxlength="20" type="text" name="sellerCode" id="sellerCode" class="smallinput" />
+					</span>
+				</p>
+				<p>
+					<label>商家描述</label>
+					<span class="field">
+						<textarea cols="80" rows="5" name="sellerDescrption" class="smallinput" id="sellerDescrption"></textarea>
+					</span>
+				</p>
+				<p>
+					<label>联系电话</label>
+					<span class="field">
+						<input maxlength="20" type="text" name="sellerTelephone" id="sellerTelephone" class="smallinput" />
+					</span>
+				</p>
+				<p>
+					<label>商家信箱</label>
+					<span class="field">
+						<input type="text" name="sellerEmail" id="sellerEmail" class="smallinput" />
+					</span>
+				</p>
+				<p>
+					<label>商户状态</label>
+					<span class="field">
+						<input type="radio" id="status-y" name="status" value="0"/>未开通 |
+						<input type="radio" id="status-n" name="status" value="1" checked="checked"/>已开通|
+						<input type="radio" id="status-f" name="status" value="2" />已禁用
+					</span>
+				</p>
+				<p>
+					<label>商家类型</label>
+					<span class="field">
+						<select id="type" name="type">
+							<option value="">请选择</option>
+							<option value="1">惠家有的商户</option>
+							<option value="2">分销平台</option>
+						</select>
+					</span>
+				</p>
+
+				<p>
+					<label>跨境商户报关</label>
+					<span class="field">
+						<input type="radio" id="flag-y" name="flag" value="1"/>需要报关 | <input type="radio" id="flag-n" name="flag" value="2" checked="checked"/>无需报关
+					</span>
+				</p>
+				<p class="seller-custom">
+					<label>商户海关备案编号</label>
+					<span class="field">
+						<input type="text" id="sellerCustomNumber" name="sellerCustomNumber" class="smallinput" />
+					</span>
+				</p>
+				<p class="seller-custom">
+					<label>商户报关地点</label>
+					<span class="field">
+						<input type="radio" id="HANGZHOU" name="sellerCustomLocation" value="HANGZHOU"/>杭州海关 |
+						<input type="radio" id="ZHENGZHOU" name="sellerCustomLocation" value="ZHENGZHOU"/>郑州海关 |
+						<input type="radio" id="GUANGZHOU" name="sellerCustomLocation" value="GUANGZHOU"/>广州海关 |
+						<input type="radio" id="CHONGQING" name="sellerCustomLocation" value="CHONGQING"/>重庆海关
+						<br />
+						<input type="radio" id="NINGBO" name="sellerCustomLocation" value="NINGBO"/>宁波海关 |
+						<input type="radio" id="SHENZHEN" name="sellerCustomLocation" value="SHENZHEN"/>深圳海关 |
+						<input type="radio" id="HENAN" name="sellerCustomLocation" value="HENAN"/>河南海关 |
+						<input type="radio" id="SHANGHAI" name="sellerCustomLocation" value="SHANGHAI"/>上海海关 
+						<br />
+						<input type="radio" id="XIAN" name="sellerCustomLocation" value="XIAN"/>西安海关 |
+						<input type="radio" id="SUZHOU" name="sellerCustomLocation" value="SUZHOU"/>苏州海关 |
+						<input type="radio" id="TIANJIN" name="sellerCustomLocation" value="TIANJIN"/>天津海关 |
+						<input type="radio" id="NANSHAGJ" name="sellerCustomLocation" value="NANSHAGJ"/>南沙国检 |
+						<input type="radio" id="ZONGSHU" name="sellerCustomLocation" value="ZONGSHU"/>海关总署
+					</span>
+				</p>
+				<p>
+					<label>商户同步价格类型</label>
+					<span class="field">
+						<select id="priceType" name="priceType">
+							<option value="">请选择</option>
+							<option value="0">成本价</option>
+							<option value="1">销售价</option>
+						</select>
+					</span>
+				</p>
+
+				<p>
+					<label>佣金设置</label>
+					<span class="field">
+						<table  class="table-show ">
+							<tbody>
+							<c:forEach var="type" items="${ucSellerType}">
+								<tr>
+									<td>
+										<%--<input type="checkbox" name="ucSellerType" value="${type.defineCode}" /> --%>
+										${type.defineName}
+									</td>
+									<td>
+										<input id="${type.defineCode }" name="${type.defineCode }" style="" class="define-code smallinput" type="text" value=""/>  %
+									</td>
+								</tr>
+							</c:forEach>
+							</tbody>
+						</table>
+					</span>
+				</p>
+				<br />
+
+				<p class="stdformbutton">
+					<span class="field">
+					<button type="button" style="width: 100px;margin-right: 10px;" class="submit radius2" onclick="addSellerInfo()">添加</button>
+					<button type="button" style="width: 100px;margin-left: 10px;" onclick="" class="stdbtn" >取消</button>
+					</span>
+				</p>
+			</form>
 		</div>
 	</div>
 </body>

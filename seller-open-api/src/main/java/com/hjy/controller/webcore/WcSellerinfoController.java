@@ -71,51 +71,25 @@ public class WcSellerinfoController {
 	 */
 	@RequestMapping("addindex")
 	public String addIndex(ModelMap model) {
-		/**
-		 * 店铺类型
-		 */
-		List<ScDefine> sellerType = scDefineService.findDefineByParentCode("44974639");
-		/**
-		 * 商户类型
-		 */
-		List<ScDefine> ucSellerType = scDefineService.findDefineByParentCode("449747810005");
-		/**
-		 * 
-		 */
-		model.put("sellerType", sellerType);
+		// 店铺类型 无用查询
+//		List<ScDefine> sellerType = scDefineService.findDefineByParentCode("44974639");
+		// 商户类型 TODO 此处改为缓存？？？
+		List<ScDefine> ucSellerType = scDefineService.findDefineByParentCode("44974747");
+//		model.put("sellerType", sellerType);
 		model.put("ucSellerType", ucSellerType);
 		return "jsp/seller/add";
 	}
 
 	/**
-	 * 
 	 * 方法: add <br>
 	 * 描述: 商户信息-添加 <br>
 	 * 作者: zhy<br>
 	 * 时间: 2016年8月17日 下午1:59:35
-	 * 
-	 * @return
 	 */
 	@RequestMapping("add")
 	@ResponseBody
 	public JSONObject add(WcSellerinfo entity) {
-		UserInfo user = (UserInfo) session.getAttribute("userInfo");
-		JSONObject obj = new JSONObject();
-		entity.setUid(WebHelper.getInstance().genUuid());
-		entity.setSellerCode(WebHelper.getInstance().genUniqueCode("SI"));
-		entity.setCreator(user.getUserName());
-		entity.setCreateTime(DateUtil.getSysDateTimeString());
-		entity.setUpdator(user.getUserName());
-		entity.setUpdateTime(DateUtil.getSysDateTimeString());
-		int result = service.insertSelective(entity);
-		if (result >= 0) {
-			obj.put("status", "success");
-			obj.put("msg", "添加成功");
-		} else {
-			obj.put("status", "error");
-			obj.put("msg", "添加失败");
-		}
-		return obj;
+		return service.insertWcSellerInfo(entity, session);
 	}
 
 	/**

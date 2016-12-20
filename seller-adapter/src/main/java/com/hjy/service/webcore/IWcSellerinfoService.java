@@ -1,5 +1,8 @@
 package com.hjy.service.webcore;
 
+import javax.servlet.http.HttpSession;
+
+import com.alibaba.fastjson.JSONObject;
 import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.service.IBaseService;
 
@@ -47,4 +50,23 @@ public interface IWcSellerinfoService extends IBaseService<WcSellerinfo, Integer
 	 */
 	WcSellerinfo selectBySellerCodeByApi(String sellerCode);
 
+	
+	public JSONObject insertWcSellerInfo(WcSellerinfo entity , HttpSession session);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

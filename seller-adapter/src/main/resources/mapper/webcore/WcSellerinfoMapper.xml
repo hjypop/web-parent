@@ -22,101 +22,165 @@
 	    <result column="seller_custom_location" property="sellerCustomLocation" jdbcType="VARCHAR" />
 	</resultMap>
 	
-	<sql id="Base_Column_List">
-		zid, uid, seller_code, seller_name,seller_descrption,
-		seller_telephone,
-		seller_email, status, price_type, commission,
-		creator,
-		DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') AS create_time,
-		updator,
-		DATE_FORMAT(update_time,'%Y-%m-%d %H:%i:%s') AS update_time
-	</sql>
-	<select id="selectBySellerCode" resultMap="BaseResultMap"
-		parameterType="java.lang.String">
+ 
+	<select id="selectBySellerCode" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
-		<include refid="Base_Column_List" />
+			*
 		from
-		webcore.wc_sellerinfo
+			webcore.wc_sellerinfo
 		where
-		seller_code =
-		#{sellerCode,jdbcType=VARCHAR}
+			seller_code = #{sellerCode,jdbcType=VARCHAR}
 	</select>
 
 	<!-- 查询商户信息列表 2016-08-17 zhy -->
-	<select id="queryPage" resultMap="BaseResultMap"
-		parameterType="com.hjy.entity.webcore.WcSellerinfo">
+	<select id="queryPage" resultMap="BaseResultMap" parameterType="com.hjy.entity.webcore.WcSellerinfo">
 		select
-		<include refid="Base_Column_List" />
-		from webcore.wc_sellerinfo
+			*
+		from 
+			webcore.wc_sellerinfo
 		<where>
 			1=1
 			<if test="sellerCode != null and sellerCode != '' ">
 				AND seller_code = #{sellerCode,jdbcType=VARCHAR}
 			</if>
 			<if test="sellerName != null and sellerName != ''">
-				AND seller_name LIKE
-				CONCAT('%',#{sellerName,jdbcType=VARCHAR},'%')
+				AND seller_name LIKE CONCAT('%',#{sellerName,jdbcType=VARCHAR},'%')
 			</if>
 		</where>
 	</select>
 
 	<!-- 根据商户编号查询已开通openapi的商户信息 2016-08-18 zhy -->
-	<select id="selectBySellerCodeByApi" resultMap="BaseResultMap"
-		parameterType="java.lang.String">
+	<select id="selectBySellerCodeByApi" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
-		<include refid="Base_Column_List" />
+			*
 		from
-		webcore.wc_sellerinfo
+			webcore.wc_sellerinfo
 		where
-		seller_code =
-		#{sellerCode,jdbcType=VARCHAR}
-		AND `status` = 1
+			seller_code = #{sellerCode,jdbcType=VARCHAR} and `status` = 1
 	</select>
 
 	<delete id="deleteBySellerCode" parameterType="java.lang.String">
-		delete from
-		webcore.wc_sellerinfo
+		delete 
+			from webcore.wc_sellerinfo
 		where
-		seller_code = #{sellerCode,jdbcType=VARCHAR}
+			seller_code = #{sellerCode,jdbcType=VARCHAR}
 	</delete>
-
-	<insert id="insertSelective" parameterType="com.hjy.entity.webcore.WcSellerinfo">
-		insert into webcore.wc_sellerinfo
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			uid,
-			seller_code,
-			seller_name,
-			<if test="sellerDescrption != null">
-				seller_descrption,
-			</if>
-			seller_telephone,
-			seller_email,
-			price_type,
-			commission,
-			creator,
-			create_time,
-			updator,
-			update_time,
-			type,
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			#{uid,jdbcType=CHAR},
-			#{sellerCode,jdbcType=VARCHAR},
-			#{sellerName,jdbcType=VARCHAR},
-			<if test="sellerDescrption != null">
-				#{sellerDescrption,jdbcType=VARCHAR},
-			</if>
-			#{sellerTelephone,jdbcType=VARCHAR},
-			#{sellerEmail,jdbcType=VARCHAR},
-			#{priceType,jdbcType=INTEGER},
-			#{commission,jdbcType=VARCHAR},
-			#{creator,jdbcType=VARCHAR},
-			STR_TO_DATE(#{createTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
-			#{updator,jdbcType=VARCHAR},
-			STR_TO_DATE(#{updateTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
-			#{type , jdbcType=INTEGER},
-		</trim>
-	</insert>
+ 
+	<insert id="insertSelective" parameterType="com.hjy.entity.webcore.WcSellerinfo" >
+	    insert into webcore.wc_sellerinfo 
+	    <trim prefix="(" suffix=")" suffixOverrides="," >
+	      <if test="zid != null" >
+	        zid,
+	      </if>
+	      <if test="uid != null" >
+	        uid,
+	      </if>
+	      <if test="sellerCode != null" >
+	        seller_code,
+	      </if>
+	      <if test="sellerName != null" >
+	        seller_name,
+	      </if>
+	      <if test="sellerTelephone != null" >
+	        seller_telephone,
+	      </if>
+	      <if test="sellerEmail != null" >
+	        seller_email,
+	      </if>
+	      <if test="status != null" >
+	        status,
+	      </if>
+	      <if test="priceType != null" >
+	        price_type,
+	      </if>
+	      <if test="creator != null" >
+	        creator,
+	      </if>
+	      <if test="createTime != null" >
+	        create_time,
+	      </if>
+	      <if test="updator != null" >
+	        updator,
+	      </if>
+	      <if test="updateTime != null" >
+	        update_time,
+	      </if>
+	      <if test="type != null" >
+	        type,
+	      </if>
+	      <if test="flag != null" >
+	        flag,
+	      </if>
+	      <if test="sellerCustomNumber != null" >
+	        seller_custom_number,
+	      </if>
+	      <if test="sellerCustomLocation != null" >
+	        seller_custom_location,
+	      </if>
+	      <if test="sellerDescrption != null" >
+	        seller_descrption,
+	      </if>
+	      <if test="commission != null" >
+	        commission,
+	      </if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      <if test="zid != null" >
+	        #{zid,jdbcType=INTEGER},
+	      </if>
+	      <if test="uid != null" >
+	        #{uid,jdbcType=CHAR},
+	      </if>
+	      <if test="sellerCode != null" >
+	        #{sellerCode,jdbcType=VARCHAR},
+	      </if>
+	      <if test="sellerName != null" >
+	        #{sellerName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="sellerTelephone != null" >
+	        #{sellerTelephone,jdbcType=VARCHAR},
+	      </if>
+	      <if test="sellerEmail != null" >
+	        #{sellerEmail,jdbcType=VARCHAR},
+	      </if>
+	      <if test="status != null" >
+	        #{status,jdbcType=INTEGER},
+	      </if>
+	      <if test="priceType != null" >
+	        #{priceType,jdbcType=INTEGER},
+	      </if>
+	      <if test="creator != null" >
+	        #{creator,jdbcType=VARCHAR},
+	      </if>
+	      <if test="createTime != null" >
+	        #{createTime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="updator != null" >
+	        #{updator,jdbcType=VARCHAR},
+	      </if>
+	      <if test="updateTime != null" >
+	        #{updateTime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="type != null" >
+	        #{type,jdbcType=INTEGER},
+	      </if>
+	      <if test="flag != null" >
+	        #{flag,jdbcType=INTEGER},
+	      </if>
+	      <if test="sellerCustomNumber != null" >
+	        #{sellerCustomNumber,jdbcType=VARCHAR},
+	      </if>
+	      <if test="sellerCustomLocation != null" >
+	        #{sellerCustomLocation,jdbcType=VARCHAR},
+	      </if>
+	      <if test="sellerDescrption != null" >
+	        #{sellerDescrption,jdbcType=LONGVARCHAR},
+	      </if>
+	      <if test="commission != null" >
+	        #{commission,jdbcType=LONGVARCHAR},
+	      </if>
+	    </trim>
+	  </insert>
 
 	<update id="updateSelective" parameterType="com.hjy.entity.webcore.WcSellerinfo">
 		update webcore.wc_sellerinfo
@@ -143,8 +207,7 @@
 				commission = #{commission,jdbcType=VARCHAR},
 			</if>
 			updator = #{updator,jdbcType=VARCHAR},
-			update_time =
-			STR_TO_DATE(#{updateTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
+			update_time = STR_TO_DATE(#{updateTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
 			<if test="type != null">
 				`type` = #{type , jdbcType=INTEGER},
 			</if>
