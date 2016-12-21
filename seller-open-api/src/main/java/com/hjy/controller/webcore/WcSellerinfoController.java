@@ -103,14 +103,10 @@ public class WcSellerinfoController {
 	 */
 	@RequestMapping("editindex")
 	public String editIndex(String sellerCode, ModelMap model) {
-		/**
-		 * 商户类型
-		 */
+		// 商户类型
 		List<ScDefine> sellerType = scDefineService.findDefineByParentCode("44974639");
 		model.put("sellerType", sellerType);
-		/**
-		 * 商户类型
-		 */
+		// 商户类型
 		List<ScDefine> ucSellerType = scDefineService.findDefineByParentCode("449747810005");
 		model.put("ucSellerType", ucSellerType);
 		WcSellerinfo info = service.selectBySellerCode(sellerCode);

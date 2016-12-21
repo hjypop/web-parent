@@ -135,7 +135,7 @@
 						<input type="radio" id="NINGBO" name="sellerCustomLocation" value="NINGBO"/>宁波海关 |
 						<input type="radio" id="SHENZHEN" name="sellerCustomLocation" value="SHENZHEN"/>深圳海关 |
 						<input type="radio" id="HENAN" name="sellerCustomLocation" value="HENAN"/>河南海关 |
-						<input type="radio" id="SHANGHAI" name="sellerCustomLocation" value="SHANGHAI"/>上海海关 
+						<input type="radio" id="SHANGHAI" name="sellerCustomLocation" value="SHANGHAI"/>上海海关
 						<br />
 						<input type="radio" id="XIAN" name="sellerCustomLocation" value="XIAN"/>西安海关 |
 						<input type="radio" id="SUZHOU" name="sellerCustomLocation" value="SUZHOU"/>苏州海关 |
