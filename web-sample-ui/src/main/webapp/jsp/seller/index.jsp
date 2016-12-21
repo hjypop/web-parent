@@ -41,6 +41,7 @@
 					html_ += '<tr class="gradeX">'
 					+'<td align="center"><span class="center"><input type="checkbox" id="' + list[i].zid + '"></span></td>'
 					+'<td class="head0" style="text-align: center;">' + list[i].sellerCode + ' </td>'
+					+'<td class="head0" style="text-align: center;">' + list[i].uid + ' </td>'
 					+'<td class="head0">' + list[i].sellerName + ' </td>'
 					+'<td class="head0" style="text-align: center;">' + list[i].sellerTelephone + ' </td>'
 					+'<td class="head0" style="text-align: center;">'
@@ -52,16 +53,13 @@
 						html_ += '未开通';
 					}
 					html_ += '</td>'
-					+'<td class="head0" style="text-align: center;">' + list[i].creator + ' </td>'
 					+'<td class="head0" style="text-align: center;">' + list[i].createTime + ' </td>'
-					+'<td class="head0" style="text-align: center;">' + list[i].updator + ' </td>'
-					+'<td class="head0" style="text-align: center;">' + list[i].updateTime + ' </td>'
 					+'<td class="head0" style="text-align:center;">'
 					+'<a href="#" class="btn btn3 btn_link"></a>'
 					+'</td>'
 					+'<td class="head0" style="text-align:center;">'
 					+'<a class="btn btn3 btn_book" href="editindex.do?sellerCode=' + list[i].sellerCode + ' " title="修改"  style="cursor: pointer;"></a> '
-					+'<a class="btn btn3 btn_trash" onclick="deleteOne(\'' + list[i].sellerCode + '\')" title="删除"  style="cursor: pointer;"></a>'
+					// +'<a class="btn btn3 btn_trash" onclick="deleteOne(\'' + list[i].sellerCode + '\')" title="删除"  style="cursor: pointer;"></a>'
 					+'</td>'
 					+'</tr>'
 
@@ -168,13 +166,11 @@
 									<input type="checkbox" name="checkedAll" id="checkedAll">
 								</th>
 								<th class="head1">商户编号</th>
+								<th class="head1">商户标识码</th>
 								<th class="head1">商户名称</th>
 								<th class="head1">联系电话</th>
 								<th class="head1">合作状态</th>
-								<th class="head1">创建人</th>
 								<th class="head1">创建时间</th>
-								<th class="head1">修改人</th>
-								<th class="head1">修改时间</th>
 								<th class="head1">接口管理</th>
 								<th class="head1">操作</th>
 							</tr>
