@@ -45,7 +45,7 @@
 					}
 				});
 			}else{
-				jAlert('记录添加失败!', '警告');
+				jAlert(obj.msg , '警告');
 			}
 
 		}
@@ -69,12 +69,12 @@
 						<input maxlength="20" type="text" name="sellerName" id="sellerName" class="smallinput" />
 					</span>
 				</p>
-				<p>
+				<%--<p>
 					<label>商家编号</label>
 					<span class="field">
 						<input maxlength="20" type="text" name="sellerCode" id="sellerCode" class="smallinput" />
 					</span>
-				</p>
+				</p>--%>
 				<p>
 					<label>商家描述</label>
 					<span class="field">

@@ -2,9 +2,11 @@ package com.hjy.service.impl.webcore;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.common.DateUtil;
 import com.hjy.dao.webcore.IWcSellerinfoDao;
@@ -80,45 +82,129 @@ public class WcSellerinfoServiceImpl extends BaseServiceImpl<WcSellerinfo, Integ
 	 */
 	public JSONObject insertWcSellerInfo(WcSellerinfo entity, HttpSession session) {
 		JSONObject obj = new JSONObject();
-		String type_ = "SI";  // 默认为惠家有商户标识
-		if(entity.getType() == 2){
-			type_ = "DP"; // 1：惠家有的商户；2：分销平台
-		}
-		UserInfo user = (UserInfo) session.getAttribute("userInfo");
-		entity.setUid(WebHelper.getInstance().genUuid());
-		entity.setSellerCode(WebHelper.getInstance().genUniqueCode(type_));
-		entity.setCreator(user.getUserName());
-		entity.setCreateTime(DateUtil.getSysDateTimeString());
-		entity.setUpdator(user.getUserName());
-		entity.setUpdateTime(DateUtil.getSysDateTimeString());
-		int result = dao.insertSelective(entity);
-		if (result >= 0) {
-			obj.put("status", "success");
-			obj.put("msg", "添加成功");
-		} else {
+		try {
+			String type_ = "SI";  // 默认为惠家有商户标识
+			if(entity.getType() == 2){
+				type_ = "DP"; // 1：惠家有的商户；2：分销平台
+			}
+			UserInfo user = (UserInfo) session.getAttribute("userInfo");
+			entity.setUid(WebHelper.getInstance().genUuid());
+			entity.setSellerCode(WebHelper.getInstance().genUniqueCode(type_));
+			JSONObject validate = this.validateEntity(entity);
+			if( !validate.getBoolean("status") ){
+				return validate;
+			}
+			entity.setCreator(user.getUserName());
+			entity.setCreateTime(DateUtil.getSysDateTimeString());
+			entity.setUpdator(user.getUserName());
+			entity.setUpdateTime(DateUtil.getSysDateTimeString());
+			
 			obj.put("status", "error");
-			obj.put("msg", "添加失败");
+			int result = dao.insertSelective(entity);
+			if (result >= 0) {
+				obj.put("status", "success");
+				obj.put("msg", "添加成功");
+			} else {
+				obj.put("msg", "添加失败");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			obj.put("msg", "【添加商户信息】异常!"); 
 		}
 		return obj;
 	}
 
-	@Override
+	/**
+	 * @description: 修改商户信息
+	 * 
+	 * @param entity
+	 * @param session
+	 * @author Yangcl 
+	 * @date 2016年12月21日 下午5:51:10 
+	 * @version 1.0.0.1
+	 */
 	public JSONObject updateWcSellerInfo(WcSellerinfo entity, HttpSession session) {
-		UserInfo user = (UserInfo) session.getAttribute("userInfo");
 		JSONObject obj = new JSONObject();
-		entity.setUpdator(user.getUserName());
-		entity.setUpdateTime(DateUtil.getSysDateTimeString());
-		entity.setType(null);
-		int result = dao.updateSelective(entity);
-		if (result >= 0) {
-			obj.put("status", "success");
-			obj.put("msg", "修改成功");
-		} else {
+		try {
+			UserInfo user = (UserInfo) session.getAttribute("userInfo");
+			entity.setUpdator(user.getUserName());
+			entity.setUpdateTime(DateUtil.getSysDateTimeString());
+			entity.setType(1); // 不会更新此字段，仅用来兼容验证
+			JSONObject validate = this.validateEntity(entity);
+			if( !validate.getBoolean("status") ){
+				return validate;
+			}
 			obj.put("status", "error");
-			obj.put("msg", "修改失败"); 
+			int result = dao.updateSelective(entity);
+			if (result >= 0) {
+				obj.put("status", "success");
+				obj.put("msg", "修改成功");
+			} else {
+				obj.put("msg", "修改失败"); 
+			}
+		} catch (Exception e) {
+			e.printStackTrace(); 
+			obj.put("msg", "【修改商户信息】异常!"); 
+		}finally{
+			
 		}
 		return obj;
 	}
+	
+	/**
+	 * @description: 验证信息完整性
+	 * 
+	 * @param e
+	 * @author Yangcl 
+	 * @date 2016年12月21日 下午5:52:04 
+	 * @version 1.0.0.1
+	 */
+	private JSONObject validateEntity(WcSellerinfo e){
+		JSONObject o = new JSONObject();
+		o.put("status", true);
+		if(StringUtils.isAnyBlank(
+				e.getSellerName(),
+				e.getSellerCode(),
+				e.getSellerDescrption(),
+				e.getSellerTelephone(),
+				e.getSellerEmail(),
+				e.getType().toString()
+				)){
+			o.put("status", false);
+			o.put("msg", "关键字段不得为空!");
+			return o;
+		}
+		if(e.getFlag() == 1 && StringUtils.isAnyBlank(e.getSellerCustomNumber() , e.getSellerCustomLocation())){
+			o.put("status", false);
+			o.put("msg", "报关商户需要填写【商户海关备案编号】和【商户报关地点】信息");
+			return o;
+		}
+		
+		JSONArray c = JSONObject.parseArray(e.getCommission());   // 开始验证 佣金设置
+		for(int i = 0 ; i < c.size() ; i ++){
+			JSONObject c_ = c.getJSONObject(i);
+			if(StringUtils.isBlank(c_.getString("commission"))){
+				o.put("status", false);
+				o.put("msg", "【佣金设置】不得为空!");
+				return o;
+			}
+			if( !this.isNumeric(c_.getString("commission")) ){
+				o.put("status", false);
+				o.put("msg", "【佣金设置】必须为正整数!");
+				return o;
+			}
+		}
+		return o;
+	}
+	
+	public boolean isNumeric(String str){  
+		   for(int i=str.length();--i>=0;){  
+		      int chr=str.charAt(i);  
+		      if(chr<48 || chr>57)  
+		         return false;  
+		   }  
+		   return true;  
+		}
 }
 
 

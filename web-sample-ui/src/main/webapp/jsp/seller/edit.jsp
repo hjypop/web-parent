@@ -45,7 +45,7 @@
 					}
 				});
 			}else{
-				jAlert('记录修改失败!', '警告');
+				jAlert(obj.msg, '警告');
 			}
 		}
 
