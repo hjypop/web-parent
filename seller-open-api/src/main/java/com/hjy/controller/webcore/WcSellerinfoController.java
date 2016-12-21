@@ -70,10 +70,8 @@ public class WcSellerinfoController {
 	 * @return
 	 */
 	@RequestMapping("addindex")
-	public String addIndex(ModelMap model) {
-		// 店铺类型 无用查询
-//		List<ScDefine> sellerType = scDefineService.findDefineByParentCode("44974639");
-		// 商户类型 TODO 此处改为缓存？？？
+	public String addIndex(ModelMap model) { 
+		// 商户类型 
 		List<ScDefine> ucSellerType = scDefineService.findDefineByParentCode("44974747");
 //		model.put("sellerType", sellerType);
 		model.put("ucSellerType", ucSellerType);
@@ -102,20 +100,17 @@ public class WcSellerinfoController {
 	 * @return
 	 */
 	@RequestMapping("editindex")
-	public String editIndex(String sellerCode, ModelMap model) {
+	public String editIndex(String sellerCode, ModelMap model) { 
 		// 商户类型
-		List<ScDefine> sellerType = scDefineService.findDefineByParentCode("44974639");
-		model.put("sellerType", sellerType);
-		// 商户类型
-		List<ScDefine> ucSellerType = scDefineService.findDefineByParentCode("449747810005");
+		List<ScDefine> ucSellerType = scDefineService.findDefineByParentCode("44974747");
 		model.put("ucSellerType", ucSellerType);
 		WcSellerinfo info = service.selectBySellerCode(sellerCode);
-		model.put("seller", info);
+		model.put("e", info);
+		model.put("c", JSONObject.parseArray(info.getCommission()));
 		return "jsp/seller/edit";
 	}
 
 	/**
-	 * 
 	 * 方法: edit <br>
 	 * 描述: 商户信息-编辑 <br>
 	 * 作者: zhy<br>
@@ -126,19 +121,7 @@ public class WcSellerinfoController {
 	@RequestMapping("edit")
 	@ResponseBody
 	public JSONObject edit(WcSellerinfo entity) {
-		UserInfo user = (UserInfo) session.getAttribute("userInfo");
-		JSONObject obj = new JSONObject();
-		entity.setUpdator(user.getUserName());
-		entity.setUpdateTime(DateUtil.getSysDateTimeString());
-		int result = service.updateSelective(entity);
-		if (result >= 0) {
-			obj.put("status", "success");
-			obj.put("msg", "编辑成功");
-		} else {
-			obj.put("status", "error");
-			obj.put("msg", "编辑失败");
-		}
-		return obj;
+		return service.updateWcSellerInfo(entity, session);
 	}
 
 	/**

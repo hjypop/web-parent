@@ -101,6 +101,24 @@ public class WcSellerinfoServiceImpl extends BaseServiceImpl<WcSellerinfo, Integ
 		}
 		return obj;
 	}
+
+	@Override
+	public JSONObject updateWcSellerInfo(WcSellerinfo entity, HttpSession session) {
+		UserInfo user = (UserInfo) session.getAttribute("userInfo");
+		JSONObject obj = new JSONObject();
+		entity.setUpdator(user.getUserName());
+		entity.setUpdateTime(DateUtil.getSysDateTimeString());
+		entity.setType(null);
+		int result = dao.updateSelective(entity);
+		if (result >= 0) {
+			obj.put("status", "success");
+			obj.put("msg", "修改成功");
+		} else {
+			obj.put("status", "error");
+			obj.put("msg", "修改失败"); 
+		}
+		return obj;
+	}
 }
 
 

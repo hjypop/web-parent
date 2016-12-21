@@ -52,6 +52,8 @@ public interface IWcSellerinfoService extends IBaseService<WcSellerinfo, Integer
 
 	
 	public JSONObject insertWcSellerInfo(WcSellerinfo entity , HttpSession session);
+	
+	public JSONObject updateWcSellerInfo(WcSellerinfo entity , HttpSession session);
 }
 
 
