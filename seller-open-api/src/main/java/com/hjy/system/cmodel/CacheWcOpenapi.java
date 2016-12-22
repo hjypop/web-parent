@@ -9,6 +9,9 @@ package com.hjy.system.cmodel;
   */
 public class CacheWcOpenapi {
 	
+	public CacheWcOpenapi() {
+	}
+	
 	public CacheWcOpenapi(String method, String apiName, String apiCode, Integer status, String description, Integer isDeleted) {
 		this.method = method;
 		this.apiName = apiName;
