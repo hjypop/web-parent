@@ -17,11 +17,15 @@ import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.webcore.IWcSellerinfoService;
 
 /**
- * 
  * 类: WcSellerinfoServiceImpl <br>
  * 描述: 商家信息业务处理接口实现类 <br>
  * 作者: zhy<br>
  * 时间: 2016年8月17日 上午11:39:29
+ * 
+ * @refactor 全面重构|所有信息缓存化，提高Api性能
+ * @author Yangcl
+ * @date 2016年12月22日 下午3:00:50
+ * @version 1.0.0
  */
 @Service
 public class WcSellerinfoServiceImpl extends BaseServiceImpl<WcSellerinfo, Integer> implements IWcSellerinfoService {

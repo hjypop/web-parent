@@ -4,7 +4,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.hjy.dao.api.ILcOpenApiOperationDao;
+import com.hjy.dao.ILcOpenApiOperationDao;
 import com.hjy.entity.log.LcOpenApiOperation;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.operation.IApiLcOpenApiOperationService;

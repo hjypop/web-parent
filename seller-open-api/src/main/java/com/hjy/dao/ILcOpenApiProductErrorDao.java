@@ -1,4 +1,4 @@
-package com.hjy.dao.api;
+package com.hjy.dao;
 
 import com.hjy.entity.log.LcOpenApiProductError;
 

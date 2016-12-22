@@ -62,75 +62,49 @@ public class WcOpenApiController {
 	}
 
 	/**
-	 * 
 	 * 方法: add <br>
 	 * 描述: 添加接口 <br>
 	 * 作者: zhy<br>
 	 * 时间: 2016年8月25日 上午10:06:42
-	 * 
 	 * @return
 	 */
 	@RequestMapping("add")
 	@ResponseBody
 	public JSONObject add(WcOpenApi entity) {
-		UserInfo user = (UserInfo) session.getAttribute("userInfo");
-		JSONObject obj = new JSONObject();
-		entity.setUid(WebHelper.getInstance().genUuid());
-		entity.setApiCode(WebHelper.getInstance().genUniqueCode("API"));
-		entity.setCreator(user.getUserName());
-		entity.setCreateTime(DateUtil.getSysDateTimeString());
-		entity.setUpdator(user.getUserName());
-		entity.setUpdateTime(DateUtil.getSysDateTimeString());
-		int result = service.insertSelective(entity);
-		if (result >= 0) {
-			obj.put("status", "success");
-			obj.put("msg", "添加成功");
-		} else {
-			obj.put("status", "error");
-			obj.put("msg", "添加失败");
-		}
-		return obj;
+		return service.insertWcOpenApi(entity, session); 
 	}
 
 	/**
-	 * 
 	 * 方法: edit <br>
 	 * 描述: 编辑接口 <br>
 	 * 作者: zhy<br>
 	 * 时间: 2016年8月25日 上午10:07:15
-	 * 
 	 * @return
 	 */
 	@RequestMapping("edit")
 	@ResponseBody
 	public JSONObject edit(WcOpenApi entity) {
-		UserInfo user = (UserInfo) session.getAttribute("userInfo");
-		JSONObject obj = new JSONObject();
-		entity.setUpdator(user.getUserName());
-		entity.setUpdateTime(DateUtil.getSysDateTimeString());
-		int result = service.updateSelective(entity);
-		if (result >= 0) {
-			obj.put("status", "success");
-			obj.put("msg", "编辑成功");
-		} else {
-			obj.put("status", "error");
-			obj.put("msg", "编辑失败");
-		}
-		return obj;
+		return service.updateWcOpenApi(entity, session);
 	}
 
 	@RequestMapping("del")
 	@ResponseBody
 	public JSONObject del(String apiCode) {
-		JSONObject obj = new JSONObject();
-		int result = service.deleteApiCode(apiCode);
-		if (result >= 0) {
-			obj.put("status", "success");
-			obj.put("msg", "删除成功");
-		} else {
-			obj.put("status", "error");
-			obj.put("msg", "删除失败");
-		}
-		return obj;
+		return service.deleteApiCode(apiCode);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

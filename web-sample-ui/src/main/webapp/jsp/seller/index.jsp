@@ -11,7 +11,7 @@
 
 		$(function(){
 			var type_ = 'post';
-			var url_ = '${basePath}seller/ajaxPageData.do';
+			var url_ = 'ajaxPageData.do';
 			var data_ = null;
 			var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
 			aForm.launch(url_ , 'table-form' , obj).init().drawForm(loadTable);
@@ -55,10 +55,10 @@
 					html_ += '</td>'
 					+'<td class="head0" style="text-align: center;">' + list[i].createTime + ' </td>'
 					+'<td class="head0" style="text-align:center;">'
-					+'<a href="#" class="btn btn3 btn_link"></a>'
+					+'<a href="#" >管理</a>'
 					+'</td>'
 					+'<td class="head0" style="text-align:center;">'
-					+'<a class="btn btn3 btn_book" href="editindex.do?sellerCode=' + list[i].sellerCode + ' " title="修改"  style="cursor: pointer;"></a> '
+					+'<a href="editindex.do?sellerCode=' + list[i].sellerCode + ' " style="cursor: pointer;color:#FB9337">修改</a> '
 					// +'<a class="btn btn3 btn_trash" onclick="deleteOne(\'' + list[i].sellerCode + '\')" title="删除"  style="cursor: pointer;"></a>'
 					+'</td>'
 					+'</tr>'

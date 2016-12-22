@@ -18,7 +18,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hjy.base.BaseTest;
 import com.hjy.common.DateUtil;
 import com.hjy.controller.DataInit;
-import com.hjy.dao.api.IApiProductInfoDao;
+import com.hjy.dao.IApiProductInfoDao;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.helper.SignHelper;

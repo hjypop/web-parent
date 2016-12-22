@@ -18,7 +18,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.annotation.ExculdeNullField;
-import com.hjy.dao.api.ILcOpenApiQueryLogDao;
+import com.hjy.dao.ILcOpenApiQueryLogDao;
 import com.hjy.dao.log.ILcOpenApiShipmentStatusDao;
 import com.hjy.dao.order.IOcExpressDetailDao;
 import com.hjy.dao.order.IOcOrderShipmentsDao;

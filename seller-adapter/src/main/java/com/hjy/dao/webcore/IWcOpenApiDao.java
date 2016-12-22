@@ -1,5 +1,7 @@
 package com.hjy.dao.webcore;
 
+import java.util.List;
+
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.webcore.WcOpenApi;
 
@@ -22,4 +24,6 @@ public interface IWcOpenApiDao extends BaseDao<WcOpenApi, Integer>{
 	 * @return
 	 */
 	int deleteApiCode(String code);
+	
+	public List<WcOpenApi> selectAllInfo(WcOpenApi entity);
 }

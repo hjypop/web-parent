@@ -54,6 +54,9 @@
                         <li id="li-3">
                             <a href="${basePath}seller/index.do">商户管理</a>
                         </li>
+                        <li id="li-17">
+                            <a href="${basePath}openapi/index.do">opent-api维护</a>
+                        </li>
                     </ul>
                 </li>
 

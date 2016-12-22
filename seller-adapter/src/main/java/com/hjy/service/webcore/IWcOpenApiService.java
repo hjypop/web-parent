@@ -1,5 +1,8 @@
 package com.hjy.service.webcore;
 
+import javax.servlet.http.HttpSession;
+
+import com.alibaba.fastjson.JSONObject;
 import com.hjy.entity.webcore.WcOpenApi;
 import com.hjy.service.IBaseService;
 
@@ -12,5 +15,9 @@ import com.hjy.service.IBaseService;
  */
 public interface IWcOpenApiService extends IBaseService<WcOpenApi, Integer>{
 
-	int deleteApiCode(String apiCode);
+	public JSONObject deleteApiCode(String apiCode);
+	
+	public JSONObject insertWcOpenApi(WcOpenApi entity , HttpSession session);
+	
+	public JSONObject updateWcOpenApi(WcOpenApi entity , HttpSession session);
 }

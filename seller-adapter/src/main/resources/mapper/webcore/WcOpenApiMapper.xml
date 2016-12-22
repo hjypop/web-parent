@@ -15,6 +15,7 @@
 		<result column="updator" property="updator" jdbcType="VARCHAR" />
 		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
 	</resultMap>
+	
 	<sql id="Base_Column_List">
 		zid, uid, api_code, api_name, method, status,
 		description,is_deleted,
@@ -25,13 +26,16 @@
 		DATE_FORMAT(update_time,'%Y-%m-%d
 		%H:%i:%s') AS update_time
 	</sql>
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
-		parameterType="java.lang.Integer">
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
-		<include refid="Base_Column_List" />
-		from webcore.wc_openapi
-		where zid = #{zid,jdbcType=INTEGER}
+			*
+		from 
+			webcore.wc_openapi
+		where 
+			zid = #{zid,jdbcType=INTEGER}
 	</select>
+	
 	<update id="deleteApiCode" parameterType="java.lang.String">
 		UPDATE
 		webcore.wc_openapi SET is_deleted = 1 where
@@ -93,12 +97,12 @@
 		</set>
 		where api_code = #{apiCode,jdbcType=VARCHAR}
 	</update>
-	<select id="queryPage" resultMap="BaseResultMap"
-		parameterType="com.hjy.entity.webcore.WcSellerApi">
+	
+	<select id="queryPage" resultMap="BaseResultMap" parameterType="com.hjy.entity.webcore.WcSellerApi">
 		SELECT
-		<include refid="Base_Column_List" />
+			*
 		FROM
-		webcore.wc_openapi
+			webcore.wc_openapi
 		<where>
 			is_deleted=0
 			<if test="apiName != null and apiName != ''">
@@ -110,4 +114,15 @@
 			</if>
 		</where>
 	</select>
+	
+	<select id="selectAllInfo" resultMap="BaseResultMap" parameterType="com.hjy.entity.webcore.WcSellerApi">
+		select
+			*
+		from 
+			webcore.wc_openapi
+	</select>
+	
+	
+	
+	
 </mapper>
