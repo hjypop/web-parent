@@ -14,4 +14,8 @@ public class ApiVisitor {
 	public static String getDictConfig(String key) {
 		return OpenApiEcacheSupport.Instance.getValue(key);
 	}
+	
+	public static String setDictConfig(String key , String value) {
+		return OpenApiEcacheSupport.Instance.getValue(key);
+	}
 }
