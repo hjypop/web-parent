@@ -19,7 +19,7 @@ import com.hjy.helper.WebHelper;
 import com.hjy.pojo.entity.login.UserInfo;
 import com.hjy.service.system.IScDefineService;
 import com.hjy.service.webcore.IWcSellerinfoService;
-import com.hjy.util.ApiVisitor;
+import com.hjy.system.ApiVisitor;
 
 /**
  * 
@@ -92,8 +92,6 @@ public class WcSellerinfoController {
 	}
 
 	/**
-	 * 
-	 * 方法: add <br>
 	 * 描述: 商户信息-编辑页面 <br>
 	 * 作者: zhy<br>
 	 * 时间: 2016年8月17日 下午1:59:35
@@ -122,8 +120,6 @@ public class WcSellerinfoController {
 	@RequestMapping("edit")
 	@ResponseBody
 	public JSONObject edit(WcSellerinfo entity) {
-		String value = ApiVisitor.getDictConfig(entity.getSellerCode());
-		System.out.println(value); 
 		return service.updateWcSellerInfo(entity, session);
 	}
 

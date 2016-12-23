@@ -80,6 +80,77 @@ public class OpenApiEcacheSupport  extends RootCache<String, String> {
 	public String getOne(String k) {
 		return null; 
 	}
+	
+	public boolean delete(String key){
+		removeByKey(key);  
+		return true; 
+	}
+	
+	/**
+	 * @description: 更新ecache
+	 * 
+	 * @param key seller-code
+	 * @author Yangcl 
+	 * @date 2016年12月23日 下午2:21:29 
+	 * @version 1.0.0.1
+	 */
+	public boolean update(String key){
+		removeByKey(key);  
+		return this.add(key); 
+	}
+	
+	public boolean add(String key){
+		WcSellerinfo info = new WcSellerinfo();
+		info.setSellerCode(key);
+		WcSellerApi api = new WcSellerApi();
+		api.setSellerCode(key); 
+		List<WcSellerinfo> sinfoList = wcSellerInfoDao.queryPage(info);  
+		if(sinfoList == null || sinfoList.size() == 0){
+			return false;
+		}
+		List<WcSellerApi> apiList = wcSellerApiDao.queryPage(api);   
+		for(WcSellerinfo s : sinfoList){
+			CacheWcSellerInfo c = new CacheWcSellerInfo();
+			List<CacheWcOpenapi> apis_ = new ArrayList<CacheWcOpenapi>();
+			if(this.validate(s, c)){
+				for(WcSellerApi a : apiList){
+					CacheWcOpenapi cw = new CacheWcOpenapi();
+					if(c.getSellerCode().equals(a.getSellerCode())){
+						cw = JSONObject.parseObject(this.getValue(a.getApiCode()) , CacheWcOpenapi.class);   
+						apis_.add(cw);
+					}
+				}
+			}else{
+				System.out.println("【" +s.getSellerName() + "】 添加缓存异常，必要字段丢失！"); 
+			}
+			c.setApis(apis_); 
+			this.inElement(s.getSellerCode(), JSONObject.toJSONString(c)); // 验证通过放入缓存
+		}
+		return true;
+	}
+	
+	/**
+	 * @description: 针对wc_openapi信息的缓存添加
+	 * 
+	 * @param key
+	 * @author Yangcl 
+	 * @date 2016年12月23日 下午2:31:29 
+	 * @version 1.0.0.1
+	 */
+	public boolean addapi(String key){
+		return true;
+	}
+	/**
+	 * @description: 针对wc_openapi信息的缓存更新
+	 * 
+	 * @param key
+	 * @author Yangcl 
+	 * @date 2016年12月23日 下午2:31:29 
+	 * @version 1.0.0.1
+	 */
+	public boolean updateapi(String key){
+		return true;
+	}
 
 	/**
 	 * @descriptions  验证对象中的值是否合法并为E e 对象赋值

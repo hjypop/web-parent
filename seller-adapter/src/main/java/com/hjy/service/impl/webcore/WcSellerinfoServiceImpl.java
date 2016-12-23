@@ -15,6 +15,7 @@ import com.hjy.helper.WebHelper;
 import com.hjy.pojo.entity.login.UserInfo;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.webcore.IWcSellerinfoService;
+import com.hjy.system.ApiVisitor;
 
 /**
  * 类: WcSellerinfoServiceImpl <br>
@@ -141,6 +142,15 @@ public class WcSellerinfoServiceImpl extends BaseServiceImpl<WcSellerinfo, Integ
 			obj.put("status", "error");
 			int result = dao.updateSelective(entity);
 			if (result >= 0) {
+				String value = ApiVisitor.find(entity.getSellerCode());
+				System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + value); 
+				
+				ApiVisitor.update(entity.getSellerCode());   // 更新ecache缓存中的信息  
+				
+				value = ApiVisitor.find(entity.getSellerCode());
+				System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + value); 
+				
+				
 				obj.put("status", "success");
 				obj.put("msg", "修改成功");
 			} else {
