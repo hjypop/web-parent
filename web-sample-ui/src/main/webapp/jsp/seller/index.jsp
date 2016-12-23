@@ -55,7 +55,7 @@
 					html_ += '</td>'
 					+'<td class="head0" style="text-align: center;">' + list[i].createTime + ' </td>'
 					+'<td class="head0" style="text-align:center;">'
-					+'<a href="#" >管理</a>'
+					+'<a href="#" >查看</a>|<a href="#" >管理</a>'
 					+'</td>'
 					+'<td class="head0" style="text-align:center;">'
 					+'<a href="editindex.do?sellerCode=' + list[i].sellerCode + ' " style="cursor: pointer;color:#FB9337">修改</a> '
