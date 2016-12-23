@@ -31,6 +31,8 @@ public class WcOpenApi extends BaseModel{
 	 */
 	private Integer status;
 
+	// 接口类型：1 商户接口 2 分销平台接口
+	private Integer flag; 
 	/**
 	 * 描述
 	 */
@@ -62,6 +64,14 @@ public class WcOpenApi extends BaseModel{
 
 	public String getApiCode() {
 		return apiCode;
+	}
+
+	public Integer getFlag() {
+		return flag;
+	}
+
+	public void setFlag(Integer flag) {
+		this.flag = flag;
 	}
 
 	public void setApiCode(String apiCode) {

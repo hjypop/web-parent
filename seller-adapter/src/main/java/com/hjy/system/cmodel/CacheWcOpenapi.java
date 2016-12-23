@@ -12,11 +12,12 @@ public class CacheWcOpenapi {
 	public CacheWcOpenapi() {
 	}
 	
-	public CacheWcOpenapi(String method, String apiName, String apiCode, Integer status, String description, Integer isDeleted) {
+	public CacheWcOpenapi(String method, String apiName, String apiCode, Integer status, Integer flag , String description, Integer isDeleted) {
 		this.method = method;
 		this.apiName = apiName;
 		this.apiCode = apiCode;
 		this.status = status;
+		this.flag = flag;
 		this.description = description;
 		this.isDeleted = isDeleted;
 	}
@@ -25,6 +26,7 @@ public class CacheWcOpenapi {
 	private String apiName;
 	private String apiCode;
 	private Integer status;  // 接口状态 0 未开通 1 已开通 2 已禁用
+	private Integer flag;  // 接口类型：1 商户接口 2 分销平台接口
 	private String description;
 	private Integer isDeleted;  // 是否已删除 0 未删除 1 已删除
 	
@@ -63,6 +65,12 @@ public class CacheWcOpenapi {
 	}
 	public void setIsDeleted(Integer isDeleted) {
 		this.isDeleted = isDeleted;
+	}
+	public Integer getFlag() {
+		return flag;
+	}
+	public void setFlag(Integer flag) {
+		this.flag = flag;
 	}
 }
 

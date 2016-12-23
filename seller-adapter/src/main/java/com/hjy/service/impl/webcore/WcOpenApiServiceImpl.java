@@ -13,6 +13,7 @@ import com.hjy.helper.WebHelper;
 import com.hjy.pojo.entity.login.UserInfo;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.webcore.IWcOpenApiService;
+import com.hjy.system.ApiCacheVisitor;
 
 /**
  * @类: WcOpenApiServiceImpl <br>
@@ -75,6 +76,7 @@ public class WcOpenApiServiceImpl extends BaseServiceImpl<WcOpenApi, Integer> im
 		entity.setUpdateTime(DateUtil.getSysDateTimeString());
 		int result = dao.insertSelective(entity);
 		if (result >= 0) {
+			ApiCacheVisitor.addapi(entity); 
 			obj.put("status", "success");
 			obj.put("msg", "添加成功");
 		} else {
@@ -98,7 +100,8 @@ public class WcOpenApiServiceImpl extends BaseServiceImpl<WcOpenApi, Integer> im
 		entity.setUpdator(user.getUserName());
 		entity.setUpdateTime(DateUtil.getSysDateTimeString());
 		int result = dao.updateSelective(entity);
-		if (result >= 0) {
+		if (result >= 0) { 
+			ApiCacheVisitor.updateapi(entity); 
 			obj.put("status", "success");
 			obj.put("msg", "编辑成功");
 		} else {

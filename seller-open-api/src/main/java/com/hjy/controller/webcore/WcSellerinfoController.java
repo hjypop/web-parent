@@ -19,7 +19,7 @@ import com.hjy.helper.WebHelper;
 import com.hjy.pojo.entity.login.UserInfo;
 import com.hjy.service.system.IScDefineService;
 import com.hjy.service.webcore.IWcSellerinfoService;
-import com.hjy.system.ApiVisitor;
+import com.hjy.system.ApiCacheVisitor;
 
 /**
  * 

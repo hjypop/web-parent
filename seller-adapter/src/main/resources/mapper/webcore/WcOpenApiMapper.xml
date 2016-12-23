@@ -8,6 +8,7 @@
 		<result column="api_name" property="apiName" jdbcType="VARCHAR" />
 		<result column="method" property="method" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="flag" property="flag" jdbcType="INTEGER" />
 		<result column="description" property="description" jdbcType="LONGVARCHAR" />
 		<result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
 		<result column="creator" property="creator" jdbcType="VARCHAR" />
@@ -16,16 +17,6 @@
 		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
 	</resultMap>
 	
-	<sql id="Base_Column_List">
-		zid, uid, api_code, api_name, method, status,
-		description,is_deleted,
-		creator,
-		DATE_FORMAT(create_time,'%Y-%m-%d
-		%H:%i:%s') AS create_time,
-		updator,
-		DATE_FORMAT(update_time,'%Y-%m-%d
-		%H:%i:%s') AS update_time
-	</sql>
 	
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
@@ -37,10 +28,9 @@
 	</select>
 	
 	<update id="deleteApiCode" parameterType="java.lang.String">
-		UPDATE
-		webcore.wc_openapi SET is_deleted = 1 where
-		api_code=#{apiCode,jdbcType=VARCHAR}
+		UPDATE webcore.wc_openapi SET is_deleted = 1 where api_code=#{apiCode,jdbcType=VARCHAR}
 	</update>
+	
 	<insert id="insertSelective" parameterType="com.hjy.entity.webcore.WcOpenApi">
 		insert into wc_openapi
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -51,6 +41,7 @@
 			<if test="status != null">
 				status,
 			</if>
+			flag,
 			<if test="description != null">
 				description,
 			</if>
@@ -67,6 +58,7 @@
 			<if test="status != null">
 				#{status,jdbcType=INTEGER},
 			</if>
+			#{flag , jdbcType=INTEGER}, 
 			<if test="description != null">
 				#{description,jdbcType=LONGVARCHAR},
 			</if>
@@ -76,6 +68,7 @@
 			STR_TO_DATE(#{updateTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
 		</trim>
 	</insert>
+	
 	<update id="updateSelective" parameterType="com.hjy.entity.webcore.WcOpenApi">
 		update wc_openapi
 		<set>
@@ -99,18 +92,20 @@
 	</update>
 	
 	<select id="queryPage" resultMap="BaseResultMap" parameterType="com.hjy.entity.webcore.WcSellerApi">
-		SELECT
+		select
 			*
-		FROM
+		from
 			webcore.wc_openapi
 		<where>
 			is_deleted=0
 			<if test="apiName != null and apiName != ''">
-				AND api_name LIKE CONCAT('%',
-				#{apiName,jdbcType=VARCHAR}, '%')
+				and api_name like CONCAT('%', #{apiName,jdbcType=VARCHAR}, '%')
 			</if>
 			<if test="method != null and method != ''">
-				AND method = #{method,jdbcType=VARCHAR}
+				and method = #{method , jdbcType=VARCHAR}
+			</if>
+			<if test="flag != null and flag != ''">
+				and flag = #{flag , jdbcType=INTEGER}
 			</if>
 		</where>
 	</select>

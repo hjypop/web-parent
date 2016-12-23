@@ -44,7 +44,7 @@
 							+ '<td class="head0" style="text-align: center;">'
 							+ obj.apiCode + ' </td>' + '<td class="head0">'
 							+ obj.apiName + ' </td>'
-							+ '<td class="head0" style="text-align: center;">'
+							+ '<td class="head0">'
 							+ obj.method + ' </td>'
 							+ '<td class="head0" style="text-align: center;">'
 					if (obj.status == 1) {
@@ -54,23 +54,21 @@
 					} else {
 						html_ += '未开通';
 					}
+					html_ += '</td><td class="head0" style="text-align: center;">'
+
+					if (obj.flag == 1) {
+						html_ += '商户平台接口';
+					}else {
+						html_ += '分销平台接口';
+					}
 					html_ += '</td>'
-							+ '<td class="head0" style="text-align: center;">'
-							+ obj.creator
-							+ ' </td>'
-							+ '<td class="head0" style="text-align: center;">'
-							+ obj.createTime
-							+ ' </td>'
-							+ '<td class="head0" style="text-align: center;">'
-							+ obj.updator
-							+ ' </td>'
-							+ '<td class="head0" style="text-align: center;">'
-							+ obj.updateTime
-							+ ' </td>'
-							+ '<td class="head0" style="text-align:center;">'
-							+ '<a onclick="openDialog(\''+obj.apiCode+'\')" title="修改"  style="cursor: pointer;color:#FB9337">修改</a>  |  '
-							+ '<a onclick="deleteOne(\'' + obj.apiCode + '\')" title="删除"  style="cursor: pointer;color:red">删除</a>'
-							+ '</td>' + '</tr>'
+								+ '<td class="head0" style="text-align: center;">'
+								+ obj.createTime
+								+ ' </td>'
+								+ '<td class="head0" style="text-align:center;">'
+								+ '<a onclick="openDialog(\''+obj.apiCode+'\')" title="修改"  style="cursor: pointer;color:#FB9337">修改</a> '
+								// + '<a onclick="deleteOne(\'' + obj.apiCode + '\')" title="删除"  style="cursor: pointer;color:red">删除</a>'
+								+ '</td>' + '</tr>'
 
 				}
 			}else{
@@ -125,6 +123,7 @@
 				$("#dialog_method").val(obj.method);
 				$("#dialog_description").val(obj.description);
 				$("#dialog_status").val(obj.status);
+				$("#flag").val(obj.flag).attr("disabled","disabled");
 				// end
 			}else{
 				$(".dialog-title").children("span").html("添加api接口");
@@ -133,6 +132,7 @@
 				$("#dialog_method").val("");
 				$("#dialog_description").val("");
 				$("#dialog_status").val("");
+				$("#flag").val("").removeAttr("disabled");
 			}
 			$.blockUI({
 				showOverlay:true ,
@@ -166,6 +166,7 @@
 			var methodVal = $("#dialog_method").val();
 			var descriptionVal = $("#dialog_description").val();
 			var statusVal = $("#dialog_status").val();
+			var flag = $("#flag").val();
 			var action = "";
 			if(apiCodeVal != ""){
 				action = "edit.do";
@@ -173,11 +174,12 @@
 				action = "add.do";
 			}
 			var data = {
-					apiCode : apiCodeVal,
-					apiName : apiNameVal,
-					method : methodVal,
-					description : descriptionVal,
-					status : statusVal
+				apiCode : apiCodeVal,
+				apiName : apiNameVal,
+				method : methodVal,
+				description : descriptionVal,
+				status : statusVal,
+				flag:flag
 			}
 			var obj = JSON.parse(ajaxs.sendAjax("post", action, data));
 			if (obj.status == 'success') {
@@ -262,10 +264,8 @@
 								<th class="head1">接口名称</th>
 								<th class="head1">接口方法名称</th>
 								<th class="head1">接口状态</th>
+								<th class="head1">所属平台</th>
 								<th class="head1">创建人</th>
-								<th class="head1">创建时间</th>
-								<th class="head1">修改人</th>
-								<th class="head1">修改时间</th>
 								<th class="head1">操作</th>
 							</tr>
 						</thead>
@@ -288,42 +288,52 @@
 	    </p>
 	    <div id="dialog-content-wrapper" class="contentwrapper">
 	    	<form id="apiForm" class="stdform" method="post" action="">
-	              	<input type="hidden"  id="dialog_apiCode" name="_dialogapiCode" value="">
-	              	<p>
-	                  	<label>接口名称</label>
-						<span style="position: relative;">
-							<input maxlength="20" type="text" name="dialog_apiName" id="dialog_apiName" class="smallinput" />
-						</span>
-					</p>
-	              	<p>
-	                  	<label>接口方法</label>
-						<span style="position: relative;">
-							<input maxlength="20" type="text" name="dialog_method" id="dialog_method" class="smallinput" />
-						</span>
-					</p>
-	              	<p>
-	                  	<label>接口描述</label>
-						<span style="position: relative;">
-							<textarea name="dialog_description" id="dialog_description" cols="80" rows="5" class="smallinput"></textarea>
-						</span>
-					</p>
-                    <p>
-                    	<label>接口状态</label>
+				<input type="hidden"  id="dialog_apiCode" name="_dialogapiCode" value="">
+				<p>
+					<label>接口名称</label>
+					<span style="position: relative;">
+						<input maxlength="20" type="text" name="dialog_apiName" id="dialog_apiName" class="smallinput" />
+					</span>
+				</p>
+				<p>
+					<label>接口方法</label>
+					<span style="position: relative;">
+						<input maxlength="20" type="text" name="dialog_method" id="dialog_method" class="smallinput" />
+					</span>
+				</p>
+				<p>
+					<label>接口描述</label>
+					<span style="position: relative;">
+						<textarea name="dialog_description" id="dialog_description" cols="80" rows="5" class="smallinput"></textarea>
+					</span>
+				</p>
+				<p>
+					<label>接口状态</label>
+					<span style="position: relative;">
+						<select id="dialog_status" name="dialog_status" style="width: 316px">
+							<option value="">请选择</option>
+							<option value="0">未开通</option>
+							<option value="1">已开通</option>
+							<option value="2">已禁用</option>
+						</select>
+					</span>
+				</p>
+				<p>
+					<label>接口状态</label>
                         <span style="position: relative;">
-                        	<select id="dialog_status" name="dialog_status" style="width: 316px">
-                        		<option value="">请选择</option>
-                        		<option value="0">未开通</option>
-                        		<option value="1">已开通</option>
-                        		<option value="2">已禁用</option>
-                        	</select>
+                        	<select id="flag" name="flag" style="width: 316px">
+								<option value="">请选择</option>
+								<option value="1">商户平台</option>
+								<option value="2">分销平台</option>
+							</select>
                         </span>
-                    </p>
-                    <p>
-                    	<span style="position: relative;">
-                     		<button onclick="apiSubmit();" type="button" style="width: 100px;margin-right: 10px;" class="submit radius2">保存</button>
-                     		<button type="button" style="width: 100px;margin-left: 10px;" onclick="closeDialog();" class="stdbtn" >取消</button>
-                    	</span>
-                    </p>
+				</p>
+				<p>
+					<span style="position: relative;">
+						<button onclick="apiSubmit();" type="button" style="width: 100px;margin-right: 10px;" class="submit radius2">保存</button>
+						<button type="button" style="width: 100px;margin-left: 10px;" onclick="closeDialog();" class="stdbtn" >取消</button>
+					</span>
+				</p>
 	    	</form>
 	    </div>
    	</div>

@@ -50,7 +50,7 @@ public class OpenApiEcacheSupport  extends RootCache<String, String> {
 	public void refresh() {
 		List<WcOpenApi> woaList = wcOpenApiDao.selectAllInfo(null);
 		for(WcOpenApi i : woaList){
-			String value = JSONObject.toJSONString(new CacheWcOpenapi(i.getMethod(), i.getApiName(), i.getApiCode(), i.getStatus(), i.getDescription(), i.getIsDeleted()));
+			String value = JSONObject.toJSONString(new CacheWcOpenapi(i.getMethod(), i.getApiName(), i.getApiCode(), i.getStatus(), i.getFlag(), i.getDescription(), i.getIsDeleted()));
 			this.inElement(i.getApiCode(), value);
 			this.inElement(i.getMethod(), value); // 分别以code 和 method为key进行存储    
 		}
@@ -82,7 +82,7 @@ public class OpenApiEcacheSupport  extends RootCache<String, String> {
 	}
 	
 	public boolean delete(String key){
-		removeByKey(key);  
+		this.removeByKey(key);  
 		return true; 
 	}
 	
@@ -95,7 +95,7 @@ public class OpenApiEcacheSupport  extends RootCache<String, String> {
 	 * @version 1.0.0.1
 	 */
 	public boolean update(String key){
-		removeByKey(key);  
+		this.removeByKey(key);  
 		return this.add(key); 
 	}
 	
@@ -137,7 +137,10 @@ public class OpenApiEcacheSupport  extends RootCache<String, String> {
 	 * @date 2016年12月23日 下午2:31:29 
 	 * @version 1.0.0.1
 	 */
-	public boolean addapi(String key){
+	public boolean addapi(WcOpenApi i){
+		String value = JSONObject.toJSONString(new CacheWcOpenapi(i.getMethod(), i.getApiName(), i.getApiCode(), i.getStatus(), i.getFlag() , i.getDescription(), i.getIsDeleted()));
+		this.inElement(i.getApiCode(), value);
+		this.inElement(i.getMethod(), value); // 分别以code 和 method为key进行存储    
 		return true;
 	}
 	/**
@@ -148,7 +151,10 @@ public class OpenApiEcacheSupport  extends RootCache<String, String> {
 	 * @date 2016年12月23日 下午2:31:29 
 	 * @version 1.0.0.1
 	 */
-	public boolean updateapi(String key){
+	public boolean updateapi(WcOpenApi e){
+		this.removeByKey(e.getApiCode());
+		this.removeByKey(e.getMethod());  
+		this.addapi(e);
 		return true;
 	}
 

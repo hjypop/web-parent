@@ -1,5 +1,7 @@
 package com.hjy.system;
 
+import com.hjy.entity.webcore.WcOpenApi;
+
 /**
  * @description: 获取open-api在ecache中的缓存信息 | 增删改查
  * 
@@ -7,7 +9,7 @@ package com.hjy.system;
  * @date 2016年12月23日 上午11:48:44 
  * @version 1.0.0
  */
-public class ApiVisitor {
+public class ApiCacheVisitor {
 	
 	/**
 	 * @description: 
@@ -26,7 +28,7 @@ public class ApiVisitor {
 	}
 	
 
-	public static boolean add(String key , String value) {
+	public static boolean add(String key) {
 		return OpenApiEcacheSupport.Instance.add(key);
 	}
 	public static boolean update(String key){
@@ -34,11 +36,11 @@ public class ApiVisitor {
 	}
 	
 	
-	public static boolean addapi(String key , String value) {
-		return OpenApiEcacheSupport.Instance.addapi(key);  
+	public static boolean addapi(WcOpenApi entity) {
+		return OpenApiEcacheSupport.Instance.addapi(entity);  
 	}
-	public static boolean updateapi(String key){
-		return OpenApiEcacheSupport.Instance.updateapi(key); 
+	public static boolean updateapi(WcOpenApi entity){
+		return OpenApiEcacheSupport.Instance.updateapi(entity); 
 	}
 }
 
