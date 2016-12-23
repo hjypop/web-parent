@@ -76,8 +76,8 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 	@Resource
 	private ILcStockchangeDao lcStockchangeDao;
 	
-	private static String ProductHead = "8016";
-	private static String SKUHead = "8019";
+	private static String ProductHead = "6016";  // 8016
+	private static String SKUHead = "6019";  // 8019
 	private static String ProductFlowHead = "PF";
 	
 	/**
