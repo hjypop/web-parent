@@ -19,6 +19,7 @@ import com.hjy.helper.WebHelper;
 import com.hjy.pojo.entity.login.UserInfo;
 import com.hjy.service.system.IScDefineService;
 import com.hjy.service.webcore.IWcSellerinfoService;
+import com.hjy.util.ApiVisitor;
 
 /**
  * 
@@ -121,6 +122,8 @@ public class WcSellerinfoController {
 	@RequestMapping("edit")
 	@ResponseBody
 	public JSONObject edit(WcSellerinfo entity) {
+		String value = ApiVisitor.getDictConfig(entity.getSellerCode());
+		System.out.println(value); 
 		return service.updateWcSellerInfo(entity, session);
 	}
 

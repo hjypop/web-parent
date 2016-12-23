@@ -38,6 +38,7 @@ public class OpenApiEcacheSupport  extends RootCache<String, String> {
 	@Inject
 	private IWcSellerApiDao wcSellerApiDao;
 	
+	public final static OpenApiEcacheSupport Instance = new OpenApiEcacheSupport();
 	
 	/**
 	 * @description: 首先加载 wc_openapi 表的信息到ecache
@@ -63,7 +64,7 @@ public class OpenApiEcacheSupport  extends RootCache<String, String> {
 				for(WcSellerApi a : apiList){
 					CacheWcOpenapi cw = new CacheWcOpenapi();
 					if(c.getSellerCode().equals(a.getSellerCode())){
-						cw = JSONObject.parseObject(a.getApiCode() , CacheWcOpenapi.class); 
+						cw = JSONObject.parseObject(this.getValue(a.getApiCode()) , CacheWcOpenapi.class);   
 						apis_.add(cw);
 					}
 				}
@@ -73,11 +74,11 @@ public class OpenApiEcacheSupport  extends RootCache<String, String> {
 			c.setApis(apis_); 
 			this.inElement(s.getSellerCode(), JSONObject.toJSONString(c)); // 验证通过放入缓存
 		}
+		
 	}
 	 
 	public String getOne(String k) {
-//		System.out.println("【" +s.getSellerName() + "】 缓存初始化异常，其API信息必要字段丢失！"); 
-		return null;
+		return null; 
 	}
 
 	/**

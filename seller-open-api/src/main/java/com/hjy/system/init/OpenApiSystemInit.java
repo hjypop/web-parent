@@ -13,8 +13,7 @@ public class OpenApiSystemInit extends RootInit{
 
 	@Override
 	public boolean onInit() {
-		
-		return false;
+		return openApiInit();
 	}
 
 	@Override
@@ -31,7 +30,7 @@ public class OpenApiSystemInit extends RootInit{
 	 */
 	private boolean openApiInit(){
 		boolean flag = true;
-		this.topInitCache(new OpenApiEcacheSupport()); 
+		this.topInitCache(new OpenApiEcacheSupport());  
 		return flag;
 	}
 	
@@ -45,8 +44,6 @@ public class OpenApiSystemInit extends RootInit{
 	 */
 	private boolean openApiDelete(){
 		boolean flag = true;
-		
-		
 		return flag;
 	}
 }
