@@ -10,16 +10,7 @@ import com.hjy.entity.webcore.WcOpenApi;
  * @version 1.0.0
  */
 public class ApiCacheVisitor {
-	
-	/**
-	 * @description: 
-	 * 
-	 * @param key
-	 * @param value
-	 * @author Yangcl 
-	 * @date 2016年12月23日 下午2:24:32 
-	 * @version 1.0.0.1
-	 */
+ 
 	public static String find(String key) {
 		return OpenApiEcacheSupport.Instance.getValue(key);
 	}

@@ -58,8 +58,7 @@ public class WcOpenApiServiceImpl extends BaseServiceImpl<WcOpenApi, Integer> im
 
 	/**
 	 * @description: 添加一条记录 
-	 * 
-	 *  TODO 同时要考虑缓存中是否已经有这条记录 && 如果没有，需要在入库的同时加入缓存
+	 * 	同时要考虑缓存中是否已经有这条记录 && 如果没有，需要在入库的同时加入缓存
 	 * 
 	 * @author Yangcl 
 	 * @date 2016年12月22日 下午2:50:14 
@@ -87,8 +86,7 @@ public class WcOpenApiServiceImpl extends BaseServiceImpl<WcOpenApi, Integer> im
 	}
 
 	/**
-	 * @description: 
-	 * 	TODO 更新数据库的同时更新缓存
+	 * @description: 更新数据库的同时更新缓存
 	 * 
 	 * @author Yangcl 
 	 * @date 2016年12月22日 下午2:52:05 
