@@ -183,7 +183,7 @@ public class OpenApiEcacheSupport  extends RootCache<String, String> {
 	            	 continue;
 	             }
 	             String value = String.valueOf(m.invoke(t)); 
-	             if(field.isAnnotationPresent(ExculdeNullField.class) && StringUtils.isBlank(value) ){
+	             if(field.isAnnotationPresent(ExculdeNullField.class) ){
 	            	 // ExculdeNullField 注解标识的字段为空，则不再对其反射设值。
 	            	 continue;
 	             }else if( e == null){  // 如果要赋值的对象为null 则只验证，不赋值

@@ -156,6 +156,7 @@
 				sellerCode : seller_code
 			};
 			var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+			$("#platform-title").html(obj.platform);
 			$("#api-list").remove();
 			var html = '<ul id="api-list" class="entrylist">';
 			if(obj.status == 'success'){
@@ -287,8 +288,10 @@
 	<div id="dialog-content-wrapper" class="contentwrapper">
 		<div class="last">
 			<div class="widgetbox" style="height: inherit">
-				<div class="title">
-					<h3>商户平台</h3>
+				<div  class="title">
+					<h3 id="platform-title">
+						<%-- 等待填充--%>
+					</h3>
 				</div>
 				<div class="widgetcontent">
 					<div id="interface-list" class="mousescroll">

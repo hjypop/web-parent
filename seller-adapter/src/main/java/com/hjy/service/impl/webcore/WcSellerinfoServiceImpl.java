@@ -194,6 +194,11 @@ public class WcSellerinfoServiceImpl extends BaseServiceImpl<WcSellerinfo, Integ
 					}
 				}
 				obj.put("data", apiList); 
+				if(info.getType() == 1){
+					obj.put("platform", "惠家有商户接口");
+				}else{
+					obj.put("platform", "惠家有分销接口");
+				}
 			}else{
 				obj.put("status", "error");
 				obj.put("msg", "未找到有效的api结果集，数据库可能链接失败。");
