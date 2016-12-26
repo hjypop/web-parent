@@ -6,6 +6,8 @@
 <head>
 	<%@ include file="/inc/head.jsp"%>
 	<script type="text/javascript" src="${js}/system/ajax-form.js"></script>
+	<script type="text/javascript" src="${js}/blockUI/jquery.blockUI.js"></script>
+	<script type="text/javascript" src="${js}/plugins/jquery.slimscroll.js"></script>
 	<script type="text/javascript">
 
 
@@ -15,7 +17,16 @@
 			var data_ = null;
 			var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
 			aForm.launch(url_ , 'table-form' , obj).init().drawForm(loadTable);
+
+//			// 自定义滚动条 | 执行此代码自定义滚动条则生效
+//			$('#interface-list').slimscroll({
+//				color: '#666',
+//				size: '10px',
+//				width: 'auto',
+//				height: '400px' // '208px'
+//			});
 		});
+
 
 		// 回调函数
 		function loadTable(url_){
@@ -55,7 +66,7 @@
 					html_ += '</td>'
 					+'<td class="head0" style="text-align: center;">' + list[i].createTime + ' </td>'
 					+'<td class="head0" style="text-align:center;">'
-					+'<a href="#" >查看</a>|<a href="#" >管理</a>'
+					+'<a href="#" >查看</a>|<a href="#" onclick="openDialog(\''+list[i].sellerCode+'\' , true)" >管理</a>'
 					+'</td>'
 					+'<td class="head0" style="text-align:center;">'
 					+'<a href="editindex.do?sellerCode=' + list[i].sellerCode + ' " style="cursor: pointer;color:#FB9337">修改</a> '
@@ -70,10 +81,6 @@
 
 			$('#ajax-tbody-1').append(html_);
 		}
-
-
-
-
 
 		function deleteOne(code) {
 			if (confirm('您确定要删除这条记录吗？')) {
@@ -105,6 +112,87 @@
 		}
 
 
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		/**
+		 * 接口管理 弹窗层
+		 * @param seller_code 商户编号
+		 * @param flag true:编辑，false:查看
+		 */
+		function openDialog(seller_code , flag){
+//			var obj = JSON.parse($("#tr_"+seller_code).attr("code"));
+			if(flag){
+				$(".dialog-title").children("span").html("管理商户接口权限");
+
+			}else{
+				$(".dialog-title").children("span").html("查看商户已开通接口");
+			}
+			drawDialog(seller_code);
+			$.blockUI({
+				showOverlay:true ,
+				css:{
+					cursor:'auto',
+					left:($(window).width() - $("#api-dialog-div").width())/2 + 'px',
+					width:$("#api-dialog-div").width()+'px',
+					height:520,
+					top:($(window).height()-$("#api-dialog-div").height())/2 + 'px',
+					position:'fixed', //居中
+					textAlign:'left',
+					border: '3px solid #FB9337'   // 边界,
+				},
+				message: $('#api-dialog-div'),
+				fadeIn: 500,//淡入时间
+				fadeOut: 1000  //淡出时间
+			});
+		}
+
+		/**
+		 * 初始化弹窗页面
+		 * @param seller_code
+		 */
+		function drawDialog(seller_code){
+			var type_ = 'post';
+			var url_ = 'soalist.do';
+			var data_ = {
+				sellerCode : seller_code
+			};
+			var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+			$("#api-list").remove();
+			var html = '<ul id="api-list" class="entrylist">';
+			if(obj.status == 'success'){
+				var arr = obj.data;
+				for(var i = 0 ; i < arr.length ; i ++){
+					var html_ = '';
+					html += '<li><div class="entry_wrap"><div class=""><h4><span>' + arr[i].method;
+					html += '</span></h4><span><span>接口名称：' + arr[i].apiName + '</span> | <a>接口状态：';
+					if(arr[i].status == 0){
+						html += "未开通";
+					}else if(arr[i].status == 1){
+						html += "已开通";
+						html_ += '<span style="margin-top: 10px"><input type="radio"  name="' + arr[i].apiCode + '" value="' + seller_code + '"/>授权使用 |';
+						html_ += '<input type="radio"  name="' + arr[i].apiCode + '" value=""/>取消使用</span></div></div></li>';
+					}else{
+						html += "已禁用";
+					}
+					html += "</a></span><br><span>接口描述：' + arr[i].description + '</span><br>" + html_;
+				}
+			}else{
+				html += obj.msg;
+			}
+			html += '</ul>';
+			$("#interface-list").append(html);
+
+			// 自定义滚动条 | 执行此代码自定义滚动条则生效
+			$('#interface-list').slimscroll({
+				color: '#666',
+				size: '10px',
+				width: 'auto',
+				height: '400px' // '208px'
+			});
+		}
+
+		function closeDialog(){
+			$.unblockUI();
+		}
 
 	</script>
 </head>
@@ -189,7 +277,63 @@
 
 
 
+<div id="api-dialog-div" class="dialog-page-div" style="display: none;width: 800px;height: 500px">
+	<p class="dialog-title">
+		<a href="#" onclick="closeDialog()" class="dialog-close"></a>
+		<span>
+			<%-- 等待填充 弹层标题 --%>
+		</span>
+	</p>
+	<div id="dialog-content-wrapper" class="contentwrapper">
+		<div class="last">
+			<div class="widgetbox" style="height: inherit">
+				<div class="title">
+					<h3>商户平台</h3>
+				</div>
+				<div class="widgetcontent">
+					<div id="interface-list" class="mousescroll">
+						<%--<ul id="api-list" class="entrylist">
+							<li>
+								<div class="entry_wrap">
+									<div class="">
+										<h4>
+											<span>Product.pushProducts</span>
+										</h4>
+										<span><span>接口名称：根据日期推送商品到第三方</span> | <a>接口状态：已开通</a></span><br>
+										<span>根据日期推送商品到第三方……</span><br>
+										<span style="margin-top: 10px">
+											&lt;%&ndash;<button class="stdbtn btn_orange">授权使用</button>
+											<button class="stdbtn btn_lime">取消使用</button>&ndash;%&gt;
+											<input type="radio"  name="" value=""/>授权使用 |
+											<input type="radio"  name="" value=""/>取消使用
+										</span>
+									</div>
+								</div>
+							</li>
 
+							<li>
+								<div class="entry_wrap">
+									<div class="">
+										<h4>
+											<span>Product.Insert</span>
+										</h4>
+										<span><span>接口名称：添加商品信息</span> | <a>接口状态：已开通</a></span><br>
+										<span>添加一条商品信息到数据库中……</span><br>
+										<span style="margin-top: 10px">
+											<button class="stdbtn btn_lime">授权使用</button>
+											<button class="stdbtn ">取消使用</button>
+										</span>
+									</div>
+								</div>
+							</li>
+
+						</ul>--%>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 

@@ -91,7 +91,7 @@
 		where api_code = #{apiCode,jdbcType=VARCHAR}
 	</update>
 	
-	<select id="queryPage" resultMap="BaseResultMap" parameterType="com.hjy.entity.webcore.WcSellerApi">
+	<select id="queryPage" resultMap="BaseResultMap" parameterType="com.hjy.entity.webcore.WcOpenApi">
 		select
 			*
 		from
@@ -110,11 +110,16 @@
 		</where>
 	</select>
 	
-	<select id="selectAllInfo" resultMap="BaseResultMap" parameterType="com.hjy.entity.webcore.WcSellerApi">
+	<select id="selectAllInfo" resultMap="BaseResultMap" parameterType="com.hjy.entity.webcore.WcOpenApi">
 		select
 			*
 		from 
 			webcore.wc_openapi
+		where 
+			1 = 1
+			<if test="flag != null and flag != ''">
+				and flag = #{flag , jdbcType=INTEGER}
+			</if>
 	</select>
 	
 	

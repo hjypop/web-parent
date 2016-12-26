@@ -1,5 +1,7 @@
 package com.hjy.service.impl.webcore;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
@@ -9,13 +11,17 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.common.DateUtil;
+import com.hjy.dao.webcore.IWcOpenApiDao;
 import com.hjy.dao.webcore.IWcSellerinfoDao;
+import com.hjy.entity.webcore.WcOpenApi;
 import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.helper.WebHelper;
 import com.hjy.pojo.entity.login.UserInfo;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.webcore.IWcSellerinfoService;
 import com.hjy.system.ApiCacheVisitor;
+import com.hjy.system.cmodel.CacheWcOpenapi;
+import com.hjy.system.cmodel.CacheWcSellerInfo;
 
 /**
  * 类: WcSellerinfoServiceImpl <br>
@@ -34,6 +40,8 @@ public class WcSellerinfoServiceImpl extends BaseServiceImpl<WcSellerinfo, Integ
 	@Autowired
 	private IWcSellerinfoDao dao;
 
+	@Autowired
+	private IWcOpenApiDao apidao;
 	/**
 	 * 
 	 * 方法: selectBySellerCode <br>
@@ -156,6 +164,49 @@ public class WcSellerinfoServiceImpl extends BaseServiceImpl<WcSellerinfo, Integ
 		}
 		return obj;
 	}
+	
+	
+	/**
+	 * @description: 获取open-api接口列表并且关联出哪些接口已经被该用户使用
+	 * 
+	 * @param sellerCode
+	 * @param session
+	 * @author Yangcl 
+	 * @date 2016年12月26日 下午3:38:28  
+	 * @version 1.0.0.1
+	 */
+	public JSONObject sellerOpenapiList(String sellerCode) {
+		JSONObject obj = new JSONObject();
+		obj.put("status", "success");
+		try {
+			CacheWcSellerInfo info = JSONObject.parseObject(ApiCacheVisitor.find(sellerCode) , CacheWcSellerInfo.class); // 取出缓存中的商户信息
+			WcOpenApi entity = new WcOpenApi();
+			entity.setFlag(info.getType()); 
+			List<WcOpenApi> apiList = apidao.selectAllInfo(entity);  
+			if(apiList != null && apiList.size() > 0){
+				if(info.getApis() != null && info.getApis().size() != 0){
+					for(int i = 0 ; i < apiList.size() ; i ++){
+						for(CacheWcOpenapi o : info.getApis()){
+							if(apiList.get(i).getApiCode().equals(o.getApiCode())){
+								apiList.get(i).setUid("true"); // 借用uid 传递信息，标识这条api是否关联了该商户。不为true则未关联
+							}
+						}
+					}
+				}
+				obj.put("data", apiList); 
+			}else{
+				obj.put("status", "error");
+				obj.put("msg", "未找到有效的api结果集，数据库可能链接失败。");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			obj.put("status", "error");
+			obj.put("msg", "服务器捕获未知的异常！请联系技术人员");
+		}
+		return obj;
+	}
+	
 	
 	/**
 	 * @description: 验证信息完整性

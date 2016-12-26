@@ -122,6 +122,20 @@ public class WcSellerinfoController {
 	public JSONObject edit(WcSellerinfo entity) {
 		return service.updateWcSellerInfo(entity, session);
 	}
+	
+	/**
+	 * @description: 取出open-api列表并关联该商户有的api
+	 * 
+	 * @param sellerCode
+	 * @author Yangcl 
+	 * @date 2016年12月26日 下午4:37:36 
+	 * @version 1.0.0.1
+	 */
+	@RequestMapping("soalist") 
+	@ResponseBody
+	public JSONObject sellerOpenapiList(String sellerCode) {
+		return service.sellerOpenapiList(sellerCode);
+	}
 
 	/**
 	 * 
