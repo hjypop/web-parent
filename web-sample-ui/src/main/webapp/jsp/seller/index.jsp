@@ -163,16 +163,22 @@
 				var arr = obj.data;
 				for(var i = 0 ; i < arr.length ; i ++){
 					var html_ = '';
-					html += '<li><div class="entry_wrap"><div class=""><h4><span>' + arr[i].method;
+					html += '<li><div class="entry_wrap"><div class=""><h4><span style="color: #F0882C">' + arr[i].method;
 					html += '</span></h4><span><span>接口名称：' + arr[i].apiName + '</span> | <a>接口状态：';
 					if(arr[i].status == 0){
-						html += "未开通";
+						html += '<span style="color: red">未开通</span>';
 					}else if(arr[i].status == 1){
-						html += "已开通";
-						html_ += '<span style="margin-top: 10px"><input type="radio"  name="' + arr[i].apiCode + '" value="' + seller_code + '"/>授权使用 |';
-						html_ += '<input type="radio"  name="' + arr[i].apiCode + '" value=""/>取消使用</span></div></div></li>';
+						html += '<span style="color: green">已开通</span>';
+						if(arr[i].uid == 'true'){
+							html_ += '<span style="margin-top: 10px"><span style="color:green">已授权使用</span> |';
+							html_ += '<input type="checkbox" class="accredit" value="' + arr[i].apiCode + '@delete" style="margin-top: 2px"/>取消授权</span></div></div></li>';
+						}else{
+							html_ += '<span style="margin-top: 10px">未授权使用 |';
+							html_ += '<input type="checkbox" class="accredit" value="' + arr[i].apiCode + '@add" style="margin-top: 2px"/>进行授权</span></div></div></li>';
+						}
+
 					}else{
-						html += "已禁用";
+						html += '已禁用';
 					}
 					html += '</a></span><br><span>接口描述：' + arr[i].description + '</span><br>' + html_;
 				}
@@ -189,6 +195,10 @@
 				width: 'auto',
 				height: '400px' // '208px'
 			});
+		}
+
+		function submitAccredit(sellerCode){
+
 		}
 
 		function closeDialog(){
