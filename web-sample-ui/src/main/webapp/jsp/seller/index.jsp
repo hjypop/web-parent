@@ -173,7 +173,7 @@
 					}else{
 						html += "已禁用";
 					}
-					html += "</a></span><br><span>接口描述：' + arr[i].description + '</span><br>" + html_;
+					html += '</a></span><br><span>接口描述：' + arr[i].description + '</span><br>' + html_;
 				}
 			}else{
 				html += obj.msg;
