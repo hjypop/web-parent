@@ -1,6 +1,7 @@
 package com.hjy.entity.webcore;
 
 
+import com.hjy.annotation.ExculdeNullField;
 import com.hjy.base.BaseModel;
 
 /**
@@ -47,18 +48,22 @@ public class WcSellerinfo extends BaseModel {
 	/**
 	 * 创建人
 	 */
+	@ExculdeNullField
 	private String creator;
 	/**
 	 * 创建时间
 	 */
+	@ExculdeNullField
 	private String createTime;
 	/**
 	 * 修改人
 	 */
+	@ExculdeNullField
 	private String updator;
 	/**
 	 * 修改时间
 	 */
+	@ExculdeNullField
 	private String updateTime;
 	
 	private Integer type;
