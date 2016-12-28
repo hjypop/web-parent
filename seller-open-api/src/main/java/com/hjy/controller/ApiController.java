@@ -27,6 +27,7 @@ import com.hjy.service.product.IApiProductService;
 import com.hjy.service.shipment.IApiOcOrderShipmentsService;
 import com.hjy.service.webcore.IWcSellerinfoService;
 import com.hjy.system.ApiCacheVisitor;
+import com.hjy.system.cmodel.CacheWcOpenapi;
 import com.hjy.system.cmodel.CacheWcSellerInfo;
 
 /**
@@ -69,19 +70,27 @@ public class ApiController {
 			return result;
 		}
 		boolean flag = true;
+		String apiCode = "";
 		String target = request.getMethod();
 		for(int i = 0 ; i < seller.getApis().size() ; i ++){
 			if(target.equals(seller.getApis().get(i).getMethod())){
 				flag = false;
+				apiCode = seller.getApis().get(i).getApiCode();
 				break;
 			}
 		}
 		if(flag){
 			result.put("code", 3);
-			result.put("desc", "无API访问权限，您所请求的方法未开通! 请联系惠家有平台接口管理人员。方法名称：【" + target + "】");
+			result.put("desc", "无API访问权限，您所请求的方法未授权! 请联系惠家有平台接口管理人员。接口名称：【" + target + "】");
 			return result;
 		}
-		// TODO  该接口还必须可用状态，否则提示信息  
+		// 该接口还必须可用状态，否则提示信息  
+		CacheWcOpenapi api = JSONObject.parseObject(ApiCacheVisitor.find(apiCode) , CacheWcOpenapi.class); 
+		if(api == null || api.getStatus() != 1){
+			result.put("code", 3);
+			result.put("desc", "api尚未开通或已禁用! 请联系惠家有平台接口管理人员。接口名称：【" + target + "】");
+			return result;
+		}
 		
 		
 		request.setAppSecret(seller.getUid());
