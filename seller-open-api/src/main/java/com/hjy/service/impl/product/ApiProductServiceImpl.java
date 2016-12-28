@@ -49,6 +49,7 @@ import com.hjy.request.RequestProduct;
 import com.hjy.request.RequestProducts;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.product.IApiProductService;
+import com.hjy.system.cmodel.CacheWcSellerInfo;
 
 /**
  * 
@@ -866,7 +867,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 *      java.lang.String, java.lang.String)
 	 */
 	@Override
-	public JSONObject pushProduct(WcSellerinfo seller, String startDate, String endDate) {
+	public JSONObject pushProduct(CacheWcSellerInfo seller, String startDate, String endDate) {
 		JSONObject response = new JSONObject();
 		List<ProductInfo> responseProduct = new ArrayList<ProductInfo>();
 		String lock = "";
@@ -1085,7 +1086,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 *      java.lang.String, java.lang.String)
 	 */
 	@Override
-	public JSONObject pushSkuStock(WcSellerinfo seller, String productCodes) {
+	public JSONObject pushSkuStock(CacheWcSellerInfo seller, String productCodes) {
 		JSONObject response = new JSONObject();
 		String lock = "";
 		try {
@@ -1149,7 +1150,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 *      java.lang.String, java.lang.String)
 	 */
 	@Override
-	public JSONObject pushProductPrice(WcSellerinfo seller, String productCodes) {
+	public JSONObject pushProductPrice(CacheWcSellerInfo seller, String productCodes) {
 		JSONObject response = new JSONObject();
 		String lock = "";
 		try {
@@ -1235,7 +1236,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @date 2016年9月30日 上午11:29:46
 	 * @version 1.0.0.1
 	 */
-	public JSONObject rsyncProductStatus(String json, WcSellerinfo seller) {
+	public JSONObject rsyncProductStatus(String json, CacheWcSellerInfo seller) {
 		JSONObject response = new JSONObject();
 		String responseTime = DateHelper.formatDate(new Date());
 		response.put("responseTime", responseTime);
@@ -1324,7 +1325,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @return
 	 */
 	@Override
-	public JSONObject findProductByProductCodes(WcSellerinfo seller, String data) {
+	public JSONObject findProductByProductCodes(CacheWcSellerInfo seller, String data) {
 		JSONObject response = new JSONObject();
 		List<ProductInfo> responseProduct = new ArrayList<ProductInfo>();
 		if (StringUtils.isNotBlank(data)) {

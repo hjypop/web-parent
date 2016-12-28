@@ -57,26 +57,35 @@ public class ApiController {
 	public JSONObject requestApi(Request request) {
 		JSONObject result = new JSONObject();
 
-		request = DataInit.pushProduct();
-		System.out.println(JSONObject.toJSONString(request));
-		logger.info(JSONObject.toJSONString(request));
+//		request = DataInit.pushProduct();
+//		System.out.println(JSONObject.toJSONString(request));
+//		logger.info(JSONObject.toJSONString(request));
 
 		
-		CacheWcSellerInfo info = JSONObject.parseObject(ApiCacheVisitor.find(request.getAppid()) , CacheWcSellerInfo.class); // 取出缓存中的商户信息
-		if (null == info) {
+		CacheWcSellerInfo seller = JSONObject.parseObject(ApiCacheVisitor.find(request.getAppid()) , CacheWcSellerInfo.class); // 取出缓存中的商户信息
+		if (null == seller) {
 			result.put("code", 3);
 			result.put("desc", "无API访问权限，错误的appid");
 			return result;
 		}
-		request.setAppSecret(info.getUid());
-		
-		WcSellerinfo seller = sellerInfoService.selectBySellerCodeByApi(request.getAppid());
-		if (null == seller) {
+		boolean flag = true;
+		String target = request.getMethod();
+		for(int i = 0 ; i < seller.getApis().size() ; i ++){
+			if(target.equals(seller.getApis().get(i).getMethod())){
+				flag = false;
+				break;
+			}
+		}
+		if(flag){
 			result.put("code", 3);
-			result.put("desc", "无API访问权限，错误的appid或appSecret");
+			result.put("desc", "无API访问权限，您所请求的方法未开通! 请联系惠家有平台接口管理人员。方法名称：【" + target + "】");
 			return result;
 		}
+		// TODO  该接口还必须可用状态，否则提示信息  
+		
+		
 		request.setAppSecret(seller.getUid());
+		
 		if (isSign(request)) { // 如果签名正确，根据method调用不同的service
 			String sellerCode = seller.getSellerCode();
 			LcOpenApiOperation log = new LcOpenApiOperation();
@@ -84,7 +93,8 @@ public class ApiController {
 			log.setCreateTime(new Date());
 			log.setRequestJson(JSONObject.toJSONString(request));
 			log.setRequestTime(new Date());
-			log.setSellerCode(seller.getSellerCode());
+			log.setSellerCode(sellerCode);
+			
 			try {
 				String[] methods = request.getMethod().split("\\.");
 				String type = methods[0];
@@ -251,35 +261,5 @@ public class ApiController {
 		return flag;
 	}
 
-	public static void main(String[] args) {
-		try {
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("appid", "SI10025");
-			map.put("data", URLEncoder
-					.encode("{\"startDate\":\"2016-10-21 13:40:57\",\"endDate\":\"2016-10-21 14:41:46\"}", "UTF-8"));
-			map.put("method", "Product.pushProduct");
-			map.put("timestamp", "2016-10-20 10:02:50");
-			map.put("nonce", "785426");
-			List<String> list = new ArrayList<String>();
-			for (Map.Entry<String, String> entry : map.entrySet()) {
-				if (entry.getValue() != "") {
-					list.add(entry.getKey() + "=" + entry.getValue() + "&");
-				}
-			}
-			Collections.sort(list); // 对List内容进行排序
-			StringBuffer str = new StringBuffer();
-			for (String nameString : list) {
-				str.append(nameString);
-			}
-			str.append("83c0de5caa5f11e39ee0000c298b20fc");
-			System.out.println(str);
-			String sign = SignHelper.md5Sign(str.toString());
-			System.out.println(sign);
-			map.put("sign", sign);
-//			String result = PureNetUtil.post("http://api-open.ycp8.cn/open/openapi.do", map);
-//			System.out.println(result);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	 
 }

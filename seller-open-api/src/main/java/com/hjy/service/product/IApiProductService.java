@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.entity.webcore.WcSellerinfo;
+import com.hjy.system.cmodel.CacheWcSellerInfo;
 
 /**
  * 
@@ -94,7 +95,7 @@ public interface IApiProductService {
 	 *            结束日期
 	 * @return
 	 */
-	JSONObject pushProduct(WcSellerinfo seller, String startDate, String endDate);
+	JSONObject pushProduct(CacheWcSellerInfo seller, String startDate, String endDate);
 
 	/**
 	 * 
@@ -107,7 +108,7 @@ public interface IApiProductService {
 	 * @param productCodes
 	 * @return
 	 */
-	JSONObject pushSkuStock(WcSellerinfo seller, String productCodes);
+	JSONObject pushSkuStock(CacheWcSellerInfo seller, String productCodes);
 
 	/**
 	 * 
@@ -121,7 +122,7 @@ public interface IApiProductService {
 	 * @param endDate
 	 * @return
 	 */
-	JSONObject pushProductPrice(WcSellerinfo seller, String productCodes);
+	JSONObject pushProductPrice(CacheWcSellerInfo seller, String productCodes);
 
 	/**
 	 * @description: 批量返回时间段内商品上下架状态有变化的商品信息 update_tim between '2016-10-01
@@ -134,7 +135,7 @@ public interface IApiProductService {
 	 * @date 2016年9月30日 上午11:29:46
 	 * @version 1.0.0.1
 	 */
-	public JSONObject rsyncProductStatus(String json, WcSellerinfo seller);
+	public JSONObject rsyncProductStatus(String json, CacheWcSellerInfo seller);
 
 	/**
 	 * 根据商品编码数组查询<br>
@@ -143,5 +144,5 @@ public interface IApiProductService {
 	 * @param codes
 	 * @return
 	 */
-	JSONObject findProductByProductCodes(WcSellerinfo seller,String codes);
+	JSONObject findProductByProductCodes(CacheWcSellerInfo seller,String codes);
 }
