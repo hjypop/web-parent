@@ -1,6 +1,7 @@
 package com.hjy.dao.webcore;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.webcore.WcSellerinfo;
@@ -60,6 +61,9 @@ public interface IWcSellerinfoDao extends BaseDao<WcSellerinfo, Integer> {
 	 * @version 1.0.0.1
 	 */
 	public List<WcSellerinfo> getCustomsDeclarationSellerList();
+	
+	
+	
 }
 
 

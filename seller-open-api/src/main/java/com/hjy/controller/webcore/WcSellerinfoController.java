@@ -136,6 +136,21 @@ public class WcSellerinfoController {
 	public JSONObject sellerOpenapiList(String sellerCode) {
 		return service.sellerOpenapiList(sellerCode);
 	}
+	
+	/**
+	 * @description: 关联该商户的open-api 
+	 * 
+	 * @param sellerCode
+	 * @author Yangcl 
+	 * @date 2016年12月26日 下午4:37:36 
+	 * @version 1.0.0.1
+	 */
+	@RequestMapping("accredit") 
+	@ResponseBody
+	public JSONObject accreditSellerOpenapiList(String sellerCode , String apis) {
+		return service.accreditSellerOpenapiList(sellerCode , apis , session);
+	}
+	
 
 	/**
 	 * 

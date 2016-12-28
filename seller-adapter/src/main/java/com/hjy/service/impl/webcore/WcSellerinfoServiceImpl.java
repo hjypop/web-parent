@@ -1,6 +1,9 @@
 package com.hjy.service.impl.webcore;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,8 +15,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.common.DateUtil;
 import com.hjy.dao.webcore.IWcOpenApiDao;
+import com.hjy.dao.webcore.IWcSellerApiDao;
 import com.hjy.dao.webcore.IWcSellerinfoDao;
 import com.hjy.entity.webcore.WcOpenApi;
+import com.hjy.entity.webcore.WcSellerApi;
 import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.helper.WebHelper;
 import com.hjy.pojo.entity.login.UserInfo;
@@ -42,6 +47,9 @@ public class WcSellerinfoServiceImpl extends BaseServiceImpl<WcSellerinfo, Integ
 
 	@Autowired
 	private IWcOpenApiDao apidao;
+	
+	@Autowired
+	private IWcSellerApiDao sellerApiDao;  
 	/**
 	 * 
 	 * 方法: selectBySellerCode <br>
@@ -212,6 +220,63 @@ public class WcSellerinfoServiceImpl extends BaseServiceImpl<WcSellerinfo, Integ
 		return obj;
 	}
 	
+	/**
+	 * @description: 关联该商户的open-api 
+	 * 
+	 * @param sellerCode
+	 * @param apis 
+	 * @param session
+	 * @author Yangcl 
+	 * @date 2016年12月26日 下午3:38:28         
+	 * @version 1.0.0.1
+	 */
+	public JSONObject accreditSellerOpenapiList(String sellerCode , String apis , HttpSession session) {
+		JSONObject obj = new JSONObject();
+		obj.put("status", "success");
+		CacheWcSellerInfo info = JSONObject.parseObject(ApiCacheVisitor.find(sellerCode) , CacheWcSellerInfo.class); // 取出缓存中的商户信息
+		String alert = info.getSellerName() +"修改成功！";
+		try {
+			String [] arr = apis.split(",");
+			if(StringUtils.isNotBlank(apis) && arr != null && arr.length != 0){
+				UserInfo user = (UserInfo) session.getAttribute("userInfo");
+				for( int i = 0 ; i < arr.length ; i ++){
+					String apiCode = arr[i].split("@")[0];
+					if("add".equals(arr[i].split("@")[1])){
+						WcSellerApi e = new WcSellerApi();
+						e.setUid(WebHelper.getInstance().genUuid());
+						e.setSellerCode(sellerCode);
+						e.setApiCode(apiCode);
+						e.setCreateTime(new Date());
+						e.setCreator(user.getUserName());  
+						sellerApiDao.insertSelective(e);
+					}else{  // delete
+						Map<String , String> map = new HashMap<String , String>();
+						map.put("apiCode", apiCode);
+						map.put("sellerCode", sellerCode);
+						sellerApiDao.deleteByDoubleCode(map);
+					}
+				}
+				ApiCacheVisitor.update(sellerCode);   // 更新ecache缓存中的信息  
+//				System.out.println("更新后的商户缓存信息为：" + ApiCacheVisitor.find(sellerCode)); 
+			}else{
+				obj.put("status", "error");
+				obj.put("msg", "请您至少选择一个接口");
+				alert = "请您至少选择一个接口";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			obj.put("status", "error");
+			obj.put("msg", "服务器捕获未知的异常！请联系技术人员");
+			alert = "服务器捕获未知的异常！请联系技术人员";
+		}
+		
+		if(info.getType() == 1){
+			obj.put("platform", "惠家有商户接口 | " + alert);
+		}else{
+			obj.put("platform", "惠家有分销接口 | " + alert); 
+		}
+		return obj;
+	}
 	
 	/**
 	 * @description: 验证信息完整性

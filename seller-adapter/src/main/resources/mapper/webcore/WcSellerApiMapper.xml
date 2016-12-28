@@ -30,27 +30,44 @@
 		where seller_code = #{sellerCode,jdbcType=INTEGER}
 	</delete>
 	
-	<insert id="insertSelective" parameterType="com.hjy.entity.webcore.WcSellerApi">
-		insert into wc_seller_api
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			uid,
-			seller_code,
-			api_code,
-			creator,
-			create_time
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			#{uid,jdbcType=CHAR},
-			#{sellerCode,jdbcType=VARCHAR},
-			#{apiCode,jdbcType=VARCHAR},
-			#{creator,jdbcType=VARCHAR},
-			STR_TO_DATE(#{createTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
-			#{updator,jdbcType=VARCHAR},
-			STR_TO_DATE(#{updateTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'),
-			#{type , jdbcType=INTEGER},
-		</trim>
+	<insert id="insertSelective" parameterType="com.hjy.entity.webcore.WcSellerApi" >
+	    insert into wc_seller_api
+	  <trim prefix="(" suffix=")" suffixOverrides="," > 
+	    <if test="uid != null" >
+	      uid,
+	    </if>
+	    <if test="sellerCode != null" >
+	      seller_code,
+	    </if>
+	    <if test="apiCode != null" >
+	      api_code,
+	    </if>
+	    <if test="creator != null" >
+	      creator,
+	    </if>
+	    <if test="createTime != null" >
+	      create_time,
+	    </if>
+	  </trim>
+	  <trim prefix="values (" suffix=")" suffixOverrides="," >
+	    <if test="uid != null" >
+	      #{uid,jdbcType=CHAR},
+	    </if>
+	    <if test="sellerCode != null" >
+	      #{sellerCode,jdbcType=VARCHAR},
+	    </if>
+	    <if test="apiCode != null" >
+	      #{apiCode,jdbcType=VARCHAR},
+	    </if>
+	    <if test="creator != null" >
+	      #{creator,jdbcType=VARCHAR},
+	    </if>
+	    <if test="createTime != null" >
+	      #{createTime,jdbcType=TIMESTAMP},
+	    </if>
+	  </trim>
 	</insert>
-	
+  
 	<select id="queryPage" resultMap="BaseResultMap" parameterType="com.hjy.entity.webcore.WcSellerApi">
 		select
 			*
@@ -59,10 +76,21 @@
 		<where>
 			1=1
 			<if test="sellerCode != null and sellerCode != '' ">
-				and seller_code = #{sellerCode,jdbcType=VARCHAR}
+				and seller_code = #{sellerCode , jdbcType=VARCHAR}
 			</if> 
 		</where>
 	</select>
+	
+	
+	
+	<delete id="deleteByDoubleCode" parameterType="Map">
+		delete from
+				webcore.wc_seller_api
+		where 
+			seller_code = #{sellerCode , jdbcType=VARCHAR}  
+		and 
+			api_code = #{apiCode , jdbcType=VARCHAR}  
+	</delete>
 </mapper>
 
 

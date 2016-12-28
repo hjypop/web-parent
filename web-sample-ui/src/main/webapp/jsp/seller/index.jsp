@@ -119,10 +119,11 @@
 		 * @param flag true:编辑，false:查看
 		 */
 		function openDialog(seller_code , flag){
-//			var obj = JSON.parse($("#tr_"+seller_code).attr("code"));
+			$("#add-api-btn").remove();
 			if(flag){
 				$(".dialog-title").children("span").html("管理商户接口权限");
-
+				var html = '<button id="add-api-btn" onclick="submitAccredit(\'' + seller_code + '\');" type="button" style="width: 100px;margin-left: 600px;" class="submit radius2">提交修改</button>';
+				$("#add-api").append(html)
 			}else{
 				$(".dialog-title").children("span").html("查看商户已开通接口");
 			}
@@ -133,7 +134,7 @@
 					cursor:'auto',
 					left:($(window).width() - $("#api-dialog-div").width())/2 + 'px',
 					width:$("#api-dialog-div").width()+'px',
-					height:520,
+					height:580,
 					top:($(window).height()-$("#api-dialog-div").height())/2 + 'px',
 					position:'fixed', //居中
 					textAlign:'left',
@@ -197,8 +198,33 @@
 			});
 		}
 
+		/**
+		 * 提交接口授权
+		 * @param seller_code
+		 */
 		function submitAccredit(sellerCode){
+			var val_ = '';
+			$(".accredit").each(function() {
+				if ($(this)[0].checked == true) {
+					val_ += $(this).val() + ',';
+				}
+			});
+			if(val_.length != 0){
+				val_ = val_.substring(0 , val_.length -1);
+			}
 
+			var data_ = {
+				sellerCode : sellerCode,
+				apis : val_
+			};
+			$("#platform-title").html("");
+			var obj = JSON.parse(ajaxs.sendAjax('post' , 'accredit.do' , data_));
+			if(obj.status == 'success'){
+				$("#platform-title").html(obj.platform);
+				drawDialog(sellerCode);
+			}else{
+				$("#platform-title").html(obj.platform);
+			}
 		}
 
 		function closeDialog(){
@@ -345,6 +371,13 @@
 				</div>
 			</div>
 		</div>
+		<form class="stdform">
+			<p>
+				<span id="add-api" style="position: relative;">
+					<%-- 等待填充 --%>
+				</span>
+			</p>
+		</form>
 	</div>
 </div>
 

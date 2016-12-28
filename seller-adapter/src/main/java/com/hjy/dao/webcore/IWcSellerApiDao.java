@@ -1,5 +1,7 @@
 package com.hjy.dao.webcore;
 
+import java.util.Map;
+
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.webcore.WcSellerApi;
 
@@ -23,4 +25,28 @@ public interface IWcSellerApiDao extends BaseDao<WcSellerApi, Integer> {
 	 * @return
 	 */
 	int deleteBySellerCode(String sellerCode);
+	
+	/**
+	 * @description: 根据 seller_cod 和 api_cod 删除一条记录  
+	 * 
+	 * @param map
+	 * @author Yangcl 
+	 * @date 2016年12月28日 下午3:51:01 
+	 * @version 1.0.0.1
+	 */
+	public Integer deleteByDoubleCode(Map<String , String> map);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

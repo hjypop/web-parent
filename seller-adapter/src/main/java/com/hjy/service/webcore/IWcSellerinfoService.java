@@ -56,6 +56,8 @@ public interface IWcSellerinfoService extends IBaseService<WcSellerinfo, Integer
 	public JSONObject updateWcSellerInfo(WcSellerinfo entity , HttpSession session);
 	
 	public JSONObject sellerOpenapiList(String sellerCode);
+	
+	public JSONObject accreditSellerOpenapiList(String sellerCode , String apis , HttpSession session);
 }
 
 
