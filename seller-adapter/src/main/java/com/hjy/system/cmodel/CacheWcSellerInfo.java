@@ -10,6 +10,7 @@ import java.util.List;
  * @version 1.0.0
  */
 public class CacheWcSellerInfo {
+	private String uid;  // app secret  
 	private String sellerCode;  // 商家编码
 	private String sellerName;  // 商家名称
 	private String sellerDescrption;  // 商家描述
@@ -24,6 +25,13 @@ public class CacheWcSellerInfo {
     private String sellerCustomLocation;   // 商户报关地点|支付网关柄春做了2次封装后的对应码
     private List<CacheWcOpenapi> apis; // 商户所属API信息集合
     
+    
+	public String getUid() {
+		return uid;
+	}
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
 	public String getSellerCode() {
 		return sellerCode;
 	}

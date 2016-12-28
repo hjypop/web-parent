@@ -26,6 +26,8 @@ import com.hjy.service.order.IApiOcOrderInfoService;
 import com.hjy.service.product.IApiProductService;
 import com.hjy.service.shipment.IApiOcOrderShipmentsService;
 import com.hjy.service.webcore.IWcSellerinfoService;
+import com.hjy.system.ApiCacheVisitor;
+import com.hjy.system.cmodel.CacheWcSellerInfo;
 
 /**
  * 
@@ -53,12 +55,21 @@ public class ApiController {
 	@RequestMapping("openapi")
 	@ResponseBody
 	public JSONObject requestApi(Request request) {
+		JSONObject result = new JSONObject();
 
 		request = DataInit.pushProduct();
 		System.out.println(JSONObject.toJSONString(request));
 		logger.info(JSONObject.toJSONString(request));
 
-		JSONObject result = new JSONObject();
+		
+		CacheWcSellerInfo info = JSONObject.parseObject(ApiCacheVisitor.find(request.getAppid()) , CacheWcSellerInfo.class); // 取出缓存中的商户信息
+		if (null == info) {
+			result.put("code", 3);
+			result.put("desc", "无API访问权限，错误的appid");
+			return result;
+		}
+		request.setAppSecret(info.getUid());
+		
 		WcSellerinfo seller = sellerInfoService.selectBySellerCodeByApi(request.getAppid());
 		if (null == seller) {
 			result.put("code", 3);

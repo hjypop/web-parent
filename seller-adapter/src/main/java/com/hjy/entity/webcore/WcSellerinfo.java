@@ -13,6 +13,7 @@ import com.hjy.base.BaseModel;
  */
 public class WcSellerinfo extends BaseModel {
 
+	private String uid;
 	/**
 	 * 商家编码
 	 */
@@ -75,6 +76,14 @@ public class WcSellerinfo extends BaseModel {
     private String sellerCustomLocation;   // 商户报关地点|支付网关柄春做了2次封装后的对应码
 	
 	
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
 	public Integer getFlag() {
 		return flag;
 	}
