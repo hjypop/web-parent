@@ -220,8 +220,8 @@
 			$("#platform-title").html("");
 			var obj = JSON.parse(ajaxs.sendAjax('post' , 'accredit.do' , data_));
 			if(obj.status == 'success'){
-				$("#platform-title").html(obj.platform);
 				drawDialog(sellerCode);
+				$("#platform-title").html(obj.platform);
 			}else{
 				$("#platform-title").html(obj.platform);
 			}
