@@ -50,8 +50,6 @@ public class ApiController {
 	@Autowired
 	private IApiOcOrderShipmentsService ocOrderShipmentsService;
 
-	@Autowired
-	private IWcSellerinfoService sellerInfoService;
 
 	@RequestMapping("openapi")
 	@ResponseBody

@@ -298,7 +298,7 @@
 				<p>
 					<label>接口方法</label>
 					<span style="position: relative;">
-						<input maxlength="20" type="text" name="dialog_method" id="dialog_method" class="smallinput" />
+						<input maxlength="50" type="text" name="dialog_method" id="dialog_method" class="smallinput" />
 					</span>
 				</p>
 				<p>

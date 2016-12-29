@@ -25,6 +25,7 @@ import com.hjy.helper.SignHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.request.Request;
 import com.hjy.service.product.IApiProductService;
+import com.hjy.system.cmodel.CacheWcSellerInfo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/applicationContext.xml", "classpath:/mybatis-config.xml" })
@@ -57,7 +58,7 @@ public class PcProductInfoTest extends BaseTest {
 	
 	public void pushProduct() {
 		System.out.println(DateUtil.getSysDateTimeString());
-		WcSellerinfo seller = new WcSellerinfo();
+		CacheWcSellerInfo seller = new CacheWcSellerInfo();
 		seller.setCommission(
 				"[{\"type\":\"LD\",\"commission\":\"12\"},{\"type\":\"4497478100050001\",\"commission\":\"33\"}]");
 		seller.setPriceType(0);
@@ -69,14 +70,14 @@ public class PcProductInfoTest extends BaseTest {
 	@Test
 	public void pushSkuStock() {
 		String productCodes = "101392,100793";
-		WcSellerinfo seller = new WcSellerinfo();
+		CacheWcSellerInfo seller = new CacheWcSellerInfo();
 		seller.setSellerCode("22911");
 		System.out.println(service.pushSkuStock(seller, productCodes));
 	}
 
 	public void pushProductPrice() {
 		System.out.println(DateUtil.getSysDateTimeString());
-		WcSellerinfo seller = new WcSellerinfo();
+		CacheWcSellerInfo seller = new CacheWcSellerInfo();
 		seller.setCommission(
 				"[{\"type\":\"LD\",\"commission\":\"12\"},{\"type\":\"4497478100050001\",\"commission\":\"33\"}]");
 		seller.setPriceType(0);
