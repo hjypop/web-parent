@@ -111,7 +111,18 @@
 						</select>
 					</span>
 				</p>
-
+				<p>
+					<label>入驻商户分类</label>
+					<span class="field">
+						<select id="sellerType" name="sellerType">
+							<option value="">请选择</option>
+							<option value="4497478100050001">普通商户</option>
+							<option value="4497478100050002">跨境商户</option>
+							<option value="4497478100050003">跨境直邮</option>
+							<option value="4497478100050004">平台入驻</option>
+						</select>
+					</span>
+				</p>
 				<p>
 					<label>跨境商户报关</label>
 					<span class="field">

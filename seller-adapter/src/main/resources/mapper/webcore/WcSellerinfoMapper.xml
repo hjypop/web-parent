@@ -9,6 +9,7 @@
 		<result column="seller_telephone" property="sellerTelephone" jdbcType="VARCHAR" />
 		<result column="seller_descrption" property="sellerDescrption" jdbcType="LONGVARCHAR" />
 		<result column="seller_email" property="sellerEmail" jdbcType="VARCHAR" />
+		<result column="seller_type" property="sellerType" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="INTEGER" />
 		<result column="price_type" property="priceType" jdbcType="INTEGER" />
 		<result column="commission" property="commission" jdbcType="LONGVARCHAR" />
@@ -87,6 +88,9 @@
 	      <if test="sellerEmail != null" >
 	        seller_email,
 	      </if>
+	      <if test="sellerType != null" >
+	        seller_type,
+	      </if>
 	      <if test="status != null" >
 	        status,
 	      </if>
@@ -143,6 +147,9 @@
 	      <if test="sellerEmail != null" >
 	        #{sellerEmail,jdbcType=VARCHAR},
 	      </if>
+	      <if test="sellerType != null" >
+	        #{sellerType , jdbcType=VARCHAR},
+	      </if>
 	      <if test="status != null" >
 	        #{status,jdbcType=INTEGER},
 	      </if>
@@ -196,6 +203,9 @@
 	      </if>
 	      <if test="sellerEmail != null" >
 	        seller_email = #{sellerEmail,jdbcType=VARCHAR},
+	      </if>
+	      <if test="sellerType != null" >
+	         seller_type = #{sellerType,jdbcType=VARCHAR},
 	      </if>
 	      <if test="status != null" >
 	        status = #{status,jdbcType=INTEGER},

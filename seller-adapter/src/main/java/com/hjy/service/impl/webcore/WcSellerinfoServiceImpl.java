@@ -104,7 +104,7 @@ public class WcSellerinfoServiceImpl extends BaseServiceImpl<WcSellerinfo, Integ
 	public JSONObject insertWcSellerInfo(WcSellerinfo entity, HttpSession session) {
 		JSONObject obj = new JSONObject();
 		try {
-			String type_ = "SI";  // 默认为惠家有商户标识
+			String type_ = this.getConfig("seller_adapter.seller_" + entity.getSellerType());  // 默认为惠家有商户标识  
 			if(entity.getType() == 2){
 				type_ = "DP"; // 1：惠家有的商户；2：分销平台
 			}
@@ -257,7 +257,7 @@ public class WcSellerinfoServiceImpl extends BaseServiceImpl<WcSellerinfo, Integ
 					}
 				}
 				ApiCacheVisitor.update(sellerCode);   // 更新ecache缓存中的信息  
-//				System.out.println("更新后的商户缓存信息为：" + ApiCacheVisitor.find(sellerCode)); 
+				System.out.println("更新后的商户缓存信息为：" + ApiCacheVisitor.find(sellerCode)); 
 			}else{
 				obj.put("status", "error");
 				obj.put("msg", "请您至少选择一个接口");

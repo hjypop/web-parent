@@ -29,6 +29,7 @@ import com.hjy.dao.ILcOpenApiQueryLogDao;
 import com.hjy.dao.product.IPcProductdescriptionDao;
 import com.hjy.dao.product.IPcProductpicDao;
 import com.hjy.dao.system.IScStoreSkunumDao;
+import com.hjy.dto.product.ApiSellerProduct;
 import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
 import com.hjy.dto.product.ProductStatus;
@@ -197,7 +198,103 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		}
 		return response;
 	}
-
+	public JSONObject syncDemooooooooooooooo(String products, CacheWcSellerInfo seller){
+		String sellerCode = seller.getSellerCode();
+		JSONObject result = new JSONObject();  
+		result.put("code", 1);  // 默认成功，为1
+		String productHead = this.getConfig("seller_adapter.product_" + seller.getSellerType()); ;
+		String skuHead = this.getConfig("seller_adapter.sku_" + seller.getSellerType()); ;
+		if(StringUtils.isNotBlank(products)){
+			String lock = "";
+			try {
+				lock = WebHelper.getInstance().addLock(180 , sellerCode + "@syncDemooooooooooooooo");
+				if(StringUtils.isNotBlank(lock)){
+					List<ProductInfo> plist =  null; 
+					try {
+						plist =  JSONArray.parseArray(products , ProductInfo.class);
+						if(plist != null && plist.size() > 0){
+							if(plist.size() > 100){
+								result.put("code", 3);
+								result.put("desc", this.getInfo(100009004 , 100));  // 请求数据量过大，超过限制{0}条
+								return result; 
+							}
+						}
+					} catch (Exception e) {
+						result.put("code", 3);
+						result.put("desc", this.getInfo(100009003));  // 请求参数错误，请求数据解析异常
+						return result; 
+					}
+				}else{
+					result.put("code", 0);
+					result.put("desc", this.getInfo(100009002));  // 分布式锁生效中
+				}
+			} catch (Exception e) {
+				e.printStackTrace(); 
+			}
+		}else{
+			result.put("code", -1);
+			result.put("desc", this.getInfo(100009001));  // 请求数据报文data为空
+		}
+		return result;
+	}
+	
+	/**
+	 * @description: 商户同步自己的商品到惠家有平台|同时同步一批商品，上线100件商品
+	 * 	
+	 * @接口所属：惠家有商户接口|Product.SyncSellerProductList
+	 * 
+	 * @param products
+	 * @param seller
+	 * @author Yangcl 
+	 * @date 2016年12月29日 下午4:45:50 
+	 * @version 1.0.0.1
+	 */
+	public JSONObject syncSellerProductList(String products, CacheWcSellerInfo seller){
+		String sellerCode = seller.getSellerCode();
+		JSONObject result = new JSONObject();  
+		result.put("code", 1);  // 默认成功，为1
+		String productHead = this.getConfig("seller_adapter.product_" + seller.getSellerType()); ;
+		String skuHead = this.getConfig("seller_adapter.sku_" + seller.getSellerType()); ;
+		if(StringUtils.isNotBlank(products)){
+			String lock = "";
+			try {
+				lock = WebHelper.getInstance().addLock(180 , sellerCode + "@Product.SyncSellerProductList");
+				if(StringUtils.isNotBlank(lock)){
+					List<ApiSellerProduct> plist =  null; 
+					try {
+						plist =  JSONArray.parseArray(products , ApiSellerProduct.class);
+						if(plist != null && plist.size() > 0){
+							if(plist.size() > 100){
+								result.put("code", 3);
+								result.put("desc", this.getInfo(100009004 , 100));  // 请求数据量过大，超过限制{0}条
+								return result; 
+							}
+							for(ApiSellerProduct p : plist){
+								
+							}
+							
+						}
+					} catch (Exception e) {
+						result.put("code", 3);
+						result.put("desc", this.getInfo(100009003));  // 请求参数错误，请求数据解析异常
+						return result; 
+					}
+				}else{
+					result.put("code", 0);
+					result.put("desc", this.getInfo(100009002));  // 分布式锁生效中
+				}
+			} catch (Exception e) {
+				e.printStackTrace(); 
+			}
+		}else{
+			result.put("code", -1);
+			result.put("desc", this.getInfo(100009001));  // 请求数据报文data为空
+		}
+		return result;
+	}
+	
+	
+	
 	/**
 	 * 
 	 * 方法: syncProductList <br>
@@ -215,8 +312,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			try {
 				lock = WebHelper.getInstance().addLock(10, sellerCode + "_Product.syncProductList");
 				if (lock != null && !"".equals(lock)) {
-					RequestProducts requestProduct = JSON.toJavaObject(JSON.parseObject(products),
-							RequestProducts.class);
+					RequestProducts requestProduct = JSON.toJavaObject(JSON.parseObject(products), RequestProducts.class);
 					if (requestProduct != null) {
 						if (requestProduct.getProductInfos() != null && requestProduct.getProductInfos().size() > 0) {
 							response = verifyProduct(requestProduct.getProductInfos());
@@ -224,8 +320,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 								for (ProductInfo info : requestProduct.getProductInfos()) {
 									if (info.getOperate() == 1) {
 										// 根据外部商品编号查询惠家有商品编号
-										String productCode = productInfoDao
-												.findProductCodeByOutCode(info.getProductOutCode());
+										String productCode = productInfoDao.findProductCodeByOutCode(info.getProductOutCode()); 
 										info.setProductCode(productCode);
 									} else {
 										info.setProductCode(WebHelper.getInstance().genUniqueCode(ProductHead));

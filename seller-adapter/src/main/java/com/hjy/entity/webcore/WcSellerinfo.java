@@ -34,6 +34,10 @@ public class WcSellerinfo extends BaseModel {
 	 * 邮箱
 	 */
 	private String sellerEmail;
+	
+	// 商户类型:普通商户4497478100050001|跨境商户4497478100050002|跨境直邮4497478100050003|平台入驻4497478100050004
+	private String sellerType = ""; 
+	
 	/**
 	 * 商户状态 0 未开通 1 已开通 2 已禁用
 	 */
@@ -114,6 +118,14 @@ public class WcSellerinfo extends BaseModel {
 
 	public void setType(Integer type) {
 		this.type = type;
+	}
+
+	public String getSellerType() {
+		return sellerType;
+	}
+
+	public void setSellerType(String sellerType) {
+		this.sellerType = sellerType;
 	}
 
 	public String getSellerCode() {

@@ -107,6 +107,9 @@ public class ApiController {
 				String type = methods[0];
 				String method = methods[1];
 				if ("Product".equals(type)) {
+					
+					// TODO 批量同步商品 syncSellerProductList  &&  syncPlatformProductList   
+					
 					if ("addProduct".equals(method)) {
 						log.setClassUrl("com.hjy.service.product.IApiProductService.addProduct");
 						log.setRemark(request.getMethod());

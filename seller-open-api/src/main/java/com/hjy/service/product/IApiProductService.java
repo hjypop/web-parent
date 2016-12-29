@@ -145,4 +145,32 @@ public interface IApiProductService {
 	 * @return
 	 */
 	JSONObject findProductByProductCodes(CacheWcSellerInfo seller,String codes);
+	
+	/**
+	 * @description: 商户同步自己的商品到惠家有平台|同时同步一批商品，上线100件商品
+	 * 	
+	 * @接口所属：惠家有商户接口|Product.SyncSellerProductList
+	 * 
+	 * @param products
+	 * @param seller
+	 * @author Yangcl 
+	 * @date 2016年12月29日 下午4:45:50 
+	 * @version 1.0.0.1
+	 */
+	public JSONObject syncSellerProductList(String products, CacheWcSellerInfo seller);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

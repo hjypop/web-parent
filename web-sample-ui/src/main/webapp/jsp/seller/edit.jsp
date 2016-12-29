@@ -53,6 +53,7 @@
 		$(function(){
 			$("input[name='status'][value='${e.status}']").attr("checked","checked"); // 商户状态 0 未开通 1 已开通 2 已禁用
 			$("#type").prop("disabled", true).find("option[value='${e.type}']").attr("selected",true);   // 商家类型
+			$("#sellerType").prop("disabled", true).find("option[value='${e.sellerType}']").attr("selected",true);   // 入驻商户分类
 			$("input[name='flag'][value='${e.flag}']").attr("checked","checked"); // 是否需要惠家有为其报关 1是 2否
 			$("input[name='sellerCustomLocation'][value='${e.sellerCustomLocation}']").attr("checked","checked");  // 商户报关地点
 			$("#priceType").find("option[value='${e.priceType}']").attr("selected",true);  // 价格类型 0 成本价 1 销售价
@@ -125,7 +126,18 @@
 						</select>
 					</span>
 			</p>
-
+			<p>
+				<label>入驻商户分类</label>
+				<span class="field">
+					<select id="sellerType" name="sellerType">
+						<option value="">请选择</option>
+						<option value="4497478100050001">普通商户</option>
+						<option value="4497478100050002">跨境商户</option>
+						<option value="4497478100050003">跨境直邮</option>
+						<option value="4497478100050004">平台入驻</option>
+					</select>
+				</span>
+			</p>
 			<p>
 				<label>跨境商户报关</label>
 					<span class="field">
