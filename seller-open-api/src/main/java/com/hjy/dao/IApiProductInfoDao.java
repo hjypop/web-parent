@@ -78,6 +78,19 @@ public interface IApiProductInfoDao {
 	String findProductCodeByOutCode(String productCodeOld);
 
 	/**
+	 * @descriptions 根据商户自己平台的编号，查找该商品是否存在
+	 *
+	 * @param sellerProductCode
+	 * @return
+	 * @date 2016年12月29日 下午11:20:48
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	public Integer findSellerProductCode(String sellerProductCode);
+	
+	
+	
+	/**
 	 * 
 	 * 方法: getProductDescByCode <br>
 	 * 描述: 根据商品编号productCode查询描述信息 <br>

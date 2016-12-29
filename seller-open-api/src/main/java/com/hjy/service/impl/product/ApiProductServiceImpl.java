@@ -269,9 +269,19 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 								result.put("desc", this.getInfo(100009004 , 100));  // 请求数据量过大，超过限制{0}条
 								return result; 
 							}
+							List<ApiSellerProduct> inlist = new ArrayList<ApiSellerProduct>();
+							List<ApiSellerProduct> uplist = new ArrayList<ApiSellerProduct>(); 
 							for(ApiSellerProduct p : plist){
-								
+								Integer count = productInfoDao.findSellerProductCode(p.getSellerCode() + "-" +p.getSellerProductCode());
+								if(count != null && count != 0){
+									uplist.add(p);
+								}else if(count != null && count == 0){
+									 // 对于通过open-api平台接入的商品，其外部商品编号均以"seller_code"-"seller_product_code"的形式来区分
+									p.setSellerProductCode(p.getSellerCode() + "-" + p.getSellerProductCode());   
+									inlist.add(p);
+								}
 							}
+							// TODO 插入商品或者更新商品信息
 							
 						}
 					} catch (Exception e) {

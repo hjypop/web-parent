@@ -268,14 +268,13 @@
 		</where>
 	</update>
 	<!-- 根据外部商品编号查询惠家有商品编号 2016-08-08 zhy -->
-	<select id="findProductCodeByOutCode" parameterType="java.lang.String"
-		resultType="java.lang.String">
+	<select id="findProductCodeByOutCode" parameterType="java.lang.String" resultType="java.lang.String">
 		SELECT
-		product_code
+			product_code
 		FROM
-		productcenter.pc_productinfo
+			productcenter.pc_productinfo
 		WHERE
-		product_code_old = #{productCodeOld,jdbcType=VARCHAR}
+			product_code_old = #{productCodeOld,jdbcType=VARCHAR}
 	</select>
 	<!-- 根据商品编号productCode查询描述信息 2016-08-26 zhy -->
 	<select id="getProductDescByCode" parameterType="java.lang.String"
@@ -425,6 +424,16 @@
 			p.product_code = #{pcode , jdbcType=VARCHAR}
 		and
 			s.sku_code = #{scode , jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 根据商户自己平台的编号，查找该商品是否存在 -->
+	<select id="findSellerProductCode" parameterType="java.lang.String"  resultType="java.lang.Integer">
+		SELECT
+			count(*) 
+		FROM
+			productcenter.pc_productinfo
+		WHERE
+			product_code_old = #{sellerProductCode , jdbcType=VARCHAR}
 	</select>
 </mapper>
 
