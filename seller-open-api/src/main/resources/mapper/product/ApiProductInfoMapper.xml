@@ -4,60 +4,44 @@
 	<resultMap id="BaseResultMap" type="com.hjy.entity.product.PcProductinfo">
 		<id column="zid" property="zid" jdbcType="INTEGER" />
 		<result column="uid" property="uid" jdbcType="CHAR" />
-		<result column="product_code_old" property="productCodeOld"
-			jdbcType="VARCHAR" />
+		<result column="product_code_old" property="productCodeOld" jdbcType="VARCHAR" />
 		<result column="product_code" property="productCode" jdbcType="VARCHAR" />
 		<result column="product_name" property="productName" jdbcType="VARCHAR" />
-		<result column="product_shortname" property="productShortname"
-			jdbcType="VARCHAR" />
+		<result column="product_shortname" property="productShortname" jdbcType="VARCHAR" />
 		<result column="video_url" property="videoUrl" jdbcType="VARCHAR" />
 		<result column="seller_code" property="sellerCode" jdbcType="VARCHAR" />
-		<result column="small_seller_code" property="smallSellerCode"
-			jdbcType="VARCHAR" />
+		<result column="small_seller_code" property="smallSellerCode" jdbcType="VARCHAR" />
 		<result column="brand_code" property="brandCode" jdbcType="VARCHAR" />
-		<result column="product_weight" property="productWeight"
-			jdbcType="DECIMAL" />
+		<result column="product_weight" property="productWeight" jdbcType="DECIMAL" />
 		<result column="flag_sale" property="flagSale" jdbcType="INTEGER" />
 		<result column="create_time" property="createTime" jdbcType="CHAR" />
 		<result column="update_time" property="updateTime" jdbcType="CHAR" />
-		<result column="min_sell_price" property="minSellPrice"
-			jdbcType="DECIMAL" />
-		<result column="max_sell_price" property="maxSellPrice"
-			jdbcType="DECIMAL" />
+		<result column="min_sell_price" property="minSellPrice" jdbcType="DECIMAL" />
+		<result column="max_sell_price" property="maxSellPrice" jdbcType="DECIMAL" />
 		<result column="market_price" property="marketPrice" jdbcType="DECIMAL" />
 		<result column="cost_price" property="costPrice" jdbcType="DECIMAL" />
 		<result column="tax_rate" property="taxRate" jdbcType="DECIMAL" />
-		<result column="product_status" property="productStatus"
-			jdbcType="VARCHAR" />
-		<result column="product_volume" property="productVolume"
-			jdbcType="DECIMAL" />
-		<result column="transport_template" property="transportTemplate"
-			jdbcType="VARCHAR" />
-		<result column="area_template" property="areaTemplate"
-			jdbcType="VARCHAR" />
-		<result column="sell_productcode" property="sellProductcode"
-			jdbcType="VARCHAR" />
-		<result column="supplier_name" property="supplierName"
-			jdbcType="VARCHAR" />
+		<result column="product_status" property="productStatus" jdbcType="VARCHAR" />
+		<result column="product_volume" property="productVolume" jdbcType="DECIMAL" />
+		<result column="transport_template" property="transportTemplate" jdbcType="VARCHAR" />
+		<result column="area_template" property="areaTemplate" jdbcType="VARCHAR" />
+		<result column="sell_productcode" property="sellProductcode" jdbcType="VARCHAR" />
+		<result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
 		<result column="mainpic_url" property="mainpicUrl" jdbcType="VARCHAR" />
 		<result column="labels" property="labels" jdbcType="VARCHAR" />
 		<result column="flag_payway" property="flagPayway" jdbcType="INTEGER" />
-		<result column="product_volume_item" property="productVolumeItem"
-			jdbcType="VARCHAR" />
-		<result column="sale_scope_did" property="saleScopeDid"
-			jdbcType="VARCHAR" />
-		<result column="validate_flag" property="validateFlag"
-			jdbcType="VARCHAR" />
-		<result column="product_code_copy" property="productCodeCopy"
-			jdbcType="VARCHAR" />
+		<result column="product_volume_item" property="productVolumeItem" jdbcType="VARCHAR" />
+		<result column="sale_scope_did" property="saleScopeDid" jdbcType="VARCHAR" />
+		<result column="validate_flag" property="validateFlag" jdbcType="VARCHAR" />
+		<result column="product_code_copy" property="productCodeCopy" jdbcType="VARCHAR" />
 		<result column="adpic_url" property="adpicUrl" jdbcType="VARCHAR" />
 		<result column="expiry_date" property="expiryDate" jdbcType="INTEGER" />
 		<result column="expiry_unit" property="expiryUnit" jdbcType="VARCHAR" />
 		<result column="low_good" property="lowGood" jdbcType="VARCHAR" />
-		<result column="qualification_category_code" property="qualificationCategoryCode"
-			jdbcType="VARCHAR" />
+		<result column="qualification_category_code" property="qualificationCategoryCode" jdbcType="VARCHAR" />
 		<result column="product_adv" property="productAdv" jdbcType="LONGVARCHAR" />
 	</resultMap>
+	
 	<sql id="Base_Column_List">
 		zid, uid, product_code_old, product_code, product_name,
 		product_shortname,
@@ -76,6 +60,7 @@
 		adpic_url, expiry_date, expiry_unit, low_good,
 		qualification_category_code,product_adv
 	</sql>
+	
 	<insert id="insert" parameterType="com.hjy.entity.product.PcProductinfo">
 		INSERT INTO
 		productcenter.pc_productinfo (
@@ -130,6 +115,7 @@
 		#{maxSellPrice,jdbcType=DECIMAL}
 		)
 	</insert>
+	
 	<insert id="batchInsert" parameterType="list">
 		INSERT INTO productcenter.pc_productinfo (
 		uid,
@@ -186,6 +172,7 @@
 			)
 		</foreach>
 	</insert>
+	
 	<update id="updateProductByProductCodeOld" parameterType="com.hjy.entity.product.PcProductinfo">
 		update productcenter.pc_productinfo
 		<set>
@@ -243,6 +230,7 @@
 			product_code_old = #{productCodeOld,jdbcType=VARCHAR}
 		</where>
 	</update>
+	
 	<!-- 修改商品价格 -->
 	<update id="updateProductPrice" parameterType="com.hjy.entity.product.PcProductinfo">
 		update productcenter.pc_productinfo
@@ -267,6 +255,7 @@
 			product_code_old = #{productCodeOld,jdbcType=VARCHAR}
 		</where>
 	</update>
+	
 	<!-- 根据外部商品编号查询惠家有商品编号 2016-08-08 zhy -->
 	<select id="findProductCodeByOutCode" parameterType="java.lang.String" resultType="java.lang.String">
 		SELECT
@@ -435,6 +424,346 @@
 		WHERE
 			product_code_old = #{sellerProductCode , jdbcType=VARCHAR}
 	</select>
+	
+	<insert id="insertSelective" parameterType="com.hjy.entity.product.ApiPcProductInfo" >
+	    insert into productcenter.pc_productinfo
+	    <trim prefix="(" suffix=")" suffixOverrides="," > 
+	      <if test="uid != null" >
+	        uid,
+	      </if>
+	      <if test="productCodeOld != null" >
+	        product_code_old,
+	      </if>
+	      <if test="productCode != null" >
+	        product_code,
+	      </if>
+	      <if test="productName != null" >
+	        product_name,
+	      </if>
+	      <if test="productShortname != null" >
+	        product_shortname,
+	      </if>
+	      <if test="videoUrl != null" >
+	        video_url,
+	      </if>
+	      <if test="sellerCode != null" >
+	        seller_code,
+	      </if>
+	      <if test="smallSellerCode != null" >
+	        small_seller_code,
+	      </if>
+	      <if test="brandCode != null" >
+	        brand_code,
+	      </if>
+	      <if test="productWeight != null" >
+	        product_weight,
+	      </if>
+	      <if test="flagSale != null" >
+	        flag_sale,
+	      </if>
+	      <if test="createTime != null" >
+	        create_time,
+	      </if>
+	      <if test="updateTime != null" >
+	        update_time,
+	      </if>
+	      <if test="minSellPrice != null" >
+	        min_sell_price,
+	      </if>
+	      <if test="maxSellPrice != null" >
+	        max_sell_price,
+	      </if>
+	      <if test="marketPrice != null" >
+	        market_price,
+	      </if>
+	      <if test="costPrice != null" >
+	        cost_price,
+	      </if>
+	      <if test="taxRate != null" >
+	        tax_rate,
+	      </if>
+	      <if test="productStatus != null" >
+	        product_status,
+	      </if>
+	      <if test="productVolume != null" >
+	        product_volume,
+	      </if>
+	      <if test="transportTemplate != null" >
+	        transport_template,
+	      </if>
+	      <if test="areaTemplate != null" >
+	        area_template,
+	      </if>
+	      <if test="sellProductcode != null" >
+	        sell_productcode,
+	      </if>
+	      <if test="supplierName != null" >
+	        supplier_name,
+	      </if>
+	      <if test="mainpicUrl != null" >
+	        mainpic_url,
+	      </if>
+	      <if test="labels != null" >
+	        labels,
+	      </if>
+	      <if test="flagPayway != null" >
+	        flag_payway,
+	      </if>
+	      <if test="productVolumeItem != null" >
+	        product_volume_item,
+	      </if>
+	      <if test="saleScopeDid != null" >
+	        sale_scope_did,
+	      </if>
+	      <if test="validateFlag != null" >
+	        validate_flag,
+	      </if>
+	      <if test="productCodeCopy != null" >
+	        product_code_copy,
+	      </if>
+	      <if test="adpicUrl != null" >
+	        adpic_url,
+	      </if>
+	      <if test="expiryDate != null" >
+	        expiry_date,
+	      </if>
+	      <if test="expiryUnit != null" >
+	        expiry_unit,
+	      </if>
+	      <if test="lowGood != null" >
+	        low_good,
+	      </if>
+	      <if test="qualificationCategoryCode != null" >
+	        qualification_category_code,
+	      </if>
+	      <if test="productAdv != null" >
+	        product_adv,
+	      </if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," > 
+	      <if test="uid != null" >
+	        #{uid,jdbcType=CHAR},
+	      </if>
+	      <if test="productCodeOld != null" >
+	        #{productCodeOld,jdbcType=VARCHAR},
+	      </if>
+	      <if test="productCode != null" >
+	        #{productCode,jdbcType=VARCHAR},
+	      </if>
+	      <if test="productName != null" >
+	        #{productName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="productShortname != null" >
+	        #{productShortname,jdbcType=VARCHAR},
+	      </if>
+	      <if test="videoUrl != null" >
+	        #{videoUrl,jdbcType=VARCHAR},
+	      </if>
+	      <if test="sellerCode != null" >
+	        #{sellerCode,jdbcType=VARCHAR},
+	      </if>
+	      <if test="smallSellerCode != null" >
+	        #{smallSellerCode,jdbcType=VARCHAR},
+	      </if>
+	      <if test="brandCode != null" >
+	        #{brandCode,jdbcType=VARCHAR},
+	      </if>
+	      <if test="productWeight != null" >
+	        #{productWeight,jdbcType=DECIMAL},
+	      </if>
+	      <if test="flagSale != null" >
+	        #{flagSale,jdbcType=INTEGER},
+	      </if>
+	      <if test="createTime != null" >
+	        #{createTime,jdbcType=CHAR},
+	      </if>
+	      <if test="updateTime != null" >
+	        #{updateTime,jdbcType=CHAR},
+	      </if>
+	      <if test="minSellPrice != null" >
+	        #{minSellPrice,jdbcType=DECIMAL},
+	      </if>
+	      <if test="maxSellPrice != null" >
+	        #{maxSellPrice,jdbcType=DECIMAL},
+	      </if>
+	      <if test="marketPrice != null" >
+	        #{marketPrice,jdbcType=DECIMAL},
+	      </if>
+	      <if test="costPrice != null" >
+	        #{costPrice,jdbcType=DECIMAL},
+	      </if>
+	      <if test="taxRate != null" >
+	        #{taxRate,jdbcType=DECIMAL},
+	      </if>
+	      <if test="productStatus != null" >
+	        #{productStatus,jdbcType=VARCHAR},
+	      </if>
+	      <if test="productVolume != null" >
+	        #{productVolume,jdbcType=DECIMAL},
+	      </if>
+	      <if test="transportTemplate != null" >
+	        #{transportTemplate,jdbcType=VARCHAR},
+	      </if>
+	      <if test="areaTemplate != null" >
+	        #{areaTemplate,jdbcType=VARCHAR},
+	      </if>
+	      <if test="sellProductcode != null" >
+	        #{sellProductcode,jdbcType=VARCHAR},
+	      </if>
+	      <if test="supplierName != null" >
+	        #{supplierName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="mainpicUrl != null" >
+	        #{mainpicUrl,jdbcType=VARCHAR},
+	      </if>
+	      <if test="labels != null" >
+	        #{labels,jdbcType=VARCHAR},
+	      </if>
+	      <if test="flagPayway != null" >
+	        #{flagPayway,jdbcType=INTEGER},
+	      </if>
+	      <if test="productVolumeItem != null" >
+	        #{productVolumeItem,jdbcType=VARCHAR},
+	      </if>
+	      <if test="saleScopeDid != null" >
+	        #{saleScopeDid,jdbcType=VARCHAR},
+	      </if>
+	      <if test="validateFlag != null" >
+	        #{validateFlag,jdbcType=VARCHAR},
+	      </if>
+	      <if test="productCodeCopy != null" >
+	        #{productCodeCopy,jdbcType=VARCHAR},
+	      </if>
+	      <if test="adpicUrl != null" >
+	        #{adpicUrl,jdbcType=VARCHAR},
+	      </if>
+	      <if test="expiryDate != null" >
+	        #{expiryDate,jdbcType=INTEGER},
+	      </if>
+	      <if test="expiryUnit != null" >
+	        #{expiryUnit,jdbcType=VARCHAR},
+	      </if>
+	      <if test="lowGood != null" >
+	        #{lowGood,jdbcType=VARCHAR},
+	      </if>
+	      <if test="qualificationCategoryCode != null" >
+	        #{qualificationCategoryCode,jdbcType=VARCHAR},
+	      </if>
+	      <if test="productAdv != null" >
+	        #{productAdv,jdbcType=LONGVARCHAR},
+	      </if>
+	    </trim>
+	  </insert>
+  
+  	<!-- 根据商户自己的商品编号更新一条记录 - Yangcl -->
+	<update id="updateByProductCodeOld" parameterType="com.hjy.entity.product.ApiPcProductInfo" >
+	  update productcenter.pc_productinfo 
+	  <set > 
+	    <if test="productCodeOld != null" >
+	      product_code_old = #{productCodeOld,jdbcType=VARCHAR},
+	    </if>  
+	    <if test="productShortname != null" >
+	      product_shortname = #{productShortname,jdbcType=VARCHAR},
+	    </if>
+	    <if test="videoUrl != null" >
+	      video_url = #{videoUrl,jdbcType=VARCHAR},
+	    </if>
+	    <if test="sellerCode != null" >
+	      seller_code = #{sellerCode,jdbcType=VARCHAR},
+	    </if>
+	    <if test="smallSellerCode != null" >
+	      small_seller_code = #{smallSellerCode,jdbcType=VARCHAR},
+	    </if>
+	    <if test="brandCode != null" >
+	      brand_code = #{brandCode,jdbcType=VARCHAR},
+	    </if>
+	    <if test="productWeight != null" >
+	      product_weight = #{productWeight,jdbcType=DECIMAL},
+	    </if>
+	    <if test="flagSale != null" >
+	      flag_sale = #{flagSale,jdbcType=INTEGER},
+	    </if>
+	    <if test="createTime != null" >
+	      create_time = #{createTime,jdbcType=CHAR},
+	    </if>
+	    <if test="updateTime != null" >
+	      update_time = #{updateTime,jdbcType=CHAR},
+	    </if>
+	    <if test="minSellPrice != null" >
+	      min_sell_price = #{minSellPrice,jdbcType=DECIMAL},
+	    </if>
+	    <if test="maxSellPrice != null" >
+	      max_sell_price = #{maxSellPrice,jdbcType=DECIMAL},
+	    </if>
+	    <if test="marketPrice != null" >
+	      market_price = #{marketPrice,jdbcType=DECIMAL},
+	    </if>
+	    <if test="costPrice != null" >
+	      cost_price = #{costPrice,jdbcType=DECIMAL},
+	    </if>
+	    <if test="taxRate != null" >
+	      tax_rate = #{taxRate,jdbcType=DECIMAL},
+	    </if>
+	    <if test="productStatus != null" >
+	      product_status = #{productStatus,jdbcType=VARCHAR},
+	    </if>
+	    <if test="productVolume != null" >
+	      product_volume = #{productVolume,jdbcType=DECIMAL},
+	    </if>
+	    <if test="transportTemplate != null" >
+	      transport_template = #{transportTemplate,jdbcType=VARCHAR},
+	    </if>
+	    <if test="areaTemplate != null" >
+	      area_template = #{areaTemplate,jdbcType=VARCHAR},
+	    </if>
+	    <if test="sellProductcode != null" >
+	      sell_productcode = #{sellProductcode,jdbcType=VARCHAR},
+	    </if>
+	    <if test="supplierName != null" >
+	      supplier_name = #{supplierName,jdbcType=VARCHAR},
+	    </if>
+	    <if test="mainpicUrl != null" >
+	      mainpic_url = #{mainpicUrl,jdbcType=VARCHAR},
+	    </if>
+	    <if test="labels != null" >
+	      labels = #{labels,jdbcType=VARCHAR},
+	    </if>
+	    <if test="flagPayway != null" >
+	      flag_payway = #{flagPayway,jdbcType=INTEGER},
+	    </if>
+	    <if test="productVolumeItem != null" >
+	      product_volume_item = #{productVolumeItem,jdbcType=VARCHAR},
+	    </if>
+	    <if test="saleScopeDid != null" >
+	      sale_scope_did = #{saleScopeDid,jdbcType=VARCHAR},
+	    </if>
+	    <if test="validateFlag != null" >
+	      validate_flag = #{validateFlag,jdbcType=VARCHAR},
+	    </if>
+	    <if test="productCodeCopy != null" >
+	      product_code_copy = #{productCodeCopy,jdbcType=VARCHAR},
+	    </if>
+	    <if test="adpicUrl != null" >
+	      adpic_url = #{adpicUrl,jdbcType=VARCHAR},
+	    </if>
+	    <if test="expiryDate != null" >
+	      expiry_date = #{expiryDate,jdbcType=INTEGER},
+	    </if>
+	    <if test="expiryUnit != null" >
+	      expiry_unit = #{expiryUnit,jdbcType=VARCHAR},
+	    </if>
+	    <if test="lowGood != null" >
+	      low_good = #{lowGood,jdbcType=VARCHAR},
+	    </if>
+	    <if test="qualificationCategoryCode != null" >
+	      qualification_category_code = #{qualificationCategoryCode,jdbcType=VARCHAR},
+	    </if>
+	    <if test="productAdv != null" >
+	      product_adv = #{productAdv,jdbcType=LONGVARCHAR},
+	    </if>
+	  </set>
+	  where product_code_old = #{productCodeOld , jdbcType=VARCHAR}
+	</update>
 </mapper>
 
 

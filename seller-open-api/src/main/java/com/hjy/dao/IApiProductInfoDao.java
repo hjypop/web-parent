@@ -6,6 +6,7 @@ import java.util.Map;
 import com.hjy.dto.product.ProductStatus;
 import com.hjy.dto.product.ApiProductDesc;
 import com.hjy.dto.product.Property;
+import com.hjy.entity.product.ApiPcProductInfo;
 import com.hjy.entity.product.PcProductinfo;
 
 /**
@@ -168,6 +169,10 @@ public interface IApiProductInfoDao {
 	 * @version 1.0.0.1
 	 */
 	public Integer validateOrderProductInfo(Map<String , String> map);
+	
+	public Integer insertSelective(ApiPcProductInfo entity);
+	
+	public Integer updateByProductCodeOld(ApiPcProductInfo entity);  
 }
 
 

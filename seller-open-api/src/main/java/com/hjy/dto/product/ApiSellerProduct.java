@@ -15,25 +15,26 @@ import com.hjy.annotation.TargetField;
  * @version 1.0.0
  */
 public class ApiSellerProduct {
-//	private Integer operate;    // 操作类型 0为添加，1为编辑
-//	private String sellerCode;    // 卖家编号
-//	private String productOutCode;    // 外部商品编号|商户自己的商品编码
 	@TargetField(value="productOutCode")
 	private String sellerProductCode;    // 商户商品编号 对应惠家有的 productOutCode(外部商品编号)
+	private BigDecimal costPrice;    // 成本价
+	private BigDecimal marketPrice;    // 市场价
 	private String productName;    // 商品名称
 	private String productShortname;    // 商品简称
 	private BigDecimal productWeight;    // 商品重量
-	private BigDecimal costPrice;    // 成本价
-	private BigDecimal marketPrice;    // 市场价
 	private String mainPicUrl;    // 主图的Url
 	private String productVolumeItem;    // 长 宽 高 ，用逗号隔开
 	private BigDecimal productVolume;    // 商品体积
 	private Integer expiryDate;    // 保质期
 	private String expiryUnit;    // 保质期单位 4497471600290001:天，4497471600290002:月,4497471600290003:年
-	
-	private ApiProductDesc description;    // 商品描述信息
-	private List<String> pcPicList;    // 商品图片信息
 	private List<ApiSellerSkuInfo> skuList;    // 商品的Sku列表的属性信息
+	
+	private String tradeType; // 贸易类型 -> 惠家有：(0:直邮，1:自贸)   TODO 看看 sc_define表中的定义是什么！！！！！！！！
+	private String taxes;			// 税率
+	private String labels;			 // 关键字
+	private String productStoreType; // // 存储方式(0:常温，1:冷藏，2:冷冻)  PcProductinfoExt  TODO 看看 sc_define表中的定义是什么！！！！！！！！
+	private List<String> productPictures ;  // 轮播图
+	private List<String> productDescribe ;  // 描述图
 	
 	
 /*	public String getSellerCode() {
@@ -89,18 +90,6 @@ public class ApiSellerProduct {
 	}
 	public void setProductVolumeItem(String productVolumeItem) {
 		this.productVolumeItem = productVolumeItem;
-	}
-	public ApiProductDesc getDescription() {
-		return description;
-	}
-	public void setDescription(ApiProductDesc description) {
-		this.description = description;
-	}
-	public List<String> getPcPicList() {
-		return pcPicList;
-	}
-	public void setPcPicList(List<String> pcPicList) {
-		this.pcPicList = pcPicList;
 	}
 	public BigDecimal getProductVolume() {
 		return productVolume;

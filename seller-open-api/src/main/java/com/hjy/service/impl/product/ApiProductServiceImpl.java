@@ -43,12 +43,12 @@ import com.hjy.dto.product.ProductStatus;
 import com.hjy.dto.product.Property;
 import com.hjy.entity.log.LcOpenApiProductError;
 import com.hjy.entity.log.LcOpenApiQueryLog;
+import com.hjy.entity.product.ApiPcProductInfo;
 import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.product.PcProductpic;
 import com.hjy.entity.product.PcSkuinfo;
 import com.hjy.entity.system.ScStoreSkunum;
-import com.hjy.entity.webcore.WcSellerinfo;
 import com.hjy.factory.UserFactory;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelper;
@@ -276,7 +276,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 								result.put("desc", this.getInfo(100009004 , 100));  // 请求数据量过大，超过限制{0}条
 								return result; 
 							}
-							List<ApiSellerProduct> inlist = new ArrayList<ApiSellerProduct>();
+							List<ApiSellerProduct> rlist = new ArrayList<ApiSellerProduct>();  // 存放正确的数据  
 							List<ApiSellerProduct> uplist = new ArrayList<ApiSellerProduct>(); 
 							List<String> errors = new ArrayList<String>();      // 作为结果返回给商户           
 							for(ApiSellerProduct p : plist){
@@ -285,21 +285,21 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 									errors.add(p.getSellerProductCode() + "@" + vali.getString("desc"));
 									continue;
 								}
-								
-								Integer count = productInfoDao.findSellerProductCode(sellerCode + "-" +p.getSellerProductCode());
-								if(count != null && count != 0){
-									uplist.add(p);
-								}else if(count != null && count == 0){
-									 // 对于通过open-api平台接入的商品，其外部商品编号均以"seller_code"-"seller_product_code"的形式来区分
-									p.setSellerProductCode(sellerCode + "-" + p.getSellerProductCode());   
-									inlist.add(p);
-								}
-							}
-							// 插入商品信息
-							if(inlist.size() != 0){
-								for(ApiSellerProduct p : inlist){
-									
-								}
+								rlist.add(p);  
+//								Integer count = productInfoDao.findSellerProductCode(sellerCode + "-" +p.getSellerProductCode());
+//								if(count != null && count != 0){
+//									uplist.add(p);
+//								}else if(count != null && count == 0){
+//									 // 对于通过open-api平台接入的商品，其外部商品编号均以"seller_code"-"seller_product_code"的形式来区分
+//									p.setSellerProductCode(sellerCode + "-" + p.getSellerProductCode());   
+//									inlist.add(p);
+//								}
+//							}
+//							// 插入商品信息
+//							if(inlist.size() != 0){
+//								for(ApiSellerProduct p : inlist){
+//									
+//								}
 							}
 							// 更新商品信息
 							
@@ -324,6 +324,21 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	}
 	
 	/**
+	 * @description: 商品信息转换    
+	 * 
+	 * @return
+	 * @author Yangcl 
+	 * @date 2016年12月30日 下午5:57:27 
+	 * @version 1.0.0.1
+	 */
+	private  List<PcProductinfo> requestConvertion(List<ApiSellerProduct> list , CacheWcSellerInfo seller){
+		List<PcProductinfo> list_ = new ArrayList<PcProductinfo>();
+		
+		return list_;
+	}
+	
+	
+	/**
 	 * @description: 数据合法性验证
 	 * 
 	 * @author Yangcl 
@@ -341,19 +356,19 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			result.put("desc", this.getInfo(100009005));  // 请求参数体中包含不合法的字段
 			return result;
 		}
-		if(p.getPcPicList() == null || p.getPcPicList().size() == 0){
-			result.put("desc", this.getInfo(100009005));  // 请求参数体中包含不合法的字段
-			return result;
-		}
-		if(p.getDescription() == null){
-			result.put("desc", this.getInfo(100009006));  // 商品描述信息不得为空
-			return result;
-		}
-		ApiProductDesc de = p.getDescription();
-		if(StringUtils.isAnyBlank(de.getDescriptionInfo(),de.getDescriptionPic() , de.getKeyword())){
-			result.put("desc", this.getInfo(100009006));  // 商品描述信息不得为空
-			return result;
-		}
+//		if(p.getPcPicList() == null || p.getPcPicList().size() == 0){
+//			result.put("desc", this.getInfo(100009005));  // 请求参数体中包含不合法的字段
+//			return result;
+//		}
+//		if(p.getDescription() == null){
+//			result.put("desc", this.getInfo(100009006));  // 商品描述信息不得为空
+//			return result;
+//		}
+//		ApiProductDesc de = p.getDescription();
+//		if(StringUtils.isAnyBlank(de.getDescriptionInfo(),de.getDescriptionPic() , de.getKeyword())){
+//			result.put("desc", this.getInfo(100009006));  // 商品描述信息不得为空
+//			return result;
+//		}
 		if(!this.isNumeric(p.getExpiryDate().toString())){
 			result.put("desc", this.getInfo(100009007));  // 保质期格式非法
 			return result;
@@ -405,10 +420,20 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	   return true;  
 	}
 
-	private  <T , E> JSONObject validate(T t , E e){
-		JSONObject result = new JSONObject();
-		result.put("flag", true);
-		
+	/**
+	 * @descriptions  验证对象中的值是否合法并为E e 对象赋值
+	 * 
+	 * T 与 E 两个对象字段名称需要一致。比如 T 中拥有 E 中一半的字段，但这一半字段名称类型都相同。
+	 *  
+	 * @param t 要验证的对象
+	 * @param e 要赋值的对象|如果要赋值的对象为 null 则只验证，不赋值
+	 * @return E
+	 * @date 2016年8月29日下午12:10:38
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 * @param <T , E>
+	 */
+	private  <T , E> E validate(T t , E e){ 
 		Field[] fields = t.getClass().getDeclaredFields();
 		 try {
 			 for(int i = 0 ; i < fields.length ; i ++){
@@ -467,13 +492,17 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			 ex.printStackTrace();
 		 } 
 		 
-		return result;
+		return e;
 	}
 	
 	
 	
 	
 	
+	///////////////////////////////////////  以下方法准备废弃不用 /////////////////////////////////////////////////
+	
+	
+	 
 	/**
 	 * 
 	 * 方法: syncProductList <br>
