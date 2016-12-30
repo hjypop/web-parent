@@ -22,7 +22,7 @@ import com.hjy.common.bill.HexUtil;
 import com.hjy.common.bill.MD5Util;
 import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
-import com.hjy.dto.product.Productdescription;
+import com.hjy.dto.product.ApiProductDesc;
 import com.hjy.helper.SignHelper;
 import com.hjy.request.Request;
 import com.hjy.request.RequestProduct;
@@ -54,7 +54,7 @@ public class ProductTest extends BaseTest {
 			/**
 			 * 描述
 			 */
-			Productdescription description = new Productdescription();
+			ApiProductDesc description = new ApiProductDesc();
 			description.setDescriptionInfo("描述信息-" + i);
 			description.setDescriptionPic("描述图片-" + i);
 			description.setKeyword("关键字-" + i);
@@ -147,7 +147,7 @@ public class ProductTest extends BaseTest {
 		/**
 		 * 描述
 		 */
-		Productdescription description = new Productdescription();
+		ApiProductDesc description = new ApiProductDesc();
 		description.setDescriptionInfo("添加-描述信息");
 		description.setDescriptionPic("添加-描述图片");
 		description.setKeyword("添加-关键字");
@@ -229,7 +229,7 @@ public class ProductTest extends BaseTest {
 		/**
 		 * 描述
 		 */
-		Productdescription description = new Productdescription();
+		ApiProductDesc description = new ApiProductDesc();
 		description.setDescriptionInfo("编辑-描述信息");
 		description.setDescriptionPic("编辑-描述图片");
 		description.setKeyword("编辑-关键字");

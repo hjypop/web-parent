@@ -59,7 +59,7 @@ public class ProductInfo implements IApiRequest {
 	/**
 	 * 商品描述信息
 	 */
-	private Productdescription description;
+	private ApiProductDesc description;
 	/**
 	 * 商品图片信息
 	 */
@@ -262,11 +262,11 @@ public class ProductInfo implements IApiRequest {
 		this.productVolumeItem = productVolumeItem;
 	}
 
-	public Productdescription getDescription() {
+	public ApiProductDesc getDescription() {
 		return description;
 	}
 
-	public void setDescription(Productdescription description) {
+	public void setDescription(ApiProductDesc description) {
 		this.description = description;
 	}
 

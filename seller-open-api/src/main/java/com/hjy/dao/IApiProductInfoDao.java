@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hjy.dto.product.ProductStatus;
-import com.hjy.dto.product.Productdescription;
+import com.hjy.dto.product.ApiProductDesc;
 import com.hjy.dto.product.Property;
 import com.hjy.entity.product.PcProductinfo;
 
@@ -100,7 +100,7 @@ public interface IApiProductInfoDao {
 	 * @param productCode
 	 * @return
 	 */
-	Productdescription getProductDescByCode(String productCode);
+	ApiProductDesc getProductDescByCode(String productCode);
 
 	/**
 	 * 

@@ -1,5 +1,8 @@
 package com.hjy.service.impl.product;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,6 +24,8 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.annotation.ExculdeNullField;
+import com.hjy.annotation.TargetField;
 import com.hjy.common.DateUtil;
 import com.hjy.dao.IApiProductInfoDao;
 import com.hjy.dao.IApiSkuInfoDao;
@@ -29,7 +34,9 @@ import com.hjy.dao.ILcOpenApiQueryLogDao;
 import com.hjy.dao.product.IPcProductdescriptionDao;
 import com.hjy.dao.product.IPcProductpicDao;
 import com.hjy.dao.system.IScStoreSkunumDao;
+import com.hjy.dto.product.ApiProductDesc;
 import com.hjy.dto.product.ApiSellerProduct;
+import com.hjy.dto.product.ApiSellerSkuInfo;
 import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
 import com.hjy.dto.product.ProductStatus;
@@ -239,7 +246,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	}
 	
 	/**
-	 * @description: 商户同步自己的商品到惠家有平台|同时同步一批商品，上线100件商品
+	 * @description: 商户同步自己的商品到惠家有平台|同时同步一批商品，上限100件商品
 	 * 	
 	 * @接口所属：惠家有商户接口|Product.SyncSellerProductList
 	 * 
@@ -258,7 +265,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		if(StringUtils.isNotBlank(products)){
 			String lock = "";
 			try {
-				lock = WebHelper.getInstance().addLock(180 , sellerCode + "@Product.SyncSellerProductList");
+				lock = WebHelper.getInstance().addLock(180 , sellerCode + "@Product.SyncSellerProductList");  // 三分钟内不得访问 
 				if(StringUtils.isNotBlank(lock)){
 					List<ApiSellerProduct> plist =  null; 
 					try {
@@ -271,17 +278,30 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 							}
 							List<ApiSellerProduct> inlist = new ArrayList<ApiSellerProduct>();
 							List<ApiSellerProduct> uplist = new ArrayList<ApiSellerProduct>(); 
+							List<String> errors = new ArrayList<String>();      // 作为结果返回给商户           
 							for(ApiSellerProduct p : plist){
-								Integer count = productInfoDao.findSellerProductCode(p.getSellerCode() + "-" +p.getSellerProductCode());
+								JSONObject vali = this.entityValidate(p);  // 验证数据合法性
+								if( !vali.getBoolean("flag") ){
+									errors.add(p.getSellerProductCode() + "@" + vali.getString("desc"));
+									continue;
+								}
+								
+								Integer count = productInfoDao.findSellerProductCode(sellerCode + "-" +p.getSellerProductCode());
 								if(count != null && count != 0){
 									uplist.add(p);
 								}else if(count != null && count == 0){
 									 // 对于通过open-api平台接入的商品，其外部商品编号均以"seller_code"-"seller_product_code"的形式来区分
-									p.setSellerProductCode(p.getSellerCode() + "-" + p.getSellerProductCode());   
+									p.setSellerProductCode(sellerCode + "-" + p.getSellerProductCode());   
 									inlist.add(p);
 								}
 							}
-							// TODO 插入商品或者更新商品信息
+							// 插入商品信息
+							if(inlist.size() != 0){
+								for(ApiSellerProduct p : inlist){
+									
+								}
+							}
+							// 更新商品信息
 							
 						}
 					} catch (Exception e) {
@@ -302,6 +322,155 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		}
 		return result;
 	}
+	
+	/**
+	 * @description: 数据合法性验证
+	 * 
+	 * @author Yangcl 
+	 * @date 2016年12月30日 下午3:11:57 
+	 * @version 1.0.0.1
+	 */
+	private  JSONObject entityValidate(ApiSellerProduct p){
+		JSONObject result = new JSONObject();
+		result.put("flag", false);
+		if(StringUtils.isAnyBlank(p.getSellerProductCode(),
+			p.getProductName() , p.getProductShortname(),
+			String.valueOf(p.getProductWeight()) , String.valueOf(p.getCostPrice()),
+			String.valueOf(p.getMarketPrice()), p.getMainPicUrl(),p.getProductVolumeItem(),
+			String.valueOf(p.getProductVolume()), p.getExpiryUnit() )){
+			result.put("desc", this.getInfo(100009005));  // 请求参数体中包含不合法的字段
+			return result;
+		}
+		if(p.getPcPicList() == null || p.getPcPicList().size() == 0){
+			result.put("desc", this.getInfo(100009005));  // 请求参数体中包含不合法的字段
+			return result;
+		}
+		if(p.getDescription() == null){
+			result.put("desc", this.getInfo(100009006));  // 商品描述信息不得为空
+			return result;
+		}
+		ApiProductDesc de = p.getDescription();
+		if(StringUtils.isAnyBlank(de.getDescriptionInfo(),de.getDescriptionPic() , de.getKeyword())){
+			result.put("desc", this.getInfo(100009006));  // 商品描述信息不得为空
+			return result;
+		}
+		if(!this.isNumeric(p.getExpiryDate().toString())){
+			result.put("desc", this.getInfo(100009007));  // 保质期格式非法
+			return result;
+		}
+		if(!(StringUtils.startsWith(p.getExpiryUnit(), "449747160029000") && 
+				StringUtils.endsWithAny(p.getExpiryUnit(), "1" , "2" , "3"))){
+			result.put("desc", this.getInfo(100009008));  // 保质期单位非法
+			return result;
+		}
+		// 开始判定sku相关信息 
+		if(p.getSkuList() == null || p.getSkuList().size() == 0){
+			result.put("desc", this.getInfo(100009009));  // 商品的Sku列表不得为空
+			return result;
+		}
+		List<ApiSellerSkuInfo> skus = p.getSkuList();
+		for(ApiSellerSkuInfo s : skus){
+			if(StringUtils.isAnyBlank(s.getSellPrice().toString(),
+					s.getCostPrice().toString(), s.getStockNum().toString(),
+					s.getSkuPicUrl() , s.getSkuName() , s.getSkuAdv() , 
+					s.getSecurityStockNum().toString() , s.getMiniOrder().toString()
+					)){
+				result.put("desc", this.getInfo(100009010));  // 商品的Sku关键信息不得为空
+				return result;
+			}
+			if(!this.isNumeric(s.getStockNum().toString())){
+				result.put("desc", this.getInfo(100009011));  // 非法的商品Sku库存数
+				return result;
+			}
+			if(!this.isNumeric(s.getSecurityStockNum().toString())){
+				result.put("desc", this.getInfo(100009012));  // 非法的商品Sku安全库存
+				return result;
+			}
+			if(!this.isNumeric(s.getMiniOrder().toString())){
+				result.put("desc", this.getInfo(100009013));  // 非法的商品Sku起订数量
+				return result;
+			}
+		}
+		
+		result.put("flag", true);
+		return result;
+	}
+	
+	private boolean isNumeric(String str){  
+	   for(int i=str.length();--i>=0;){  
+	      int chr=str.charAt(i);  
+	      if(chr<48 || chr>57)  
+	         return false;  
+	   }  
+	   return true;  
+	}
+
+	private  <T , E> JSONObject validate(T t , E e){
+		JSONObject result = new JSONObject();
+		result.put("flag", true);
+		
+		Field[] fields = t.getClass().getDeclaredFields();
+		 try {
+			 for(int i = 0 ; i < fields.length ; i ++){
+				 Field field = fields[i];
+				 String name = field.getName();
+				 String func = "get" + name.substring(0,1).toUpperCase()+name.substring(1);
+				 Method m = t.getClass().getMethod(func);
+	             String value = ""; 
+	             if(field.isAnnotationPresent(ExculdeNullField.class)){
+	            	 continue; // ExculdeNullField 注解标识的字段为空，则不再对其反射设值。
+	             }else if( e == null){  // 如果要赋值的对象为null 则只验证，不赋值
+	                 continue;
+	             }
+	             if(m.invoke(t) != null) { 
+	            	 value = String.valueOf(m.invoke(t)); 
+	             }else{ // 如果getter方法取值为null，则代表T对象该字段为null，不再操作
+	            	 continue; 
+	             }
+	             
+	             // 如果字段包含目标反射声明注解 
+	             if(field.isAnnotationPresent(TargetField.class)){
+	            	 name = field.getAnnotation(TargetField.class).value();
+	             }
+	             // 赋值 
+	             String func_ = "set" + name.substring(0,1).toUpperCase()+name.substring(1); 
+				 Method m_ = e.getClass().getMethod(func_  , m.invoke(t).getClass()); 
+	             // 如果这里是t.getClass() 会引起 object is not an instance of declaring class 这个异常。
+	             // 原因在于 T 对象有值了，你还在尝试对他赋值。
+				@SuppressWarnings("rawtypes")
+				Class[] c = m_.getParameterTypes();
+				 if(c[0] == String.class) {
+		 	 		 m_.invoke(e , value);
+		 	 	 }else if(c[0] == BigDecimal.class) {
+		 	 		 m_.invoke(e , BigDecimal.valueOf(Double.valueOf(value)));
+		 	 	 }else if(c[0] == Integer.class) {
+					 m_.invoke(e ,Integer.valueOf(value));
+			 	 }else if(c[0] == Boolean.class) {
+		 	 		 m_.invoke(e , Boolean.valueOf(value));
+		 	 	 }else if(c[0] == Float.class){
+		 		 	 m_.invoke(e , Float.valueOf(value));
+		 	 	 }else if(c[0] == Double.class) {
+	 	 		 	 m_.invoke(e , Double.valueOf(value));
+		 	 	 }else if(c[0] == Byte.class) {
+		 	 		 m_.invoke(e , Byte.valueOf(value));
+		 	 	 }
+			 }
+		 } catch (NoSuchMethodException ex) {
+	            // ex.printStackTrace();  被赋值的对象中找不到的方法不做处理即可
+		 } catch (SecurityException ex) {
+			 ex.printStackTrace();
+		 } catch (IllegalAccessException ex) {
+			 ex.printStackTrace();
+		 } catch (IllegalArgumentException ex) {
+			 ex.printStackTrace();
+		 } catch (InvocationTargetException ex) {
+			 ex.printStackTrace();
+		 } 
+		 
+		return result;
+	}
+	
+	
 	
 	
 	
