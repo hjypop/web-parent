@@ -29,10 +29,10 @@ public class ApiSellerProduct {
 	private String expiryUnit;    // 保质期单位 4497471600290001:天，4497471600290002:月,4497471600290003:年
 	private List<ApiSellerSkuInfo> skuList;    // 商品的Sku列表的属性信息
 	
-	private String tradeType; // 贸易类型 -> 惠家有：(0:直邮，1:自贸)   TODO 看看 sc_define表中的定义是什么！！！！！！！！
+//	private String tradeType; // 贸易类型 -> 惠家有：(0:直邮，1:自贸) PcProductinfoExt  TODO 看看 sc_define表中的定义是什么！！！！！！！！
+//	private String productStoreType; // // 存储方式(0:常温，1:冷藏，2:冷冻)  PcProductinfoExt  TODO 看看 sc_define表中的定义是什么！！！！！！！！
 	private String taxes;			// 税率
 	private String labels;			 // 关键字
-	private String productStoreType; // // 存储方式(0:常温，1:冷藏，2:冷冻)  PcProductinfoExt  TODO 看看 sc_define表中的定义是什么！！！！！！！！
 	private List<String> productPictures ;  // 轮播图
 	private List<String> productDescribe ;  // 描述图
 	
