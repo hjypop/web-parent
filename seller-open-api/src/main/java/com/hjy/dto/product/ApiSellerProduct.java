@@ -17,32 +17,47 @@ import com.hjy.annotation.TargetField;
 public class ApiSellerProduct {
 	@TargetField(value="productOutCode")
 	private String sellerProductCode;    // 商户商品编号 对应惠家有的 productOutCode(外部商品编号)
-	private BigDecimal costPrice;    // 成本价
-	private BigDecimal marketPrice;    // 市场价
 	private String productName;    // 商品名称
 	private String productShortname;    // 商品简称
+	private BigDecimal costPrice;    // 成本价
+	private BigDecimal marketPrice;    // 市场价
 	private BigDecimal productWeight;    // 商品重量
 	private String mainPicUrl;    // 主图的Url
 	private String productVolumeItem;    // 长 宽 高 ，用逗号隔开
 	private BigDecimal productVolume;    // 商品体积
 	private Integer expiryDate;    // 保质期
 	private String expiryUnit;    // 保质期单位 4497471600290001:天，4497471600290002:月,4497471600290003:年
-	private List<ApiSellerSkuInfo> skuList;    // 商品的Sku列表的属性信息
-	
-//	private String tradeType; // 贸易类型 -> 惠家有：(0:直邮，1:自贸) PcProductinfoExt  TODO 看看 sc_define表中的定义是什么！！！！！！！！
-//	private String productStoreType; // // 存储方式(0:常温，1:冷藏，2:冷冻)  PcProductinfoExt  TODO 看看 sc_define表中的定义是什么！！！！！！！！
-	private String taxes;			// 税率
+	private BigDecimal taxes;			// 税率
 	private String labels;			 // 关键字
 	private List<String> productPictures ;  // 轮播图
 	private List<String> productDescribe ;  // 描述图
+	private List<ApiSellerSkuInfo> skuList;    // 商品的Sku列表的属性信息
 	
 	
-/*	public String getSellerCode() {
-		return sellerCode;
+	public BigDecimal getTaxes() {
+		return taxes;
 	}
-	public void setSellerCode(String sellerCode) {
-		this.sellerCode = sellerCode;
-	}*/
+	public void setTaxes(BigDecimal taxes) {
+		this.taxes = taxes;
+	}
+	public String getLabels() {
+		return labels;
+	}
+	public void setLabels(String labels) {
+		this.labels = labels;
+	}
+	public List<String> getProductPictures() {
+		return productPictures;
+	}
+	public void setProductPictures(List<String> productPictures) {
+		this.productPictures = productPictures;
+	}
+	public List<String> getProductDescribe() {
+		return productDescribe;
+	}
+	public void setProductDescribe(List<String> productDescribe) {
+		this.productDescribe = productDescribe;
+	}
 	public String getSellerProductCode() {
 		return sellerProductCode;
 	}

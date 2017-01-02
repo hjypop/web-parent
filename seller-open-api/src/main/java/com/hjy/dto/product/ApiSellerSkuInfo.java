@@ -18,14 +18,26 @@ public class ApiSellerSkuInfo {
 	private BigDecimal costPrice; 	// 成本价
 	private Long stockNum;    // 库存数
 	private String skuPicUrl;    // 商品的Sku的图片信息
-//	private String skuKey;    // color_id=6&style_id=0
-//	private String skuKeyvalue;    // 颜色=白色&款式=共同
 	private String skuName;    // 商品的sku名称信息
 	private String skuAdv;    // 广告语
 	private Long securityStockNum;    // 安全库存
 	private String qrcodeLink;    // 二维码图片链接
+	private String saleYn;   // 是否可卖 Y可卖 N不可卖
+	private Integer flagEnable;  // 是否可用 0 不可用   1可用
 	private Integer miniOrder;    // 起订数量
 	
+	public String getSaleYn() {
+		return saleYn;
+	}
+	public void setSaleYn(String saleYn) {
+		this.saleYn = saleYn;
+	}
+	public Integer getFlagEnable() {
+		return flagEnable;
+	}
+	public void setFlagEnable(Integer flagEnable) {
+		this.flagEnable = flagEnable;
+	}
 	public String getSkuCode() {
 		return skuCode;
 	}
