@@ -27,6 +27,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hjy.annotation.ExculdeNullField;
 import com.hjy.annotation.TargetField;
 import com.hjy.common.DateUtil;
+import com.hjy.common.product.SkuCommon;
 import com.hjy.constant.MemberConst;
 import com.hjy.dao.IApiProductInfoDao;
 import com.hjy.dao.IApiSkuInfoDao;
@@ -46,7 +47,9 @@ import com.hjy.entity.log.LcOpenApiProductError;
 import com.hjy.entity.log.LcOpenApiQueryLog;
 import com.hjy.entity.product.ApiPcProductInfo;
 import com.hjy.entity.product.PcProductdescription;
+import com.hjy.entity.product.PcProductflow;
 import com.hjy.entity.product.PcProductinfo;
+import com.hjy.entity.product.PcProductinfoExt;
 import com.hjy.entity.product.PcProductpic;
 import com.hjy.entity.product.PcSkuinfo;
 import com.hjy.entity.system.ScStoreSkunum;
@@ -54,6 +57,7 @@ import com.hjy.factory.UserFactory;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelper;
 import com.hjy.helper.WebHelper;
+import com.hjy.model.ProductSkuInfo;
 import com.hjy.request.RequestProduct;
 import com.hjy.request.RequestProducts;
 import com.hjy.service.impl.BaseServiceImpl;
@@ -162,12 +166,13 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 							List<ApiSellerProduct> uplist = new ArrayList<ApiSellerProduct>(); 
 							List<String> errors = new ArrayList<String>();      // 作为结果返回给商户           
 							for(ApiSellerProduct p : plist){
-								JSONObject vali = this.entityValidate(p);  // 验证数据合法性
+								JSONObject vali = this.entityValidate(p , skuHead);  // 验证数据合法性
 								if( !vali.getBoolean("flag") ){
 									errors.add(p.getSellerProductCode() + "@" + vali.getString("desc"));
 									continue;
 								}
 								rlist.add(p);  
+								// TODO 删掉缓存中的商品信息 
 //								Integer count = productInfoDao.findSellerProductCode(sellerCode + "-" +p.getSellerProductCode());
 //								if(count != null && count != 0){
 //									uplist.add(p);
@@ -213,7 +218,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	 * @date 2016年12月30日 下午3:11:57 
 	 * @version 1.0.0.1
 	 */
-	private  JSONObject entityValidate(ApiSellerProduct p){
+	private  JSONObject entityValidate(ApiSellerProduct p , String skuHead){
 		JSONObject result = new JSONObject();
 		result.put("flag", false);
 		if(StringUtils.isAnyBlank(p.getSellerProductCode(),
@@ -268,6 +273,10 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					s.getSecurityStockNum().toString() , s.getMiniOrder().toString(),
 					s.getSaleYn() , s.getFlagEnable().toString() )){
 				result.put("desc", this.getInfo(100009010));  // 商品的Sku关键信息不得为空
+				return result;
+			}
+			if(StringUtils.isNotBlank(s.getSkuCode()) && !StringUtils.startsWith(s.getSkuCode(), skuHead)){
+				result.put("desc", this.getInfo(100009021));  // 100009021=非法的sku编号前缀
 				return result;
 			}
 			if(!this.isNumeric(s.getStockNum().toString())){
@@ -398,7 +407,10 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			String uid = UUID.randomUUID().toString().replace("-", "");
 			PcProductinfo e = new PcProductinfo();
 			e.setUid(uid); 
-			e.setProductCode(WebHelper.getInstance().genUniqueCode(phead));
+//			e.setProductCode(WebHelper.getInstance().genUniqueCode(phead));               // TODO ： 此处赋值会影响Sku信息的相关描述，是否应该在此处查库？？？
+																																						  // 然后再加一个标志位 用于区分更新还是添加 
+			
+			
 			e.setProductCodeOld(seller.getSellerCode() + "-" + p.getSellerProductCode());  // 添加标示头，用于区分可能存在的编号
 			e.setProductName(p.getProductName());
 			e.setProductShortname(p.getProductShortname());
@@ -417,6 +429,79 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			e.setLabels(p.getLabels());
 //			e.setPicUpdate(p.getPicUpdate()); // 商品图片是否被编辑过。更新商品时候使用。
 			
+			// 设置商品描述
+			PcProductdescription description = new PcProductdescription();
+			description.setUid(uid);
+			description.setProductCode(e.getProductCode());
+			String img = "";	// <img src="http://www.minspc.com/webupload/welfare/T130979285971471323.jpg"/><br/>
+			String img_ = "";
+			List<String> picList = p.getProductDescribe(); // 商品描述图片列表
+			for(String s : picList){
+				img += "<img src='" + s + "'/><br/>";
+				img_ += s + "|";
+			}
+			img_ = img_.substring(0, img_.length()-1);
+			description.setDescriptionInfo(img);
+			description.setDescriptionPic(img_);
+			description.setKeyword(p.getLabels());
+			e.setDescription(description);
+			
+			// 设置Sku信息。
+			List<ApiSellerSkuInfo> slist = p.getSkuList();
+			// 设置商品轮播图  每个sku都有一个轮播图                  TODO 是否是这样 问斌哥 
+			List<PcProductpic> lunBoList = new ArrayList<PcProductpic>();
+			List<ProductSkuInfo> skuInfoList = new ArrayList<ProductSkuInfo>();
+			for(ApiSellerSkuInfo s : slist){
+				ProductSkuInfo i = new ProductSkuInfo();
+				if(StringUtils.isBlank(s.getSkuCode())){
+					i.setSkuCode(WebHelper.getInstance().genUniqueCode(shead)); 
+				}else{
+					i.setSkuCode(s.getSkuCode()); 
+				}
+				i.setProductCode(e.getProductCode());
+				i.setSellPrice(s.getSellPrice());
+				i.setMarketPrice(p.getMarketPrice());
+				i.setCostPrice(s.getCostPrice());     // 设置sku的成本价
+				i.setSkuName(s.getSkuName());
+				i.setSkuPicUrl(s.getSkuPicUrl());   // 商品的Sku的图片信息
+				i.setSellProductcode(p.getSellerProductCode());    // 设置外部商品 id 
+				i.setStockNum(Integer.valueOf(s.getStockNum().toString()));   
+				i.setSecurityStockNum(Integer.valueOf(s.getSecurityStockNum().toString()));  // 商品库存
+				i.setSaleYn(s.getSaleYn());
+				i.setFlagEnable(s.getFlagEnable().toString());
+				i.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS);  // SI2003   
+				i.setSkuKey("color_id=0&style_id=0");
+				i.setSkuValue("颜色属性=共同&规格属性=共同");
+				skuInfoList.add(i);
+				for(String url : p.getProductPictures()){
+					PcProductpic pic = new PcProductpic();
+					pic.setUid(UUID.randomUUID().toString().replace("-", ""));
+					pic.setPicUrl(url);
+					pic.setProductCode(e.getProductCode());
+					pic.setSkuCode(i.getSkuCode());
+					lunBoList.add(pic);
+				}
+			}
+			e.setProductSkuInfoList(skuInfoList);  
+			e.setPcPicList(lunBoList);
+			
+			// 设置商品扩展信息
+			PcProductinfoExt ext = new PcProductinfoExt();// 设置扩展信息
+			ext.setProductCodeOld(e.getProductCodeOld());
+			ext.setProductCode(e.getProductCode());
+			ext.setPrchType("10");  // 异地入库类型
+			ext.setDlrId( seller.getSellerCode() );  // 供应商编号
+			ext.setDlrNm(seller.getSellerName());  // 供应商名称
+			ext.setValidateFlag("Y"); // 是否是虚拟商品  Y：是  N：否 
+			ext.setPoffer("open-api-platform");
+			ext.setSettlementType(p.getSettlementType());	// 服务费结算方式  
+			e.setPcProductinfoExt(ext);
+			
+			// 商品变更状态
+			PcProductflow pcProdcutflow = new PcProductflow();
+			pcProdcutflow.setFlowCode(WebHelper.getInstance().genUniqueCode("PF"));
+			pcProdcutflow.setFlowStatus(SkuCommon.ProAddOr);
+			e.setPcProdcutflow(pcProdcutflow);
 			
 			list_.add(e);
 		}

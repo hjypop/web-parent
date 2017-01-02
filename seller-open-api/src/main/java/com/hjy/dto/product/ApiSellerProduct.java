@@ -29,11 +29,18 @@ public class ApiSellerProduct {
 	private String expiryUnit;    // 保质期单位 4497471600290001:天，4497471600290002:月,4497471600290003:年
 	private BigDecimal taxes;			// 税率
 	private String labels;			 // 关键字
+	private String settlementType; // 服务费结算方式 常规结算4497471600110001| 特殊结算4497471600110002|服务费结算 4497471600110003
 	private List<String> productPictures ;  // 轮播图
 	private List<String> productDescribe ;  // 描述图
 	private List<ApiSellerSkuInfo> skuList;    // 商品的Sku列表的属性信息
 	
 	
+	public String getSettlementType() {
+		return settlementType;
+	}
+	public void setSettlementType(String settlementType) {
+		this.settlementType = settlementType;
+	}
 	public BigDecimal getTaxes() {
 		return taxes;
 	}
