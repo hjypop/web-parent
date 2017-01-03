@@ -252,7 +252,7 @@ public class PcProductinfo {
 	 
 	private String picUpdate; // "1" 图片有变动 "0"无变动 |民生品粹用到，描述其商品图片是否编辑过
 	
-	
+	private Boolean isUpdate;  // 这条记录是更新还是新添加|open-api用到 true：添加 ;  false：更新
 	
 	public PcProductinfo() {
 		super();
@@ -715,6 +715,13 @@ public class PcProductinfo {
 	}
 	public void setPicUpdate(String picUpdate) {
 		this.picUpdate = picUpdate;
+	}
+	
+	public Boolean getIsUpdate() {
+		return isUpdate;
+	}
+	public void setIsUpdate(Boolean isUpdate) {
+		this.isUpdate = isUpdate;
 	}
 	
 	

@@ -25,7 +25,22 @@ public class ApiSellerSkuInfo {
 	private String saleYn;   // 是否可卖 Y可卖 N不可卖
 	private Integer flagEnable;  // 是否可用 0 不可用   1可用
 	private Integer miniOrder;    // 起订数量
+	private String specification; // 规格属性
+	private String color ;   // 颜色属性
 	
+	
+	public String getSpecification() {
+		return specification;
+	}
+	public void setSpecification(String specification) {
+		this.specification = specification;
+	}
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
+	}
 	public String getSaleYn() {
 		return saleYn;
 	}

@@ -266,19 +266,16 @@
 			product_code_old = #{productCodeOld,jdbcType=VARCHAR}
 	</select>
 	<!-- 根据商品编号productCode查询描述信息 2016-08-26 zhy -->
-	<select id="getProductDescByCode" parameterType="java.lang.String"
-		resultType="com.hjy.dto.product.Productdescription">
+	<select id="getProductDescByCode" parameterType="java.lang.String" resultType="com.hjy.dto.product.ApiProductDesc">
 		SELECT
-		description_info AS descriptionInfo,
-		description_pic
-		AS descriptionPic,
-		keyword
+			description_info AS descriptionInfo,
+			description_pic AS descriptionPic,
+			keyword
 		FROM
-		productcenter.pc_productdescription
+			productcenter.pc_productdescription
 		WHERE
-		product_code = #{productCode,jdbcType=VARCHAR}
-		ORDER BY
-		zid DESC
+			product_code = #{productCode,jdbcType=VARCHAR}
+		ORDER BY zid DESC
 		LIMIT 1
 	</select>
 	<!-- 根据商品编号productCode查询图片列表 2016-08-26 zhy -->

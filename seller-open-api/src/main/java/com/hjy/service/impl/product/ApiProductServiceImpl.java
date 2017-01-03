@@ -18,6 +18,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
@@ -33,9 +34,18 @@ import com.hjy.dao.IApiProductInfoDao;
 import com.hjy.dao.IApiSkuInfoDao;
 import com.hjy.dao.ILcOpenApiProductErrorDao;
 import com.hjy.dao.ILcOpenApiQueryLogDao;
+import com.hjy.dao.log.ILcStockchangeDao;
+import com.hjy.dao.product.IPcBrandinfoDao;
+import com.hjy.dao.product.IPcProductcategoryRelDao;
 import com.hjy.dao.product.IPcProductdescriptionDao;
+import com.hjy.dao.product.IPcProductflowDao;
+import com.hjy.dao.product.IPcProductinfoDao;
+import com.hjy.dao.product.IPcProductinfoExtDao;
 import com.hjy.dao.product.IPcProductpicDao;
+import com.hjy.dao.product.IPcProductpropertyDao;
+import com.hjy.dao.product.IPcSkuinfoDao;
 import com.hjy.dao.system.IScStoreSkunumDao;
+import com.hjy.dao.user.IUcSellercategoryProductRelationDao;
 import com.hjy.dto.product.ApiProductDesc;
 import com.hjy.dto.product.ApiSellerProduct;
 import com.hjy.dto.product.ApiSellerSkuInfo;
@@ -46,6 +56,7 @@ import com.hjy.dto.product.Property;
 import com.hjy.entity.log.LcOpenApiProductError;
 import com.hjy.entity.log.LcOpenApiQueryLog;
 import com.hjy.entity.product.ApiPcProductInfo;
+import com.hjy.entity.product.PcProductcategoryRel;
 import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductflow;
 import com.hjy.entity.product.PcProductinfo;
@@ -73,23 +84,33 @@ import com.hjy.system.cmodel.CacheWcSellerInfo;
  */
 @Service
 public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Integer> implements IApiProductService {
-	public static String ProductHead = "8016";
-	public static String SKUHead = "8019";
+	
+	private static Logger logger = Logger.getLogger(ApiProductServiceImpl.class);   
+	
 	@Resource
-	private IApiProductInfoDao productInfoDao;
+	private IPcProductflowDao pcpFlowdao;
 	@Resource
-	private IPcProductdescriptionDao productdescription;
+	private IPcProductinfoDao pcProductInfoDao;
 	@Resource
-	private IPcProductpicDao pcProductpic;
+	private IPcProductcategoryRelDao pcProductcategoryRelDao;
 	@Resource
-	private IApiSkuInfoDao skuInfoDao;
+	private IPcProductdescriptionDao pcProductdescriptionDao;
+	@Resource
+	private IPcProductpicDao pcProductpicDao;
+	@Resource
+	private IPcProductpropertyDao pcProductpropertyDao;
+	@Resource
+	private IPcSkuinfoDao pcSkuinfoDao;
+	@Resource
+	private IPcBrandinfoDao pcBrandinfoDao;
+	@Resource
+	private IPcProductinfoExtDao pcProductinfoExtDao;
+	@Resource
+	private IUcSellercategoryProductRelationDao ucSellercategoryProductRelationDao;
 	@Resource
 	private IScStoreSkunumDao scStoreSkunumDao;
 	@Resource
-	private ILcOpenApiProductErrorDao errorDao;
-	@Resource
-	private ILcOpenApiQueryLogDao openApiQueryDao;
-
+	private ILcStockchangeDao lcStockchangeDao;
 	
 	public JSONObject syncDemooooooooooooooo(String products, CacheWcSellerInfo seller){
 		String sellerCode = seller.getSellerCode();
@@ -172,23 +193,16 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 									continue;
 								}
 								rlist.add(p);  
-								// TODO 删掉缓存中的商品信息 
-//								Integer count = productInfoDao.findSellerProductCode(sellerCode + "-" +p.getSellerProductCode());
-//								if(count != null && count != 0){
-//									uplist.add(p);
-//								}else if(count != null && count == 0){
-//									 // 对于通过open-api平台接入的商品，其外部商品编号均以"seller_code"-"seller_product_code"的形式来区分
-//									p.setSellerProductCode(sellerCode + "-" + p.getSellerProductCode());   
-//									inlist.add(p);
-//								}
-//							}
-//							// 插入商品信息
-//							if(inlist.size() != 0){
-//								for(ApiSellerProduct p : inlist){
-//									
-//								}
 							}
-							// 更新商品信息
+							// TODO 删掉缓存中的商品信息 
+							List<PcProductinfo> targetList = this.requestConvertion(rlist, seller, productHead, skuHead); 
+							for(PcProductinfo e : targetList){
+								if(e.getIsUpdate()){  // 准备添加一条记录 
+									
+								}else{
+									
+								}
+							}
 							
 						}
 					} catch (Exception e) {
@@ -265,16 +279,18 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			result.put("desc", this.getInfo(100009009));  // 商品的Sku列表不得为空
 			return result;
 		}
+		Map<String , String> vmap = new HashMap<String , String>(); // 用于验证 规格属性+颜色属性，sku中这两个属性不得重复。 
 		List<ApiSellerSkuInfo> skus = p.getSkuList();
 		for(ApiSellerSkuInfo s : skus){
 			if(StringUtils.isAnyBlank(s.getSellPrice().toString(),
 					s.getCostPrice().toString(), s.getStockNum().toString(),
 					s.getSkuPicUrl() , s.getSkuName() , s.getSkuAdv() , 
 					s.getSecurityStockNum().toString() , s.getMiniOrder().toString(),
-					s.getSaleYn() , s.getFlagEnable().toString() )){
+					s.getSaleYn() , s.getFlagEnable().toString() , s.getSpecification() , s.getColor())){
 				result.put("desc", this.getInfo(100009010));  // 商品的Sku关键信息不得为空
 				return result;
 			}
+			vmap.put(StringUtils.trim(s.getColor()) + StringUtils.trim(s.getSpecification()), "validate");   
 			if(StringUtils.isNotBlank(s.getSkuCode()) && !StringUtils.startsWith(s.getSkuCode(), skuHead)){
 				result.put("desc", this.getInfo(100009021));  // 100009021=非法的sku编号前缀
 				return result;
@@ -299,6 +315,11 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				result.put("desc", this.getInfo(100009020));  // 100009020=非法的可用状态标识，flagEnable: 0不可用/1可用
 				return result;
 			}
+		}
+		
+		if(vmap.size() != skus.size()){
+			result.put("desc", this.getInfo(100009022));  // 100009022=sku规格属性不得重复！
+			return result;
 		}
 		
 		result.put("flag", true);
@@ -406,19 +427,25 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		for(ApiSellerProduct p : list){
 			String uid = UUID.randomUUID().toString().replace("-", "");
 			PcProductinfo e = new PcProductinfo();
-			e.setUid(uid); 
-//			e.setProductCode(WebHelper.getInstance().genUniqueCode(phead));               // TODO ： 此处赋值会影响Sku信息的相关描述，是否应该在此处查库？？？
-																																						  // 然后再加一个标志位 用于区分更新还是添加 
-			
-			
 			e.setProductCodeOld(seller.getSellerCode() + "-" + p.getSellerProductCode());  // 添加标示头，用于区分可能存在的编号
+			e.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS);  // SI2003
+			List<PcProductinfo> pList = pcProductInfoDao.getListBySellerCode(e);
+			if (pList == null || pList.size() == 0) { // 若果不存在，就添加
+				e.setUid(uid); 
+				e.setProductCode(WebHelper.getInstance().genUniqueCode(phead));
+				e.setIsUpdate(true);  	// 标志位 用于区分更新还是添加 
+			}else{
+				e.setUid(pList.get(0).getUid()); // 根据uid更新商品
+				e.setProductCode(pList.get(0).getProductCode());   
+				e.setIsUpdate(false);  
+			}
+			
 			e.setProductName(p.getProductName());
 			e.setProductShortname(p.getProductShortname());
 			e.setMaxSellPrice(p.getMarketPrice());
 			e.setMinSellPrice(p.getCostPrice());
 			e.setCostPrice(p.getCostPrice());
 			e.setMarketPrice(p.getMarketPrice());
-			e.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS);  // SI2003
 			e.setMainpicUrl(p.getProductPictures().get(0));  // 主图默认为轮播图的第一张
 			e.setSmallSellerCode(seller.getSellerCode()); 
 			e.setProductStatus("4497153900060003");// 商品下架
@@ -427,7 +454,6 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			e.setProductWeight(p.getProductWeight());
 			e.setTransportTemplate("0");  // 运费模板默认为卖家包邮
 			e.setLabels(p.getLabels());
-//			e.setPicUpdate(p.getPicUpdate()); // 商品图片是否被编辑过。更新商品时候使用。
 			
 			// 设置商品描述
 			PcProductdescription description = new PcProductdescription();
@@ -448,10 +474,9 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			
 			// 设置Sku信息。
 			List<ApiSellerSkuInfo> slist = p.getSkuList();
-			// 设置商品轮播图  每个sku都有一个轮播图                  TODO 是否是这样 问斌哥 
-			List<PcProductpic> lunBoList = new ArrayList<PcProductpic>();
 			List<ProductSkuInfo> skuInfoList = new ArrayList<ProductSkuInfo>();
-			for(ApiSellerSkuInfo s : slist){
+			for(int k = 0 ; k < slist.size() ; k ++){
+				ApiSellerSkuInfo s = slist.get(k);
 				ProductSkuInfo i = new ProductSkuInfo();
 				if(StringUtils.isBlank(s.getSkuCode())){
 					i.setSkuCode(WebHelper.getInstance().genUniqueCode(shead)); 
@@ -470,19 +495,23 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				i.setSaleYn(s.getSaleYn());
 				i.setFlagEnable(s.getFlagEnable().toString());
 				i.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS);  // SI2003   
-				i.setSkuKey("color_id=0&style_id=0");
-				i.setSkuValue("颜色属性=共同&规格属性=共同");
+				// sku规格属性信息 参看：PlusSupportProduct.propertyListSku() 这个方法 
+				i.setSkuKey("color_id=" + k + "&style_id=" + k);  
+				i.setSkuValue("颜色属性=" + s.getColor() + "&规格属性=" + s.getSpecification()); 
 				skuInfoList.add(i);
-				for(String url : p.getProductPictures()){
-					PcProductpic pic = new PcProductpic();
-					pic.setUid(UUID.randomUUID().toString().replace("-", ""));
-					pic.setPicUrl(url);
-					pic.setProductCode(e.getProductCode());
-					pic.setSkuCode(i.getSkuCode());
-					lunBoList.add(pic);
-				}
 			}
 			e.setProductSkuInfoList(skuInfoList);  
+			
+			// 设置商品轮播图  经过确定，惠家有库中并不是每个sku都有一个轮播图，轮播图只绑定于product - Yangcl
+			List<PcProductpic> lunBoList = new ArrayList<PcProductpic>();
+			for(String url : p.getProductPictures()){
+				PcProductpic pic = new PcProductpic();
+				pic.setUid(UUID.randomUUID().toString().replace("-", ""));
+				pic.setPicUrl(url);
+				pic.setProductCode(e.getProductCode());
+				pic.setSkuCode(" "); // 所以这里设置为空 
+				lunBoList.add(pic);
+			}
 			e.setPcPicList(lunBoList);
 			
 			// 设置商品扩展信息
@@ -494,18 +523,171 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			ext.setDlrNm(seller.getSellerName());  // 供应商名称
 			ext.setValidateFlag("Y"); // 是否是虚拟商品  Y：是  N：否 
 			ext.setPoffer("open-api-platform");
-			ext.setSettlementType(p.getSettlementType());	// 服务费结算方式  
+			ext.setSettlementType("2222222222222");	// 服务费结算方式    TODO 此处需要从缓存中取得信息 但此功能尚未实现
+			ext.setPurchaseType("22222222222222");     //  TODO 此处需要从缓存中取得信息 但此功能尚未实现
 			e.setPcProductinfoExt(ext);
 			
 			// 商品变更状态
-			PcProductflow pcProdcutflow = new PcProductflow();
-			pcProdcutflow.setFlowCode(WebHelper.getInstance().genUniqueCode("PF"));
-			pcProdcutflow.setFlowStatus(SkuCommon.ProAddOr);
-			e.setPcProdcutflow(pcProdcutflow);
+			PcProductflow pf = new PcProductflow();
+			pf.setFlowCode(WebHelper.getInstance().genUniqueCode("PF"));
+			pf.setFlowStatus(SkuCommon.ProAddOr);
+			pf.setProductCode(e.getProductCode()); 
+			e.setPcProdcutflow(pf);
 			
 			list_.add(e);
 		}
 		return list_;
+	}
+	
+	/**
+	 * @description: 插入商户商品信息到数据库
+	 * 
+	 * @param e
+	 * @author Yangcl 
+	 * @date 2017年1月3日 下午2:32:07 
+	 * @version 1.0.0.1
+	 */
+	private JSONObject insertSellerProduct(PcProductinfo e){
+		JSONObject result = new JSONObject();
+		result.put("type", "insert");
+		String createTime = DateUtil.getSysDateTimeString();
+		try {
+			// 插入商品基本信息
+			PcProductinfo p = new PcProductinfo();
+			p.setUid(e.getUid());
+			p.setCreateTime(createTime);
+			p.setBrandCode("");
+			p.setFlagPayway(0);  // 是否货到付款 0 否 1 是|经过验证，pc_productinfo都是0 - Yangcl 
+			p.setFlagSale(e.getFlagSale()); 
+			p.setLabels(e.getLabels());
+			p.setMainpicUrl(e.getMainpicUrl());   
+			p.setMarketPrice(e.getMarketPrice());
+			p.setMaxSellPrice(e.getMarketPrice());
+			p.setMinSellPrice(e.getCostPrice());
+			p.setProductCode(e.getProductCode());
+			p.setProductCodeOld(e.getProductCodeOld());  // 只有LD商品没有外部商品编号  
+			p.setProductName(e.getProdutName());  
+			p.setProductStatus(e.getProductStatus());
+			p.setProductVolume(e.getProductVolume());
+			p.setProductVolumeItem(e.getProductVolumeItem());
+			p.setProductWeight(e.getProductWeight());
+			p.setSellerCode(e.getSellerCode());
+			p.setSmallSellerCode(e.getSmallSellerCode());
+			p.setTransportTemplate(e.getTransportTemplate());
+			p.setUpdateTime(createTime);
+			p.setCostPrice(e.getCostPrice());
+			p.setProductShortname(e.getProductShortname());
+			p.setValidate_flag(e.getValidate_flag());// 添加是否是虚拟商品字段
+			p.setTaxRate(e.getTaxRate());
+			p.setExpiryDate(e.getExpiryDate());// 保质期
+			p.setExpiryUnit(e.getExpiryUnit());// 保质期单位
+//			p.setQualificationCategoryCode(e.getQualificationCategoryCode());		// 资质品类 由运营维护 
+			pcProductInfoDao.insertSelective(p); 
+			
+			// 添加商品的实类信息
+			PcProductcategoryRel pprModel = new PcProductcategoryRel();
+			pprModel.setUid(UUID.randomUUID().toString().replace("-", ""));
+			pprModel.setProductCode(e.getProductCode());	
+			pprModel.setFlagMain(Long.parseLong(1 + ""));
+			pcProductcategoryRelDao.insertSelective(pprModel);
+			
+			// 添加 描述信息
+			PcProductdescription ppdModel = new PcProductdescription();
+			ppdModel.setUid(UUID.randomUUID().toString().replace("-", ""));
+			ppdModel.setProductCode(e.getProductCode());
+			ppdModel.setKeyword(e.getDescription().getKeyword());
+			ppdModel.setDescriptionPic(e.getDescription().getDescriptionPic());
+			ppdModel.setDescriptionInfo(e.getDescription().getDescriptionInfo()); 
+			pcProductdescriptionDao.insertSelective(ppdModel);			
+			
+			// 插入商品轮播图
+			List<PcProductpic> picList = e.getPcPicList();
+			for (PcProductpic pic : picList) {
+				pcProductpicDao.insertSelective(pic);
+			}
+			
+			// 插入sku信息
+			List<ProductSkuInfo> skuList = e.getProductSkuInfoList();
+			for (ProductSkuInfo sku : skuList) {
+				PcSkuinfo si = new PcSkuinfo();
+				si.setUid(UUID.randomUUID().toString().replace("-", ""));  
+				si.setMarketPrice(sku.getMarketPrice());
+				si.setProductCode(e.getProductCode());
+				si.setProductCodeOld(e.getProductCodeOld());
+				si.setQrcodeLink(sku.getQrcodeLink());
+				si.setSecurityStockNum(Long.valueOf(sku.getSecurityStockNum()));
+				si.setSellerCode(e.getSellerCode());
+				si.setSellPrice(sku.getSellPrice());
+				si.setSellProductcode(e.getProductCode());   // 历史遗留问题，无从追溯。数据库表就这么定义的。 - Yangcl  
+				si.setSkuCode(sku.getSkuCode());
+//				si.setSkuCodeOld(sku.getSkuCodeOld());
+				si.setSkuKey(sku.getSkuKey());
+				si.setSkuKeyvalue(sku.getSkuValue());
+				si.setSkuPicurl(sku.getSkuPicUrl());
+				si.setSkuName(sku.getSkuName());
+				si.setSkuAdv(sku.getSkuAdv()); 
+				si.setStockNum(Long.valueOf(sku.getStockNum()));    
+				si.setSaleYn(sku.getSaleYn());
+				si.setCostPrice(sku.getCostPrice());
+				si.setMiniOrder(sku.getMiniOrder());
+				pcSkuinfoDao.insertSelective(si);
+
+				// 插入商品sku库存
+				ScStoreSkunum sssModel = new ScStoreSkunum();
+				sssModel.setUid(UUID.randomUUID().toString().replace("-", ""));
+				sssModel.setSkuCode(sku.getSkuCode());
+				sssModel.setStockNum(Long.valueOf(sku.getStockNum()));
+				sssModel.setStoreCode("TDS1");   // TDS1即第三方仓库，麦乐购使用此库存编号，此处也使用
+				sssModel.setBatchCode("");
+				scStoreSkunumDao.insertSelective(sssModel);
+			}
+			
+			// 插入商品属性信息。 
+//			PcProductproperty ppp = new PcProductproperty(); 
+//			pcProductpropertyDao.insertSelective(ppp);
+			
+			// 插入商品扩展信息
+			PcProductinfoExt ppe = new PcProductinfoExt();
+			ppe.setUid(UUID.randomUUID().toString().replace("-", ""));
+			ppe.setProductCode(e.getPcProductinfoExt().getProductCode());
+			ppe.setPrchType(e.getPcProductinfoExt().getPrchType());
+			ppe.setDlrId(e.getPcProductinfoExt().getDlrId());
+			ppe.setDlrNm(e.getPcProductinfoExt().getDlrNm());
+//			ppe.setOaSiteNo(e.getPcProductinfoExt().getOaSiteNo());
+			ppe.setValidateFlag(e.getPcProductinfoExt().getValidateFlag());
+			ppe.setProductCodeOld(e.getProductCodeOld());
+//			ppe.setProductStoreType(e.getPcProductinfoExt().getProductStoreType());
+//			ppe.setProductTradeType(e.getPcProductinfoExt().getProductTradeType());
+			ppe.setPoffer(e.getPcProductinfoExt().getPoffer());
+			Integer fictitious = e.getPcProductinfoExt().getFictitiousSales();  // 虚拟销售量基数
+			if (fictitious == null ||StringUtils.isBlank(fictitious.toString())) {
+				fictitious = 0;
+			}
+			ppe.setFictitiousSales(fictitious);
+			String grossProfit ="";       // 毛利润
+			if(null != e.getPcProductinfoExt().getGrossProfit()){
+				grossProfit = e.getPcProductinfoExt().getGrossProfit().toString();
+			}
+			ppe.setGrossProfit(Long.parseLong((StringUtils.isBlank(grossProfit) ? "0" : grossProfit)));
+			String accmrng = "";   // 积分
+			if(null != e.getPcProductinfoExt().getAccmRng()){
+				accmrng = e.getPcProductinfoExt().getAccmRng().toString();
+			}
+			ppe.setAccmRng(Double.parseDouble(StringUtils.isBlank(accmrng) ? "0" : accmrng));
+			ppe.setMdId("open-api-01"); 
+			ppe.setMdNm("open-api-platform");
+			ppe.setSettlementType(e.getPcProductinfoExt().getSettlementType());   // 结算方式  常规结算4497471600110001| 特殊结算4497471600110002|服务费结算 4497471600110003
+			ppe.setPurchaseType(e.getPcProductinfoExt().getPurchaseType());   // 采购类型 代销 4497471600160001|经销4497471600160002|代收代付4497471600160003
+			ppe.setPicMaterialUrl(e.getPcProductinfoExt().getPicMaterialUrl());
+			ppe.setPicMaterialUpload(e.getPcProductinfoExt().getPicMaterialUpload());
+//			ppe.setKjtSellerCode("");  
+			pcProductinfoExtDao.insertSelective(ppe);
+			
+			
+		} catch (Exception ex) { 
+			
+		}
+		return result; 
 	}
 	
 	
@@ -531,10 +713,24 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	
 	
 	
-	
-	
-	
 	///////////////////////////////////////  以下方法准备废弃不用 /////////////////////////////////////////////////
+	
+	public static String ProductHead = "8016";
+	public static String SKUHead = "8019"; 
+	@Resource
+	private IApiProductInfoDao productInfoDao;
+	@Resource
+	private IPcProductdescriptionDao productdescription;
+	@Resource
+	private IPcProductpicDao pcProductpic;
+	@Resource
+	private IApiSkuInfoDao skuInfoDao;
+//	@Resource
+//	private IScStoreSkunumDao scStoreSkunumDao;
+	@Resource
+	private ILcOpenApiProductErrorDao errorDao;
+	@Resource
+	private ILcOpenApiQueryLogDao openApiQueryDao;
 	
 	/**
 	 * 

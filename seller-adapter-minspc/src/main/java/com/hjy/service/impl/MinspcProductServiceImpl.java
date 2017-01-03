@@ -190,7 +190,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 				scStoreSkunumDao.insertSelective(sssModel);
 			}
 			
-			// 插入商品属性信息。 此处是无用操作 整个表就没有数据
+			// 插入商品属性信息。 
 //			PcProductproperty ppp = new PcProductproperty(); 
 //			pcProductpropertyDao.insertSelective(ppp);
 			
