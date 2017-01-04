@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  */
 public class ApiSellerSkuInfo {
 	
-	private String skuCode;    // sku编码
+	private String skuCode;    // sku编码                  TODO 这里不需要该字段 
 	private BigDecimal sellPrice;    // 销售价
 	private BigDecimal costPrice; 	// 成本价
 	private Long stockNum;    // 库存数

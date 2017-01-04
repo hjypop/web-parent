@@ -55,6 +55,7 @@ import com.hjy.dto.product.ProductStatus;
 import com.hjy.dto.product.Property;
 import com.hjy.entity.log.LcOpenApiProductError;
 import com.hjy.entity.log.LcOpenApiQueryLog;
+import com.hjy.entity.log.LcStockchange;
 import com.hjy.entity.product.ApiPcProductInfo;
 import com.hjy.entity.product.PcProductcategoryRel;
 import com.hjy.entity.product.PcProductdescription;
@@ -68,6 +69,7 @@ import com.hjy.factory.UserFactory;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelper;
 import com.hjy.helper.WebHelper;
+import com.hjy.jms.ProductJmsSupport;
 import com.hjy.model.ProductSkuInfo;
 import com.hjy.request.RequestProduct;
 import com.hjy.request.RequestProducts;
@@ -197,7 +199,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 							// TODO 删掉缓存中的商品信息 
 							List<PcProductinfo> targetList = this.requestConvertion(rlist, seller, productHead, skuHead); 
 							for(PcProductinfo e : targetList){
-								if(e.getIsUpdate()){  // 准备添加一条记录 
+								if(!e.getIsUpdate()){  // 准备添加一条记录 
 									
 								}else{
 									
@@ -410,7 +412,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		return e;
 	}
 	
-	
+ 
 	/**
 	 * @descriptions 商品信息转换|syncSellerProductList接口专属转换方法。 
 	 *
@@ -433,11 +435,11 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			if (pList == null || pList.size() == 0) { // 若果不存在，就添加
 				e.setUid(uid); 
 				e.setProductCode(WebHelper.getInstance().genUniqueCode(phead));
-				e.setIsUpdate(true);  	// 标志位 用于区分更新还是添加 
+				e.setIsUpdate(false);  	// 标志位 用于区分更新还是添加 
 			}else{
 				e.setUid(pList.get(0).getUid()); // 根据uid更新商品
 				e.setProductCode(pList.get(0).getProductCode());   
-				e.setIsUpdate(false);  
+				e.setIsUpdate(true);  
 			}
 			
 			e.setProductName(p.getProductName());
@@ -472,17 +474,46 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			description.setKeyword(p.getLabels());
 			e.setDescription(description);
 			
+			
+			/*
+			 * 根据product_code 找出该商品下所有的Sku信息，
+			 * 以skuKey+"@"+skuValue 作为map的key，sku_code 作为value
+			 * map中的key是区分一个product_code下的唯一依据  
+			 */
+			Map<String , String> skmap = new HashMap<String , String>();  
+			if(e.getIsUpdate()){    // 如果是更新商品，则验证sku的规格属性信息
+				List<PcSkuinfo>  mapList = pcSkuinfoDao.getSkuinfoByPcode(e.getProductCode());  
+				if(mapList != null && mapList.size() != 0){
+					for(PcSkuinfo s : mapList	){
+						skmap.put(s.getSkuKey() , s.getSkuCode());
+					}
+				}
+			}
+			
 			// 设置Sku信息。
 			List<ApiSellerSkuInfo> slist = p.getSkuList();
 			List<ProductSkuInfo> skuInfoList = new ArrayList<ProductSkuInfo>();
 			for(int k = 0 ; k < slist.size() ; k ++){
 				ApiSellerSkuInfo s = slist.get(k);
 				ProductSkuInfo i = new ProductSkuInfo();
-				if(StringUtils.isBlank(s.getSkuCode())){
+				// sku规格属性信息 参看：PlusSupportProduct.propertyListSku() 这个方法 
+				i.setSkuKey("color_id=" + k + "&style_id=" + k);  
+				i.setSkuValue("颜色属性=" + s.getColor() + "&规格属性=" + s.getSpecification()); 
+				
+				if(!e.getIsUpdate()){  // 如果是添加商品 则直接为sku生成一个code
 					i.setSkuCode(WebHelper.getInstance().genUniqueCode(shead)); 
-				}else{
-					i.setSkuCode(s.getSkuCode()); 
+				}else{   
+					/** 更新商品信息分为2种情况
+					 * 		1. 更新已经存在的sku信息
+					 * 		2. 在原有sku信息的基础上增加一条sku信息 
+					 */
+					if(skmap.containsKey(i.getSkuKey() + "@" + i.getSkuKeyvalue())){  // 以sku的规格属性确定该商品是否包含这条sku，不包含则生成一个Sku
+						i.setSkuCode( skmap.get(i.getSkuKey() + "@" + i.getSkuKeyvalue()) );  
+					}else{
+						i.setSkuCode(WebHelper.getInstance().genUniqueCode(shead)); 
+					}
 				}
+				
 				i.setProductCode(e.getProductCode());
 				i.setSellPrice(s.getSellPrice());
 				i.setMarketPrice(p.getMarketPrice());
@@ -495,9 +526,6 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				i.setSaleYn(s.getSaleYn());
 				i.setFlagEnable(s.getFlagEnable().toString());
 				i.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS);  // SI2003   
-				// sku规格属性信息 参看：PlusSupportProduct.propertyListSku() 这个方法 
-				i.setSkuKey("color_id=" + k + "&style_id=" + k);  
-				i.setSkuValue("颜色属性=" + s.getColor() + "&规格属性=" + s.getSpecification()); 
 				skuInfoList.add(i);
 			}
 			e.setProductSkuInfoList(skuInfoList);  
@@ -523,8 +551,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			ext.setDlrNm(seller.getSellerName());  // 供应商名称
 			ext.setValidateFlag("Y"); // 是否是虚拟商品  Y：是  N：否 
 			ext.setPoffer("open-api-platform");
-			ext.setSettlementType("2222222222222");	// 服务费结算方式    TODO 此处需要从缓存中取得信息 但此功能尚未实现
-			ext.setPurchaseType("22222222222222");     //  TODO 此处需要从缓存中取得信息 但此功能尚未实现
+			ext.setSettlementType(seller.getSettlement());	// 服务费结算方式    TODO 此处需要从缓存中取得信息 但此功能尚未实现
+			ext.setPurchaseType(seller.getPurchase());     //  TODO 此处需要从缓存中取得信息 但此功能尚未实现
 			e.setPcProductinfoExt(ext);
 			
 			// 商品变更状态
@@ -541,8 +569,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	
 	/**
 	 * @description: 插入商户商品信息到数据库
-	 * 
-	 * @param e
+	 *  
 	 * @author Yangcl 
 	 * @date 2017年1月3日 下午2:32:07 
 	 * @version 1.0.0.1
@@ -550,6 +577,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 	private JSONObject insertSellerProduct(PcProductinfo e){
 		JSONObject result = new JSONObject();
 		result.put("type", "insert");
+		result.put("code", "1"); // 默认插入成功
+		result.put("entity", e);  
 		String createTime = DateUtil.getSysDateTimeString();
 		try {
 			// 插入商品基本信息
@@ -680,17 +709,148 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			ppe.setPurchaseType(e.getPcProductinfoExt().getPurchaseType());   // 采购类型 代销 4497471600160001|经销4497471600160002|代收代付4497471600160003
 			ppe.setPicMaterialUrl(e.getPcProductinfoExt().getPicMaterialUrl());
 			ppe.setPicMaterialUpload(e.getPcProductinfoExt().getPicMaterialUpload());
-//			ppe.setKjtSellerCode("");  
 			pcProductinfoExtDao.insertSelective(ppe);
 			
+			// 插入商品历史流水信息
+			PcProductflow ppf = new PcProductflow();
+			ppf.setUid(UUID.randomUUID().toString().replace("-", ""));
+			ppf.setCreator("open-api-platform");
+			ppf.setFlowCode(e.getPcProdcutflow().getFlowCode());
+			ppf.setFlowStatus(e.getPcProdcutflow().getFlowStatus());
+			ppf.setProductCode(e.getProductCode());
+			ppf.setUpdateTime(createTime);
+			ppf.setUpdator("open-api-platform");
+			ppf.setProductJson(JSON.toJSONString(e)); 
+			pcpFlowdao.insertSelective(ppf);
 			
+			// 插入商品库存流水
+			for (ProductSkuInfo sku : skuList) {
+				LcStockchange lsModel = new LcStockchange();
+				lsModel.setChangeStock(sku.getStockNum());
+				lsModel.setChangeType(SkuCommon.SkuStockChangeTypeCreateProduct);
+				lsModel.setCode(sku.getSkuCode());
+				lsModel.setCreateTime(createTime);
+				lsModel.setCreateUser("open-api-platform");
+				lsModel.setUid(UUID.randomUUID().toString().replace("-", ""));
+				lcStockchangeDao.insertSelective(lsModel);
+			}
+			
+			ProductJmsSupport pjs = new ProductJmsSupport();
+			pjs.onChangeProductText(e.getProductCode());
+			this.genarateJmsStaticPageForProduct(e);
 		} catch (Exception ex) { 
-			
+			String exstring = ExceptionHelper.allExceptionInformation(ex);
+			logger.error(exstring);
+			result.put("code", "0");  // 操作出现异常
+			result.put("exception", exstring); 
+			return result;
 		}
 		return result; 
 	}
 	
+	/**                                  TODO 此处尚有问题！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+	 * @description: 更新商户信息到数据库，同时下架已经上架的商品，并且删除Redis中的缓存 
+	 *  
+	 * @author Yangcl 
+	 * @date 2017年1月4日 上午10:39:36 
+	 * @version 1.0.0.1
+	 */
+	private JSONObject updateSellerProduct(PcProductinfo e){
+		JSONObject result = new JSONObject();
+		result.put("type", "update");
+		result.put("code", "1"); // 默认更新成功
+		result.put("entity", e);  
+		String updateTime = DateUtil.getSysDateTimeString();
+		try {
+			// 更新商品基本信息
+			PcProductinfo pinfo = new PcProductinfo();
+			pinfo.setUid(e.getUid()); 
+			pinfo.setLabels(e.getLabels());
+			pinfo.setMainPicUrl(e.getMainPicUrl());
+			pinfo.setCostPrice(e.getCostPrice());
+			pinfo.setMarketPrice(e.getMarketPrice());
+			pinfo.setMaxSellPrice(e.getMaxSellPrice());
+			pinfo.setMinSellPrice(e.getMinSellPrice());
+			pinfo.setProductName(e.getProdutName());  
+			pinfo.setProductStatus(e.getProductStatus());
+			pinfo.setProductWeight(e.getProductWeight());
+			pinfo.setUpdateTime(updateTime);
+			pinfo.setTaxRate(e.getTaxRate());
+			pcProductInfoDao.updateSelective(pinfo); 
+			
+			
+			// 根据product_code更新商品描述信息
+			PcProductdescription ppd = new PcProductdescription();
+			ppd.setProductCode(e.getProductCode()); 
+			ppd.setKeyword(e.getDescription().getKeyword());
+			ppd.setDescriptionPic(e.getDescription().getDescriptionPic());
+			ppd.setDescriptionInfo(e.getDescription().getDescriptionInfo()); 
+			pcProductdescriptionDao.updateSelective(ppd);
+			
+			// 更新商品轮播图|先删除再添加 
+			pcProductpicDao.deleteByProductCode(e.getProductCode());
+			List<PcProductpic> picList = e.getPcPicList();
+			for (PcProductpic pic : picList) {
+				pcProductpicDao.insertSelective(pic);
+			}
+			
+			// 更新商品sku信息|可能会是添加一个Sku信息，也可能是更新一个Sku信息
+			List<ProductSkuInfo> skuList = e.getProductSkuInfoList();
+			for (ProductSkuInfo sku : skuList) {
+				PcSkuinfo psModel = new PcSkuinfo();
+				psModel.setMarketPrice(sku.getMarketPrice());
+				psModel.setSecurityStockNum(Long.valueOf(sku.getSecurityStockNum()));
+				psModel.setSellPrice(sku.getSellPrice());
+				psModel.setCostPrice(sku.getCostPrice());
+				psModel.setSkuKey(sku.getSkuKey());
+				psModel.setSkuPicurl(sku.getSkuPicUrl());
+				psModel.setSkuName(sku.getSkuName());
+				psModel.setStockNum(Long.valueOf(sku.getStockNum()));    
+//				pcSkuinfoDao.updateSelectiveByProductCode(psModel); 
+			}
+		} catch (Exception ex) {
+			String exstring = ExceptionHelper.allExceptionInformation(ex);
+			logger.error(exstring);
+			result.put("code", "0");  // 操作出现异常
+			result.put("exception", exstring); 
+			return result;
+		}
+		
+		
+		return result;
+	}
 	
+	
+	
+	/**
+	 * @description: 生成静态页面 通过商品|
+	 * 此方法拷贝自ProductServiceImpl.java -> genarateJmsStaticPageForProduct()
+	 * 原作者不详 
+	 *
+	 * @throws 
+	 * @author Yangcl
+	 * @date 2016年9月9日 上午11:41:08 
+	 * @version 1.0.0.1
+	 */
+	private void genarateJmsStaticPageForProduct(PcProductinfo product) {
+		ProductJmsSupport pjs = new ProductJmsSupport();
+		// 通知前端生成静态页面
+		String skuCodes = "";
+		if (product.getProductSkuInfoList() != null) {
+			int j = product.getProductSkuInfoList().size();
+			for (int i = 0; i < j; i++) {
+				if (i == (j - 1)) {
+					skuCodes += product.getProductSkuInfoList().get(i).getSkuCode();
+				} else {
+					skuCodes += product.getProductSkuInfoList().get(i).getSkuCode() + ",";
+				}
+			}
+			if (j > 0) {
+				String jsonData = "{\"type\":\"sku\",\"data\":\"" + skuCodes + "\"}";
+				pjs.OnChangeSku(jsonData);
+			}
+		}
+	}
 	
 	
 	

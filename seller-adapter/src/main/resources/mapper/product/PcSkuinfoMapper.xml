@@ -180,24 +180,22 @@
 			</if>
 		</trim>
 	</insert>
-	<select id="findSkuCodeByProductCode" parameterType="java.lang.String"
-		resultType="java.lang.String">
+	<select id="findSkuCodeByProductCode" parameterType="java.lang.String" resultType="java.lang.String">
 		SELECT
-		sku_code
+			sku_code
 		FROM
-		productcenter.pc_skuinfo
+			productcenter.pc_skuinfo
 		<where>
 			product_code = #{productCode,jdbcType=VARCHAR}
 		</where>
 	</select>
 
 	<!-- 可以扩展if中的查询条件 - Yangcl -->
-	<select id="findList" resultMap="BaseResultMap"
-		parameterType="com.hjy.entity.product.PcSkuinfo">
+	<select id="findList" resultMap="BaseResultMap" parameterType="com.hjy.entity.product.PcSkuinfo">
 		select
-		*
+			*
 		from
-		productcenter.pc_skuinfo
+			productcenter.pc_skuinfo
 		where 1=1
 		<if test="productCode != null ">
 			and product_code = #{productCode , jdbcType=VARCHAR}
@@ -357,4 +355,32 @@
 		</set>
 		where sku_code = #{skuCode,jdbcType=VARCHAR}
 	</update>
+	
+	<!-- 
+		根据product_code 找出该商品下所有的Sku信息，
+		以skuKey+"@"+skuValue 作为map的key，sku_code 作为value.
+		map中的key是区分一个product_code下的唯一依据  - Yangcl  
+	 --> 
+	<select id="getSkuinfoByPcode" parameterType="java.lang.String"  resultMap="BaseResultMap">  
+		select
+			concat(sku_key,'@',sku_keyvalue) as skuKey,
+			sku_code as skuCode
+		from
+			productcenter.pc_skuinfo 
+		where
+			product_code = #{productCode,jdbcType=VARCHAR}
+	</select>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

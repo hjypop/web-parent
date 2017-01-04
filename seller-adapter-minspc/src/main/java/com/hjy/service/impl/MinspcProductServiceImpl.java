@@ -309,10 +309,10 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			pcProductInfoDao.updateSelective(pinfo); 
 			
 			// 更新商品的扩展信息
-			PcProductinfoExt ppe = e.getPcProductinfoExt();
-			ppe.setProductCode(e.getProductCode()); 
-			ppe.setProductCodeOld(null); 
-			pcProductinfoExtDao.updateSelectiveByProductCode(ppe);
+//			PcProductinfoExt ppe = e.getPcProductinfoExt();
+//			ppe.setProductCode(e.getProductCode()); 
+//			ppe.setProductCodeOld(null); 
+//			pcProductinfoExtDao.updateSelectiveByProductCode(ppe);
 			
 			
 			if(e.getPicUpdate().equals("1")){
@@ -458,7 +458,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			ext.setProductCode(e.getProductCode());
 			ext.setPrchType("10");  // 一地入库类型
 			// TODO @@@@@@@@@@@@@@@@@@ 供应商编号
-			ext.setDlrId(getConfig("seller_adapter_minspc.seller_company_id"));
+			ext.setDlrId(getConfig("seller_adapter_minspc.small_seller_code"));
 			// TODO @@@@@@@@@@@@@@@@@@ 供应商名称
 			ext.setDlrNm(getConfig("seller_adapter_minspc.seller_company_name"));
 			ext.setValidateFlag("Y"); // 是否是虚拟商品  Y：是  N：否

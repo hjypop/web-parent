@@ -1,5 +1,10 @@
 package com.hjy.dao.product;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.MapKey;
+
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.product.PcSkuinfo;
 
@@ -28,6 +33,19 @@ public interface IPcSkuinfoDao extends BaseDao<PcSkuinfo, Integer> {
 	int updateSelectiveByProductCode(PcSkuinfo psModel); 
 	
 	int updateSelectiveBySkuCode(PcSkuinfo psModel); 
+	
+	/**
+	 * @description:  根据product_code 找出该商品下所有的Sku信息，
+	 * 以skuKey+"@"+skuValue 作为map的key，sku_code 作为value.
+	 * map中的key是区分一个product_code下的唯一依据  
+	 * 
+	 * @param productCode
+	 * @author Yangcl 
+	 * @date 2017年1月4日 下午2:31:10 
+	 * @version 1.0.0.1
+	 */
+	
+	public List<PcSkuinfo> getSkuinfoByPcode(String productCode);
 }
 
 
