@@ -457,9 +457,9 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			ext.setProductCodeOld(e.getProductCodeOld());
 			ext.setProductCode(e.getProductCode());
 			ext.setPrchType("10");  // 一地入库类型
-			// TODO @@@@@@@@@@@@@@@@@@ 供应商编号
+			// 供应商编号
 			ext.setDlrId(getConfig("seller_adapter_minspc.small_seller_code"));
-			// TODO @@@@@@@@@@@@@@@@@@ 供应商名称
+			// 供应商名称
 			ext.setDlrNm(getConfig("seller_adapter_minspc.seller_company_name"));
 			ext.setValidateFlag("Y"); // 是否是虚拟商品  Y：是  N：否
 			// 贸易类型 -> 惠家有：(0:直邮，1:自贸)  ||  民生品粹：0为保税贸易，1为海外直邮，2为一般贸易
