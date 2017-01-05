@@ -120,6 +120,16 @@ public interface IPcProductinfoDao extends BaseDao<PcProductinfo, Integer> {
 	 * @version 1.0.0.1
 	 */
 	public int updateNullByProductCode(List<String> list);
+	
+	/**
+	 * @description: 根据 product_code&small_seller_code 更新商品的税率 
+	 * 
+	 * @param entity
+	 * @author Yangcl 
+	 * @date 2017年1月5日 上午11:43:03 
+	 * @version 1.0.0.1
+	 */
+	public Integer updateProductTaxRate(PcProductinfo entity); 
 }
 
 

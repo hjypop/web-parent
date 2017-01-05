@@ -28,7 +28,6 @@ public class ReadExcel {
 
 	public static void main(String[] args) {
 		Map<String , List<String>> map = readExcel("D:\\2.xlsx");   
-		System.out.println(map.size()); 
 		
 	}
 	

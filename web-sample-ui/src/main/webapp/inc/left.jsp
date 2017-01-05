@@ -51,6 +51,9 @@
                         <li id="li-2">
                             <a href="${basePath}kjt/validate.do">跨境通临时问题维护</a>
                         </li>
+                        <li id="li-18">
+                            <a href="${basePath}adapter/validate.do">商户临时问题维护</a>
+                        </li>
                         <li id="li-3">
                             <a href="${basePath}seller/index.do">商户管理</a>
                         </li>

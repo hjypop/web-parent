@@ -677,6 +677,19 @@
 		</foreach>
 	</update>
 	
+	<!-- 更新商品税率|在SellerOperationServiceImpl中使用   - Yangcl -->
+	<update id="updateProductTaxRate" parameterType="com.hjy.entity.product.PcProductinfo">
+		update productcenter.pc_productinfo
+		<set> 
+			tax_rate = #{taxRate , jdbcType=DECIMAL},
+		</set>
+		where 
+				seller_code='SI2003'  
+			and 
+				product_code = #{productCode ,jdbcType=VARCHAR}
+			and 
+				small_seller_code = #{smallSellerCode , jdbcType=VARCHAR}
+	</update>
 
 </mapper>
 
