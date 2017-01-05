@@ -37,4 +37,33 @@ public interface IScStoreSkunumDao extends BaseDao<ScStoreSkunum, Integer> {
 	 * @return
 	 */
 	int updateSelectiveBySkuCode(ScStoreSkunum sssModel);
+	
+	/**
+	 * @description: 根据sku_code删除一条记录|这个方法用于open-api的ApiProductServiceImpl类
+	 * 
+	 * @param scode 
+	 * @author Yangcl 
+	 * @date 2017年1月5日 下午7:01:15 
+	 * @version 1.0.0.1
+	 */
+	public Integer deleteSkuStore(String scode);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

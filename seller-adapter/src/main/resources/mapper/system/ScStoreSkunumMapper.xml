@@ -159,4 +159,32 @@
 			sku_code = #{skuCode,jdbcType=VARCHAR}
 		</where>
 	</update>
+	
+	<!-- 根据sku_code删除一条记录|这个方法用于open-api的ApiProductServiceImpl类 - Yangcl -->
+	<delete id="deleteSkuStore" parameterType="java.lang.String" resultType="java.lang.Integer"> 
+		delete from 
+			systemcenter.sc_store_skunum
+		where 
+			sku_code = #{scode , jdbcType=VARCHAR}  
+	</delete>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -71,18 +71,27 @@ import com.hjy.helper.ExceptionHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.jms.ProductJmsSupport;
 import com.hjy.model.ProductSkuInfo;
+import com.hjy.redis.core.RedisLaunch;
+import com.hjy.redis.srnpr.ERedisSchema;
 import com.hjy.request.RequestProduct;
 import com.hjy.request.RequestProducts;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.product.IApiProductService;
 import com.hjy.system.cmodel.CacheWcSellerInfo;
-
+ 
 /**
+ * @description: openapi商品业务处理接口实现类
  * 
- * 类: ApiProductServiceImpl <br>
- * 描述: openapi商品业务处理接口实现类 <br>
- * 作者: zhy<br>
- * 时间: 2016年8月4日 上午9:20:07
+ * 	TODO requestConvertion()  方法的如下两个地方还没有完成，等待上一层的修改
+ * 						    ext.setSettlementType(seller.getSettlement());	// 服务费结算方式    TODO 此处需要从缓存中取得信息 但此功能尚未实现 
+ * 							ext.setPurchaseType(seller.getPurchase());     //  TODO 此处需要从缓存中取得信息 但此功能尚未实现
+ * 
+ * 	TODO 准备删除 LcOpenApiProductError相关的实体、配置文件、dao、Service 以及 数据库中的表
+ * 				 新加入了商品的日志表：lc_open_api_seller_product_operations，该表专门记录所有惠家有商户同步商品的信息
+ * 
+ * @author Yangcl
+ * @date 2017年1月5日 下午7:15:38 
+ * @version 1.0.0
  */
 @Service
 public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Integer> implements IApiProductService {
@@ -169,60 +178,60 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		String sellerCode = seller.getSellerCode();
 		JSONObject result = new JSONObject();  
 		result.put("code", 1);  // 默认成功，为1
-		String productHead = this.getConfig("seller_adapter.product_" + seller.getSellerType()); ;
+		JSONArray ra = new JSONArray();   // 这里存放具体的操作结果，商品同步成功和失败的信息 
+		String productHead = this.getConfig("seller_adapter.product_" + seller.getSellerType()); 
 		String skuHead = this.getConfig("seller_adapter.sku_" + seller.getSellerType()); ;
 		if(StringUtils.isNotBlank(products)){
-			String lock = "";
-			try {
-				lock = WebHelper.getInstance().addLock(180 , sellerCode + "@Product.SyncSellerProductList");  // 三分钟内不得访问 
-				if(StringUtils.isNotBlank(lock)){
-					List<ApiSellerProduct> plist =  null; 
-					try {
-						plist =  JSONArray.parseArray(products , ApiSellerProduct.class);
-						if(plist != null && plist.size() > 0){
-							if(plist.size() > 100){
-								result.put("code", 3);
-								result.put("desc", this.getInfo(100009004 , 100));  // 请求数据量过大，超过限制{0}条
-								return result; 
-							}
-							List<ApiSellerProduct> rlist = new ArrayList<ApiSellerProduct>();  // 存放正确的数据  
-							List<ApiSellerProduct> uplist = new ArrayList<ApiSellerProduct>(); 
-							List<String> errors = new ArrayList<String>();      // 作为结果返回给商户           
-							for(ApiSellerProduct p : plist){
-								JSONObject vali = this.entityValidate(p , skuHead);  // 验证数据合法性
-								if( !vali.getBoolean("flag") ){
-									errors.add(p.getSellerProductCode() + "@" + vali.getString("desc"));
-									continue;
-								}
-								rlist.add(p);  
-							}
-							// TODO 删掉缓存中的商品信息 
-							List<PcProductinfo> targetList = this.requestConvertion(rlist, seller, productHead, skuHead); 
-							for(PcProductinfo e : targetList){
-								if(!e.getIsUpdate()){  // 准备添加一条记录 
-									
-								}else{
-									
-								}
-							}
-							
+			String lock  = WebHelper.getInstance().addLock(180 , sellerCode + "@Product.SyncSellerProductList");  // 三分钟内不得访问 
+			if(StringUtils.isNotBlank(lock)){
+				List<ApiSellerProduct> plist =  null; 
+				try {
+					plist =  JSONArray.parseArray(products , ApiSellerProduct.class);
+					if(plist != null && plist.size() > 0){
+						if(plist.size() > 100){
+							result.put("code", 3);
+							result.put("desc", this.getInfo(100009004 , 100));  // 请求数据量过大，超过限制{0}条
+							return result; 
 						}
-					} catch (Exception e) {
-						result.put("code", 3);
-						result.put("desc", this.getInfo(100009003));  // 请求参数错误，请求数据解析异常
-						return result; 
+						List<ApiSellerProduct> rlist = new ArrayList<ApiSellerProduct>();  // 存放正确的数据  
+						List<String> errors = new ArrayList<String>();      // 作为结果返回给商户           
+						for(ApiSellerProduct p : plist){
+							JSONObject vali = this.entityValidate(p , skuHead);  // 验证数据合法性
+							if( !vali.getBoolean("flag") ){
+								errors.add(p.getSellerProductCode() + "@" + vali.getString("desc"));
+								continue;
+							}
+							rlist.add(p);  
+						}
+						
+						List<PcProductinfo> targetList = this.requestConvertion(rlist, seller, productHead, skuHead); 
+						for(PcProductinfo e : targetList){
+							if(!e.getIsUpdate()){  // 准备添加一条记录 
+								ra.add(this.insertSellerProduct(e)); 
+							}else{	   
+								ra.add(this.updateSellerProduct(e)); 
+								// 删掉缓存中的商品信息 
+								this.redisDeleteProductInfo(e.getProductCode()); 
+							}
+						}
 					}
-				}else{
-					result.put("code", 0);
-					result.put("desc", this.getInfo(100009002));  // 分布式锁生效中
+				} catch (Exception e) {
+					result.put("code", 3);
+					result.put("desc", this.getInfo(100009003));  // 请求参数错误，请求数据解析异常
+//					return result; 
+				}finally{
+					WebHelper.getInstance().unLock(lock);
 				}
-			} catch (Exception e) {
-				e.printStackTrace(); 
-			}
+			}else{
+				result.put("code", 0);
+				result.put("desc", this.getInfo(100009002));  // 分布式锁生效中
+			} 
 		}else{
 			result.put("code", -1);
 			result.put("desc", this.getInfo(100009001));  // 请求数据报文data为空
 		}
+		
+		
 		return result;
 	}
 	
@@ -498,7 +507,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				ProductSkuInfo i = new ProductSkuInfo();
 				// sku规格属性信息 参看：PlusSupportProduct.propertyListSku() 这个方法 
 				i.setSkuKey("color_id=" + k + "&style_id=" + k);  
-				i.setSkuValue("颜色属性=" + s.getColor() + "&规格属性=" + s.getSpecification()); 
+				i.setSkuValue("颜色属性=" + StringUtils.trimToEmpty(s.getColor()) + "&规格属性=" + StringUtils.trimToEmpty(s.getSpecification()) );  
 				
 				if(!e.getIsUpdate()){  // 如果是添加商品 则直接为sku生成一个code
 					i.setSkuCode(WebHelper.getInstance().genUniqueCode(shead)); 
@@ -507,7 +516,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 					 * 		1. 更新已经存在的sku信息
 					 * 		2. 在原有sku信息的基础上增加一条sku信息 
 					 */
-					if(skmap.containsKey(i.getSkuKey() + "@" + i.getSkuKeyvalue())){  // 以sku的规格属性确定该商品是否包含这条sku，不包含则生成一个Sku
+					if(skmap.containsKey(i.getSkuKey() + "@" + i.getSkuKeyvalue())){  // 以sku的规格属性确定该商品是否包含这条sku，不包含则生成一个sku_code
 						i.setSkuCode( skmap.get(i.getSkuKey() + "@" + i.getSkuKeyvalue()) );  
 					}else{
 						i.setSkuCode(WebHelper.getInstance().genUniqueCode(shead)); 
@@ -551,7 +560,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			ext.setDlrNm(seller.getSellerName());  // 供应商名称
 			ext.setValidateFlag("Y"); // 是否是虚拟商品  Y：是  N：否 
 			ext.setPoffer("open-api-platform");
-			ext.setSettlementType(seller.getSettlement());	// 服务费结算方式    TODO 此处需要从缓存中取得信息 但此功能尚未实现
+			ext.setSettlementType(seller.getSettlement());	// 服务费结算方式    TODO 此处需要从缓存中取得信息 但此功能尚未实现!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			ext.setPurchaseType(seller.getPurchase());     //  TODO 此处需要从缓存中取得信息 但此功能尚未实现
 			e.setPcProductinfoExt(ext);
 			
@@ -748,7 +757,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		return result; 
 	}
 	
-	/**                                  TODO 此处尚有问题！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+	/**                                    
 	 * @description: 更新商户信息到数据库，同时下架已经上架的商品，并且删除Redis中的缓存 
 	 *  
 	 * @author Yangcl 
@@ -794,19 +803,49 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 				pcProductpicDao.insertSelective(pic);
 			}
 			
-			// 更新商品sku信息|可能会是添加一个Sku信息，也可能是更新一个Sku信息
+			// 更新商品sku信息|根据product_code删除其下所有的sku信息，然后重新添加
 			List<ProductSkuInfo> skuList = e.getProductSkuInfoList();
 			for (ProductSkuInfo sku : skuList) {
-				PcSkuinfo psModel = new PcSkuinfo();
-				psModel.setMarketPrice(sku.getMarketPrice());
-				psModel.setSecurityStockNum(Long.valueOf(sku.getSecurityStockNum()));
-				psModel.setSellPrice(sku.getSellPrice());
-				psModel.setCostPrice(sku.getCostPrice());
-				psModel.setSkuKey(sku.getSkuKey());
-				psModel.setSkuPicurl(sku.getSkuPicUrl());
-				psModel.setSkuName(sku.getSkuName());
-				psModel.setStockNum(Long.valueOf(sku.getStockNum()));    
-//				pcSkuinfoDao.updateSelectiveByProductCode(psModel); 
+				// 删除这条sku信息
+				Map<String , String > pmap = new HashMap<String , String>();
+				pmap.put("scode", sku.getSkuCode());    
+				pmap.put("skey", sku.getSkuKey());   
+				pmap.put("svalue", sku.getSkuValue());  
+				pcSkuinfoDao.deleteSkuinfo(pmap);  
+				// 插入 
+				PcSkuinfo si = new PcSkuinfo();
+				si.setUid(UUID.randomUUID().toString().replace("-", ""));  
+				si.setMarketPrice(sku.getMarketPrice());
+				si.setProductCode(e.getProductCode());
+				si.setProductCodeOld(e.getProductCodeOld());
+				si.setQrcodeLink(sku.getQrcodeLink());
+				si.setSecurityStockNum(Long.valueOf(sku.getSecurityStockNum()));
+				si.setSellerCode(e.getSellerCode());
+				si.setSellPrice(sku.getSellPrice());
+				si.setSellProductcode(e.getProductCode());   // 历史遗留问题，无从追溯。数据库表就这么定义的。 - Yangcl  
+				si.setSkuCode(sku.getSkuCode());
+//				si.setSkuCodeOld(sku.getSkuCodeOld());
+				si.setSkuKey(sku.getSkuKey());
+				si.setSkuKeyvalue(sku.getSkuValue());
+				si.setSkuPicurl(sku.getSkuPicUrl());
+				si.setSkuName(sku.getSkuName());
+				si.setSkuAdv(sku.getSkuAdv()); 
+				si.setStockNum(Long.valueOf(sku.getStockNum()));    
+				si.setSaleYn(sku.getSaleYn());
+				si.setCostPrice(sku.getCostPrice());
+				si.setMiniOrder(sku.getMiniOrder());
+				pcSkuinfoDao.insertSelective(si);
+
+				// 先删除sku库存，再添加商品sku库存
+				scStoreSkunumDao.deleteSkuStore(sku.getSkuCode());   
+				// 插入 
+				ScStoreSkunum sssModel = new ScStoreSkunum();
+				sssModel.setUid(UUID.randomUUID().toString().replace("-", ""));
+				sssModel.setSkuCode(sku.getSkuCode());
+				sssModel.setStockNum(Long.valueOf(sku.getStockNum()));
+				sssModel.setStoreCode("TDS1");   // TDS1即第三方仓库，麦乐购使用此库存编号，此处也使用
+				sssModel.setBatchCode("");
+				scStoreSkunumDao.insertSelective(sssModel);
 			}
 		} catch (Exception ex) {
 			String exstring = ExceptionHelper.allExceptionInformation(ex);
@@ -816,11 +855,8 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 			return result;
 		}
 		
-		
 		return result;
 	}
-	
-	
 	
 	/**
 	 * @description: 生成静态页面 通过商品|
@@ -852,7 +888,31 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		}
 	}
 	
-	
+	/**
+	 * @descriptions 刷新Redis 
+	 * 
+	 * @param productCode_ 
+	 * @date 2016年8月16日下午1:37:21
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	private boolean redisDeleteProductInfo(String productCode_){
+		// 循环删除所有商品下关联的子活动
+		for(String key : RedisLaunch.setFactory(ERedisSchema.ProductIcChildren).hgetAll(productCode_).keySet()){
+			RedisLaunch.setFactory(ERedisSchema.IcSku).del(key);
+		}
+		// 删除所有Sku相关信息
+		List<PcSkuinfo> skuList = pcSkuinfoDao.findList(new PcSkuinfo(productCode_)); 
+		for(PcSkuinfo i : skuList){
+			RedisLaunch.setFactory(ERedisSchema.IcSku).del(i.getSkuCode()); 
+			RedisLaunch.setFactory(ERedisSchema.Stock).del(i.getSkuCode());
+			RedisLaunch.setFactory(ERedisSchema.SkuStoreStock).del(i.getSkuCode());
+		}
+		RedisLaunch.setFactory(ERedisSchema.Product).del(productCode_);
+		RedisLaunch.setFactory(ERedisSchema.ProductSku).del(productCode_);
+		RedisLaunch.setFactory(ERedisSchema.ProductSales).del(productCode_);		//刷新销量缓存
+		return true;
+	}
 	
 	
 	

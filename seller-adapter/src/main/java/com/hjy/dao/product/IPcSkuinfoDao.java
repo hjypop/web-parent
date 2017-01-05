@@ -46,6 +46,15 @@ public interface IPcSkuinfoDao extends BaseDao<PcSkuinfo, Integer> {
 	 */
 	
 	public List<PcSkuinfo> getSkuinfoByPcode(String productCode);
+	
+	/**
+	 * @description: 根据这三个条件：sku_code、sku_key、sku_keyvalue 删除一条记录|这个方法用于open-api的ApiProductServiceImpl类
+	 * 	 	 	 	 	 	 	 	 	 	 
+	 * @author Yangcl 
+	 * @date 2017年1月5日 下午6:14:12 
+	 * @version 1.0.0.1
+	 */
+	public Integer deleteSkuinfo(Map<String , String> map);
 }
 
 
