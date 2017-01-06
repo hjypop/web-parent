@@ -35,6 +35,7 @@ import com.hjy.dao.IApiSkuInfoDao;
 import com.hjy.dao.ILcOpenApiProductErrorDao;
 import com.hjy.dao.ILcOpenApiQueryLogDao;
 import com.hjy.dao.log.ILcStockchangeDao;
+import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.dao.product.IPcBrandinfoDao;
 import com.hjy.dao.product.IPcProductcategoryRelDao;
 import com.hjy.dao.product.IPcProductdescriptionDao;
@@ -73,6 +74,8 @@ import com.hjy.jms.ProductJmsSupport;
 import com.hjy.model.ProductSkuInfo;
 import com.hjy.redis.core.RedisLaunch;
 import com.hjy.redis.srnpr.ERedisSchema;
+import com.hjy.request.data.OrderInfoRequestDto;
+import com.hjy.response.OrderInfoResponse;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.system.cmodel.CacheWcSellerInfo;
 import com.hjy.service.IOpenApiSellerService;
@@ -121,6 +124,8 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	private IScStoreSkunumDao scStoreSkunumDao;
 	@Resource
 	private ILcStockchangeDao lcStockchangeDao;
+	@Resource
+	private IOcOrderinfoDao orderInfoDao;
 	
 	
 	
@@ -143,7 +148,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 		String productHead = this.getConfig("seller_adapter.product_" + seller.getSellerType()); 
 		String skuHead = this.getConfig("seller_adapter.sku_" + seller.getSellerType()); ;
 		if(StringUtils.isNotBlank(products)){
-			String lock  = WebHelper.getInstance().addLock(180 , sellerCode + "@Product.SyncSellerProductList");  // 三分钟内不得访问 
+			String lock  = WebHelper.getInstance().addLock(180 , sellerCode + "@OpenApiSellerServiceImpl.syncSellerProductList");  // 三分钟内不得访问 
 			if(StringUtils.isNotBlank(lock)){
 				List<ApiSellerProduct> plist =  null; 
 				try {
@@ -164,7 +169,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 							}
 							rlist.add(p);  
 						}
-						
+						result.put("errors", errors); 
 						List<PcProductinfo> targetList = this.requestConvertion(rlist, seller, productHead, skuHead); 
 						for(PcProductinfo e : targetList){
 							if(!e.getIsUpdate()){  // 准备添加一条记录 
@@ -192,7 +197,8 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 			result.put("desc", this.getInfo(100009001));  // 请求数据报文data为空
 		}
 		
-		
+		String responseTime = DateHelper.formatDate(new Date());
+		result.put("responseTime", responseTime);
 		return result;
 	}
 	
@@ -877,12 +883,102 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	
 	
 	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/**
+	 * @description: 依据开始时间和结束时间来查询一批订单，惠家有返回订单列表。
+	 * 
+	 * @接口所属：惠家有商户接口|Product.SyncSellerProductList
+	 * 
+	 * @param request
+	 * @param seller 
+	 * @author Yangcl 
+	 * @date 2017年1月6日 上午10:14:35 
+	 * @version 1.0.0.1
+	 */
+	public JSONObject syncSellerOrderList(String request, CacheWcSellerInfo seller){
+		String sellerCode = seller.getSellerCode();
+		JSONObject result = new JSONObject();  
+		result.put("code", 1);  // 默认成功，为1
+		if(StringUtils.isNotBlank(request)){
+			String lock = WebHelper.getInstance().addLock(600 , sellerCode + "@OpenApiSellerServiceImpl.syncSellerOrderList");  // 10分钟内不得访问 
+			if(StringUtils.isNotBlank(lock)){
+				String startTime = "";
+				String endTime = "";
+				try {
+					JSONObject r = JSONObject.parseObject(request);
+					if(StringUtils.isAnyBlank(r.getString("startTime") , r.getString("endTime"))){
+						startTime = this.getCustomDate(new Date() , -1);  // startTime和endTime不传，则默认为昨天0点到今天0点。
+						endTime = this.getCustomDate(new Date() , 0);  
+					}else{
+						startTime = r.getString("startTime") ;  
+						endTime = r.getString("endTime");  
+						if(!this.compareDate(startTime, endTime)){
+							result.put("code", 3);
+							result.put("desc", this.getInfo(100009023));
+							return result; 
+						}
+					}
+					List<OrderInfoResponse> list = orderInfoDao.getOpenApiOrderinfoList(new OrderInfoRequestDto(sellerCode, null ,  startTime, endTime));
+					
+					 
+				} catch (Exception e) {
+					result.put("code", 3);
+					result.put("desc", this.getInfo(100009003));  // 请求参数错误，请求数据解析异常
+					return result; 
+				}finally {
+					WebHelper.getInstance().unLock(lock); 
+				}
+				
+			}else{
+				result.put("code", 0);
+				result.put("desc", this.getInfo(100009002));  // 分布式锁生效中
+			} 
+		}else{
+			result.put("code", -1);
+			result.put("desc", this.getInfo(100009001));  // 请求数据报文data为空
+		}
+		return result;
+	}
+	
+ 
+	private String getCustomDate(Date date , Integer flag){
+		 Calendar calendar = new GregorianCalendar();
+		 calendar.setTime(date);
+		 calendar.add(calendar.DATE , flag);//把日期往后增加一天|正数往后推,负数往前移动
+		 date=calendar.getTime(); //这个时间就是日期往后推一天的结果 
+		 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+		 
+		 return formatter.format(date);
+	}
+	
+	/**
+	 * @descriptions 比较两个时间的大小 如果两个时间相等则返回false
+	 * 
+	 * @tips 如果两个时间相等则a.compareTo(b) = 0
+	 * 
+	 * @param a not null
+	 * @param b not null 
+	 * @return boolean 
+	 * 
+	 * @refactor 
+	 * @author Yangcl
+	 * @date 2016-5-5-下午2:52:13
+	 * @version 1.0.0.1
+	 */
+	private boolean compareDate(String a , String b){
+		if(StringUtils.isAnyBlank(a , b)){
+			return false;
+		}
+		return a.compareTo(b) < 0;
+	}
 	
 	
 	
 	
 	
 	
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public JSONObject syncDemooooooooooooooo(String products, CacheWcSellerInfo seller){
 		String sellerCode = seller.getSellerCode();
