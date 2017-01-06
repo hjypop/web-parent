@@ -21,6 +21,7 @@ import com.hjy.dao.ILockDao;
 import com.hjy.dao.order.IOcOrderdetailDao;
 import com.hjy.dao.product.IPcProductinfoDao;
 import com.hjy.dao.product.IPcSkuinfoDao;
+import com.hjy.dao.system.IScEventItemProductDao;
 import com.hjy.dao.system.IScFlowBussinessHistoryDao;
 import com.hjy.dto.KjtProductInfo;
 import com.hjy.dto.ProductStatusDto;
@@ -28,6 +29,7 @@ import com.hjy.dto.QueryKjtLog;
 import com.hjy.entity.LcRsyncKjtLog;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.product.PcSkuinfo;
+import com.hjy.entity.system.ScEventItemProduct;
 import com.hjy.entity.system.ScFlowBussinessHistory;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelper;
@@ -63,6 +65,9 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 	
 	@Resource
 	private ILockDao sysLockDao;
+	
+	@Resource  
+	private IScEventItemProductDao scEventItemProductDao;
 	
 	
 	public JSONObject funcOne(String json, HttpSession session) {
@@ -287,6 +292,8 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 	/**
 	 * @description: 上下架部分跨境通商品|也可以是全部商品的上下架
 	 * 
+	 * 			如果有商品编号，则不区分商户是谁，是跨境通也可以是其他商户    
+	 * 
 	 * @param json 
 	 * @param productStatus 4497153900060002(已上架)|4497153900060004(平台强制下架) 
 	 * @param reason 上下架原因描述 + 邮件发送人
@@ -395,8 +402,19 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 			RedisLaunch.setFactory(ERedisSchema.Stock).del(i.getSkuCode());
 			RedisLaunch.setFactory(ERedisSchema.SkuStoreStock).del(i.getSkuCode());
 		}
-		// TODO 删除促销的Sku信息 
-		
+		//  删除促销的Sku信息 
+//		for (MDataMap mDataMap : DbUp.upTable("sc_event_item_product").queryAll(
+//				"item_code", "", "", new MDataMap("product_code", sProductCode))) {
+//			String itemCode = mDataMap.get("item_code");
+//			XmasKv.upFactory(EKvSchema.IcSku).del(itemCode);
+//			
+//		}
+		List<ScEventItemProduct> itemList =   scEventItemProductDao.findEntityListByProduct(productCode_);
+		if(itemList != null && itemList.size() > 0){
+			for(ScEventItemProduct item : itemList){
+				RedisLaunch.setFactory(ERedisSchema.IcSku).del(item.getItemCode());   
+			}
+		}
 		
 		RedisLaunch.setFactory(ERedisSchema.Product).del(productCode_);
 		RedisLaunch.setFactory(ERedisSchema.ProductSku).del(productCode_);

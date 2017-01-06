@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.system.IScEventItemProductDao" >
+  <resultMap id="BaseResultMap" type="com.hjy.entity.system.ScEventItemProduct" >
+    <id column="zid" property="zid" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="CHAR" />
+    <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+    <result column="event_code" property="eventCode" jdbcType="VARCHAR" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    <result column="sku_code" property="skuCode" jdbcType="VARCHAR" />
+    <result column="sku_name" property="skuName" jdbcType="VARCHAR" />
+    <result column="store_num" property="storeNum" jdbcType="INTEGER" />
+    <result column="sales_num" property="salesNum" jdbcType="INTEGER" />
+    <result column="selling_price" property="sellingPrice" jdbcType="DECIMAL" />
+    <result column="favorable_price" property="favorablePrice" jdbcType="DECIMAL" />
+    <result column="member_purchase_num" property="memberPurchaseNum" jdbcType="INTEGER" />
+    <result column="persion_purchase_num" property="persionPurchaseNum" jdbcType="INTEGER" />
+    <result column="purchase_num" property="purchaseNum" jdbcType="INTEGER" />
+    <result column="seat" property="seat" jdbcType="INTEGER" />
+    <result column="stock_count" property="stockCount" jdbcType="CHAR" />
+    <result column="sales_count_model" property="salesCountModel" jdbcType="CHAR" />
+    <result column="sales_advertisement" property="salesAdvertisement" jdbcType="VARCHAR" />
+    <result column="cover_img" property="coverImg" jdbcType="VARCHAR" />
+    <result column="standard" property="standard" jdbcType="VARCHAR" />
+    <result column="price_value" property="priceValue" jdbcType="VARCHAR" />
+    <result column="price_orientation" property="priceOrientation" jdbcType="CHAR" />
+    <result column="sort_type" property="sortType" jdbcType="VARCHAR" />
+    <result column="price_is" property="priceIs" jdbcType="CHAR" />
+    <result column="starting_price" property="startingPrice" jdbcType="DECIMAL" />
+    <result column="base_price" property="basePrice" jdbcType="DECIMAL" />
+    <result column="time_interval" property="timeInterval" jdbcType="CHAR" />
+    <result column="price_up_de" property="priceUpDe" jdbcType="DECIMAL" />
+    <result column="true_base_price" property="trueBasePrice" jdbcType="DECIMAL" />
+    <result column="flag_enable" property="flagEnable" jdbcType="INTEGER" />
+    <result column="mainpic_url" property="mainpicUrl" jdbcType="VARCHAR" />
+  </resultMap>
+   
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    	*
+    from 
+    	systemcenter.sc_event_item_product
+    where 
+    	zid = #{zid,jdbcType=INTEGER}  
+  </select>
+  
+  
+  <select id="findEntityListByProduct" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    	*
+    from 
+    	systemcenter.sc_event_item_product
+    where 
+    	product_code = #{productCode , jdbcType=VARCHAR}    
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from systemcenter.sc_event_item_product where zid = #{zid,jdbcType=INTEGER}
+  </delete>
+   
+  
+  <insert id="insertSelective" parameterType="com.hjy.entity.system.ScEventItemProduct" >
+    insert into systemcenter.sc_event_item_product
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="zid != null" >
+        zid,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="itemCode != null" >
+        item_code,
+      </if>
+      <if test="eventCode != null" >
+        event_code,
+      </if>
+      <if test="productCode != null" >
+        product_code,
+      </if>
+      <if test="skuCode != null" >
+        sku_code,
+      </if>
+      <if test="skuName != null" >
+        sku_name,
+      </if>
+      <if test="storeNum != null" >
+        store_num,
+      </if>
+      <if test="salesNum != null" >
+        sales_num,
+      </if>
+      <if test="sellingPrice != null" >
+        selling_price,
+      </if>
+      <if test="favorablePrice != null" >
+        favorable_price,
+      </if>
+      <if test="memberPurchaseNum != null" >
+        member_purchase_num,
+      </if>
+      <if test="persionPurchaseNum != null" >
+        persion_purchase_num,
+      </if>
+      <if test="purchaseNum != null" >
+        purchase_num,
+      </if>
+      <if test="seat != null" >
+        seat,
+      </if>
+      <if test="stockCount != null" >
+        stock_count,
+      </if>
+      <if test="salesCountModel != null" >
+        sales_count_model,
+      </if>
+      <if test="salesAdvertisement != null" >
+        sales_advertisement,
+      </if>
+      <if test="coverImg != null" >
+        cover_img,
+      </if>
+      <if test="standard != null" >
+        standard,
+      </if>
+      <if test="priceValue != null" >
+        price_value,
+      </if>
+      <if test="priceOrientation != null" >
+        price_orientation,
+      </if>
+      <if test="sortType != null" >
+        sort_type,
+      </if>
+      <if test="priceIs != null" >
+        price_is,
+      </if>
+      <if test="startingPrice != null" >
+        starting_price,
+      </if>
+      <if test="basePrice != null" >
+        base_price,
+      </if>
+      <if test="timeInterval != null" >
+        time_interval,
+      </if>
+      <if test="priceUpDe != null" >
+        price_up_de,
+      </if>
+      <if test="trueBasePrice != null" >
+        true_base_price,
+      </if>
+      <if test="flagEnable != null" >
+        flag_enable,
+      </if>
+      <if test="mainpicUrl != null" >
+        mainpic_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="zid != null" >
+        #{zid,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=CHAR},
+      </if>
+      <if test="itemCode != null" >
+        #{itemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="eventCode != null" >
+        #{eventCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="skuCode != null" >
+        #{skuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="skuName != null" >
+        #{skuName,jdbcType=VARCHAR},
+      </if>
+      <if test="storeNum != null" >
+        #{storeNum,jdbcType=INTEGER},
+      </if>
+      <if test="salesNum != null" >
+        #{salesNum,jdbcType=INTEGER},
+      </if>
+      <if test="sellingPrice != null" >
+        #{sellingPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="favorablePrice != null" >
+        #{favorablePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="memberPurchaseNum != null" >
+        #{memberPurchaseNum,jdbcType=INTEGER},
+      </if>
+      <if test="persionPurchaseNum != null" >
+        #{persionPurchaseNum,jdbcType=INTEGER},
+      </if>
+      <if test="purchaseNum != null" >
+        #{purchaseNum,jdbcType=INTEGER},
+      </if>
+      <if test="seat != null" >
+        #{seat,jdbcType=INTEGER},
+      </if>
+      <if test="stockCount != null" >
+        #{stockCount,jdbcType=CHAR},
+      </if>
+      <if test="salesCountModel != null" >
+        #{salesCountModel,jdbcType=CHAR},
+      </if>
+      <if test="salesAdvertisement != null" >
+        #{salesAdvertisement,jdbcType=VARCHAR},
+      </if>
+      <if test="coverImg != null" >
+        #{coverImg,jdbcType=VARCHAR},
+      </if>
+      <if test="standard != null" >
+        #{standard,jdbcType=VARCHAR},
+      </if>
+      <if test="priceValue != null" >
+        #{priceValue,jdbcType=VARCHAR},
+      </if>
+      <if test="priceOrientation != null" >
+        #{priceOrientation,jdbcType=CHAR},
+      </if>
+      <if test="sortType != null" >
+        #{sortType,jdbcType=VARCHAR},
+      </if>
+      <if test="priceIs != null" >
+        #{priceIs,jdbcType=CHAR},
+      </if>
+      <if test="startingPrice != null" >
+        #{startingPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="basePrice != null" >
+        #{basePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="timeInterval != null" >
+        #{timeInterval,jdbcType=CHAR},
+      </if>
+      <if test="priceUpDe != null" >
+        #{priceUpDe,jdbcType=DECIMAL},
+      </if>
+      <if test="trueBasePrice != null" >
+        #{trueBasePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="flagEnable != null" >
+        #{flagEnable,jdbcType=INTEGER},
+      </if>
+      <if test="mainpicUrl != null" >
+        #{mainpicUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateSelective" parameterType="com.hjy.entity.system.ScEventItemProduct" >
+    update systemcenter.sc_event_item_product
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=CHAR},
+      </if>
+      <if test="itemCode != null" >
+        item_code = #{itemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="eventCode != null" >
+        event_code = #{eventCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        product_code = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="skuCode != null" >
+        sku_code = #{skuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="skuName != null" >
+        sku_name = #{skuName,jdbcType=VARCHAR},
+      </if>
+      <if test="storeNum != null" >
+        store_num = #{storeNum,jdbcType=INTEGER},
+      </if>
+      <if test="salesNum != null" >
+        sales_num = #{salesNum,jdbcType=INTEGER},
+      </if>
+      <if test="sellingPrice != null" >
+        selling_price = #{sellingPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="favorablePrice != null" >
+        favorable_price = #{favorablePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="memberPurchaseNum != null" >
+        member_purchase_num = #{memberPurchaseNum,jdbcType=INTEGER},
+      </if>
+      <if test="persionPurchaseNum != null" >
+        persion_purchase_num = #{persionPurchaseNum,jdbcType=INTEGER},
+      </if>
+      <if test="purchaseNum != null" >
+        purchase_num = #{purchaseNum,jdbcType=INTEGER},
+      </if>
+      <if test="seat != null" >
+        seat = #{seat,jdbcType=INTEGER},
+      </if>
+      <if test="stockCount != null" >
+        stock_count = #{stockCount,jdbcType=CHAR},
+      </if>
+      <if test="salesCountModel != null" >
+        sales_count_model = #{salesCountModel,jdbcType=CHAR},
+      </if>
+      <if test="salesAdvertisement != null" >
+        sales_advertisement = #{salesAdvertisement,jdbcType=VARCHAR},
+      </if>
+      <if test="coverImg != null" >
+        cover_img = #{coverImg,jdbcType=VARCHAR},
+      </if>
+      <if test="standard != null" >
+        standard = #{standard,jdbcType=VARCHAR},
+      </if>
+      <if test="priceValue != null" >
+        price_value = #{priceValue,jdbcType=VARCHAR},
+      </if>
+      <if test="priceOrientation != null" >
+        price_orientation = #{priceOrientation,jdbcType=CHAR},
+      </if>
+      <if test="sortType != null" >
+        sort_type = #{sortType,jdbcType=VARCHAR},
+      </if>
+      <if test="priceIs != null" >
+        price_is = #{priceIs,jdbcType=CHAR},
+      </if>
+      <if test="startingPrice != null" >
+        starting_price = #{startingPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="basePrice != null" >
+        base_price = #{basePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="timeInterval != null" >
+        time_interval = #{timeInterval,jdbcType=CHAR},
+      </if>
+      <if test="priceUpDe != null" >
+        price_up_de = #{priceUpDe,jdbcType=DECIMAL},
+      </if>
+      <if test="trueBasePrice != null" >
+        true_base_price = #{trueBasePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="flagEnable != null" >
+        flag_enable = #{flagEnable,jdbcType=INTEGER},
+      </if>
+      <if test="mainpicUrl != null" >
+        mainpic_url = #{mainpicUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where zid = #{zid,jdbcType=INTEGER}
+  </update>
+</mapper>
