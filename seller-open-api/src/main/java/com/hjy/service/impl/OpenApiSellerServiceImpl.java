@@ -170,16 +170,22 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 							rlist.add(p);  
 						}
 						result.put("errors", errors); 
+						Map<String , List<String>> successMap = new HashMap<String , List<String>>();
 						List<PcProductinfo> targetList = this.requestConvertion(rlist, seller, productHead, skuHead); 
 						for(PcProductinfo e : targetList){
 							if(!e.getIsUpdate()){  // 准备添加一条记录 
-								ra.add(this.insertSellerProduct(e)); 
+								JSONObject add = this.insertSellerProduct(e);
+								successMap.put(e.getProductCodeOld().split("-")[1], this.skuCodeList(add));  
+								ra.add(add); 
 							}else{	   
-								ra.add(this.updateSellerProduct(e)); 
+								JSONObject update = this.updateSellerProduct(e);
+								successMap.put(e.getProductCodeOld().split("-")[1], this.skuCodeList(update));  
+								ra.add(update);                          
 								// 删掉缓存中的商品信息 
 								this.redisDeleteProductInfo(e.getProductCode()); 
 							}
 						}
+						result.put("success", successMap);
 					}
 				} catch (Exception e) {
 					result.put("code", 3);
@@ -871,7 +877,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 		// 删除所有Sku相关信息
 		List<PcSkuinfo> skuList = pcSkuinfoDao.findList(new PcSkuinfo(productCode_)); 
 		for(PcSkuinfo i : skuList){
-			RedisLaunch.setFactory(ERedisSchema.IcSku).del(i.getSkuCode()); 
+			RedisLaunch.setFactory(ERedisSchema.Sku).del(i.getSkuCode()); 
 			RedisLaunch.setFactory(ERedisSchema.Stock).del(i.getSkuCode());
 			RedisLaunch.setFactory(ERedisSchema.SkuStoreStock).del(i.getSkuCode());
 		}
@@ -881,7 +887,16 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 		return true;
 	}
 	
-	
+	private List<String> skuCodeList(JSONObject o){
+		List<String> skuList = new ArrayList<>();
+		if(o.getString("code").equals("1")){    
+			PcProductinfo e = JSONObject.parseObject(o.getString("entity"), PcProductinfo.class);
+			for(int i = 0 ; i < e.getProductSkuInfoList().size() ; i ++){
+				skuList.add(e.getProductSkuInfoList().get(i).getSkuCode());
+			}
+		}
+		return skuList;
+	}
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/**

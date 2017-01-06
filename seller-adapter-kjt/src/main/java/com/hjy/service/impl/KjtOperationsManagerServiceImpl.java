@@ -332,7 +332,7 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 		}
 		
 		
-		String lockcode = WebHelper.getInstance().addLock(10000 , "seller-adapter-kjt@OperationsManagerServiceImpl.funcSeven");      // 分布式锁
+		String lockcode = WebHelper.getInstance().addLock(300 , "seller-adapter-kjt@OperationsManagerServiceImpl.funcSeven");      // 分布式锁5分钟
 		if(StringUtils.isNotEmpty(lockcode)) {
 			try { 
 				for(PcProductinfo i : list){
@@ -391,10 +391,13 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 		// 删除所有Sku相关信息
 		List<PcSkuinfo> skuList = pcSkuinfoDao.findList(new PcSkuinfo(productCode_)); 
 		for(PcSkuinfo i : skuList){
-			RedisLaunch.setFactory(ERedisSchema.IcSku).del(i.getSkuCode()); 
+			RedisLaunch.setFactory(ERedisSchema.Sku).del(i.getSkuCode()); 
 			RedisLaunch.setFactory(ERedisSchema.Stock).del(i.getSkuCode());
 			RedisLaunch.setFactory(ERedisSchema.SkuStoreStock).del(i.getSkuCode());
 		}
+		// TODO 删除促销的Sku信息 
+		
+		
 		RedisLaunch.setFactory(ERedisSchema.Product).del(productCode_);
 		RedisLaunch.setFactory(ERedisSchema.ProductSku).del(productCode_);
 		RedisLaunch.setFactory(ERedisSchema.ProductSales).del(productCode_);		//刷新销量缓存
