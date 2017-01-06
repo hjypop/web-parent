@@ -161,7 +161,7 @@
 	</update>
 	
 	<!-- 根据sku_code删除一条记录|这个方法用于open-api的ApiProductServiceImpl类 - Yangcl -->
-	<delete id="deleteSkuStore" parameterType="java.lang.String" resultType="java.lang.Integer"> 
+	<delete id="deleteSkuStore" parameterType="java.lang.String" > 
 		delete from 
 			systemcenter.sc_store_skunum
 		where 

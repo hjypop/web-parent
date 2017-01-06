@@ -372,7 +372,7 @@
 	</select>
 	
 	<!-- 根据这三个条件删除一条记录|这个方法用于open-api的ApiProductServiceImpl类 - Yangcl -->
-	<delete id="deleteSkuinfo" parameterType="java.util.Map" resultType="java.lang.Integer"> 
+	<delete id="deleteSkuinfo" parameterType="java.util.Map"> 
 		delete from 
 			productcenter.pc_skuinfo 
 		where 
