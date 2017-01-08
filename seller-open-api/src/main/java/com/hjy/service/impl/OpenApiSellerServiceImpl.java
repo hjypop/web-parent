@@ -135,7 +135,8 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	 * @description: 商户同步自己的商品到惠家有平台|同时同步一批商品，上限100件商品
 	 * 	
 	 * @接口所属：惠家有商户接口|Product.SyncSellerProductList
-	 * 
+	 *  @访问间隔：3分钟 
+	 *  
 	 * @param products
 	 * @param seller
 	 * @author Yangcl 
@@ -880,6 +881,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	 * @description: 依据开始时间和结束时间来查询一批订单，惠家有返回订单列表。
 	 * 
 	 * @接口所属：惠家有商户接口|Product.SyncSellerProductList
+	 * @访问间隔：10分钟 
 	 * 
 	 * @param request
 	 * @param seller 
