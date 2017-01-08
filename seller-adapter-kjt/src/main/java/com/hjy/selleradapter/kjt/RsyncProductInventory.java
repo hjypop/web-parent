@@ -8,7 +8,7 @@ import com.hjy.constant.MemberConst;
 import com.hjy.entity.product.PcProductinfoExt;
 import com.hjy.entity.system.ScStore;
 import com.hjy.entity.system.ScStoreSkunum;
-import com.hjy.helper.PlusHelperNotice;
+import com.hjy.helper.RedisHelper;
 import com.hjy.jms.ProductJmsSupport;
 import com.hjy.model.MWebResult;
 import com.hjy.model.RsyncDateCheck;
@@ -141,14 +141,14 @@ public class RsyncProductInventory
 					scStoreSkunumService.insertSelective(scStoreSkunum);
 				}
 				// 修改SKU库存
-				new PlusHelperNotice().onChangeSkuStock(sku_code);
+				new RedisHelper().reloadSkuStockInRedis(sku_code);
 				// 编辑商品属性
 				PcProductinfoExt pcProductinfoExt = new PcProductinfoExt();
 				pcProductinfoExt.setProductCode(product_code);
 				pcProductinfoExt.setOaSiteNo(wareGouse);
 				pcProductinfoExtService.updatePcProductinfoExt(pcProductinfoExt);
 
-				new PlusHelperNotice().onChangeProductInfo(product_code);
+				new RedisHelper().reloadProductInRedis(product_code);
 				// 触发消息队列
 				ProductJmsSupport pjs = new ProductJmsSupport();
 				pjs.onChangeForProductChangeAll(product_code);

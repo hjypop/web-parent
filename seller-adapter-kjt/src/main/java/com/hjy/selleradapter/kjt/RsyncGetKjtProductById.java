@@ -16,7 +16,7 @@ import com.hjy.entity.product.PcProductflow;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.product.PcProductinfoExt;
 import com.hjy.entity.product.ProductChangeFlag;
-import com.hjy.helper.PlusHelperNotice;
+import com.hjy.helper.RedisHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.model.MWebResult;
 import com.hjy.model.ProductSkuInfo;
@@ -122,7 +122,7 @@ public class RsyncGetKjtProductById
 				productinfo.setPcProdcutflow(pcProdcutflow);
 				int resultCode = productService.AddProductTx(productinfo, error, "");
 				if (resultCode == 1) {// 添加商品成功刷新缓存
-					new PlusHelperNotice().onChangeProductInfo(productinfo.getProductCode()); 
+					new RedisHelper().reloadProductInRedis(productinfo.getProductCode()); 
 				}
 				result.setCode(resultCode);
 				result.setMessage(error.toString());

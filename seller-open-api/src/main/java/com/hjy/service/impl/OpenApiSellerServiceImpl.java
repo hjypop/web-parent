@@ -34,6 +34,7 @@ import com.hjy.dao.IApiProductInfoDao;
 import com.hjy.dao.IApiSkuInfoDao;
 import com.hjy.dao.ILcOpenApiProductErrorDao;
 import com.hjy.dao.ILcOpenApiQueryLogDao;
+import com.hjy.dao.ILcOpenApiSellerProductOperationsDao;
 import com.hjy.dao.log.ILcStockchangeDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.dao.product.IPcBrandinfoDao;
@@ -69,6 +70,7 @@ import com.hjy.entity.system.ScStoreSkunum;
 import com.hjy.factory.UserFactory;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelper;
+import com.hjy.helper.RedisHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.jms.ProductJmsSupport;
 import com.hjy.model.ProductSkuInfo;
@@ -126,8 +128,8 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	private ILcStockchangeDao lcStockchangeDao;
 	@Resource
 	private IOcOrderinfoDao orderInfoDao;
-	
-	
+	@Resource
+	private ILcOpenApiSellerProductOperationsDao openApiSellerProductOperationsDao;
 	
 	/**
 	 * @description: 商户同步自己的商品到惠家有平台|同时同步一批商品，上限100件商品
@@ -182,7 +184,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 								successMap.put(e.getProductCodeOld().split("-")[1], this.skuCodeList(update));  
 								ra.add(update);                          
 								// 删掉缓存中的商品信息 
-								this.redisDeleteProductInfo(e.getProductCode()); 
+								new RedisHelper().reloadProductInRedis(e.getProductCode()); 
 							}
 						}
 						result.put("success", successMap);
@@ -861,31 +863,6 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 		}
 	}
 	
-	/**
-	 * @descriptions 刷新Redis 
-	 * 
-	 * @param productCode_ 
-	 * @date 2016年8月16日下午1:37:21
-	 * @author Yangcl 
-	 * @version 1.0.0.1
-	 */
-	private boolean redisDeleteProductInfo(String productCode_){
-		// 循环删除所有商品下关联的子活动
-		for(String key : RedisLaunch.setFactory(ERedisSchema.ProductIcChildren).hgetAll(productCode_).keySet()){
-			RedisLaunch.setFactory(ERedisSchema.IcSku).del(key);
-		}
-		// 删除所有Sku相关信息
-		List<PcSkuinfo> skuList = pcSkuinfoDao.findList(new PcSkuinfo(productCode_)); 
-		for(PcSkuinfo i : skuList){
-			RedisLaunch.setFactory(ERedisSchema.Sku).del(i.getSkuCode()); 
-			RedisLaunch.setFactory(ERedisSchema.Stock).del(i.getSkuCode());
-			RedisLaunch.setFactory(ERedisSchema.SkuStoreStock).del(i.getSkuCode());
-		}
-		RedisLaunch.setFactory(ERedisSchema.Product).del(productCode_);
-		RedisLaunch.setFactory(ERedisSchema.ProductSku).del(productCode_);
-		RedisLaunch.setFactory(ERedisSchema.ProductSales).del(productCode_);		//刷新销量缓存
-		return true;
-	}
 	
 	private List<String> skuCodeList(JSONObject o){
 		List<String> skuList = new ArrayList<>();

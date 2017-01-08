@@ -33,6 +33,7 @@ import com.hjy.entity.system.ScEventItemProduct;
 import com.hjy.entity.system.ScFlowBussinessHistory;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelper;
+import com.hjy.helper.RedisHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.pojo.entity.system.JobExectimer;
 import com.hjy.redis.core.RedisLaunch;
@@ -356,7 +357,7 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 							" 商编：" + i.getProductCode() + "  原因：" + reason,  // " - 上下架原因描述 - 邮件发送人",
 							productStatus							
 							));
-					boolean flag = this.redisReloadProductInfo(i.getProductCode());
+					boolean flag = new RedisHelper().reloadProductInRedis(i.getProductCode());
 					logger.info(i.getProductName() + "@"+ i.getProductCode() +"@缓存状态信息：" + flag); 
 				}
 				
@@ -382,45 +383,7 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 	
 	
 	
-	/**
-	 * @descriptions 刷新Redis 
-	 * 
-	 * @param productCode_ 
-	 * @date 2016年8月16日下午1:37:21
-	 * @author Yangcl 
-	 * @version 1.0.0.1
-	 */
-	private boolean redisReloadProductInfo(String productCode_){
-		// 循环删除所有商品下关联的子活动
-		for(String key : RedisLaunch.setFactory(ERedisSchema.ProductIcChildren).hgetAll(productCode_).keySet()){
-			RedisLaunch.setFactory(ERedisSchema.IcSku).del(key);
-		}
-		// 删除所有Sku相关信息
-		List<PcSkuinfo> skuList = pcSkuinfoDao.findList(new PcSkuinfo(productCode_)); 
-		for(PcSkuinfo i : skuList){
-			RedisLaunch.setFactory(ERedisSchema.Sku).del(i.getSkuCode()); 
-			RedisLaunch.setFactory(ERedisSchema.Stock).del(i.getSkuCode());
-			RedisLaunch.setFactory(ERedisSchema.SkuStoreStock).del(i.getSkuCode());
-		}
-		//  删除促销的Sku信息 
-//		for (MDataMap mDataMap : DbUp.upTable("sc_event_item_product").queryAll(
-//				"item_code", "", "", new MDataMap("product_code", sProductCode))) {
-//			String itemCode = mDataMap.get("item_code");
-//			XmasKv.upFactory(EKvSchema.IcSku).del(itemCode);
-//			
-//		}
-		List<ScEventItemProduct> itemList =   scEventItemProductDao.findEntityListByProduct(productCode_);
-		if(itemList != null && itemList.size() > 0){
-			for(ScEventItemProduct item : itemList){
-				RedisLaunch.setFactory(ERedisSchema.IcSku).del(item.getItemCode());   
-			}
-		}
-		
-		RedisLaunch.setFactory(ERedisSchema.Product).del(productCode_);
-		RedisLaunch.setFactory(ERedisSchema.ProductSku).del(productCode_);
-		RedisLaunch.setFactory(ERedisSchema.ProductSales).del(productCode_);		//刷新销量缓存
-		return true;
-	}
+ 
 
 	
 }
