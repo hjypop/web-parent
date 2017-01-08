@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.matrix.dao.LcOpenApiSellerProductOperationsMapper" >
+  <resultMap id="BaseResultMap" type="com.matrix.pojo.entity.LcOpenApiSellerProductOperations" >
+    <id column="zid" property="zid" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="seller_code" property="sellerCode" jdbcType="VARCHAR" />
+    <result column="api_name" property="apiName" jdbcType="VARCHAR" />
+    <result column="class_url" property="classUrl" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="DATE" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.matrix.pojo.entity.LcOpenApiSellerProductOperationsWithBLOBs" extends="BaseResultMap" >
+    <result column="request_data" property="requestData" jdbcType="LONGVARCHAR" />
+    <result column="handle_data" property="handleData" jdbcType="LONGVARCHAR" />
+    <result column="response_data" property="responseData" jdbcType="LONGVARCHAR" />
+    <result column="remark" property="remark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    zid, uid, seller_code, api_name, class_url, create_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    request_data, handle_data, response_data, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from lc_open_api_seller_product_operations
+    where zid = #{zid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from lc_open_api_seller_product_operations
+    where zid = #{zid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.matrix.pojo.entity.LcOpenApiSellerProductOperationsWithBLOBs" >
+    insert into lc_open_api_seller_product_operations (zid, uid, seller_code, 
+      api_name, class_url, create_time, 
+      request_data, handle_data, response_data, 
+      remark)
+    values (#{zid,jdbcType=INTEGER}, #{uid,jdbcType=VARCHAR}, #{sellerCode,jdbcType=VARCHAR}, 
+      #{apiName,jdbcType=VARCHAR}, #{classUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, 
+      #{requestData,jdbcType=LONGVARCHAR}, #{handleData,jdbcType=LONGVARCHAR}, #{responseData,jdbcType=LONGVARCHAR}, 
+      #{remark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.matrix.pojo.entity.LcOpenApiSellerProductOperationsWithBLOBs" >
+    insert into lc_open_api_seller_product_operations
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="zid != null" >
+        zid,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="sellerCode != null" >
+        seller_code,
+      </if>
+      <if test="apiName != null" >
+        api_name,
+      </if>
+      <if test="classUrl != null" >
+        class_url,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="requestData != null" >
+        request_data,
+      </if>
+      <if test="handleData != null" >
+        handle_data,
+      </if>
+      <if test="responseData != null" >
+        response_data,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="zid != null" >
+        #{zid,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerCode != null" >
+        #{sellerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="apiName != null" >
+        #{apiName,jdbcType=VARCHAR},
+      </if>
+      <if test="classUrl != null" >
+        #{classUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="requestData != null" >
+        #{requestData,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="handleData != null" >
+        #{handleData,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="responseData != null" >
+        #{responseData,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.matrix.pojo.entity.LcOpenApiSellerProductOperationsWithBLOBs" >
+    update lc_open_api_seller_product_operations
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerCode != null" >
+        seller_code = #{sellerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="apiName != null" >
+        api_name = #{apiName,jdbcType=VARCHAR},
+      </if>
+      <if test="classUrl != null" >
+        class_url = #{classUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=DATE},
+      </if>
+      <if test="requestData != null" >
+        request_data = #{requestData,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="handleData != null" >
+        handle_data = #{handleData,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="responseData != null" >
+        response_data = #{responseData,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where zid = #{zid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.matrix.pojo.entity.LcOpenApiSellerProductOperationsWithBLOBs" >
+    update lc_open_api_seller_product_operations
+    set uid = #{uid,jdbcType=VARCHAR},
+      seller_code = #{sellerCode,jdbcType=VARCHAR},
+      api_name = #{apiName,jdbcType=VARCHAR},
+      class_url = #{classUrl,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=DATE},
+      request_data = #{requestData,jdbcType=LONGVARCHAR},
+      handle_data = #{handleData,jdbcType=LONGVARCHAR},
+      response_data = #{responseData,jdbcType=LONGVARCHAR},
+      remark = #{remark,jdbcType=LONGVARCHAR}
+    where zid = #{zid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.matrix.pojo.entity.LcOpenApiSellerProductOperations" >
+    update lc_open_api_seller_product_operations
+    set uid = #{uid,jdbcType=VARCHAR},
+      seller_code = #{sellerCode,jdbcType=VARCHAR},
+      api_name = #{apiName,jdbcType=VARCHAR},
+      class_url = #{classUrl,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=DATE}
+    where zid = #{zid,jdbcType=INTEGER}
+  </update>
+</mapper>
