@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.base.BaseClass;
 import com.hjy.dao.IJobExectimerDao;
 import com.hjy.dao.ILcRsyncKjtLogDao;
 import com.hjy.dao.ILockDao;
@@ -35,16 +36,18 @@ import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelper;
 import com.hjy.helper.RedisHelper;
 import com.hjy.helper.WebHelper;
+import com.hjy.model.MDataMap;
 import com.hjy.pojo.entity.system.JobExectimer;
 import com.hjy.redis.core.RedisLaunch;
 import com.hjy.redis.srnpr.ERedisSchema;
 import com.hjy.selleradapter.job.JobForInventory;
 import com.hjy.selleradapter.job.JobGetChangeProductFromKJT;
 import com.hjy.service.IKjtOperationsManagerService;
+import com.hjy.support.WebClientSupport;
 
 
 @Service("kjtOperationsManagerService")
-public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerService {
+public class KjtOperationsManagerServiceImpl extends BaseClass implements IKjtOperationsManagerService {
 	private static Logger logger=Logger.getLogger(KjtOperationsManagerServiceImpl.class);
 	@Resource
 	private IJobExectimerDao jobExectimerDao;
@@ -361,6 +364,15 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 							));
 					boolean flag = new RedisHelper().reloadProductInRedis(i.getProductCode());
 					logger.info(i.getProductName() + "@"+ i.getProductCode() +"@缓存状态信息：" + flag); 
+					
+					MDataMap pmap = new MDataMap();
+					pmap.put("productCode", i.getProductCode());
+					// 根据上架或下架的情况来更新 solr 中的索引信息|下架则删除solr中的索引；上架则添加solr中的索引信息
+					if(productStatus.equals("4497153900060002")){
+						WebClientSupport.upPost(this.getConfig("web-redis.web_client_url_addone"), pmap);
+					}else{  // 下架商品则删除solr中的索引
+						WebClientSupport.upPost(this.getConfig("web-redis.web_client_url_delbyid"), pmap);
+					}
 				}
 				
 				result.put("status", "success");
