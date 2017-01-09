@@ -632,7 +632,7 @@
 		from 
 			productcenter.pc_productinfo
 		where
-			product_status = '4497153900060004' 
+			product_status = '4497153900060003' 
 		and
 			small_seller_code = #{code}
 	</select>

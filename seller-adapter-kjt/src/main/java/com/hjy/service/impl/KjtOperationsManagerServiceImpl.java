@@ -296,7 +296,9 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 	 * 			如果有商品编号，则不区分商户是谁，是跨境通也可以是其他商户    
 	 * 
 	 * @param json 
-	 * @param productStatus 4497153900060002(已上架)|4497153900060004(平台强制下架) 
+	 * @param productStatus 4497153900060002(已上架)|4497153900060003(商户下架)|4497153900060004(平台强制下架) 
+	 * 						如果是【平台强制下架】则运营人员无法编辑。
+	 * 
 	 * @param reason 上下架原因描述 + 邮件发送人
 	 * @param session
 	 * @return
@@ -318,17 +320,17 @@ public class KjtOperationsManagerServiceImpl implements IKjtOperationsManagerSer
 		if(productStatus.equals("4497153900060002") && StringUtils.isBlank(json)){  
 			// 准备将强制下架的商品 全部上架
 			list = pcProductinfoDao.getSoldOutProductList("SF03KJT");
-		}else if(productStatus.equals("4497153900060004") && StringUtils.isBlank(json)){  
+		}else if(productStatus.equals("4497153900060003") && StringUtils.isBlank(json)){  
 			 // 准备将现在所有上架的商品 全部下架
 			list = pcProductinfoDao.getItemUpshelfProductList("SF03KJT");
 		}else{
 			try { // 准备批量上下架商品
 				pcodeList = JSON.parseArray(json, String.class);
 				ProductStatusDto dto = new ProductStatusDto();
-				if(productStatus.equals("4497153900060004")){
+				if(productStatus.equals("4497153900060003")){
 					dto.setProductStatus("4497153900060002");
 				}else if(productStatus.equals("4497153900060002")){
-					dto.setProductStatus("4497153900060004");
+					dto.setProductStatus("4497153900060003");
 				}
 				dto.setList(pcodeList); 
 				list = pcProductinfoDao.getListByProductCodeList(dto);

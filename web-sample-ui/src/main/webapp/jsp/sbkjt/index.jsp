@@ -121,7 +121,7 @@
         function funcSeven(){
             var msg = "商品批量上架";
             var status_ = trim($("#seven-status").val());
-            if(status_ == "4497153900060004"){
+            if(status_ == "4497153900060003"){
                 msg = "商品批量下架";
             }
             if(status_.length == 0){
@@ -331,7 +331,7 @@
                             <select id="seven-status" class="radius3" style="margin-top:5px; margin-bottom: 15px;">
                                 <option value="">---请选择---</option>
                                 <option value="4497153900060002">商品批量上架</option>
-                                <option value="4497153900060004">商品批量下架</option>
+                                <option value="4497153900060003">商品批量下架</option>
                             </select>
 
                             <div class="status_thumb_list" style="width: 308px"> product_code Json串：</div>
