@@ -616,9 +616,7 @@
 			* 
 		from 
 			productcenter.pc_productinfo
-		where
-			product_status = #{productStatus}
-		and
+		where 
 			product_code in
 		<foreach item="item" index="index" collection="list" open="(" close=")" separator=",">
 			#{item}
