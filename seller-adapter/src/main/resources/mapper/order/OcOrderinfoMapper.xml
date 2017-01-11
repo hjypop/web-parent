@@ -111,53 +111,49 @@
 	
 	<!-- 根据small_seller_code返回订单详细信息列表。seller-open-api项目中使用 2016-08-04 - Yangcl  -->
 	<resultMap id="OrderApiResultMap" type="com.hjy.response.OrderInfoResponse"> 
-		<!-- oc_orderinfo 表字段 -->
-		<result column="order_code" jdbcType="VARCHAR" property="orderCode" /> 
-		<result column="product_money" jdbcType="DECIMAL" property="productMoney" />
+<!-- oc_orderinfo 表字段 -->
+		<!-- <result column="order_code" jdbcType="VARCHAR" property="orderCode" /> 
 		<result column="transport_money" jdbcType="DECIMAL" property="transportMoney" />
 		<result column="order_money" jdbcType="DECIMAL" property="orderMoney" />
 		<result column="payed_money" jdbcType="DECIMAL" property="payedMoney" />
-		<result column="product_name" jdbcType="VARCHAR" property="productName" />
-		<!-- oc_orderdetail 表字段 -->
-		<result column="sku_code" jdbcType="VARCHAR" property="skuCode" />
+		<result column="product_name" jdbcType="VARCHAR" property="productName" /> -->
+<!-- oc_orderdetail 表字段 -->
+		<!-- <result column="sku_code" jdbcType="VARCHAR" property="skuCode" />
 		<result column="product_code" jdbcType="VARCHAR" property="productCode" />
 		<result column="sku_name" jdbcType="VARCHAR" property="skuName" />
 		<result column="sku_price" jdbcType="DECIMAL" property="skuPrice" />
-		<result column="sku_num" jdbcType="INTEGER" property="skuNum" />
-		<result column="show_price" jdbcType="DECIMAL" property="showPrice" />
-		<result column="tax_rate" jdbcType="DECIMAL" property="taxRate" />
-		<!-- oc_orderadress 表字段-->
-		<result column="area_code" jdbcType="VARCHAR" property="areaCode" />
-		<result column="address" jdbcType="VARCHAR" property="address" />
-		<result column="postcode" jdbcType="VARCHAR" property="postcode" /> 
-		<!-- oc_order_remark 表字段 -->
-		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="sku_num" jdbcType="INTEGER" property="skuNum" /> -->
+<!-- oc_orderadress 表字段-->
+		<!-- <result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="postcode" jdbcType="VARCHAR" property="postcode" />  -->
+<!-- oc_order_remark 表字段 -->
+		<!-- <result column="remark" jdbcType="VARCHAR" property="remark" /> -->
 	</resultMap>
 	<select id="getOpenApiOrderinfoList" parameterType="com.hjy.request.data.OrderInfoRequestDto" resultMap="OrderApiResultMap">
-		SELECT 
+		select 
 				info.order_code AS orderCode,
-				info.product_money AS productMoney,
+				detail.product_code AS productCode,
+				info.product_name AS productName,
 				info.transport_money AS transportMoney,
 				info.order_money AS orderMoney,
-				info.payed_money AS infoPayedMoney,
-				info.product_name AS productName,
+				info.payed_money AS payedMoney,
 				detail.sku_code AS skuCode,
-				detail.product_code AS productCode,
 				detail.sku_name AS skuName,
 				detail.sku_price AS skuPrice,
 				detail.sku_num AS skuNum,
-				detail.show_price AS showPrice,
-				detail.tax_rate AS taxRate ,  # 税率
-				address.area_code AS areaCode , # 地区编码
-				address.address AS address , 
+				address.auth_address AS address , 
 				address.postcode AS postcode ,  
-				remark.remark AS remark 
-		FROM
+				remark.remark AS remark ,
+				address.receive_person as receivePerson , 
+				address.auth_true_name as authName ,
+				address.auth_idcard_number as authIdcard , 
+				address.auth_phone_number as mobile
+		from
 				ordercenter.oc_orderinfo info 
 				LEFT JOIN ordercenter.oc_orderdetail detail ON info.order_code = detail.order_code 
 				LEFT JOIN ordercenter.oc_orderadress address ON info.order_code = address.order_code 
 				LEFT JOIN ordercenter.oc_order_remark remark ON info.order_code = remark.order_code
-		WHERE 
+		where 
 				info.create_time between #{startTime , jdbcType=VARCHAR} and #{endTime , jdbcType=VARCHAR} 
 				and info.small_seller_code = #{sellerCode , jdbcType=VARCHAR} 
 				<if test="orderCode != null and orderCode != ''">

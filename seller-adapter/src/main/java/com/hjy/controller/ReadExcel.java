@@ -29,7 +29,7 @@ public class ReadExcel {
 
 	public static void main(String[] args) {
 //		Map<String , List<String>> map = readExcel("D:\\2.xlsx");   
-		readProduct("D:\\5.xls");               
+		readProduct("D:\\5.xlsx");               
 	}
 	
 	

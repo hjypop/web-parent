@@ -16,8 +16,7 @@ public class OrderInfoStatus {
 	public OrderInfoStatus() { 
 	}
 	
-	public OrderInfoStatus(String orderCode, String orderStatus) {
-		super();
+	public OrderInfoStatus(String orderCode, String orderStatus) { 
 		this.orderCode = orderCode;
 		this.orderStatus = orderStatus;
 	}

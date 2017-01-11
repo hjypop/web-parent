@@ -6,7 +6,6 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -20,8 +19,6 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -30,11 +27,9 @@ import com.hjy.annotation.TargetField;
 import com.hjy.common.DateUtil;
 import com.hjy.common.product.SkuCommon;
 import com.hjy.constant.MemberConst;
-import com.hjy.dao.IApiProductInfoDao;
-import com.hjy.dao.IApiSkuInfoDao;
-import com.hjy.dao.ILcOpenApiProductErrorDao;
 import com.hjy.dao.ILcOpenApiQueryLogDao;
 import com.hjy.dao.ILcOpenApiSellerProductOperationsDao;
+import com.hjy.dao.log.ILcOpenApiOrderStatusDao;
 import com.hjy.dao.log.ILcStockchangeDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.dao.product.IPcBrandinfoDao;
@@ -48,17 +43,12 @@ import com.hjy.dao.product.IPcProductpropertyDao;
 import com.hjy.dao.product.IPcSkuinfoDao;
 import com.hjy.dao.system.IScStoreSkunumDao;
 import com.hjy.dao.user.IUcSellercategoryProductRelationDao;
-import com.hjy.dto.product.ApiProductDesc;
 import com.hjy.dto.product.ApiSellerProduct;
 import com.hjy.dto.product.ApiSellerSkuInfo;
-import com.hjy.dto.product.PcSkuInfo;
 import com.hjy.dto.product.ProductInfo;
-import com.hjy.dto.product.ProductStatus;
-import com.hjy.dto.product.Property;
-import com.hjy.entity.log.LcOpenApiProductError;
+import com.hjy.entity.log.LcOpenApiOrderStatus;
 import com.hjy.entity.log.LcOpenApiQueryLog;
 import com.hjy.entity.log.LcStockchange;
-import com.hjy.entity.product.ApiPcProductInfo;
 import com.hjy.entity.product.PcProductcategoryRel;
 import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductflow;
@@ -67,16 +57,15 @@ import com.hjy.entity.product.PcProductinfoExt;
 import com.hjy.entity.product.PcProductpic;
 import com.hjy.entity.product.PcSkuinfo;
 import com.hjy.entity.system.ScStoreSkunum;
-import com.hjy.factory.UserFactory;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelper;
 import com.hjy.helper.RedisHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.jms.ProductJmsSupport;
 import com.hjy.model.ProductSkuInfo;
-import com.hjy.redis.core.RedisLaunch;
-import com.hjy.redis.srnpr.ERedisSchema;
 import com.hjy.request.data.OrderInfoRequestDto;
+import com.hjy.request.data.OrderInfoStatus;
+import com.hjy.request.data.OrderInfoStatusDto;
 import com.hjy.response.OrderInfoResponse;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.system.cmodel.CacheWcSellerInfo;
@@ -130,6 +119,10 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	private IOcOrderinfoDao orderInfoDao;
 	@Resource
 	private ILcOpenApiSellerProductOperationsDao openApiSellerProductOperationsDao;
+	@Resource
+	private ILcOpenApiQueryLogDao openApiQueryDao;
+	@Resource
+	private ILcOpenApiOrderStatusDao openApiOrderStatusDao;
 	
 	/**
 	 * @description: 商户同步自己的商品到惠家有平台|同时同步一批商品，上限100件商品
@@ -173,7 +166,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 							rlist.add(p);  
 						}
 						result.put("errors", errors); 
-						Map<String , List<String>> successMap = new HashMap<String , List<String>>();
+						Map<String , List<SkuResult>> successMap = new HashMap<String , List<SkuResult>>();
 						List<PcProductinfo> targetList = this.requestConvertion(rlist, seller, productHead, skuHead); 
 						for(PcProductinfo e : targetList){
 							if(!e.getIsUpdate()){  // 准备添加一条记录 
@@ -865,14 +858,16 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	}
 	
 	
-	private List<String> skuCodeList(JSONObject o){
-		List<String> skuList = new ArrayList<>();
+	private List<SkuResult> skuCodeList(JSONObject o){
+		List<SkuResult> skuList = new ArrayList<SkuResult>();
 		if(o.getString("code").equals("1")){    
 			PcProductinfo e = JSONObject.parseObject(o.getString("entity"), PcProductinfo.class);
 			for(int i = 0 ; i < e.getProductSkuInfoList().size() ; i ++){
-				skuList.add(e.getProductSkuInfoList().get(i).getSkuCode());
+				skuList.add(new SkuResult(e.getProductSkuInfoList().get(i).getSkuCode(), 
+						e.getProductSkuInfoList().get(i).getSkuName(), 
+						e.getProductSkuInfoList().get(i).getSkuKeyvalue() ) );
 			}
-		}
+		} 
 		return skuList;
 	}
 	
@@ -880,7 +875,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	/**
 	 * @description: 依据开始时间和结束时间来查询一批订单，惠家有返回订单列表。
 	 * 
-	 * @接口所属：惠家有商户接口|Product.SyncSellerProductList
+	 * @接口所属：惠家有商户接口|Order.SyncSellerOrderList
 	 * @访问间隔：10分钟 
 	 * 
 	 * @param request
@@ -913,12 +908,31 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 						}
 					}
 					List<OrderInfoResponse> list = orderInfoDao.getOpenApiOrderinfoList(new OrderInfoRequestDto(sellerCode, null ,  startTime, endTime));
-					
-					 
-				} catch (Exception e) {
+					result.put("desc", "请求成功");
+					result.put("data", list);
+					openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
+							sellerCode , 
+							"Order.SyncSellerOrderList" ,   
+							"com.hjy.service.impl.OpenApiSellerServiceImpl.syncSellerOrderList" , 
+							new Date(),
+							1 , 
+							request,
+							result.toJSONString(),  
+							"query success")); 
+				} catch (Exception ex) {
+					logger.error("查询订单状态信息异常|"  , ex);  
+					String remark_ = "{" + ExceptionHelper.allExceptionInformation(ex)+ "}";  // 记录异常信息到数据库表
 					result.put("code", 3);
-					result.put("desc", this.getInfo(100009003));  // 请求参数错误，请求数据解析异常
-					return result; 
+					result.put("desc", remark_); 
+					openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
+							sellerCode , 
+							"Order.SyncSellerOrderList" , 
+							"com.hjy.service.impl.OpenApiSellerServiceImpl.syncSellerOrderList" , 
+							new Date(),
+							2 , 
+							request,
+							result.toJSONString(), 
+							remark_)); 
 				}finally {
 					WebHelper.getInstance().unLock(lock); 
 				}
@@ -931,6 +945,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 			result.put("code", -1);
 			result.put("desc", this.getInfo(100009001));  // 请求数据报文data为空
 		}
+		result.put("responseTime", DateHelper.formatDate(new Date()));
 		return result;
 	}
 	
@@ -966,10 +981,101 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 		return a.compareTo(b) < 0;
 	}
 	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/**
+	 * @description: 批量更新订单状态信息|商户已经发货或用户取消订单后，将订单对应的状态传递给惠家有
+	 * 
+	 * @接口所属：惠家有商户接口|Order.UpdateOrderStatus
+	 * @访问间隔：10分钟 
+	 * 
+	 * @param json
+	 * @param seller
+	 * @author Yangcl 
+	 * @date 2017年1月10日 下午2:41:47 
+	 * @version 1.0.0.1
+	 */
+	public JSONObject updateOrderStatus(String json, CacheWcSellerInfo seller){
+		String sellerCode = seller.getSellerCode();
+		JSONObject result = new JSONObject();  
+		result.put("code", 1);  // 默认成功，为1
+		if(StringUtils.isNotBlank(json)){
+			OrderInfoStatus e = null;
+			String lock = "";
+			try {
+				lock = WebHelper.getInstance().addLock(600 , sellerCode + "@OpenApiSellerServiceImpl.updateOrderStatus");
+				if(StringUtils.isNotBlank(lock)){
+					List<OrderInfoStatus> list =  JSONArray.parseArray(json , OrderInfoStatus.class);
+					if(list != null && list.size() > 0){
+						if(list.size() > 100){
+							result.put("code", 3);
+							result.put("desc", this.getInfo(100009004 , 100));  // 请求数据量过大，超过限制{0}条
+							return result; 
+						}                                     // 449715390001000
+						List<OrderInfoStatus> updateList = new ArrayList<OrderInfoStatus>();
+						List<String> error = new ArrayList<String>(); // 保存效验失败的订单编号 
+						for( int i = 0 ; i < list.size() ; i ++){
+							list.get(i).setUpdateTime(DateHelper.formatDate(new Date()));
+							if(this.validateOrderStatus(list.get(i))){
+								updateList.add(list.get(i));
+							}else{
+								error.add(list.get(i).getOrderCode());
+							}
+						}
+						
+						List<OrderInfoStatus> successList = new ArrayList<OrderInfoStatus>(); // 保存同步成功的记录
+						for(OrderInfoStatus o : updateList){
+							e = o;
+							Integer count = orderInfoDao.apiUpdateOrderinfoStatus(new OrderInfoStatusDto(o.getOrderCode() , o.getOrderStatus() , o.getUpdateTime() , sellerCode));
+							// 插入一条同步日志记录      zid   sellerCode  orderCode   orderStatus createTime 
+							if(count != null && count == 1){
+								openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , o.getOrderCode() , o.getOrderStatus() , 1 , new Date() , "update success"));
+								successList.add(o);
+							}else if(count != null && count == 0){
+								error.add(o.getOrderCode());
+							}
+						}
+					} 
+				}else{
+					result.put("code", 0);
+					result.put("desc", this.getInfo(100009002));  // 分布式锁生效中
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace(); 
+				logger.error("更新订单状态信息异常|" , ex);  
+				String remark_ = "{" + ExceptionHelper.allExceptionInformation(ex)+ "}";  		// 记录异常信息到数据库表
+				openApiOrderStatusDao.insertSelective(new LcOpenApiOrderStatus(sellerCode , e.getOrderCode() , e.getOrderStatus() , 2 , new Date() , remark_));
+				result.put("code", 3);
+				result.put("desc", this.getInfo(100009003));  		// 请求参数错误，请求数据解析异常
+				return result; 
+			}finally{
+				WebHelper.getInstance().unLock(lock); 
+			}
+		}else{
+			result.put("code", -1);
+			result.put("desc", this.getInfo(100009001));  		   // 请求数据报文data为空
+		}
+		return result;
+	}	
 	
-	
-	
-	
+	/**
+	 * @descriptions 效验订单状态
+	 * 
+	 * @param status 
+	 * @date 2016年8月5日下午2:37:39
+	 * @author Yangcl 
+	 * @version 1.0.0.1
+	 */
+	private boolean validateOrderStatus(OrderInfoStatus info){
+		boolean flag = false;
+		if(StringUtils.isBlank(info.getOrderCode())){
+			return flag;
+		}
+		String status = info.getOrderStatus();
+		if(StringUtils.startsWithAny(status, new String[] {"1" , "2" , "3" , "4" , "5" , "6" , "7" })){
+			flag = true;
+		}
+		return flag;
+	}
 	
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1015,7 +1121,43 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	}
 }
 
-
+/**
+ * @description: 返回同步成功的sku信息 
+ * 
+ * @author Yangcl
+ * @date 2017年1月10日 下午2:16:23 
+ * @version 1.0.0
+ */
+class SkuResult{
+	private String skuCode;
+	private String skuName;
+	private String property;  // sku规格属性
+	
+	public SkuResult(String skuCode, String skuName, String property) {
+		this.skuCode = skuCode;
+		this.skuName = skuName;
+		this.property = property;
+	}
+	
+	public String getSkuCode() {
+		return skuCode;
+	}
+	public void setSkuCode(String skuCode) {
+		this.skuCode = skuCode;
+	}
+	public String getSkuName() {
+		return skuName;
+	}
+	public void setSkuName(String skuName) {
+		this.skuName = skuName;
+	}
+	public String getProperty() {
+		return property;
+	}
+	public void setProperty(String property) {
+		this.property = property;
+	}
+}
 
 
 
