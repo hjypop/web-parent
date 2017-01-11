@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.system.IScFlowMainDao">
+	<resultMap id="BaseResultMap" type="com.hjy.entity.system.ScFlowMain">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="uid" property="uid" jdbcType="VARCHAR" />
+		<result column="flow_code" property="flowCode" jdbcType="VARCHAR" />
+		<result column="flow_type" property="flowType" jdbcType="VARCHAR" />
+		<result column="creator" property="creator" jdbcType="VARCHAR" />
+		<result column="updator" property="updator" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+		<result column="outer_code" property="outerCode" jdbcType="VARCHAR" />
+		<result column="flow_title" property="flowTitle" jdbcType="VARCHAR" />
+		<result column="flow_url" property="flowUrl" jdbcType="VARCHAR" />
+		<result column="flow_remark" property="flowRemark" jdbcType="VARCHAR" />
+		<result column="flow_isend" property="flowIsend" jdbcType="INTEGER" />
+		<result column="current_status" property="currentStatus" jdbcType="VARCHAR" />
+		<result column="last_status" property="lastStatus" jdbcType="VARCHAR" />
+		<result column="next_operators" property="nextOperators" jdbcType="VARCHAR" />
+		<result column="next_operator_status" property="nextOperatorStatus" jdbcType="VARCHAR" />
+		<result column="next_operator_id" property="nextOperatorId" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+			*
+		from 
+			systemcenter.sc_flow_main
+		where 
+			zid = #{zid,jdbcType=INTEGER}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from systemcenter.sc_flow_main where zid = #{zid,jdbcType=INTEGER}
+	</delete>
+	
+	<insert id="insert" parameterType="com.hjy.entity.system.ScFlowMain">
+		insert into systemcenter.sc_flow_main (
+			zid, 
+			uid, 
+			flow_code,
+			flow_type, 
+			creator, 
+			updator,
+			create_time, update_time, outer_code,
+			flow_title, flow_url, flow_remark,
+			flow_isend, current_status, last_status,
+			next_operators, next_operator_status, next_operator_id
+		)
+		values (
+			#{zid,jdbcType=INTEGER}, #{uid,jdbcType=VARCHAR},
+			#{flowCode,jdbcType=VARCHAR},
+			#{flowType,jdbcType=VARCHAR},
+			 #{creator,jdbcType=VARCHAR}, #{updator,jdbcType=VARCHAR},
+			#{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR},
+			#{outerCode,jdbcType=VARCHAR},
+			#{flowTitle,jdbcType=VARCHAR}, 
+			#{flowUrl,jdbcType=VARCHAR}, #{flowRemark,jdbcType=VARCHAR},
+			#{flowIsend,jdbcType=INTEGER}, #{currentStatus,jdbcType=VARCHAR},
+			#{lastStatus,jdbcType=VARCHAR},
+			#{nextOperators,jdbcType=VARCHAR},
+			#{nextOperatorStatus,jdbcType=VARCHAR},
+			#{nextOperatorId,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	
+	<insert id="insertSelective" parameterType="com.hjy.entity.system.ScFlowMain">
+		insert into systemcenter.sc_flow_main
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="uid != null">
+				uid,
+			</if>
+			<if test="flowCode != null">
+				flow_code,
+			</if>
+			<if test="flowType != null">
+				flow_type,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			<if test="updator != null">
+				updator,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="outerCode != null">
+				outer_code,
+			</if>
+			<if test="flowTitle != null">
+				flow_title,
+			</if>
+			<if test="flowUrl != null">
+				flow_url,
+			</if>
+			<if test="flowRemark != null">
+				flow_remark,
+			</if>
+			<if test="flowIsend != null">
+				flow_isend,
+			</if>
+			<if test="currentStatus != null">
+				current_status,
+			</if>
+			<if test="lastStatus != null">
+				last_status,
+			</if>
+			<if test="nextOperators != null">
+				next_operators,
+			</if>
+			<if test="nextOperatorStatus != null">
+				next_operator_status,
+			</if>
+			<if test="nextOperatorId != null">
+				next_operator_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null">
+				#{uid,jdbcType=VARCHAR},
+			</if>
+			<if test="flowCode != null">
+				#{flowCode,jdbcType=VARCHAR},
+			</if>
+			<if test="flowType != null">
+				#{flowType,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="updator != null">
+				#{updator,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="outerCode != null">
+				#{outerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="flowTitle != null">
+				#{flowTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="flowUrl != null">
+				#{flowUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="flowRemark != null">
+				#{flowRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="flowIsend != null">
+				#{flowIsend,jdbcType=INTEGER},
+			</if>
+			<if test="currentStatus != null">
+				#{currentStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="lastStatus != null">
+				#{lastStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="nextOperators != null">
+				#{nextOperators,jdbcType=VARCHAR},
+			</if>
+			<if test="nextOperatorStatus != null">
+				#{nextOperatorStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="nextOperatorId != null">
+				#{nextOperatorId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	
+	<update id="updateSelective" parameterType="com.hjy.entity.system.ScFlowMain">
+		update systemcenter.sc_flow_main
+		<set> 
+			<if test="flowCode != null">
+				flow_code = #{flowCode,jdbcType=VARCHAR},
+			</if>
+			<if test="flowType != null">
+				flow_type = #{flowType,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				creator = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="updator != null">
+				updator = #{updator,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="outerCode != null">
+				outer_code = #{outerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="flowTitle != null">
+				flow_title = #{flowTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="flowUrl != null">
+				flow_url = #{flowUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="flowRemark != null">
+				flow_remark = #{flowRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="flowIsend != null">
+				flow_isend = #{flowIsend,jdbcType=INTEGER},
+			</if>
+			<if test="currentStatus != null">
+				current_status = #{currentStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="lastStatus != null">
+				last_status = #{lastStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="nextOperators != null">
+				next_operators = #{nextOperators,jdbcType=VARCHAR},
+			</if>
+			<if test="nextOperatorStatus != null">
+				next_operator_status = #{nextOperatorStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="nextOperatorId != null">
+				next_operator_id = #{nextOperatorId,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where zid = #{zid,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateByPrimaryKey" parameterType="com.hjy.entity.system.ScFlowMain">
+		update 
+			systemcenter.sc_flow_main
+		set 
+			uid = #{uid,jdbcType=VARCHAR},
+			flow_code = #{flowCode,jdbcType=VARCHAR},
+			flow_type = #{flowType,jdbcType=VARCHAR},
+			creator = #{creator,jdbcType=VARCHAR},
+			updator = #{updator,jdbcType=VARCHAR},
+			create_time = #{createTime,jdbcType=VARCHAR},
+			update_time = #{updateTime,jdbcType=VARCHAR},
+			outer_code = #{outerCode,jdbcType=VARCHAR},
+			flow_title = #{flowTitle,jdbcType=VARCHAR},
+			flow_url = #{flowUrl,jdbcType=VARCHAR},
+			flow_remark = #{flowRemark,jdbcType=VARCHAR},
+			flow_isend = #{flowIsend,jdbcType=INTEGER},
+			current_status = #{currentStatus,jdbcType=VARCHAR},
+			last_status = #{lastStatus,jdbcType=VARCHAR},
+			next_operators = #{nextOperators,jdbcType=VARCHAR},
+			next_operator_status = #{nextOperatorStatus,jdbcType=VARCHAR},
+			next_operator_id = #{nextOperatorId,jdbcType=VARCHAR}
+		where zid = #{zid,jdbcType=INTEGER}
+	</update>
+</mapper>
