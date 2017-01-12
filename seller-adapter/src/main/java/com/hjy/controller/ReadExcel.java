@@ -72,6 +72,13 @@ public class ReadExcel {
 //		String json = JSON.toJSONString(list); 
 //		System.out.println(json); 
 		
+		Map<String , String> map = new HashMap<String , String>();	
+		for(String s : list){
+			map.put(s, s);
+		}
+		System.out.println("map = " + map.size() + "|list = " + list.size());  
+		
+		
 		String str = "";
 		for(String s : list){
 			str += "'" + s + "',";
