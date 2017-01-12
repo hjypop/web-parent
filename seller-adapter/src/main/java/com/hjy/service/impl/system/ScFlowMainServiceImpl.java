@@ -1,14 +1,24 @@
 package com.hjy.service.impl.system;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.dao.system.IScFlowMainDao;
+import com.hjy.dao.system.IScFlowStatuschangeDao;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.system.ScFlowMain;
+import com.hjy.entity.system.ScFlowStatuschange;
 import com.hjy.helper.WebHelper;
+import com.hjy.model.flow.FlowNextOperator;
+import com.hjy.model.flow.RoleStatus;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.system.IScFlowMainService;
 import com.hjy.system.cmodel.CacheWcSellerInfo;
@@ -28,6 +38,9 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 	
 	@Resource
 	private IScFlowMainDao dao;
+	
+	@Resource
+	private IScFlowStatuschangeDao flowStatusChangeDao;  
 
 	
 	/**
@@ -57,7 +70,16 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 		
 		
 		f.setFlowCode(WebHelper.getInstance().genUniqueCode(FlowHead));
-		// TODO 
+		FlowNextOperator fno = this.getNextAll(f.getFlowType(), f.getCurrentStatus());
+		if(StringUtils.isBlank( fno.getNextOperator() )){
+			f.setFlowIsend(1); // 是否结束|也不知道谁特么设计的这个字段，从这尿性上猜 1应该是结束，默认为0
+		}
+		f.setNextOperators(fno.getNextOperator());
+		f.setNextOperatorStatus(fno.getNextOperatorStatus());
+		
+		// TODO 调用 添加订单的存储过程
+		
+		
 		
 		return result;
 	}
@@ -78,6 +100,90 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 		
 		return flag;		
 	}
+	
+	
+	private FlowNextOperator getNextAll(String flowType , String toStatus){
+		FlowNextOperator o = new FlowNextOperator();
+		List<RoleStatus> rsList = this.getRoleToStatusList(flowType, toStatus);
+		if(rsList != null && rsList.size() != 0){
+			o.setNextOperator(this.getNextOperator(rsList));  
+			o.setNextOperatorStatus(this.getNextOpoeratorStatus(rsList)); 
+		}
+		return o;
+	}
+	
+	
+	/**
+	 * @description: 获取角色 状态 对应关系
+	 * 
+	 * @param flowType
+	 * @param toStatus
+	 * @author Yangcl 
+	 * @date 2017年1月12日 下午3:15:42 
+	 * @version 1.0.0.1
+	 */
+	private List<RoleStatus> getRoleToStatusList(String flowType , String toStatus){
+		List<RoleStatus> list = new ArrayList<RoleStatus>();
+		
+		Map<String , String> map = new HashMap<String , String>(2);
+		map.put("flow_type", flowType);
+		map.put("from_status", toStatus);
+		List<ScFlowStatuschange> list_ = flowStatusChangeDao.findListByFlowTyp(map);
+		if(list_ != null && list_.size() != 0){
+			for(ScFlowStatuschange s : list_){
+				list.add(new RoleStatus(s.getRoleId(), s.getToStatus()));
+			}
+		}
+		
+		return list;  
+	}
+	
+	/**
+	 * @description: 获取下一级审批人
+	 * 
+	 * @param list
+	 * @author Yangcl 
+	 * @date 2017年1月12日 下午4:38:24 
+	 * @version 1.0.0.1
+	 */
+	private String getNextOperator(List<RoleStatus> list){
+		String str = "";
+		Map<String , String> map = new HashMap<String , String>();
+		if(list != null && list.size() != 0){
+			for(RoleStatus s : list){
+				if(!map.containsKey(s.getRoleCode())){
+					map.put(s.getRoleCode(), "");
+					str += s.getRoleCode() + "," ;
+				}
+			}
+			if(StringUtils.isNotBlank(str)){
+				str = str.substring(0  , str.length()-1); 
+			}
+		}
+		return str;
+	}
+	
+	/**
+	 * @description: 获取下一审批人状态 
+	 * 
+	 * @param list
+	 * @author Yangcl 
+	 * @date 2017年1月12日 下午5:55:01 
+	 * @version 1.0.0.1
+	 */
+	private String getNextOpoeratorStatus(List<RoleStatus> list){
+		String str = "";
+		if(list != null && list.size() != 0){
+			for(RoleStatus s : list){
+				str += s.getRoleCode() + ":" + s.getToStatus() + ";" ;
+			}
+			if(StringUtils.isNotBlank(str)){
+				str = str.substring(0  , str.length()-1); 
+			}
+		}
+		return str;
+	}
+	
 	
 }
 

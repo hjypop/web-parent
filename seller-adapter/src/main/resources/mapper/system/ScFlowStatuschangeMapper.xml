@@ -103,7 +103,58 @@
 		where zid = #{zid,jdbcType=INTEGER}
 	</update>
 	
+	
+	<select id="findListByFlowTyp" resultMap="BaseResultMap" parameterType="Map">
+		select
+			*
+		from 
+			systemcenter.sc_flow_statuschange
+		where 
+			flow_type = #{flowType , jdbcType=VARCHAR}      
+		and
+			from_status = #{fromStatus , jdbcType=VARCHAR}        
+	</select>
+	
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
