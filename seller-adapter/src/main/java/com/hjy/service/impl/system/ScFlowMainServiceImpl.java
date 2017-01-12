@@ -14,7 +14,8 @@ import com.hjy.service.system.IScFlowMainService;
 import com.hjy.system.cmodel.CacheWcSellerInfo;
 
 /**
- * @description: 审批流相关服务类，用于open-api 和 minspc
+ * @description: 审批流相关服务类，用于open-api 和 minspc|这个类用于模拟创建审批流
+ * @核心方法 createFlowMain() 
  * 
  * @author Yangcl
  * @date 2017年1月11日 下午11:23:05 
@@ -30,7 +31,7 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 
 	
 	/**
-	 * @description: 为新添加的商品床架一个审批流
+	 * @description: 为新添加的商品创建一个审批流
 	 * 
 	 * @param p Product information
 	 * @param seller 
