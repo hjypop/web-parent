@@ -49,8 +49,9 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 	/**
 	 * @description: 为新添加的商品创建一个审批流
 	 * 
-	 * @模仿蓝本 该方法主要模仿自【商家管理后台】->【商品相关】->【商品管理】->【添加商品】的代码逻辑
-	 * 
+	 * @模仿蓝本 该方法主要模仿自【商家管理后台】(商户后台)->【商品相关】->【商品管理】->【添加商品】的部分代码逻辑
+	 * 					改部分的代码逻辑为：创建审批流。代码原有逻辑调用位于systemcenter库下的存储过程 proc_flow_create
+	 * 					此处改为向sc_flow_main表和sc_flow_history表直接插入数据信息。
 	 * 
 	 * @param p Product information
 	 * @param seller 
@@ -82,11 +83,9 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 		}
 		f.setNextOperators(fno.getNextOperator());
 		f.setNextOperatorStatus(fno.getNextOperatorStatus());
+		 
+		//* 代码原有逻辑调用位于systemcenter库下的存储过程 proc_flow_create
 		
-		// TODO 
-		/* 代码原有逻辑调用位于systemcenter库下的存储过程 proc_flow_create
-		 * 
-		 */
 		
 		
 		
