@@ -1,5 +1,6 @@
 package com.hjy.service.impl.system;
 
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
@@ -46,6 +49,9 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 	/**
 	 * @description: 为新添加的商品创建一个审批流
 	 * 
+	 * @模仿蓝本 该方法主要模仿自【商家管理后台】->【商品相关】->【商品管理】->【添加商品】的代码逻辑
+	 * 
+	 * 
 	 * @param p Product information
 	 * @param seller 
 	 * @param platform 创建平台名称
@@ -77,7 +83,11 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 		f.setNextOperators(fno.getNextOperator());
 		f.setNextOperatorStatus(fno.getNextOperatorStatus());
 		
-		// TODO 调用 添加订单的存储过程
+		// TODO 
+		/* 代码原有逻辑调用位于systemcenter库下的存储过程 proc_flow_create
+		 * 
+		 */
+		
 		
 		
 		

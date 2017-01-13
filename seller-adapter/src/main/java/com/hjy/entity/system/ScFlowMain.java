@@ -25,7 +25,7 @@ public class ScFlowMain {
     private String lastStatus;
     private String nextOperators;
     private String nextOperatorStatus;
-    private String nextOperatorId;
+    private String nextOperatorId;   // 添加商品时取消指定审批人 2016-06-27 zhy | 此处取自老代码的注解
     
     
 	public Integer getZid() {
