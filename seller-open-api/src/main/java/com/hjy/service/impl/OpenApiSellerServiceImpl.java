@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -68,6 +69,7 @@ import com.hjy.request.data.OrderInfoStatus;
 import com.hjy.request.data.OrderInfoStatusDto;
 import com.hjy.response.OrderInfoResponse;
 import com.hjy.service.impl.BaseServiceImpl;
+import com.hjy.service.system.IScFlowMainService;
 import com.hjy.system.cmodel.CacheWcSellerInfo;
 import com.hjy.service.IOpenApiSellerService;
 
@@ -124,6 +126,9 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	@Resource
 	private ILcOpenApiOrderStatusDao openApiOrderStatusDao;
 	
+	@Autowired
+	private IScFlowMainService scFlowMainService;
+	
 	/**
 	 * @description: 商户同步自己的商品到惠家有平台|同时同步一批商品，上限100件商品
 	 * 	
@@ -170,7 +175,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 						List<PcProductinfo> targetList = this.requestConvertion(rlist, seller, productHead, skuHead); 
 						for(PcProductinfo e : targetList){
 							if(!e.getIsUpdate()){  // 准备添加一条记录 
-								JSONObject add = this.insertSellerProduct(e);
+								JSONObject add = this.insertSellerProduct(e , seller);
 								successMap.put(e.getProductCodeOld().split("-")[1], this.skuCodeList(add));  
 								ra.add(add); 
 							}else{	   
@@ -552,7 +557,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	 * @date 2017年1月3日 下午2:32:07 
 	 * @version 1.0.0.1
 	 */
-	private JSONObject insertSellerProduct(PcProductinfo e){
+	private JSONObject insertSellerProduct(PcProductinfo e , CacheWcSellerInfo seller){
 		JSONObject result = new JSONObject();
 		result.put("type", "insert");
 		result.put("code", "1"); // 默认插入成功
@@ -713,9 +718,11 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 				lcStockchangeDao.insertSelective(lsModel);
 			}
 			
-			ProductJmsSupport pjs = new ProductJmsSupport();
-			pjs.onChangeProductText(e.getProductCode());
-			this.genarateJmsStaticPageForProduct(e);
+			scFlowMainService.createFlowMain(p , seller , "open-api");   
+			
+//			ProductJmsSupport pjs = new ProductJmsSupport();
+//			pjs.onChangeProductText(e.getProductCode());
+//			this.genarateJmsStaticPageForProduct(e);
 		} catch (Exception ex) { 
 			String exstring = ExceptionHelper.allExceptionInformation(ex);
 			logger.error(exstring);
@@ -1016,6 +1023,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 						for( int i = 0 ; i < list.size() ; i ++){
 							list.get(i).setUpdateTime(DateHelper.formatDate(new Date()));
 							if(this.validateOrderStatus(list.get(i))){
+								list.get(i).setOrderStatus("449715390001000" + list.get(i).getOrderStatus()); 
 								updateList.add(list.get(i));
 							}else{
 								error.add(list.get(i).getOrderCode());
@@ -1071,7 +1079,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 			return flag;
 		}
 		String status = info.getOrderStatus();
-		if(StringUtils.startsWithAny(status, new String[] {"1" , "2" , "3" , "4" , "5" , "6" , "7" })){
+		if(status.length() == 1 && StringUtils.startsWithAny(status, new String[] {"1" , "2" , "3" , "4" , "5" , "6" , "7" })){
 			flag = true;
 		}
 		return flag;
