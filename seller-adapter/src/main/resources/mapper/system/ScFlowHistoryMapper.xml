@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.system.IScFlowHistoryDao"> 
+
+	<resultMap id="BaseResultMap" type="com.hjy.entity.system.ScFlowHistory">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="uid" property="uid" jdbcType="VARCHAR" />
+		<result column="flow_code" property="flowCode" jdbcType="VARCHAR" />
+		<result column="flow_type" property="flowType" jdbcType="VARCHAR" />
+		<result column="creator" property="creator" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="flow_remark" property="flowRemark" jdbcType="VARCHAR" />
+		<result column="current_status" property="currentStatus" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+			*
+		from 
+			systemcenter.sc_flow_history
+		where 
+			zid = #{zid,jdbcType=INTEGER}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from systemcenter.sc_flow_history where zid = #{zid,jdbcType=INTEGER}
+	</delete>
+	
+	 
+	<insert id="insertSelective" parameterType="com.hjy.entity.system.ScFlowHistory">
+		insert into systemcenter.sc_flow_history
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="uid != null">
+				uid,
+			</if>
+			<if test="flowCode != null">
+				flow_code,
+			</if>
+			<if test="flowType != null">
+				flow_type,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="flowRemark != null">
+				flow_remark,
+			</if>
+			<if test="currentStatus != null">
+				current_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null">
+				#{uid,jdbcType=VARCHAR},
+			</if>
+			<if test="flowCode != null">
+				#{flowCode,jdbcType=VARCHAR},
+			</if>
+			<if test="flowType != null">
+				#{flowType,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="flowRemark != null">
+				#{flowRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="currentStatus != null">
+				#{currentStatus,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateSelective" parameterType="com.hjy.entity.system.ScFlowHistory">
+		update systemcenter.sc_flow_history
+		<set> 
+			<if test="flowCode != null">
+				flow_code = #{flowCode,jdbcType=VARCHAR},
+			</if>
+			<if test="flowType != null">
+				flow_type = #{flowType,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				creator = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="flowRemark != null">
+				flow_remark = #{flowRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="currentStatus != null">
+				current_status = #{currentStatus,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where zid = #{zid,jdbcType=INTEGER}
+	</update>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

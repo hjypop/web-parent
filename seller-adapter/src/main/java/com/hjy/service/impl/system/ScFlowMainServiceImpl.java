@@ -1,7 +1,7 @@
 package com.hjy.service.impl.system;
 
-import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,16 +9,18 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.dao.system.IScFlowHistoryDao;
 import com.hjy.dao.system.IScFlowMainDao;
 import com.hjy.dao.system.IScFlowStatuschangeDao;
 import com.hjy.entity.product.PcProductinfo;
+import com.hjy.entity.system.ScFlowHistory;
 import com.hjy.entity.system.ScFlowMain;
 import com.hjy.entity.system.ScFlowStatuschange;
+import com.hjy.helper.DateHelper;
+import com.hjy.helper.ExceptionHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.model.flow.FlowNextOperator;
 import com.hjy.model.flow.RoleStatus;
@@ -41,9 +43,11 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 	
 	@Resource
 	private IScFlowMainDao dao;
-	
 	@Resource
 	private IScFlowStatuschangeDao flowStatusChangeDao;  
+	@Resource
+	private IScFlowHistoryDao flowHistoryDao;  
+	
 
 	
 	/**
@@ -53,9 +57,9 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 	 * 					该部分的代码逻辑为：创建审批流。代码原有逻辑调用位于systemcenter库下的存储过程 proc_flow_create
 	 * 					此处改为向sc_flow_main表和sc_flow_history表直接插入数据信息。
 	 * 
-	 * @param p Product information
+	 * @param p product information
 	 * @param seller 
-	 * @param platform 创建平台名称
+	 * @param platform 创建平台名称，如：open-api or minspc
 	 * @author Yangcl 
 	 * @date 2017年1月11日 下午11:34:45 
 	 * @version 1.0.0.1
@@ -85,10 +89,22 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 		f.setNextOperatorStatus(fno.getNextOperatorStatus());
 		 
 		// 代码原有逻辑调用位于systemcenter库下的存储过程 proc_flow_create
-		
-		
-		
-		
+		try {
+			dao.insertSelective(f);
+			ScFlowHistory sfh = new ScFlowHistory();
+			sfh.setUid(f.getUid());
+			sfh.setFlowCode(f.getFlowCode());
+			sfh.setFlowType(f.getFlowType());
+			sfh.setCreator("seller-adapter");
+			sfh.setCreateTime(DateHelper.formatDate(new Date())); 
+			sfh.setFlowRemark(f.getFlowRemark());
+			sfh.setCurrentStatus(f.getCurrentStatus()); 
+			flowHistoryDao.insertSelective(sfh);
+		} catch (Exception ex) {
+			logger.error("该商品在创建审批流时出现异常！【" + p.getProductCode() + "】"); 
+			String exstring = ExceptionHelper.allExceptionInformation(ex);
+			logger.error("ScFlowMainServiceImpl.createFlowMain()方法在创建审批流时出现严重异常！请查实！" + exstring);
+		}
 		
 		return result;
 	}

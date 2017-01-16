@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -45,6 +46,9 @@ import com.hjy.helper.WebHelper;
 import com.hjy.jms.ProductJmsSupport;
 import com.hjy.model.ProductSkuInfo;
 import com.hjy.service.IMinspcProductService;
+import com.hjy.service.system.IScFlowMainService;
+import com.hjy.system.ApiCacheVisitor;
+import com.hjy.system.cmodel.CacheWcSellerInfo;
 
 @Service
 public class MinspcProductServiceImpl extends BaseClass implements IMinspcProductService{
@@ -76,12 +80,17 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 	@Resource
 	private ILcStockchangeDao lcStockchangeDao;
 	
+	@Autowired
+	private IScFlowMainService scFlowMainService;
+	
+	
+	
 	private static String ProductHead = "6016";  // 8016
 	private static String SKUHead = "6019";  // 8019
 	private static String ProductFlowHead = "PF";
 	
 	/**
-	 * @description: 插入产品数据到多个表|TODO 此处需要解决事物回滚@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	 * @description: 插入产品数据到多个表 
 	 * 							 这里参考了跨境通com.hjy.service.impl.TxProductServiceImpl.java -> insertProduct() 
 	 * @throws                  
 	 * @author Yangcl
@@ -256,6 +265,9 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 				lsModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 				lcStockchangeDao.insertSelective(lsModel);
 			}
+			// 创建审批流
+			CacheWcSellerInfo seller = JSONObject.parseObject(ApiCacheVisitor.find("SF03100646") , CacheWcSellerInfo.class); // 取出缓存中的商户信息
+			scFlowMainService.createFlowMain(pinfo, seller, "minspc");   
 			
 			// 校验输入的数据合法性
 			ProductJmsSupport pjs = new ProductJmsSupport();
@@ -277,7 +289,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 	
 	
 	/**
-	 * @description: 更新产品数据到多个表|TODO 此处需要解决事物回滚@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	 * @description: 更新产品数据到多个表 
 	 * 							 
 	 * @throws                  
 	 * @author Yangcl
