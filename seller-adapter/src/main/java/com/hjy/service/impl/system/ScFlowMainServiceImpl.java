@@ -39,7 +39,7 @@ import com.hjy.system.cmodel.CacheWcSellerInfo;
 @Service("scFlowMainService")
 public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> implements IScFlowMainService {
 
-	private static String FlowHead = "SF";
+	private static String FlowHead = "SF9";
 	
 	@Resource
 	private IScFlowMainDao dao;
