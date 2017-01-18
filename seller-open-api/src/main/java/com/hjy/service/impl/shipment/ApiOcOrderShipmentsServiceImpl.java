@@ -100,7 +100,7 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 		String lockcode = WebHelper.getInstance().addLock(10000 , sellerCode + "@ApiOcOrderShipmentsServiceImpl.apiInsertShipments");      // 分布式锁
 		if(StringUtils.isNotEmpty(lockcode)) { 
 			List<OrderShipment> correctList = new ArrayList<OrderShipment>(); // 保存合法的物流信息
-			List<OrderShipment> exceptionOrderList = new ArrayList<OrderShipment>();  // 异常的订单物流信息|关键字段不全，不做处理，返回给调用方
+			List<OrderShipment> errorList = new ArrayList<OrderShipment>();  // 异常的订单物流信息|关键字段不全，不做处理，返回给调用方
 			for(int i = 0 ; i < list.size() ; i ++){
 				if(StringUtils.isNotBlank(list.get(i).getOrderCode()) && StringUtils.isNotBlank(list.get(i).getLogisticseCode()) && 
 						StringUtils.isNotBlank(list.get(i).getLogisticseName()) && StringUtils.isNotBlank(list.get(i).getWaybill())){
@@ -110,7 +110,7 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 					list.get(i).setCreateTime(DateHelper.formatDate(new Date())); 
 					correctList.add(list.get(i)); 
 				}else{
-					exceptionOrderList.add(list.get(i)); 
+					errorList.add(list.get(i)); 
 				}
 			}
 			List<OrderShipment> insertList = new ArrayList<OrderShipment>(); // 保存在我们库中的订单的物流信息，排除非法订单
@@ -127,8 +127,8 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 					insertList.add(o);
 				}
 			}
-			if(exceptionOrderList.size() > 0){
-				result.put("exceptionOrderList", exceptionOrderList); // 关键字段不全订单
+			if(errorList.size() > 0){
+				result.put("errorList", errorList); // 关键字段不全订单
 			}
 			if(otherOrderList.size() > 0){
 				result.put("otherList", otherOrderList); // 非惠家有订单

@@ -67,6 +67,7 @@ import com.hjy.model.ProductSkuInfo;
 import com.hjy.request.data.OrderInfoRequestDto;
 import com.hjy.request.data.OrderInfoStatus;
 import com.hjy.request.data.OrderInfoStatusDto;
+import com.hjy.request.data.OrderShipment;
 import com.hjy.response.OrderInfoResponse;
 import com.hjy.service.impl.BaseServiceImpl;
 import com.hjy.service.system.IScFlowMainService;
@@ -1099,20 +1100,92 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public JSONObject syncDemooooooooooooooo(String products, CacheWcSellerInfo seller){
+	/**
+	 * @description: 订单的物流变更信息|效验订单后插入物流信息
+	 * 
+	 * @接口所属：惠家有商户接口|Order.SyncSellerShipments
+	 * @访问间隔：5分钟 
+	 * 
+	 * @param json
+	 * @param seller
+	 * @return
+	 * @author Yangcl 
+	 * @date 2017年1月18日 上午11:40:01 
+	 * @version 1.0.0.1
+	 */
+	public JSONObject apiInsertShipments(String json, CacheWcSellerInfo seller){
+		String sellerCode = seller.getSellerCode();
+		JSONObject result = new JSONObject();  
+		result.put("code", 1);  // 默认成功，为1
+		
+		if(StringUtils.isNotBlank(json)){
+			String lock = "";
+			try {
+				lock = WebHelper.getInstance().addLock(180 , sellerCode + "@OpenApiSellerServiceImpl.apiInsertShipments");
+				if(StringUtils.isNotBlank(lock)){
+					List<OrderShipment> list = JSONArray.parseArray(json , OrderShipment.class);
+					if(list != null && list.size() > 0){
+						if(list.size() > 100){
+							result.put("code", 3);
+							result.put("desc", this.getInfo(100009004 , 100));  // 请求数据量过大，超过限制{0}条
+							return result; 
+						}
+						List<OrderShipment> correctList = new ArrayList<OrderShipment>(); // 保存合法的物流信息
+						List<OrderShipment> errorList = new ArrayList<OrderShipment>();  // 异常的订单物流信息|关键字段不全，不做处理，返回给调用方
+						for(int i = 0 ; i < list.size() ; i ++){
+							if(StringUtils.isAnyBlank(list.get(i).getOrderCode(), list.get(i).getLogisticseCode(), 
+									list.get(i).getWaybill(), list.get(i).getLogisticseName())){
+								errorList.add(list.get(i)); 
+								
+								// TODO 判断快递名称是否正确
+							}else{
+								list.get(i).setUid(UUID.randomUUID().toString().replace("-", ""));
+								list.get(i).setCreator(sellerCode); 
+								list.get(i).setCreateTime(DateHelper.formatDate(new Date())); 
+								correctList.add(list.get(i)); 
+							}
+							
+						}
+						
+					} 
+				}else{
+					result.put("code", 0);
+					result.put("desc", this.getInfo(100009002));  // 分布式锁生效中
+				}
+			} catch (Exception e) {
+				e.printStackTrace(); 
+				result.put("code", 3);
+				result.put("desc", this.getInfo(100009003));  // 请求参数错误，请求数据解析异常
+				return result; 
+			}finally{
+				WebHelper.getInstance().unLock(lock); 
+			}
+		}else{
+			result.put("code", -1);
+			result.put("desc", this.getInfo(100009001));  // 请求数据报文data为空
+		}
+		result.put("responseTime", DateHelper.formatDate(new Date()));
+		return result;
+	}
+	
+	
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public JSONObject syncDemooooooooooooooo(String json, CacheWcSellerInfo seller){
 		String sellerCode = seller.getSellerCode();
 		JSONObject result = new JSONObject();  
 		result.put("code", 1);  // 默认成功，为1
 		String productHead = this.getConfig("seller_adapter.product_" + seller.getSellerType()); ;
-		String skuHead = this.getConfig("seller_adapter.sku_" + seller.getSellerType()); ;
-		if(StringUtils.isNotBlank(products)){
+		String skuHead = this.getConfig("seller_adapter.sku_" + seller.getSellerType()); 
+		if(StringUtils.isNotBlank(json)){
 			String lock = "";
 			try {
 				lock = WebHelper.getInstance().addLock(180 , sellerCode + "@syncDemooooooooooooooo");
 				if(StringUtils.isNotBlank(lock)){
 					List<ProductInfo> plist =  null; 
 					try {
-						plist =  JSONArray.parseArray(products , ProductInfo.class);
+						plist =  JSONArray.parseArray(json , ProductInfo.class);
 						if(plist != null && plist.size() > 0){
 							if(plist.size() > 100){
 								result.put("code", 3);
@@ -1131,11 +1204,15 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 				}
 			} catch (Exception e) {
 				e.printStackTrace(); 
+			}finally{
+				WebHelper.getInstance().unLock(lock); 
 			}
 		}else{
 			result.put("code", -1);
 			result.put("desc", this.getInfo(100009001));  // 请求数据报文data为空
 		}
+		
+		result.put("responseTime", DateHelper.formatDate(new Date()));
 		return result;
 	}
 }
