@@ -187,6 +187,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 							}
 						}
 						result.put("success", successMap);
+						result.put("desc", this.getInfo(100009024));  		   // 100009024=请求执行完成!
 					}
 				} catch (Exception e) {
 					result.put("code", 3);
@@ -915,7 +916,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 						}
 					}
 					List<OrderInfoResponse> list = orderInfoDao.getOpenApiOrderinfoList(new OrderInfoRequestDto(sellerCode, null ,  startTime, endTime));
-					result.put("desc", "请求成功");
+					result.put("desc", this.getInfo(100009024));  		   // 100009024=请求执行完成!
 					result.put("data", list);
 					openApiQueryDao.insertSelective(new LcOpenApiQueryLog(UUID.randomUUID().toString().replace("-", ""),
 							sellerCode , 
@@ -1022,11 +1023,11 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 						List<String> error = new ArrayList<String>(); // 保存效验失败的订单编号 
 						for( int i = 0 ; i < list.size() ; i ++){
 							list.get(i).setUpdateTime(DateHelper.formatDate(new Date()));
-							if(this.validateOrderStatus(list.get(i))){
+							if(this.validateOrderStatus(list.get(i) , sellerCode)){
 								list.get(i).setOrderStatus("449715390001000" + list.get(i).getOrderStatus()); 
 								updateList.add(list.get(i));
 							}else{
-								error.add(list.get(i).getOrderCode());
+								error.add(list.get(i).getOrderCode());    
 							}
 						}
 						
@@ -1042,6 +1043,9 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 								error.add(o.getOrderCode());
 							}
 						}
+						result.put("success", successList);
+						result.put("error", error); 
+						result.put("desc", this.getInfo(100009024));  		   // 100009024=请求执行完成!
 					} 
 				}else{
 					result.put("code", 0);
@@ -1073,7 +1077,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	 * @author Yangcl 
 	 * @version 1.0.0.1
 	 */
-	private boolean validateOrderStatus(OrderInfoStatus info){
+	private boolean validateOrderStatus(OrderInfoStatus info , String sellerCode){
 		boolean flag = false;
 		if(StringUtils.isBlank(info.getOrderCode())){
 			return flag;
@@ -1082,6 +1086,13 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 		if(status.length() == 1 && StringUtils.startsWithAny(status, new String[] {"1" , "2" , "3" , "4" , "5" , "6" , "7" })){
 			flag = true;
 		}
+		
+		// 验证是否为该商户下的订单。
+//		Integer count = orderInfoDao.apiOrderinfoValidate(new OrderInfoStatusDto(info.getOrderCode() , sellerCode)); 
+//		if(count == 0){
+//			flag = false;
+//		}
+		
 		return flag;
 	}
 	

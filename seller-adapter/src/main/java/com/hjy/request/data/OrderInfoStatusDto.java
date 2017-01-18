@@ -23,6 +23,14 @@ public class OrderInfoStatusDto {
 
 	
 	
+	public OrderInfoStatusDto(String orderCode, String sellerCode) {
+		super();
+		this.orderCode = orderCode;
+		this.sellerCode = sellerCode;
+	}
+
+
+
 	public String getSellerCode() {
 		return sellerCode;
 	}

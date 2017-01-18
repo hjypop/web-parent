@@ -177,6 +177,17 @@
 			order_code = #{orderCode,jdbcType=VARCHAR} and small_seller_code = #{sellerCode,jdbcType=VARCHAR}
 	</update>
 	
+	<update id="apiOrderinfoValidate" parameterType="com.hjy.request.data.OrderInfoStatusDto">
+		select
+			count(*)
+		from
+			ordercenter.oc_orderinfo
+		where 
+				order_code = #{orderCode , jdbcType=VARCHAR} 
+			and 
+				small_seller_code = #{sellerCode , jdbcType=VARCHAR}
+	</update>
+	
 	
 	<!-- 根据order_code 和 small_seller_code获取一条记录信息 2016-08-10 Yangcl -->
 	<select id="getOrderInfoByCode" parameterType="com.hjy.entity.order.OcOrderinfo" resultMap="BaseResultMap">

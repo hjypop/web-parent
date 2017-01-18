@@ -69,6 +69,16 @@ public interface IOcOrderinfoDao extends BaseDao<OcOrderinfo, Integer>{
 	public Integer apiUpdateOrderinfoStatus(OrderInfoStatusDto dto);
 	
 	/**
+	 * @description: 验证是否为该商户下的订单  
+	 * 
+	 * @param dto 
+	 * @author Yangcl 
+	 * @date 2017年1月18日 上午11:11:55 
+	 * @version 1.0.0.1
+	 */
+	public Integer apiOrderinfoValidate(OrderInfoStatusDto dto);
+	
+	/**
 	 * @descriptions 根据order_code 和 small_seller_code 获取一条记录信息
 	 * 
 	 * @date 2016年8月10日下午2:01:52
