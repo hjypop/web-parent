@@ -31,7 +31,9 @@ import com.hjy.constant.MemberConst;
 import com.hjy.dao.ILcOpenApiQueryLogDao;
 import com.hjy.dao.ILcOpenApiSellerProductOperationsDao;
 import com.hjy.dao.log.ILcOpenApiOrderStatusDao;
+import com.hjy.dao.log.ILcOpenApiShipmentStatusDao;
 import com.hjy.dao.log.ILcStockchangeDao;
+import com.hjy.dao.order.IOcOrderShipmentsDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.dao.product.IPcBrandinfoDao;
 import com.hjy.dao.product.IPcProductcategoryRelDao;
@@ -49,7 +51,10 @@ import com.hjy.dto.product.ApiSellerSkuInfo;
 import com.hjy.dto.product.ProductInfo;
 import com.hjy.entity.log.LcOpenApiOrderStatus;
 import com.hjy.entity.log.LcOpenApiQueryLog;
+import com.hjy.entity.log.LcOpenApiShipmentStatus;
 import com.hjy.entity.log.LcStockchange;
+import com.hjy.entity.order.OcOrderShipments;
+import com.hjy.entity.order.OcOrderinfo;
 import com.hjy.entity.product.PcProductcategoryRel;
 import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductflow;
@@ -126,6 +131,11 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	private ILcOpenApiQueryLogDao openApiQueryDao;
 	@Resource
 	private ILcOpenApiOrderStatusDao openApiOrderStatusDao;
+	@Resource
+	private IOcOrderShipmentsDao orderShipmentsDao ;
+	@Resource
+	private ILcOpenApiShipmentStatusDao logShipmentStatusDao;
+	
 	
 	@Autowired
 	private IScFlowMainService scFlowMainService;
@@ -1108,7 +1118,6 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 	 * 
 	 * @param json
 	 * @param seller
-	 * @return
 	 * @author Yangcl 
 	 * @date 2017年1月18日 上午11:40:01 
 	 * @version 1.0.0.1
@@ -1130,21 +1139,83 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 							result.put("desc", this.getInfo(100009004 , 100));  // 请求数据量过大，超过限制{0}条
 							return result; 
 						}
+						// 效验订单，判断状态正确的订单	 
 						List<OrderShipment> correctList = new ArrayList<OrderShipment>(); // 保存合法的物流信息
 						List<OrderShipment> errorList = new ArrayList<OrderShipment>();  // 异常的订单物流信息|关键字段不全，不做处理，返回给调用方
 						for(int i = 0 ; i < list.size() ; i ++){
 							if(StringUtils.isAnyBlank(list.get(i).getOrderCode(), list.get(i).getLogisticseCode(), 
 									list.get(i).getWaybill(), list.get(i).getLogisticseName())){
-								errorList.add(list.get(i)); 
 								
-								// TODO 判断快递名称是否正确
+								errorList.add(list.get(i)); 
 							}else{
 								list.get(i).setUid(UUID.randomUUID().toString().replace("-", ""));
 								list.get(i).setCreator(sellerCode); 
 								list.get(i).setCreateTime(DateHelper.formatDate(new Date())); 
 								correctList.add(list.get(i)); 
 							}
+						}
+						if(errorList.size() > 0){
+							result.put("errorList", errorList); // 关键字段不全订单
+						}
+						
+						// 效验订单，判断是否有不是该商户下的订单	 
+						List<OrderShipment> insertList = new ArrayList<OrderShipment>(); // 保存在我们库中的订单的物流信息，排除非法订单
+						List<String> otherOrderList = new ArrayList<String>();  // 非惠家有订单的物流信息，不做处理，返回给调用方
+						for(OrderShipment o : correctList){
+							OcOrderinfo info = orderInfoDao.getOrderInfoByCode(new OcOrderinfo(o.getOrderCode() , sellerCode)); 
+							if(null == info){ 
+								otherOrderList.add(o.getOrderCode());   
+							}else{
+								insertList.add(o);
+							}
+						}
+						if(otherOrderList.size() > 0){
+							result.put("otherList", otherOrderList); // 非该商户订单
+						}
+						
+						// 准备处理订单对应的物流信息
+						List<OrderShipment> successList = new ArrayList<OrderShipment>(); // 保存同步成功的记录
+						List<OrderShipment> updateList = new ArrayList<OrderShipment>(); // 保存insertList中在库中已经存在的对象
+						OrderShipment ex = null;
+						try {
+							List<OrderShipment> insertList_ = new ArrayList<OrderShipment>(); 
+							for(OrderShipment s : insertList){
+								OcOrderShipments info = orderShipmentsDao.findWayBill(s); // 如果存在多条记录，此处mybatis会报异常
+								if(null != info){
+									updateList.add(new OrderShipment(info.getUid() , info.getOrderCode() , 
+														s.getLogisticseCode() , s.getLogisticseName() , s.getWaybill() ,
+														info.getCreator() , info.getCreateTime() , s.getRemark()));  
+								}else{
+									insertList_.add(s);
+								}
+							}
+							insertList = insertList_;
 							
+							for(OrderShipment s : insertList){
+								ex = s;
+								orderShipmentsDao.insertSelective(new OcOrderShipments(s.getUid() , s.getOrderCode() , s.getLogisticseCode() , s.getLogisticseName() , s.getWaybill() , s.getCreator() , s.getCreateTime() , s.getRemark()));   
+								logShipmentStatusDao.insertSelective(new LcOpenApiShipmentStatus(ex.getUid() , sellerCode , ex.getOrderCode() , ex.getLogisticseName() , ex.getWaybill() , 1 , new Date() , "insert success"));
+								successList.add(s);
+							}
+							for(OrderShipment s : updateList){
+								ex = s;
+								orderShipmentsDao.updateSelectiveByUid(new OcOrderShipments(s.getUid() , s.getOrderCode() , s.getLogisticseCode() , s.getLogisticseName() , s.getWaybill() , s.getCreator() , s.getCreateTime() , s.getRemark()));   
+								logShipmentStatusDao.insertSelective(new LcOpenApiShipmentStatus(ex.getUid() , sellerCode , ex.getOrderCode() , ex.getLogisticseName() , ex.getWaybill() , 1 , new Date() , "update success"));
+								successList.add(s);
+							}
+						} catch (Exception e) { 
+							// 记录异常信息到数据库表  shipmentUid sellerCode orderCode logisticseName wayBill  flag createTime remark
+							String desc_ = "平台内部错误，成功 " + successList.size() + " 条，失败 " + (insertList.size() + updateList.size() - successList.size()) + " 条";
+							logger.error("插入物流数据异常|" + desc_ , e); 
+							String remark_ = "{" + ExceptionHelper.allExceptionInformation(e) + "}";
+							logShipmentStatusDao.insertSelective(new LcOpenApiShipmentStatus(ex.getUid() , sellerCode , 
+									ex.getOrderCode() , ex.getLogisticseName() , ex.getWaybill() , 2 , new Date() , remark_));
+							
+							result.put("code", 5);
+							result.put("desc", desc_);
+							return result; 
+						}finally{
+							result.put("successList", successList);
 						}
 						
 					} 

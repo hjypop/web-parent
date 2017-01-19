@@ -143,7 +143,9 @@ public class ApiOcOrderShipmentsServiceImpl extends BaseServiceImpl<OcOrderShipm
 				for(OrderShipment s : insertList){
 					OcOrderShipments info = dao.findWayBill(s);       // 如果存在多条记录，此处mybatis会报异常
 					if(null != info){
-						updateList.add(new OrderShipment(info.getUid() , info.getOrderCode() , s.getLogisticseCode() , s.getLogisticseName() , s.getWaybill() , info.getCreator() , info.getCreateTime() , s.getRemark()));
+						updateList.add(new OrderShipment(info.getUid() , info.getOrderCode() , 
+											s.getLogisticseCode() , s.getLogisticseName() , s.getWaybill() ,
+											info.getCreator() , info.getCreateTime() , s.getRemark()));  
 					}else{
 						insertList_.add(s);
 					}
