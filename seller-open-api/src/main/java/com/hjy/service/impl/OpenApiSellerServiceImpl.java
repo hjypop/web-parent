@@ -1250,33 +1250,32 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 		String productHead = this.getConfig("seller_adapter.product_" + seller.getSellerType()); ;
 		String skuHead = this.getConfig("seller_adapter.sku_" + seller.getSellerType()); 
 		if(StringUtils.isNotBlank(json)){
-			String lock = "";
-			try {
-				lock = WebHelper.getInstance().addLock(180 , sellerCode + "@syncDemooooooooooooooo");
-				if(StringUtils.isNotBlank(lock)){
-					List<ProductInfo> plist =  null; 
-					try {
-						plist =  JSONArray.parseArray(json , ProductInfo.class);
-						if(plist != null && plist.size() > 0){
-							if(plist.size() > 100){
-								result.put("code", 3);
-								result.put("desc", this.getInfo(100009004 , 100));  // 请求数据量过大，超过限制{0}条
-								return result; 
-							}
-						}
-					} catch (Exception e) {
+			String lock = WebHelper.getInstance().addLock(180 , sellerCode + "@syncDemooooooooooooooo");
+			if(StringUtils.isNotBlank(lock)){
+				List<ProductInfo> list =  null; 
+				try {
+					list =  JSONArray.parseArray(json , ProductInfo.class);
+				} catch (Exception e) {
+					e.printStackTrace(); 
+					result.put("code", 3);
+					result.put("desc", this.getInfo(100009003));  // 请求参数错误，请求数据解析异常
+					return result; 
+				}finally{
+					WebHelper.getInstance().unLock(lock); 
+				}
+				
+				if(list != null && list.size() > 0){
+					if(list.size() > 100){
 						result.put("code", 3);
-						result.put("desc", this.getInfo(100009003));  // 请求参数错误，请求数据解析异常
+						result.put("desc", this.getInfo(100009004 , 100));  // 请求数据量过大，超过限制{0}条
 						return result; 
 					}
-				}else{
-					result.put("code", 0);
-					result.put("desc", this.getInfo(100009002));  // 分布式锁生效中
-				}
-			} catch (Exception e) {
-				e.printStackTrace(); 
-			}finally{
-				WebHelper.getInstance().unLock(lock); 
+					// TODO you code .
+					
+				} 
+			}else{
+				result.put("code", 0);
+				result.put("desc", this.getInfo(100009002));  // 分布式锁生效中
 			}
 		}else{
 			result.put("code", -1);
