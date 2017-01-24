@@ -345,6 +345,7 @@ public class KjtOperationsManagerServiceImpl extends BaseClass implements IKjtOp
 		String lockcode = WebHelper.getInstance().addLock(300 , "seller-adapter-kjt@OperationsManagerServiceImpl.funcSeven");      // 分布式锁5分钟
 		if(StringUtils.isNotEmpty(lockcode)) {
 			try {
+				int count = 1;
 				for(PcProductinfo i : list){
 					String uid=i.getUid();
 					String flowType = "449715390006";
@@ -362,20 +363,23 @@ public class KjtOperationsManagerServiceImpl extends BaseClass implements IKjtOp
 					boolean flag = new RedisHelper().reloadProductInRedis(i.getProductCode());
 					logger.info(i.getProductName() + "@"+ i.getProductCode() +"@缓存状态信息：" + flag);
 
+					String falgsss = "";
 					try {
 						MDataMap pmap = new MDataMap();
 						pmap.put("productCode", i.getProductCode());
 						// 根据上架或下架的情况来更新 solr 中的索引信息|下架则删除solr中的索引；上架则添加solr中的索引信息
 						if(productStatus.equals("4497153900060002")){
-							WebClientSupport.upPost(this.getConfig("web-redis.web_client_url_addone"), pmap);
+							falgsss = "addone : " + WebClientSupport.upPost(this.getConfig("web-redis.web_client_url_addone"), pmap);
 						}else{  // 下架商品则删除solr中的索引
-							WebClientSupport.upPost(this.getConfig("web-redis.web_client_url_delbyid"), pmap);
+							falgsss = "delbyid : " + WebClientSupport.upPost(this.getConfig("web-redis.web_client_url_delbyid"), pmap);
 						}
 					} catch (Exception exx) {
 						System.out.println(ExceptionHelper.allExceptionInformation(exx));  
 						elist.add(i.getProductCode());
 						continue;
 					}
+					
+					System.out.println("**********************************************************当前执行第：" + count++  + "条记录|搜索状态：" + falgsss); 
 				}
 
 				result.put("status", "success");
