@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -67,6 +68,10 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 	public JSONObject createFlowMain(PcProductinfo p , CacheWcSellerInfo seller , String platform) {
 		JSONObject result = new JSONObject();
 		ScFlowMain f = new ScFlowMain();
+		f.setUid(UUID.randomUUID().toString().replace("-", ""));    
+		f.setCreateTime(DateHelper.formatDate(new Date())); 
+		f.setUpdateTime(DateHelper.formatDate(new Date()));
+		
 		f.setCreator(platform); 
 		if(this.isCrossBorderSeller(seller)){
 			f.setCurrentStatus("4497172300160004");
