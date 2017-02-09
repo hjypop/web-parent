@@ -266,7 +266,9 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 				lcStockchangeDao.insertSelective(lsModel);
 			}
 			// 创建审批流
-			CacheWcSellerInfo seller = JSONObject.parseObject(ApiCacheVisitor.find("SF03100646") , CacheWcSellerInfo.class); // 取出缓存中的商户信息
+//			CacheWcSellerInfo seller = JSONObject.parseObject(ApiCacheVisitor.find("SF03100646") , CacheWcSellerInfo.class); // 取出缓存中的商户信息
+			CacheWcSellerInfo seller = new CacheWcSellerInfo();
+			seller.setSellerType("4497478100050002"); 
 			scFlowMainService.createFlowMain(pinfo, seller, "minspc");   
 			
 			// 校验输入的数据合法性
