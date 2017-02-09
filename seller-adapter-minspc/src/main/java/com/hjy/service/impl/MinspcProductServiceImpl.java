@@ -407,7 +407,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			e.setSmallSellerCode(getConfig("seller_adapter_minspc.small_seller_code"));  // 线上配置文件 small_seller_code 
 			e.setProductStatus("4497153900060003");// 商品下架
 			e.setValidate_flag("Y");//是否是虚拟商品
-			e.setTaxRate(BigDecimal.valueOf(Double.valueOf(p.getProductTaxes())));
+			e.setTaxRate(BigDecimal.valueOf(Double.valueOf(0))); 
 			e.setProductWeight(BigDecimal.valueOf(Double.valueOf(p.getProductWeight())));
 			e.setTransportTemplate("0");// 运费模板默认为卖家包邮
 			e.setLabels(p.getProductKey());   //  关键字
@@ -480,6 +480,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			ext.setProductStoreType(p.getColdStorage()); 
 			ext.setPoffer("job-system-minspc");
 			ext.setSettlementType("4497471600110003");	// 服务费结算
+			ext.setPurchaseType("4497471600160003");  // purchase_type 采购类型  代收代付：4497471600160003
 			e.setPcProductinfoExt(ext);
 			
 			// 商品变更状态
