@@ -92,7 +92,7 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 		}
 		f.setFlowTitle(p.getProductCode()); 
 		f.setFlowType("449717230016");
-		f.setFlowUrl(this.getConfig("seller_adapter.PreviewCheckProductUrl")); 
+		f.setFlowUrl(this.getConfig("seller_adapter.PreviewCheckProductUrl") + p.getProductCode() + "_1"); 
 		f.setOuterCode(p.getProductCode());  
 		f.setFlowRemark(this.getInfo(200002002, p.getProductCode()));   
 		f.setFlowCode(WebHelper.getInstance().genUniqueCode(FlowHead)); 

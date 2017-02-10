@@ -613,6 +613,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 			PcProductcategoryRel pprModel = new PcProductcategoryRel();
 			pprModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 			pprModel.setProductCode(e.getProductCode());	
+			pprModel.setCategoryCode("44971603002900010001");  // 惠家有默认
 			pprModel.setFlagMain(Long.parseLong(1 + ""));
 			pcProductcategoryRelDao.insertSelective(pprModel);
 			
