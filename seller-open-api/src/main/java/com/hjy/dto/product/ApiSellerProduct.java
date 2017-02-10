@@ -9,6 +9,7 @@ import com.hjy.annotation.TargetField;
  * @description: open-api 惠家有商户商品的数据封装体
  * 
  * TODO 待删除：RequestProducts  &  com.hjy.dto.product.ProductInfo
+ * TODO private BigDecimal taxes;			// 税率  这里也是个问题
  * 
  * @author Yangcl
  * @date 2016年12月29日 下午6:03:24 

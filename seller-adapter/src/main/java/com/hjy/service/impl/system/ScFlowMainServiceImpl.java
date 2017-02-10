@@ -68,30 +68,35 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 	public JSONObject createFlowMain(PcProductinfo p , CacheWcSellerInfo seller , String platform) {
 		JSONObject result = new JSONObject();
 		ScFlowMain f = new ScFlowMain();
-		f.setUid(UUID.randomUUID().toString().replace("-", ""));    
+		f.setUid(UUID.randomUUID().toString().replace("-", ""));  
 		f.setCreateTime(DateHelper.formatDate(new Date())); 
 		f.setUpdateTime(DateHelper.formatDate(new Date()));
 		
 		f.setCreator(platform); 
+		/**
+		 * 4677031800010001 za_role表里的，代表超级管理员  
+		 * 4497172300160002 普通运营待审批
+		 * 4497172300160003 网站编辑待审批
+		 * 4497172300160006 质检员驳回
+		 * 4497172300160009 跨境运营审批驳回
+		 * 
+		 */
 		if(this.isCrossBorderSeller(seller)){
-			f.setCurrentStatus("4497172300160004");
+			f.setCurrentStatus("4497172300160004");  // 跨境运营待审批
+			f.setNextOperators("4677031800010001");
+			f.setNextOperatorStatus("4677031800010001:4497172300160003;4677031800010001:4497172300160009");
 		}else{
-			f.setCurrentStatus("4497172300160001");  
+			f.setCurrentStatus("4497172300160001");    // 质检员待审批
+			f.setNextOperators("4677031800010001");
+			f.setNextOperatorStatus("4677031800010001:4497172300160002;4677031800010001:4497172300160006");
 		}
 		f.setFlowTitle(p.getProductCode()); 
 		f.setFlowType("449717230016");
 		f.setFlowUrl(this.getConfig("seller_adapter.PreviewCheckProductUrl")); 
 		f.setOuterCode(p.getProductCode());  
 		f.setFlowRemark(this.getInfo(200002002, p.getProductCode()));   
-		
-		
-		f.setFlowCode(WebHelper.getInstance().genUniqueCode(FlowHead));
-		FlowNextOperator fno = this.getNextAll(f.getFlowType(), f.getCurrentStatus());
-		if(StringUtils.isBlank( fno.getNextOperator() )){
-			f.setFlowIsend(1); // 是否结束|也不知道谁特么设计的这个字段，从这尿性上猜 1应该是结束，默认为0
-		}
-		f.setNextOperators(fno.getNextOperator());
-		f.setNextOperatorStatus(fno.getNextOperatorStatus());
+		f.setFlowCode(WebHelper.getInstance().genUniqueCode(FlowHead)); 
+		f.setFlowIsend(0);
 		 
 		// 代码原有逻辑调用位于systemcenter库下的存储过程 proc_flow_create
 		try {
@@ -131,93 +136,96 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 		return flag;		
 	}
 	
-	
-	private FlowNextOperator getNextAll(String flowType , String toStatus){
-		FlowNextOperator o = new FlowNextOperator();
-		List<RoleStatus> rsList = this.getRoleToStatusList(flowType, toStatus);
-		if(rsList != null && rsList.size() != 0){
-			o.setNextOperator(this.getNextOperator(rsList));  
-			o.setNextOperatorStatus(this.getNextOpoeratorStatus(rsList)); 
-		}
-		return o;
-	}
-	
-	
-	/**
-	 * @description: 获取角色 状态 对应关系
-	 * 
-	 * @param flowType
-	 * @param toStatus
-	 * @author Yangcl 
-	 * @date 2017年1月12日 下午3:15:42 
-	 * @version 1.0.0.1
-	 */
-	private List<RoleStatus> getRoleToStatusList(String flowType , String toStatus){
-		List<RoleStatus> list = new ArrayList<RoleStatus>();
-		
-		Map<String , String> map = new HashMap<String , String>(2);
-		map.put("flow_type", flowType);
-		map.put("from_status", toStatus);
-		List<ScFlowStatuschange> list_ = flowStatusChangeDao.findListByFlowTyp(map);
-		if(list_ != null && list_.size() != 0){
-			for(ScFlowStatuschange s : list_){
-				list.add(new RoleStatus(s.getRoleId(), s.getToStatus()));
-			}
-		}
-		
-		return list;  
-	}
-	
-	/**
-	 * @description: 获取下一级审批人
-	 * 
-	 * @param list
-	 * @author Yangcl 
-	 * @date 2017年1月12日 下午4:38:24 
-	 * @version 1.0.0.1
-	 */
-	private String getNextOperator(List<RoleStatus> list){
-		String str = "";
-		Map<String , String> map = new HashMap<String , String>();
-		if(list != null && list.size() != 0){
-			for(RoleStatus s : list){
-				if(!map.containsKey(s.getRoleCode())){
-					map.put(s.getRoleCode(), "");
-					str += s.getRoleCode() + "," ;
-				}
-			}
-			if(StringUtils.isNotBlank(str)){
-				str = str.substring(0  , str.length()-1); 
-			}
-		}
-		return str;
-	}
-	
-	/**
-	 * @description: 获取下一审批人状态 
-	 * 
-	 * @param list
-	 * @author Yangcl 
-	 * @date 2017年1月12日 下午5:55:01 
-	 * @version 1.0.0.1
-	 */
-	private String getNextOpoeratorStatus(List<RoleStatus> list){
-		String str = "";
-		if(list != null && list.size() != 0){
-			for(RoleStatus s : list){
-				str += s.getRoleCode() + ":" + s.getToStatus() + ";" ;
-			}
-			if(StringUtils.isNotBlank(str)){
-				str = str.substring(0  , str.length()-1); 
-			}
-		}
-		return str;
-	}
-	
-	
 }
 
 
+
+
+
+
+
+
+//private FlowNextOperator getNextAll(String flowType , String toStatus){
+//	FlowNextOperator o = new FlowNextOperator();
+//	List<RoleStatus> rsList = this.getRoleToStatusList(flowType, toStatus);
+//	if(rsList != null && rsList.size() != 0){
+//		o.setNextOperator(this.getNextOperator(rsList));  
+//		o.setNextOperatorStatus(this.getNextOpoeratorStatus(rsList)); 
+//	}
+//	return o;
+//}
+
+
+/**
+ * @description: 获取角色 状态 对应关系
+ * 
+ * @param flowType
+ * @param toStatus
+ * @author Yangcl 
+ * @date 2017年1月12日 下午3:15:42 
+ * @version 1.0.0.1
+ */
+//private List<RoleStatus> getRoleToStatusList(String flowType , String toStatus){
+//	List<RoleStatus> list = new ArrayList<RoleStatus>();
+//	
+//	Map<String , String> map = new HashMap<String , String>(2);
+//	map.put("flow_type", flowType);
+//	map.put("from_status", toStatus);
+//	List<ScFlowStatuschange> list_ = flowStatusChangeDao.findListByFlowTyp(map);
+//	if(list_ != null && list_.size() != 0){
+//		for(ScFlowStatuschange s : list_){
+//			list.add(new RoleStatus(s.getRoleId(), s.getToStatus()));
+//		}
+//	}
+//	
+//	return list;  
+//}
+
+/**
+ * @description: 获取下一级审批人
+ * 
+ * @param list
+ * @author Yangcl 
+ * @date 2017年1月12日 下午4:38:24 
+ * @version 1.0.0.1
+ */
+//private String getNextOperator(List<RoleStatus> list){
+//	String str = "";
+//	Map<String , String> map = new HashMap<String , String>();
+//	if(list != null && list.size() != 0){
+//		for(RoleStatus s : list){
+//			if(!map.containsKey(s.getRoleCode())){
+//				map.put(s.getRoleCode(), "");
+//				str += s.getRoleCode() + "," ;
+//			}
+//		}
+//		if(StringUtils.isNotBlank(str)){
+//			str = str.substring(0  , str.length()-1); 
+//		}
+//	}
+//	return str;
+//}
+
+/**
+ * @description: 获取下一审批人状态 
+ * 
+ * @param list
+ * @author Yangcl 
+ * @date 2017年1月12日 下午5:55:01 
+ * @version 1.0.0.1
+ */
+//private String getNextOpoeratorStatus(List<RoleStatus> list){
+//	String str = "";
+//	if(list != null && list.size() != 0){
+//		for(RoleStatus s : list){
+//			str += s.getRoleCode() + ":" + s.getToStatus() + ";" ;
+//		}
+//		if(StringUtils.isNotBlank(str)){
+//			str = str.substring(0  , str.length()-1); 
+//		}
+//	}
+//	return str;
+//}
 
 
 

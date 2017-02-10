@@ -269,7 +269,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 //			CacheWcSellerInfo seller = JSONObject.parseObject(ApiCacheVisitor.find("SF03100646") , CacheWcSellerInfo.class); // 取出缓存中的商户信息
 			CacheWcSellerInfo seller = new CacheWcSellerInfo();
 			seller.setSellerType("4497478100050002"); 
-			scFlowMainService.createFlowMain(pinfo, seller, "minspc");   
+			scFlowMainService.createFlowMain(pinfo, seller, "minspc-job");   
 			
 			// 校验输入的数据合法性
 			ProductJmsSupport pjs = new ProductJmsSupport();
@@ -407,7 +407,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			e.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS);  // SI2003
 			e.setMainpicUrl(p.getProductPictures().get(0));   // 主图默认为轮播图的第一张  
 			e.setSmallSellerCode(getConfig("seller_adapter_minspc.small_seller_code"));  // 线上配置文件 small_seller_code 
-			e.setProductStatus("4497153900060003");// 商品下架
+			e.setProductStatus("4497153900060001");// 商品待上架
 			e.setValidate_flag("Y");//是否是虚拟商品
 			e.setTaxRate(BigDecimal.valueOf(Double.valueOf(0))); 
 			e.setProductWeight(BigDecimal.valueOf(Double.valueOf(p.getProductWeight())));

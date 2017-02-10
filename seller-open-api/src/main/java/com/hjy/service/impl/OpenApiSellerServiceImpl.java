@@ -445,7 +445,8 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 			e.setMarketPrice(p.getMarketPrice());
 			e.setMainpicUrl(p.getProductPictures().get(0));  // 主图默认为轮播图的第一张
 			e.setSmallSellerCode(seller.getSellerCode()); 
-			e.setProductStatus("4497153900060003");// 商品下架
+			// 状态必须是待上架，否则审批流在网站编辑节点无法编辑。
+			e.setProductStatus("4497153900060001");// 商品待上架    
 			e.setValidate_flag("Y");//是否是虚拟商品
 			e.setTaxRate(p.getTaxes());
 			e.setProductWeight(p.getProductWeight());
