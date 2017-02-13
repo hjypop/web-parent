@@ -250,6 +250,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			ppf.setFlowCode(e.getPcProdcutflow().getFlowCode());
 			ppf.setFlowStatus(e.getPcProdcutflow().getFlowStatus());
 			ppf.setProductCode(e.getProductCode());
+			ppf.setCreateTime(createTime); 
 			ppf.setUpdateTime(createTime);
 			ppf.setUpdator("job-system-minspc");
 			ppf.setProductJson(JSON.toJSONString(e)); 
@@ -489,7 +490,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			// 商品变更状态
 			PcProductflow pcProdcutflow = new PcProductflow();
 			pcProdcutflow.setFlowCode(WebHelper.getInstance().genUniqueCode(ProductFlowHead));
-			pcProdcutflow.setFlowStatus(SkuCommon.ProAddOr);
+			pcProdcutflow.setFlowStatus(SkuCommon.ProAddInit); // 10 新增商品未审核状态
 			e.setPcProdcutflow(pcProdcutflow);
 			
 			list_.add(e);
