@@ -554,7 +554,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 			// 商品变更状态
 			PcProductflow pf = new PcProductflow();
 			pf.setFlowCode(WebHelper.getInstance().genUniqueCode("PF"));
-			pf.setFlowStatus(SkuCommon.ProAddOr);
+			pf.setFlowStatus(SkuCommon.ProAddInit);  // 新增商品未审核状态
 			pf.setProductCode(e.getProductCode()); 
 			e.setPcProdcutflow(pf);
 			
@@ -715,6 +715,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 			ppf.setFlowCode(e.getPcProdcutflow().getFlowCode());
 			ppf.setFlowStatus(e.getPcProdcutflow().getFlowStatus());
 			ppf.setProductCode(e.getProductCode());
+			ppf.setCreateTime(createTime); 
 			ppf.setUpdateTime(createTime);
 			ppf.setUpdator("open-api-platform");
 			ppf.setProductJson(JSON.toJSONString(e)); 
