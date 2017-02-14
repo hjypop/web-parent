@@ -280,7 +280,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 		List<ApiSellerSkuInfo> skus = p.getSkuList();
 		for(ApiSellerSkuInfo s : skus){
 			if(StringUtils.isAnyBlank(s.getSellPrice().toString(),
-					s.getCostPrice().toString(), s.getStockNum().toString(),
+					s.getCostPrice().toString() , s.getStockNum().toString(),
 					s.getSkuPicUrl() , s.getSkuName() , s.getSkuAdv() , 
 					s.getSecurityStockNum().toString() , s.getMiniOrder().toString(),
 					s.getSaleYn() , s.getFlagEnable().toString() , s.getSpecification() , s.getColor())){
@@ -312,6 +312,11 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 				result.put("desc", this.getInfo(100009020));  // 100009020=非法的可用状态标识，flagEnable: 0不可用/1可用
 				return result;
 			}
+			if(s.getSellPrice().toString().compareTo(s.getCostPrice().toString()) <= 0){
+				result.put("desc", this.getInfo(100009025));  // 100009025=商品的sku成本价必须小于销售价
+				return result;
+			}
+			
 		}
 		
 		if(vmap.size() != skus.size()){

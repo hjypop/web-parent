@@ -439,7 +439,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			ProductSkuInfo skuInfo = new ProductSkuInfo();
 			skuInfo.setSkuCode(WebHelper.getInstance().genUniqueCode(SKUHead));
 			skuInfo.setProductCode(e.getProductCode());
-			skuInfo.setSellPrice(price);
+			skuInfo.setSellPrice(price.add(new BigDecimal(1)));  // 商品的sku成本价必须小于销售价|所以这里默认+1
 			skuInfo.setMarketPrice(price);
 			skuInfo.setCostPrice(price);// 设置sku的成本价
 			skuInfo.setSkuName(e.getProductName()); 
