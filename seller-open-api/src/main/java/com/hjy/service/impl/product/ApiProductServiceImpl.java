@@ -249,7 +249,7 @@ public class ApiProductServiceImpl extends BaseServiceImpl<PcProductinfo, Intege
 		if(StringUtils.isAnyBlank(p.getSellerProductCode(),
 			p.getProductName() , p.getProductShortname(),
 			p.getCostPrice().toString(), p.getMarketPrice().toString() , 
-			p.getProductWeight().toString() , p.getMainPicUrl() , p.getProductVolumeItem(),
+			p.getProductWeight().toString() , p.getMainpicUrl() , p.getProductVolumeItem(),
 			p.getProductVolume().toString() , p.getExpiryDate().toString() , p.getExpiryUnit() ,
 			p.getTaxes().toString() , p.getLabels() )){
 			result.put("desc", this.getInfo(100009005));  // 请求参数体中包含不合法的字段
