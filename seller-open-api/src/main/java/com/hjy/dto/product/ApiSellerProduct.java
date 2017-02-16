@@ -23,7 +23,7 @@ public class ApiSellerProduct {
 	private BigDecimal costPrice;    // 成本价
 	private BigDecimal marketPrice;    // 市场价
 	private BigDecimal productWeight;    // 商品重量
-	private String mainPicUrl;    // 主图的Url
+	private String mainpicUrl;    // 主图的Url
 	private String productVolumeItem;    // 长 宽 高 ，用逗号隔开
 	private BigDecimal productVolume;    // 商品体积
 	private Integer expiryDate;    // 保质期
@@ -102,11 +102,11 @@ public class ApiSellerProduct {
 	public void setMarketPrice(BigDecimal marketPrice) {
 		this.marketPrice = marketPrice;
 	}
-	public String getMainPicUrl() {
-		return mainPicUrl;
+	public String getMainpicUrl() {
+		return mainpicUrl;
 	}
-	public void setMainPicUrl(String mainPicUrl) {
-		this.mainPicUrl = mainPicUrl;
+	public void setMainpicUrl(String mainpicUrl) {
+		this.mainpicUrl = mainpicUrl;
 	}
 	public String getProductVolumeItem() {
 		return productVolumeItem;

@@ -112,7 +112,8 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			pinfo.setFlagPayway(e.getFlagPayway());
 			pinfo.setFlagSale(e.getFlagSale());
 			pinfo.setLabels(e.getLabels());
-			pinfo.setMainPicUrl(e.getMainPicUrl());
+//			pinfo.setMainPicUrl(e.getMainPicUrl());
+			pinfo.setMainpicUrl(e.getMainpicUrl());   // 数据库主图
 			pinfo.setMarketPrice(e.getMarketPrice());
 			pinfo.setMaxSellPrice(e.getMaxSellPrice());
 			pinfo.setMinSellPrice(e.getMinSellPrice());
@@ -154,12 +155,21 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			ppdModel.setDescriptionInfo(e.getDescription().getDescriptionInfo()); 
 			pcProductdescriptionDao.insertSelective(ppdModel);
 			
+			List<PcProductpic> picList_ = new ArrayList<PcProductpic>(); 
 			// 插入商品轮播图
 			List<PcProductpic> picList = e.getPcPicList();
 			for (PcProductpic pic : picList) {
 				pcProductpicDao.insertSelective(pic);
-			}
-			
+				PcProductpic pic_ = new PcProductpic();
+				pic_.setPicUrl(pic.getPicUrl()); 
+				picList_.add(pic_);
+			} 
+			/*
+			 * 否则编辑商品的时候无法显示主图|modproductDraftBox.js -> set_value()方法里的坑代码。
+			 * 貌似在其他涉及到编辑商品的代码里，也都是这样的。在编辑代码的时候会读取对应表中记录的
+			 * product_json字段中的json串，里面PcProductpic结构只有picUrl有值
+			 */
+			e.setPcPicList(picList_);  
 			
 			// 插入sku信息
 			List<ProductSkuInfo> skuList = e.getProductSkuInfoList();
@@ -433,13 +443,13 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			// TODO 但此处有问题，是否在open-api中开放此类目？
 			e.setQualificationCategoryCode(""); 
 			// 店铺商品分类关系
-			List<UcSellercategoryProductRelation> usprList = new ArrayList<UcSellercategoryProductRelation>();
-			UcSellercategoryProductRelation uspr = new UcSellercategoryProductRelation();
-			uspr.setProductCode(e.getProductCode());
-			uspr.setCategoryCode("4497160400020001");  // uc_sellercategory表 榨汁机
-			uspr.setSellerCode("SI2003"); 
-			usprList.add(uspr);
-			e.setUsprList(usprList);  
+//			List<UcSellercategoryProductRelation> usprList = new ArrayList<UcSellercategoryProductRelation>();
+//			UcSellercategoryProductRelation uspr = new UcSellercategoryProductRelation();
+//			uspr.setProductCode(e.getProductCode());
+//			uspr.setCategoryCode("");  // uc_sellercategory表 榨汁机
+//			uspr.setSellerCode("SI2003"); 
+//			usprList.add(uspr);
+//			e.setUsprList(usprList);  
 
 			// 设置商品描述
 			PcProductdescription description = new PcProductdescription();
@@ -463,7 +473,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			ProductSkuInfo skuInfo = new ProductSkuInfo();
 			skuInfo.setSkuCode(WebHelper.getInstance().genUniqueCode(SKUHead));
 			skuInfo.setProductCode(e.getProductCode());
-			skuInfo.setSellPrice(price.add(new BigDecimal(1)));  // 商品的sku成本价必须小于销售价|所以这里默认+1
+			skuInfo.setSellPrice(price);  
 			skuInfo.setMarketPrice(price);
 			skuInfo.setCostPrice(price);// 设置sku的成本价
 			skuInfo.setSkuName(e.getProductName()); 
@@ -474,19 +484,19 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			skuInfo.setSaleYn("Y");// 是否可卖为可买
 			skuInfo.setFlagEnable("1");// 是否可用为可用
 			skuInfo.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS);  // SI2003
-			skuInfo.setSkuKey("color_id=0&style_id=0");
-			skuInfo.setSkuValue("颜色属性=共同&规格属性=共同");
+			skuInfo.setSkuKey("4497462000010001=44974620000100010000&4497462000020001=44974620000200010000");
+			skuInfo.setSkuValue("颜色=共同&款式=共同");
 			skuInfoList.add(skuInfo);
 			e.setProductSkuInfoList(skuInfoList); 
 			
-			// 设置商品轮播图
+			// 设置商品轮播图  经过确定，惠家有库中并不是每个sku都有一个轮播图，轮播图只绑定于product - Yangcl
 			List<PcProductpic> lunBoList = new ArrayList<PcProductpic>();
 			for(String url : p.getProductPictures()){
 				PcProductpic picModel = new PcProductpic();
 				picModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 				picModel.setPicUrl(url);
 				picModel.setProductCode(e.getProductCode());
-				picModel.setSkuCode(skuInfo.getSkuCode());
+				picModel.setSkuCode(""); // 所以这里设置为空 
 				lunBoList.add(picModel);
 			}
 			e.setPcPicList(lunBoList);

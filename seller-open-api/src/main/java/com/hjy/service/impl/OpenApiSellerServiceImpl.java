@@ -237,7 +237,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 		if(StringUtils.isAnyBlank(p.getSellerProductCode(),
 			p.getProductName() , p.getProductShortname(),
 			p.getCostPrice().toString(), p.getMarketPrice().toString() , 
-			p.getProductWeight().toString() , p.getMainPicUrl() , p.getProductVolumeItem(),
+			p.getProductWeight().toString() , p.getMainpicUrl() , p.getProductVolumeItem(),
 			p.getProductVolume().toString() , p.getExpiryDate().toString() , p.getExpiryUnit() ,
 			p.getTaxes().toString() , p.getLabels() )){
 			result.put("desc", this.getInfo(100009005));  // 请求参数体中包含不合法的字段
@@ -450,7 +450,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 			e.setMinSellPrice(p.getCostPrice());
 			e.setCostPrice(p.getCostPrice());
 			e.setMarketPrice(p.getMarketPrice());
-			e.setMainpicUrl(p.getProductPictures().get(0));  // 主图默认为轮播图的第一张
+			e.setMainpicUrl(p.getMainpicUrl());  // 主图 
 			e.setSmallSellerCode(seller.getSellerCode()); 
 			// 状态必须是待上架，否则审批流在网站编辑节点无法编辑。
 			e.setProductStatus("4497153900060001");// 商品待上架    
@@ -478,13 +478,13 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 			// TODO 但此处有问题，是否在open-api中开放此类目？
 			e.setQualificationCategoryCode(""); 
 			// 店铺商品分类关系
-			List<UcSellercategoryProductRelation> usprList = new ArrayList<UcSellercategoryProductRelation>();
-			UcSellercategoryProductRelation uspr = new UcSellercategoryProductRelation();
-			uspr.setProductCode(e.getProductCode());
-			uspr.setCategoryCode("4497160400020001");  // uc_sellercategory表 榨汁机
-			uspr.setSellerCode("SI2003"); 
-			usprList.add(uspr);
-			e.setUsprList(usprList); 
+//			List<UcSellercategoryProductRelation> usprList = new ArrayList<UcSellercategoryProductRelation>();
+//			UcSellercategoryProductRelation uspr = new UcSellercategoryProductRelation();
+//			uspr.setProductCode(e.getProductCode());
+//			uspr.setCategoryCode("4497160400020001");  // uc_sellercategory表 榨汁机
+//			uspr.setSellerCode("SI2003"); 
+//			usprList.add(uspr);
+//			e.setUsprList(usprList); 
 			
 			// 设置商品描述
 			PcProductdescription description = new PcProductdescription();
@@ -566,7 +566,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 				pic.setUid(UUID.randomUUID().toString().replace("-", ""));
 				pic.setPicUrl(url);
 				pic.setProductCode(e.getProductCode());
-				pic.setSkuCode(" "); // 所以这里设置为空 
+				pic.setSkuCode(""); // 所以这里设置为空 
 				lunBoList.add(pic);
 			}
 			e.setPcPicList(lunBoList);
@@ -618,7 +618,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 			p.setFlagPayway(0);  // 是否货到付款 0 否 1 是|经过验证，pc_productinfo都是0 - Yangcl 
 			p.setFlagSale(e.getFlagSale()); 
 			p.setLabels(e.getLabels());
-			p.setMainpicUrl(e.getMainpicUrl());   
+			p.setMainpicUrl(e.getMainpicUrl());    // 数据库主图
 			p.setMarketPrice(e.getMarketPrice());
 			p.setMaxSellPrice(e.getMarketPrice());
 			p.setMinSellPrice(e.getCostPrice());
@@ -794,7 +794,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 			PcProductinfo pinfo = new PcProductinfo();
 			pinfo.setUid(e.getUid()); 
 			pinfo.setLabels(e.getLabels());
-			pinfo.setMainPicUrl(e.getMainPicUrl());
+			pinfo.setMainpicUrl(e.getMainpicUrl());
 			pinfo.setCostPrice(e.getCostPrice());
 			pinfo.setMarketPrice(e.getMarketPrice());
 			pinfo.setMaxSellPrice(e.getMaxSellPrice());
