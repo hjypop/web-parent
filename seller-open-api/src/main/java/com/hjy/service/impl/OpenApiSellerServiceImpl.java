@@ -318,7 +318,7 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 				result.put("desc", this.getInfo(100009025));  // 100009025=商品的sku成本价必须小于销售价
 				return result;
 			}
-			
+			// TODO 规格属性与颜色属性验证问题
 		}
 		
 		if(vmap.size() != skus.size()){
@@ -525,7 +525,8 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 			for(int k = 0 ; k < slist.size() ; k ++){
 				ApiSellerSkuInfo s = slist.get(k);
 				ProductSkuInfo i = new ProductSkuInfo();
-				// sku规格属性信息 参看：PlusSupportProduct.propertyListSku() 这个方法 
+				// sku规格属性信息 参看：PlusSupportProduct.propertyListSku() 这个方法 |此处也有问题！TODO 规格属性与颜色属性挂靠问题待解决
+				// 下面的代码不对
 				i.setSkuKey("color_id=" + k + "&style_id=" + k);  
 				i.setSkuValue("颜色属性=" + StringUtils.trimToEmpty(s.getColor()) + "&规格属性=" + StringUtils.trimToEmpty(s.getSpecification()) );  
 				
