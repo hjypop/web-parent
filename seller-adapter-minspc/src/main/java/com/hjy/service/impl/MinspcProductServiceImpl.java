@@ -33,6 +33,7 @@ import com.hjy.dao.user.IUcSellercategoryProductRelationDao;
 import com.hjy.dto.response.ResultMsg;
 import com.hjy.dto.response.product.Product;
 import com.hjy.entity.log.LcStockchange;
+import com.hjy.entity.product.PcCategoryinfo;
 import com.hjy.entity.product.PcProductcategoryRel;
 import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductflow;
@@ -41,6 +42,7 @@ import com.hjy.entity.product.PcProductinfoExt;
 import com.hjy.entity.product.PcProductpic;
 import com.hjy.entity.product.PcSkuinfo;
 import com.hjy.entity.system.ScStoreSkunum;
+import com.hjy.entity.user.UcSellercategoryProductRelation;
 import com.hjy.helper.ExceptionHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.jms.ProductJmsSupport;
@@ -140,13 +142,8 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			pinfo.setQualificationCategoryCode(e.getQualificationCategoryCode());// 资质品类
 			pcProductInfoDao.insertSelective(pinfo); 
 			
-			// 添加商品的实类信息
-			PcProductcategoryRel pprModel = new PcProductcategoryRel();
-			pprModel.setUid(UUID.randomUUID().toString().replace("-", ""));
-			pprModel.setProductCode(e.getProductCode());	
-			pprModel.setCategoryCode("44971603002900010001");  // 惠家有默认
-			pprModel.setFlagMain(Long.parseLong(1 + ""));
-			pcProductcategoryRelDao.insertSelective(pprModel);
+			// 添加商品的实类信息 
+			pcProductcategoryRelDao.insertSelective(e.getPcProductcategoryRel());
 			
 			// 添加 描述信息
 			PcProductdescription ppdModel = new PcProductdescription();
@@ -409,6 +406,7 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			e.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS);  // SI2003
 			e.setMainpicUrl(p.getProductPictures().get(0));   // 主图默认为轮播图的第一张  
 			e.setSmallSellerCode(getConfig("seller_adapter_minspc.small_seller_code"));  // 线上配置文件 small_seller_code 
+			// 状态必须是待上架，否则审批流在网站编辑节点无法编辑。
 			e.setProductStatus("4497153900060001");// 商品待上架
 			e.setValidate_flag("Y");//是否是虚拟商品
 			e.setTaxRate(BigDecimal.valueOf(Double.valueOf(0))); 
@@ -416,6 +414,32 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			e.setTransportTemplate("0");// 运费模板默认为卖家包邮
 			e.setLabels(p.getProductKey());   //  关键字
 			e.setPicUpdate(p.getPicUpdate()); // 商品图片是否被编辑过。更新商品时候使用。
+			
+			// 补充信息
+			PcCategoryinfo category = new PcCategoryinfo();
+			category.setCategoryCode("44971603002900010001");
+			category.setCategoryName("");
+			category.setParentCode("");
+			category.setUid("");
+			category.setZid(0); 
+			e.setCategory(category); 
+			PcProductcategoryRel pcr = new PcProductcategoryRel();
+			pcr.setUid(UUID.randomUUID().toString().replace("-", ""));
+			pcr.setProductCode(e.getProductCode());	
+			pcr.setCategoryCode("44971603002900010001");  // 惠家有默认
+			pcr.setFlagMain(Long.parseLong(1 + ""));
+			e.setPcProductcategoryRel(pcr); 
+			// 资质品类：select * from systemcenter.`sc_define` where parent_code = '449747160031'
+			// TODO 但此处有问题，是否在open-api中开放此类目？
+			e.setQualificationCategoryCode(""); 
+			// 店铺商品分类关系
+			List<UcSellercategoryProductRelation> usprList = new ArrayList<UcSellercategoryProductRelation>();
+			UcSellercategoryProductRelation uspr = new UcSellercategoryProductRelation();
+			uspr.setProductCode(e.getProductCode());
+			uspr.setCategoryCode("4497160400020001");  // uc_sellercategory表 榨汁机
+			uspr.setSellerCode("SI2003"); 
+			usprList.add(uspr);
+			e.setUsprList(usprList);  
 
 			// 设置商品描述
 			PcProductdescription description = new PcProductdescription();

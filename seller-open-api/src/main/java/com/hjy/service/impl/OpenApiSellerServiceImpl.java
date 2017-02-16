@@ -55,6 +55,7 @@ import com.hjy.entity.log.LcOpenApiShipmentStatus;
 import com.hjy.entity.log.LcStockchange;
 import com.hjy.entity.order.OcOrderShipments;
 import com.hjy.entity.order.OcOrderinfo;
+import com.hjy.entity.product.PcCategoryinfo;
 import com.hjy.entity.product.PcProductcategoryRel;
 import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductflow;
@@ -63,6 +64,7 @@ import com.hjy.entity.product.PcProductinfoExt;
 import com.hjy.entity.product.PcProductpic;
 import com.hjy.entity.product.PcSkuinfo;
 import com.hjy.entity.system.ScStoreSkunum;
+import com.hjy.entity.user.UcSellercategoryProductRelation;
 import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelper;
 import com.hjy.helper.RedisHelper;
@@ -458,6 +460,32 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 			e.setTransportTemplate("0");  // 运费模板默认为卖家包邮
 			e.setLabels(p.getLabels());
 			
+			// 补充信息
+			PcCategoryinfo category = new PcCategoryinfo();
+			category.setCategoryCode("44971603002900010001");
+			category.setCategoryName("");
+			category.setParentCode("");
+			category.setUid("");
+			category.setZid(0); 
+			e.setCategory(category); 
+			PcProductcategoryRel pcr = new PcProductcategoryRel();
+			pcr.setUid(UUID.randomUUID().toString().replace("-", ""));
+			pcr.setProductCode(e.getProductCode());	
+			pcr.setCategoryCode("44971603002900010001");  // 惠家有默认
+			pcr.setFlagMain(Long.parseLong(1 + ""));
+			e.setPcProductcategoryRel(pcr); 
+			// 资质品类：select * from systemcenter.`sc_define` where parent_code = '449747160031'
+			// TODO 但此处有问题，是否在open-api中开放此类目？
+			e.setQualificationCategoryCode(""); 
+			// 店铺商品分类关系
+			List<UcSellercategoryProductRelation> usprList = new ArrayList<UcSellercategoryProductRelation>();
+			UcSellercategoryProductRelation uspr = new UcSellercategoryProductRelation();
+			uspr.setProductCode(e.getProductCode());
+			uspr.setCategoryCode("4497160400020001");  // uc_sellercategory表 榨汁机
+			uspr.setSellerCode("SI2003"); 
+			usprList.add(uspr);
+			e.setUsprList(usprList); 
+			
 			// 设置商品描述
 			PcProductdescription description = new PcProductdescription();
 			description.setUid(uid);
@@ -614,13 +642,8 @@ public class OpenApiSellerServiceImpl  extends BaseServiceImpl<PcProductinfo, In
 //			p.setQualificationCategoryCode(e.getQualificationCategoryCode());		// 资质品类 由运营维护 
 			pcProductInfoDao.insertSelective(p); 
 			
-			// 添加商品的实类信息
-			PcProductcategoryRel pprModel = new PcProductcategoryRel();
-			pprModel.setUid(UUID.randomUUID().toString().replace("-", ""));
-			pprModel.setProductCode(e.getProductCode());	
-			pprModel.setCategoryCode("44971603002900010001");  // 惠家有默认
-			pprModel.setFlagMain(Long.parseLong(1 + ""));
-			pcProductcategoryRelDao.insertSelective(pprModel);
+			// 添加商品的实类信息 
+			pcProductcategoryRelDao.insertSelective(e.getPcProductcategoryRel());
 			
 			// 添加 描述信息
 			PcProductdescription ppdModel = new PcProductdescription();
