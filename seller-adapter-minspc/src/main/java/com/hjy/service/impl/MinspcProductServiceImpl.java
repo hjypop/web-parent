@@ -2,6 +2,7 @@ package com.hjy.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +29,7 @@ import com.hjy.dao.product.IPcProductinfoExtDao;
 import com.hjy.dao.product.IPcProductpicDao;
 import com.hjy.dao.product.IPcProductpropertyDao;
 import com.hjy.dao.product.IPcSkuinfoDao;
+import com.hjy.dao.system.IScFlowBussinessHistoryDao;
 import com.hjy.dao.system.IScStoreSkunumDao;
 import com.hjy.dao.user.IUcSellercategoryProductRelationDao;
 import com.hjy.dto.response.ResultMsg;
@@ -41,9 +43,12 @@ import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.product.PcProductinfoExt;
 import com.hjy.entity.product.PcProductpic;
 import com.hjy.entity.product.PcSkuinfo;
+import com.hjy.entity.system.ScFlowBussinessHistory;
 import com.hjy.entity.system.ScStoreSkunum;
 import com.hjy.entity.user.UcSellercategoryProductRelation;
+import com.hjy.helper.DateHelper;
 import com.hjy.helper.ExceptionHelper;
+import com.hjy.helper.RedisHelper;
 import com.hjy.helper.WebHelper;
 import com.hjy.jms.ProductJmsSupport;
 import com.hjy.model.ProductSkuInfo;
@@ -85,7 +90,8 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 	@Autowired
 	private IScFlowMainService scFlowMainService;
 	
-	
+	@Resource
+	private IScFlowBussinessHistoryDao scFlowBussinessHistoryDao;
 	
 	private static String ProductHead = "6016";  // 8016
 	private static String SKUHead = "6019";  // 8019
@@ -298,78 +304,76 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 		return result; 
 	}
 	
-	
+	 
 	/**
 	 * @description: 更新产品数据到多个表 
-	 * 							 
-	 * @throws                  
-	 * @author Yangcl
+	 * 	更新商品基本信息|商品主图不再更新。只更新库存
+	 * 
+	 * @param entity 新数据
+	 * @param info 数据库中的记录
+	 * @return
+	 * @author Yangcl 
 	 * @date 2016年9月9日 下午3:32:46 
 	 * @version 1.0.0.1
 	 */
-	public ResultMsg updateProductInTables(PcProductinfo e) {
+	public ResultMsg updateProductInTables(PcProductinfo e  , PcProductinfo info) {
 		ResultMsg result = new ResultMsg();
 		result.setType("update"); 
 		String createTime = DateUtil.getSysDateTimeString();
-		try {
-			// 更新商品基本信息
-			PcProductinfo pinfo = new PcProductinfo();
-			pinfo.setUid(e.getUid()); 
-			pinfo.setLabels(e.getLabels());
-			pinfo.setMainPicUrl(e.getMainPicUrl());
-			pinfo.setCostPrice(e.getCostPrice());
-			pinfo.setMarketPrice(e.getMarketPrice());
-			pinfo.setMaxSellPrice(e.getMaxSellPrice());
-			pinfo.setMinSellPrice(e.getMinSellPrice());
-			pinfo.setProductName(e.getProdutName());  
-			pinfo.setProductStatus(e.getProductStatus());
-			pinfo.setProductWeight(e.getProductWeight());
-			pinfo.setUpdateTime(createTime);
-			pinfo.setTaxRate(e.getTaxRate());
-			if(e.getPicUpdate().equals("1")){
-				pinfo.setProductName(e.getProductName() + " @@ 商品图片信息有变更-需要修正");  
-			}
-			pcProductInfoDao.updateSelective(pinfo); 
-			
-			// 更新商品的扩展信息
-//			PcProductinfoExt ppe = e.getPcProductinfoExt();
-//			ppe.setProductCode(e.getProductCode()); 
-//			ppe.setProductCodeOld(null); 
-//			pcProductinfoExtDao.updateSelectiveByProductCode(ppe);
-			
-			
-			if(e.getPicUpdate().equals("1")){
-				// 更新商品描述信息
-				PcProductdescription ppd = new PcProductdescription();
-				ppd.setKeyword(e.getDescription().getKeyword());
-				ppd.setDescriptionPic(e.getDescription().getDescriptionPic());
-				ppd.setDescriptionInfo(e.getDescription().getDescriptionInfo()); 
-				pcProductdescriptionDao.updateSelective(ppd);
-				
-				// 更新商品轮播图
-				pcProductpicDao.deleteByProductCode(e.getProductCode());
-				List<PcProductpic> picList = e.getPcPicList();
-				for (PcProductpic pic : picList) {
-					pcProductpicDao.insertSelective(pic);
+		try { 
+			if(info.getProductStatus().equals("4497153900060002")){     // 如果是上架的商品才更新
+				PcProductinfo pinfo = new PcProductinfo();
+				pinfo.setUid(e.getUid()); 
+				pinfo.setUpdateTime(createTime);
+				pcProductInfoDao.updateSelective(pinfo); 
+				// 更新商品sku信息
+				List<ProductSkuInfo> skuList = e.getProductSkuInfoList();
+				for (ProductSkuInfo sku : skuList) {
+					PcSkuinfo ps = new PcSkuinfo();
+					ps.setProductCode(info.getProductCode()); 
+					ps.setStockNum(Long.valueOf(sku.getStockNum()));    
+					pcSkuinfoDao.updateSelectiveByProductCode(ps); // 因为一个商品对应一个Sku，所以这里偷懒
+					
+					List<PcSkuinfo> slist = pcSkuinfoDao.getSkuinfoByPcode(e.getProductCode());   
+					if(slist != null && slist.size() > 0){ 
+						// 更新商品sku库存|sku 的实际库存保存在sc_store_skunum表中
+						PcSkuinfo i = slist.get(0);
+						ScStoreSkunum sss = new ScStoreSkunum();
+						sss.setSkuCode(i.getSkuCode());
+						sss.setStockNum(Long.valueOf(sku.getStockNum()));  
+						scStoreSkunumDao.updateSelectiveBySkuCode(sss);
+					}
 				}
+				
+				boolean flag = new RedisHelper().reloadProductInRedis(info.getProductCode());
+				logger.info(info.getProductName() + "@"+ info.getProductCode() +"@缓存状态信息：" + flag);
 			}
 			
-			
-			// 更新商品sku信息
-			List<ProductSkuInfo> skuList = e.getProductSkuInfoList();
-			for (ProductSkuInfo sku : skuList) {
-				PcSkuinfo psModel = new PcSkuinfo();
-				psModel.setMarketPrice(sku.getMarketPrice());
-				psModel.setSecurityStockNum(Long.valueOf(sku.getSecurityStockNum()));
-				psModel.setSellPrice(sku.getSellPrice());
-				psModel.setCostPrice(sku.getCostPrice());
-				psModel.setSkuKey(sku.getSkuKey());
-				psModel.setSkuPicurl(sku.getSkuPicUrl());
-				psModel.setSkuName(sku.getSkuName());
-				psModel.setStockNum(Long.valueOf(sku.getStockNum()));    
-				pcSkuinfoDao.updateSelectiveByProductCode(psModel); // 因为一个商品对应一个Sku，所以这里偷懒
-			}
-			
+//			if(e.getCostPrice().toString().equals(info.getCostPrice())){
+//				pcProductInfoDao.updateSelective(pinfo); 
+//				// 更新商品sku信息
+//				List<ProductSkuInfo> skuList = e.getProductSkuInfoList();
+//				for (ProductSkuInfo sku : skuList) {
+//					PcSkuinfo psModel = new PcSkuinfo();
+//					psModel.setStockNum(Long.valueOf(sku.getStockNum()));    
+//					pcSkuinfoDao.updateSelectiveByProductCode(psModel); // 因为一个商品对应一个Sku，所以这里偷懒
+//				}
+//			}else{
+				// 如果成本价有变动，则商品下架，redis中的信息删除，solr中的索引也同时下架|根据需求，此处不再处理
+//				pinfo.setCostPrice(e.getCostPrice());
+//				pinfo.setProductStatus("4497153900060003"); // 商品下架
+//				pcProductInfoDao.updateSelective(pinfo);
+//				scFlowBussinessHistoryDao.insertSelective(new ScFlowBussinessHistory(
+//					UUID.randomUUID().toString().replace("-", ""),
+//					pinfo.getUid(),    // 关联商品的uuid
+//					"449715390006",
+//					"job-system-minspc",
+//					DateHelper.formatDate(new Date()),
+//					" 商编：" + pinfo.getProductCode() + "  原因：成本价变动后自动下架",  // " - 上下架原因描述 - 邮件发送人",
+//					"4497153900060003"
+//				));
+				
+//			}
 			
 		} catch (Exception ex) {
 			String exstring = ExceptionHelper.allExceptionInformation(ex);
@@ -416,7 +420,6 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			e.setSellerCode(MemberConst.MANAGE_CODE_HOMEHAS);  // SI2003
 			e.setMainpicUrl(p.getProductPictures().get(0));   // 主图默认为轮播图的第一张  
 			e.setSmallSellerCode(getConfig("seller_adapter_minspc.small_seller_code"));  // 线上配置文件 small_seller_code 
-			// 状态必须是待上架，否则审批流在网站编辑节点无法编辑。
 			e.setProductStatus("4497153900060001");// 商品待上架
 			e.setValidate_flag("Y");//是否是虚拟商品
 			e.setTaxRate(BigDecimal.valueOf(Double.valueOf(0))); 
@@ -489,14 +492,14 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			skuInfoList.add(skuInfo);
 			e.setProductSkuInfoList(skuInfoList); 
 			
-			// 设置商品轮播图  经过确定，惠家有库中并不是每个sku都有一个轮播图，轮播图只绑定于product - Yangcl
+			// 设置商品轮播图
 			List<PcProductpic> lunBoList = new ArrayList<PcProductpic>();
 			for(String url : p.getProductPictures()){
 				PcProductpic picModel = new PcProductpic();
 				picModel.setUid(UUID.randomUUID().toString().replace("-", ""));
 				picModel.setPicUrl(url);
 				picModel.setProductCode(e.getProductCode());
-				picModel.setSkuCode(""); // 所以这里设置为空 
+				picModel.setSkuCode(skuInfo.getSkuCode());
 				lunBoList.add(picModel);
 			}
 			e.setPcPicList(lunBoList);

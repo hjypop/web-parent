@@ -562,6 +562,7 @@
 		SELECT
 		    p.uid as uid,
 			p.product_code AS productCode,
+			p.product_status AS productStatus,
 			p.product_shortname AS productShortname,
 			p.max_sell_price AS maxSellPrice,
 			p.min_sell_price AS minSellPrice,

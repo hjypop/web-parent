@@ -71,7 +71,7 @@ public class RsyncProductList extends RsyncMinspc {
 				i = pList.get(0);
 				e.setUid(i.getUid()); // 根据uid更新商品
 				e.setProductCode(i.getProductCode());   
-				msg = productService.updateProductInTables(e); 
+				msg = productService.updateProductInTables(e , i);  
 			}
 			if(msg.getCode().equals("1")){
 				successList.add(msg.getEntity());
