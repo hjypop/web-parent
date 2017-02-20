@@ -20,7 +20,7 @@ public class JobForGetOrderStatusList extends RootJob {
 
 	@Override
 	public void doExecute(JobExecutionContext context) {
-		String lockCode = WebHelper.getInstance().addLock(1000 , "JobForGetOrderStatusList");	// 分布式锁定
+		String lockCode = WebHelper.getInstance().addLock(120 , "JobForGetOrderStatusList");	// 分布式锁定
 		if (StringUtils.isNotBlank(lockCode)) {
 			try {
 				new RsyncOrderStatusList().doRsync();
