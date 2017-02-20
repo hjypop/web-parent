@@ -290,9 +290,9 @@
       	<foreach collection="list" item="item" index="index" open="" close="" separator=";">  
             update ordercenter.oc_orderinfo  
             <set>  
-              	order_status = ${item.orderStatus}
+              	order_status = '${item.orderStatus}'
             </set>  
-            	where order_code = ${item.orderCode}
+            	where order_code = '${item.orderCode}'
      	</foreach>  
 	</update> 
 	
