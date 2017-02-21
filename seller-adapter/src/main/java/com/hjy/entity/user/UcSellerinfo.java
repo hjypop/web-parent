@@ -11,19 +11,41 @@ import com.hjy.base.BaseModel;
  * @since JDK 1.6
  */
 public class UcSellerinfo extends BaseModel{
-	/**
-	 * 卖家编号
-	 */
-	private String sellerCode ;
-	/**
-	 * 卖家名称
-	 */
-	private String sellerName;
+	
+	private String sellerCode;		// 卖家所属平台编号 SI2003
+	private String smallSellerCode; // 小商户编号
+	private String sellerName;   // 卖家名称
+	private String sellerStatus; // 商家状态    终审通过:4497172300040004
+	private String flowStatus; //	合同主管审批通过:4497172300140005
 	
 	/**
 	 * 卖家logo
 	 */
 	private String sellerPic ;
+
+	public String getSmallSellerCode() {
+		return smallSellerCode;
+	}
+
+	public void setSmallSellerCode(String smallSellerCode) {
+		this.smallSellerCode = smallSellerCode;
+	}
+
+	public String getSellerStatus() {
+		return sellerStatus;
+	}
+
+	public void setSellerStatus(String sellerStatus) {
+		this.sellerStatus = sellerStatus;
+	}
+
+	public String getFlowStatus() {
+		return flowStatus;
+	}
+
+	public void setFlowStatus(String flowStatus) {
+		this.flowStatus = flowStatus;
+	}
 
 	public String getSellerCode() {
 		return sellerCode;

@@ -2,6 +2,9 @@ package com.hjy.selleradapter.job;
 
 import org.quartz.JobExecutionContext;
 
+import com.hjy.annotation.Inject;
+import com.hjy.dao.user.IUcSellerinfoDao;
+import com.hjy.dao.webcore.IWcSellerinfoDao;
 import com.hjy.quartz.job.RootJob;
 
 /**
@@ -15,6 +18,13 @@ import com.hjy.quartz.job.RootJob;
  */
 public class JobForRsyncSellerInfo extends RootJob {
 
+	@Inject
+	private IWcSellerinfoDao wcSellerinfoDao;   
+	@Inject 
+	private IUcSellerinfoDao ucSellerinfoDao;
+	
+	
+	
 	@Override
 	public void doExecute(JobExecutionContext context) {
 		
@@ -22,3 +32,19 @@ public class JobForRsyncSellerInfo extends RootJob {
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
