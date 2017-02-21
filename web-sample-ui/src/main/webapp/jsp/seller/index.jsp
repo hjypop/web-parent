@@ -268,7 +268,7 @@
 
 
 					<div class="btn_div" style="margin-bottom: 5px;">
-						<a href="addindex.do" class="btn btn2 btn_blue btn_link">
+						<a href="addindex.do" class="btn btn2 btn_blue btn_link" style="display: none">
 							<span>添加</span>
 						</a>
 					</div>
