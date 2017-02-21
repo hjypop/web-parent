@@ -4,7 +4,7 @@
 Xshell：
 	地址：172.18.19.133
 	用户名：root
-	密码：admin@100
+	密码：gL29R5RQQXZdsbjQWQED
 	日志目录：cd /opt/tomcat/logs
 	所有运行记录：tail -f catalina.out
 	所有Error级别错误记录：tail -f matrix_error_log
