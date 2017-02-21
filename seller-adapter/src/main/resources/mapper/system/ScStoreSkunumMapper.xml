@@ -152,7 +152,7 @@
 				batch_code = #{batchCode,jdbcType=VARCHAR}
 			</if>
 			<if test="stockNum != null">
-				stock_num = #{stockNum,jdbcType=DECIMAL}
+				stock_num = stock_num + #{stockNum , jdbcType=DECIMAL}
 			</if>
 		</set>
 		<where>

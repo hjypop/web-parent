@@ -329,20 +329,21 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 				// 更新商品sku信息
 				List<ProductSkuInfo> skuList = e.getProductSkuInfoList();
 				for (ProductSkuInfo sku : skuList) {
-					PcSkuinfo ps = new PcSkuinfo();
-					ps.setProductCode(info.getProductCode()); 
-					ps.setStockNum(Long.valueOf(sku.getStockNum()));    
-					pcSkuinfoDao.updateSelectiveByProductCode(ps); // 因为一个商品对应一个Sku，所以这里偷懒
-					
 					List<PcSkuinfo> slist = pcSkuinfoDao.getSkuinfoByPcode(e.getProductCode());   
 					if(slist != null && slist.size() > 0){ 
 						// 更新商品sku库存|sku 的实际库存保存在sc_store_skunum表中
 						PcSkuinfo i = slist.get(0);
 						ScStoreSkunum sss = new ScStoreSkunum();
 						sss.setSkuCode(i.getSkuCode());
-						sss.setStockNum(Long.valueOf(sku.getStockNum()));  
+						// 博略德传来的是总数，减去pc_skuinfo中的数量 再加上原有的数量 才是正确的库存
+						sss.setStockNum(Long.valueOf(sku.getStockNum() - i.getStockNum())); 
 						scStoreSkunumDao.updateSelectiveBySkuCode(sss);
 					}
+					
+					PcSkuinfo ps = new PcSkuinfo();
+					ps.setProductCode(info.getProductCode()); 
+					ps.setStockNum(Long.valueOf(sku.getStockNum()));    
+					pcSkuinfoDao.updateSelectiveByProductCode(ps); // 因为一个商品对应一个Sku，所以这里偷懒
 				}
 				
 				boolean flag = new RedisHelper().reloadProductInRedis(info.getProductCode());

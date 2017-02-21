@@ -364,7 +364,8 @@
 	<select id="getSkuinfoByPcode" parameterType="java.lang.String"  resultMap="BaseResultMap">  
 		select
 			concat(sku_key,'@',sku_keyvalue) as skuKey,
-			sku_code as skuCode
+			sku_code as skuCode,
+			stock_num as stockNum 
 		from
 			productcenter.pc_skuinfo 
 		where
