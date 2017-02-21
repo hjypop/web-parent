@@ -40,6 +40,7 @@ private static Logger logger = Logger.getLogger(RsyncVoidOrder.class);
 				if(this.getUpdateInfo().getSellerOrderCode().equals(dr.getOrderID())){
 					OcKjSellerSeparateOrder osr = new OcKjSellerSeparateOrder();
 					osr.setZid(this.getUpdateInfo().getZid());
+					osr.setStatus("4497153900010006");
 					osr.setSellerStatus("void-order"); 
 					osr.setUpdateTime(new Date());
 					kjSellerSeparateOrderDao.updateSelective(osr);
