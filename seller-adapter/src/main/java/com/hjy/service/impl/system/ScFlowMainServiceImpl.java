@@ -74,7 +74,10 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 		
 		f.setCreator(platform); 
 		/**
-		 * 4677031800010001 za_role表里的，代表超级管理员  
+		 * za_role表
+		 * 	46770318000100030001 HJY-质检专员审批
+		 * 	46770318000100030004 HJY-跨境商品运营审批
+		 * 
 		 * 4497172300160002 普通运营待审批
 		 * 4497172300160003 网站编辑待审批
 		 * 4497172300160006 质检员驳回
@@ -83,12 +86,12 @@ public class ScFlowMainServiceImpl extends BaseServiceImpl<ScFlowMain, Integer> 
 		 */
 		if(this.isCrossBorderSeller(seller)){
 			f.setCurrentStatus("4497172300160004");  // 跨境运营待审批
-			f.setNextOperators("4677031800010001");
-			f.setNextOperatorStatus("4677031800010001:4497172300160003;4677031800010001:4497172300160009");
+			f.setNextOperators("46770318000100030004");
+			f.setNextOperatorStatus("46770318000100030004:4497172300160003;46770318000100030004:4497172300160009");
 		}else{
 			f.setCurrentStatus("4497172300160001");    // 质检员待审批
-			f.setNextOperators("4677031800010001");
-			f.setNextOperatorStatus("4677031800010001:4497172300160002;4677031800010001:4497172300160006");
+			f.setNextOperators("46770318000100030001");
+			f.setNextOperatorStatus("46770318000100030001:4497172300160002;46770318000100030001:4497172300160006");
 		}
 		f.setFlowTitle(p.getProductCode()); 
 		f.setFlowType("449717230016");
