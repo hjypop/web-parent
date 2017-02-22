@@ -36,7 +36,7 @@ private static Logger logger = Logger.getLogger(RsyncVoidOrder.class);
 		String msg = "";
 		if(entity.getCode().equals("0")){
 			DataResponse dr = entity.getData().get(0);
-			if(dr.getStatus().equals("0") || dr.getStatus().equals("-1")){  // 表示作废成功 
+			if(dr.getStatus().equals("0")){  // 表示作废成功 
 				if(this.getUpdateInfo().getSellerOrderCode().equals(dr.getOrderID())){
 					OcKjSellerSeparateOrder osr = new OcKjSellerSeparateOrder();
 					osr.setZid(this.getUpdateInfo().getZid());
