@@ -7,8 +7,8 @@
     <artifactId>web-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>web-cache</artifactId>
-  <name>web-cache</name>
+  <artifactId>web-redis</artifactId>
+  <name>web-redis</name>
   <packaging>jar</packaging>
   <url>http://www.huijiayou.cn</url>
 </project>

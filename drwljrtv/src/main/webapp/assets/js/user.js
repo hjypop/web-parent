@@ -32,7 +32,8 @@ var User = {
 			success : function(data) {
 				data = JSON.parse(data);
 				if (data.state == 'ok') {
-					window.open("loginindex.do", "_self");
+					window.open("index.do", "_self");
+					//window.open("loginindex.do", "_self");
 				} else {
 					alert(data.msg);
 				}

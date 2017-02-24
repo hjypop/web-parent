@@ -3,6 +3,7 @@ package com.drwljrtv.controller.user;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +31,8 @@ public class UserController {
 		JSONObject obj = service.login(request);
 		if (StringUtils.equals(obj.getString("state"), "ok")) {
 			JSONObject data = obj.getJSONObject("data");
-			session.setAttribute(data.getString("token"), data);
+			data.put("username", request.getUsername());
+			session.setAttribute("token", data);
 		}
 		return obj;
 	}
@@ -44,10 +46,20 @@ public class UserController {
 	@ResponseBody
 	public JSONObject register(UserRequest request, HttpSession session) {
 		JSONObject obj = service.register(request);
+		if(obj != null && StringUtils.equals(obj.getString("state"), "ok")) {
+			//注册成功,自动登录
+			obj = login(request, session);
+		}
 		return obj;
 	}
 	@RequestMapping("info")
-	public String info(){
+	public String info(UserRequest request, HttpServletRequest req, HttpSession session){
+		JSONObject data = (JSONObject) session.getAttribute("token");
+		if(data != null) {
+			//用户已登录
+			String userName = data.getString("username");
+			req.setAttribute("username", userName);
+		}
 		return "jsp/user/info";
 	}
 	

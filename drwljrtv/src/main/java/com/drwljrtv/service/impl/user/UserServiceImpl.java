@@ -54,9 +54,10 @@ public class UserServiceImpl implements IUserService {
 		param.put("username", request.getUsername());
 		param.put("password", request.getPassword());
 		param.put("cpassword", request.getCpassword());
-		param.put("email", request.getEmail());
+		param.put("email", request.getUsername() + "@abc.com");
 		param.put("category", String.valueOf(request.getCategory()));
 		param.put("gender", request.getGender());
+		param.put("org_id", "1");
 		JSONObject obj = ApiHelper.getInstance().getObj(param);
 		return obj;
 	}
