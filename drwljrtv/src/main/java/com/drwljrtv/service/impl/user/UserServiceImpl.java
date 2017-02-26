@@ -99,7 +99,7 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public JSONObject logout(UserRequest request) {
 		Map<String, String> param = new HashMap<String, String>();
-		param.put("cmd", "logout(UserRequest)");
+		param.put("cmd", "logout");
 		param.put("userid", String.valueOf(request.getUserid()));
 		param.put("token", request.getToken());
 		JSONObject obj = ApiHelper.getInstance().getObj(param);

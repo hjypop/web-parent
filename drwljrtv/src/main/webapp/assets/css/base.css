@@ -22,8 +22,8 @@ textarea {
 
 input,
 textarea {
-　　border: 0;
-　　-webkit-appearance: none;
+銆��border: 0;
+銆��-webkit-appearance: none;
 }
 /*@font-face {
 	font-family: heiti;
@@ -33,11 +33,11 @@ textarea {
 }*/
 
 html {
-　　      -webkit-text-size-adjust: 100%;
+銆��      -webkit-text-size-adjust: 100%;
 }
 html,body {
 	font-size: 14px;
-	font-family: '微软雅黑';
+	font-family: '寰蒋闆呴粦';
 	-webkit-overflow-scrolling: touch;
 	background: #eeeeee;
 }
@@ -361,7 +361,7 @@ nav a.active,nav a:hover{
 
 .pinList li{
 	float: left;
-	width: 25%;
+	width: 19%;
 	padding-bottom: .3rem;
 }
 .pinList li a{
@@ -477,7 +477,7 @@ nav a.active,nav a:hover{
 }
 
 
-/*我的*/
+/*鎴戠殑*/
 .myTitle{
 	padding: .3rem;
 	background: #fff;
@@ -511,6 +511,7 @@ nav a.active,nav a:hover{
 	border-radius: .5rem;
 	-webkit-border-radius: .5rem;
 	-moz-border-radius: .5rem;
+	text-align: center;
 	overflow: hidden;
 	
 }
@@ -548,7 +549,7 @@ nav a.active,nav a:hover{
 	border-top: 1px solid #eee;
 }
 .MyList li.active strong:before{
-	content: "·";
+	content: "路";
 	color: red;
 }
 .MyList li:nth-child(1){

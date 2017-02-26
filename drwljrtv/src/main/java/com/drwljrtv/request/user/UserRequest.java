@@ -5,7 +5,7 @@ public class UserRequest {
 	/**
 	 * 用户id
 	 */
-	private Integer userid;
+	private String userid;
 	/**
 	 * 用户令牌
 	 */
@@ -164,11 +164,11 @@ public class UserRequest {
 		this.gender = gender;
 	}
 
-	public Integer getUserid() {
+	public String getUserid() {
 		return userid;
 	}
 
-	public void setUserid(Integer userid) {
+	public void setUserid(String userid) {
 		this.userid = userid;
 	}
 

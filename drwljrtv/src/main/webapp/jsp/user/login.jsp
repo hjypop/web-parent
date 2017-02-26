@@ -22,7 +22,14 @@
 <link rel="stylesheet" href="assets/css/swiper.min.css" />
 <link rel="stylesheet" href="assets/css/animate.min.css" />
 <link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+
 <script type="text/javascript" src="assets/js/jquery-1.11.1.min.js"></script>
+<script
+  src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"
+  integrity="sha256-4JY5MVcEmAVSuS6q4h9mrwCm6KNx91f3awsSQgwu0qc="
+  crossorigin="anonymous"></script>
+
 <script type="text/javascript" src="assets/js/swiper.jquery.min.js"></script>
 <script type="text/javascript" src="assets/js/fastclick.js"></script>
 <script type="text/javascript" src="assets/js/base.js"></script>
@@ -36,7 +43,7 @@
 	<div class="wrapper main">
 		<div class="login">
 			<h3 class="loginTitle">欢迎登陆</h3>
-			<form action="" method="post">
+			<form action="" id="login" method="post">
 				<ul class="LoginInput clearfix">
 					<li><label>账号：</label> <input type="text" name="username"
 						id="username" value="" placeholder="手机/邮箱" /></li>
@@ -46,6 +53,10 @@
 				<a href="javascript:void(0)" onclick="User.login();" class="loginBtn">登录</a>
 			</form>
 		</div>
+	</div>
+	<div id="msgDialog" title="提示">
+		<span  style="float:left; margin:0 70px 20px 0;"></span>
+		<div id="msg" align="center"></div>
 	</div>
 </body>
 </html>

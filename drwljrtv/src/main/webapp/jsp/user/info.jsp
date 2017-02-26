@@ -10,13 +10,19 @@
 			<a class="MyHead"><img
 				src="assets/img/01_index_list_topic_icon_icon.png"></a>
 			<div class="left denglu">
-				<a href="user/loginindex.do">登录/注册</a> <a>
-					<!--<i><img src="img/01_index_bottom_bar_icon_subject.png"></i>-->开通会员
-				</a>
+				<c:if test="${empty username}">
+					<a href="user/loginindex.do">${username}登录/注册</a> <a>
+						<!--<i><img src="img/01_index_bottom_bar_icon_subject.png"></i>-->开通会员
+					</a>
+				</c:if>
+				<c:if test="${!empty username}">
+					<a>${username}</a>
+					<a href="user/logout.do">退出</a>
+				</c:if>
 			</div>
-			<div class="zipindao">
+			<!-- div class="zipindao">
 				<i><img src="assets/img/zipindao.png"></i><a>自频道></a>
-			</div>
+			</div-->
 		</div>
 		<ul class="MyList clearfix">
 			<li class="active"><a> <i><img src="assets/img/xiaoxi.jpg"></i>

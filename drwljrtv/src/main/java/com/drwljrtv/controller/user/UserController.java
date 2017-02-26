@@ -36,6 +36,23 @@ public class UserController {
 		}
 		return obj;
 	}
+	
+	@RequestMapping("logout")
+	public String logout(HttpSession session) {
+		JSONObject data = (JSONObject) session.getAttribute("token");
+		if(data != null) {
+			UserRequest request = new UserRequest();
+			request.setUserid(data.getString("userid"));
+			request.setToken(data.getString("token"));
+			data = service.logout(request);
+			if (StringUtils.equals(data.getString("state"), "ok")) {
+				//注销成功
+				session.removeAttribute("token");
+				return "redirect:/jsp/index";
+			}
+		}
+		return "";
+	}
 
 	@RequestMapping("registerindex")
 	public String registerIndex() {

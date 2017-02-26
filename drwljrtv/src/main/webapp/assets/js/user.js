@@ -14,7 +14,17 @@ var User = {
 				if (data.state == 'ok') {
 					window.open("index.do", "_self");
 				} else {
-					alert(data.msg);
+					$("#msg").text(data.msg);
+					$("#msgDialog").dialog({
+					      resizable: false,
+					      height:140,
+					      modal: true,
+					      buttons: { 
+					          "确定": function() {
+					            $(this).dialog( "close" );
+					          }
+					     }
+					});
 				}
 			},
 			error : function(data) {
