@@ -5,16 +5,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSON;
 import com.hjy.annotation.Inject;
+import com.hjy.common.DateUtil;
+import com.hjy.dao.log.ILcOrderstatusDao;
 import com.hjy.dao.order.IOcKjSellerSeparateOrderDao;
 import com.hjy.dao.order.IOcOrderShipmentsDao;
 import com.hjy.dao.order.IOcOrderinfoDao;
 import com.hjy.dto.response.orderStatus.DataResponse;
 import com.hjy.dto.response.orderStatus.SoResponse;
+import com.hjy.entity.log.LcOrderstatus;
 import com.hjy.entity.order.OcKjSellerSeparateOrder;
 import com.hjy.entity.order.OcOrderShipments;
 import com.hjy.entity.order.OcOrderinfo;
@@ -31,6 +36,8 @@ public class RsyncOrderStatusList extends RsyncMinspc {
 	private IOcKjSellerSeparateOrderDao kjSellerSeparateOrderDao; 
 	@Inject
 	private IOcOrderShipmentsDao ocOrderShipmentsDao;
+	@Inject
+	private ILcOrderstatusDao lcOrderstatusDao;
 	
 	private List<OcKjSellerSeparateOrder> list;
 	
@@ -106,6 +113,16 @@ public class RsyncOrderStatusList extends RsyncMinspc {
 						info.setOrderCode(o.getOrderCode());
 						info.setOrderStatus("4497153900010003");
 						orderinfoList.add(info);
+						
+						// 添加订单状态日志表记录
+						LcOrderstatus os = new LcOrderstatus();
+						os.setUid(UUID.randomUUID().toString().replace("-", ""));
+						os.setCode(o.getOrderCode());
+						os.setCreateTime(DateUtil.getSysDateTimeString());
+						os.setCreateUser("minspc-job");
+						os.setOldStatus("4497153900010002");
+						os.setNowStatus("4497153900010003");
+						lcOrderstatusDao.insertSelective(os);
 					}
 				}
 				k.setStatus("4497153900010003"); // order_status 订单状态 已发货
