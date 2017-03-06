@@ -15,6 +15,7 @@ import com.hjy.dao.product.IPcProductinfoDao;
 import com.hjy.dao.product.IPcSkuinfoDao;
 import com.hjy.entity.product.PcProductinfo;
 import com.hjy.entity.product.PcSkuinfo;
+import com.hjy.helper.RedisHelper;
 import com.hjy.redis.core.RedisLaunch;
 import com.hjy.redis.srnpr.ERedisSchema;
 import com.hjy.service.operations.ISellerOperationService;
@@ -49,7 +50,7 @@ public class SellerOperationServiceImpl implements ISellerOperationService {
 					e.setProductCode(pcode);
 					e.setTaxRate(taxRate); 
 					pcProductinfoDao.updateProductTaxRate(e);
-					this.redisDeleteProductInfo(pcode);  // 删除redis中的缓存信息 
+					boolean flag = new RedisHelper().reloadProductInRedis(pcode);  // 删除redis中的缓存信息 
 				}
 			}
 			
@@ -62,29 +63,4 @@ public class SellerOperationServiceImpl implements ISellerOperationService {
 		return result;
 	}
 
-	/**
-	 * @descriptions 刷新Redis 
-	 * 
-	 * @param productCode_ 
-	 * @date 2016年8月16日下午1:37:21
-	 * @author Yangcl 
-	 * @version 1.0.0.1
-	 */
-	private boolean redisDeleteProductInfo(String productCode_){
-		// 循环删除所有商品下关联的子活动
-		for(String key : RedisLaunch.setFactory(ERedisSchema.ProductIcChildren).hgetAll(productCode_).keySet()){
-			RedisLaunch.setFactory(ERedisSchema.IcSku).del(key);
-		}
-		// 删除所有Sku相关信息
-		List<PcSkuinfo> skuList = pcSkuinfoDao.findList(new PcSkuinfo(productCode_)); 
-		for(PcSkuinfo i : skuList){
-			RedisLaunch.setFactory(ERedisSchema.IcSku).del(i.getSkuCode()); 
-			RedisLaunch.setFactory(ERedisSchema.Stock).del(i.getSkuCode());
-			RedisLaunch.setFactory(ERedisSchema.SkuStoreStock).del(i.getSkuCode());
-		}
-		RedisLaunch.setFactory(ERedisSchema.Product).del(productCode_);
-		RedisLaunch.setFactory(ERedisSchema.ProductSku).del(productCode_);
-		RedisLaunch.setFactory(ERedisSchema.ProductSales).del(productCode_);		//刷新销量缓存
-		return true;
-	}
 }
