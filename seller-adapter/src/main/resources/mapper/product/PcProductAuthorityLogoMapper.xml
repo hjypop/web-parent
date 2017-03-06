@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjy.dao.product.IPcProductAuthorityLogoDao">
+
+	<resultMap id="BaseResultMap" type="com.hjy.entity.product.PcProductAuthorityLogo">
+		<id column="zid" property="zid" jdbcType="INTEGER" />
+		<result column="uid" property="uid" jdbcType="CHAR" />
+		<result column="product_code" property="productCode" jdbcType="VARCHAR" />
+		<result column="authority_logo_uid" property="authorityLogoUid" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="CHAR" />
+	</resultMap>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+			*
+		from 
+			productcenter.pc_product_authority_logo
+		where 
+			zid = #{zid,jdbcType=INTEGER}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from productcenter.pc_product_authority_logo where zid = #{zid,jdbcType=INTEGER}
+	</delete>
+	
+	<insert id="insertSelective" parameterType="com.hjy.entity.product.PcProductAuthorityLogo">
+		insert into productcenter.pc_product_authority_logo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				zid,
+			</if>
+			<if test="uid != null">
+				uid,
+			</if>
+			<if test="productCode != null">
+				product_code,
+			</if>
+			<if test="authorityLogoUid != null">
+				authority_logo_uid,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="zid != null">
+				#{zid,jdbcType=INTEGER},
+			</if>
+			<if test="uid != null">
+				#{uid,jdbcType=CHAR},
+			</if>
+			<if test="productCode != null">
+				#{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="authorityLogoUid != null">
+				#{authorityLogoUid,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateSelective" parameterType="com.hjy.entity.product.PcProductAuthorityLogo">
+		update productcenter.pc_product_authority_logo
+		<set>
+			<if test="uid != null">
+				uid = #{uid,jdbcType=CHAR},
+			</if>
+			<if test="productCode != null">
+				product_code = #{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="authorityLogoUid != null">
+				authority_logo_uid = #{authorityLogoUid,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=CHAR},
+			</if>
+		</set>
+		where zid = #{zid,jdbcType=INTEGER}
+	</update>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -38,10 +38,8 @@ xshell：
 
 
 Yangcl
-TODO 等待处理：
-oc_orderinfo 表增加唯一索引 order_code
-
-oc_orderadress 表增加唯一索引 order_code
+		等待处理一下功能未实现：
+				pc_product_authority_logo 表，需要根据商户类型进行判断，关联一个商品的商户自定义标识，跨境商品，统一设置为不支持7天退货。
 
 
 

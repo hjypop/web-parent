@@ -21,6 +21,7 @@ import com.hjy.common.product.SkuCommon;
 import com.hjy.constant.MemberConst;
 import com.hjy.dao.log.ILcStockchangeDao;
 import com.hjy.dao.product.IPcBrandinfoDao;
+import com.hjy.dao.product.IPcProductAuthorityLogoDao;
 import com.hjy.dao.product.IPcProductcategoryRelDao;
 import com.hjy.dao.product.IPcProductdescriptionDao;
 import com.hjy.dao.product.IPcProductflowDao;
@@ -36,6 +37,7 @@ import com.hjy.dto.response.ResultMsg;
 import com.hjy.dto.response.product.Product;
 import com.hjy.entity.log.LcStockchange;
 import com.hjy.entity.product.PcCategoryinfo;
+import com.hjy.entity.product.PcProductAuthorityLogo;
 import com.hjy.entity.product.PcProductcategoryRel;
 import com.hjy.entity.product.PcProductdescription;
 import com.hjy.entity.product.PcProductflow;
@@ -92,6 +94,9 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 	
 	@Resource
 	private IScFlowBussinessHistoryDao scFlowBussinessHistoryDao;
+	
+	@Resource
+	private IPcProductAuthorityLogoDao pcProductAuthorityLogoDao;
 	
 	private static String ProductHead = "6016";  // 8016
 	private static String SKUHead = "6019";  // 8019
@@ -285,6 +290,22 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 			CacheWcSellerInfo seller = new CacheWcSellerInfo();
 			seller.setSellerType("4497478100050002"); 
 			scFlowMainService.createFlowMain(pinfo, seller, "minspc-job");   
+			
+			
+			// 关联一个商品的商户自定义标识，博略德的商品为跨境商品，统一设置为不支持7天退货。
+			String [] arr = this.getConfig("seller_adapter_minspc.pc_authority_logo").split(",");
+			if(arr != null && arr.length != 0){
+				for(int i = 0 ; i < arr.length ; i ++ ){
+					String authority_logo = arr[i];
+					PcProductAuthorityLogo o = new PcProductAuthorityLogo();
+					o.setUid(UUID.randomUUID().toString().replace("-", ""));
+					o.setProductCode(e.getProductCode());
+					o.setAuthorityLogoUid(arr[i]);
+					o.setCreateTime(createTime); 
+					pcProductAuthorityLogoDao.insertSelective(o);
+				}
+			}
+			
 			
 			// 校验输入的数据合法性
 			ProductJmsSupport pjs = new ProductJmsSupport();
