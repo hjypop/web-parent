@@ -75,24 +75,28 @@ public class SellerOperationServiceImpl implements ISellerOperationService {
 		}
 		SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			/*List<PcProductAuthorityLogo> list = palDao.getAllInformation();
-			if(list != null){
-				for(PcProductAuthorityLogo l : list){
-					new RedisHelper().deleteProductAuthorityLogo(l.getProductCode());
-				}
-			
-				return null;
-			}*/
-			
-			
+//			List<PcProductAuthorityLogo> list = palDao.getAllInformation();
+//			if(list != null){
+//				for(PcProductAuthorityLogo l : list){
+//					new RedisHelper().deleteProductAuthorityLogo(l.getProductCode());
+//				}
+//			
+//				return null;
+//			}
 			List<String> pcodeList = JSONObject.parseArray(json, String.class);
+			if(pcodeList != null){
+				for(String s : pcodeList){
+					new RedisHelper().deleteProductAuthorityLogo(s);
+				} 
+			}
+			
 			for(String s : pcodeList){
-//				new RedisHelper().deleteProductAuthorityLogo(s);
+				new RedisHelper().deleteProductAuthorityLogo(s);
 				
 				PcProductAuthorityLogo e = new PcProductAuthorityLogo();
 				e.setUid(UUID.randomUUID().toString().replace("-", ""));
 				e.setProductCode(s);
-				e.setAuthorityLogoUid("abcdefghijklmn0001");   // 不支持7天退换货
+				e.setAuthorityLogoUid("abcdefghijklmn0002");   // 不支持7天退换货
 				e.setCreateTime(sdf.format(new Date()));
 				palDao.insertSelective(e);
 			}
