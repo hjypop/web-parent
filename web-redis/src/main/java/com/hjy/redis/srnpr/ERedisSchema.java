@@ -241,7 +241,13 @@ public enum ERedisSchema {
 	/**
 	 * 商户信息
 	 */
-	Seller
+	Seller,
+	
+	// 权威标识
+	// get xs-ProductAuthorityLogo-ProductLog 获取所有非通路权威标识
+	// get xs-ProductAuthorityLogo-SI2003 获取所有通路权威标识
+	// get xs-ProductAuthorityLogo-8016410750 获取某一个商品的非通路权威标识
+	ProductAuthorityLogo
 }
 
 

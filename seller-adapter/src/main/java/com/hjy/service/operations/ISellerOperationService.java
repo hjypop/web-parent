@@ -6,7 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 
 public interface ISellerOperationService {
 
-	public JSONObject funcOne(String json , HttpSession session); 
+	public JSONObject funcOne(String json , HttpSession session);
+
+	public JSONObject funcTwo(String json, HttpSession session);  
 	
 	
 }

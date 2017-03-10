@@ -690,6 +690,47 @@
 				small_seller_code = #{smallSellerCode , jdbcType=VARCHAR}
 	</update>
 
+
+	<select id="findKjProductList" resultMap="BaseResultMap">
+		select 
+			* 
+		from productcenter.`pc_productinfo` where seller_code ='SI2003' and small_seller_code != 'SI2003' 
+		and
+			small_seller_code in( select small_seller_code from usercenter.`uc_seller_info_extend` where uc_seller_type in ('4497478100050002','4497478100050003')  )
+	</select>
+
+	<select id="findLdProductList" resultMap="BaseResultMap" parameterType="java.util.List">
+		select 
+			* 
+		from 
+			productcenter.`pc_productinfo` 
+		where
+			seller_code ='SI2003' 
+		and 
+			small_seller_code = 'SI2003' 
+		and
+			product_code not in
+		<foreach item="item" index="index" collection="list" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="findZyProductList" resultMap="BaseResultMap" parameterType="java.util.List">
+		select 
+			*
+		from 
+			productcenter.`pc_productinfo` 
+		where 
+			seller_code ='SI2003' 
+		and
+			small_seller_code in( select small_seller_code from usercenter.`uc_seller_info_extend` where uc_seller_type in ('4497478100050001','4497478100050004')  )
+		and
+			product_code not in
+		<foreach item="item" index="index" collection="list" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
+
 </mapper>
 
 

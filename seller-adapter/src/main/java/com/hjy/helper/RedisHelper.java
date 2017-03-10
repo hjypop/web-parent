@@ -82,6 +82,20 @@ public class RedisHelper extends BaseClass {
 		RedisLaunch.setFactory(ERedisSchema.SkuStoreStock).del(skuCode);	 
 		return true;
 	}
+	
+	/**
+	 * @description: 根据商品编号删除非通路权威标识  xs-ProductAuthorityLogo-code
+	 * 
+	 * @param pcode
+	 * @return
+	 * @author Yangcl 
+	 * @date 2017年3月9日 下午6:51:45 
+	 * @version 1.0.0.1
+	 */
+	public boolean deleteProductAuthorityLogo(String pcode){
+		RedisLaunch.setFactory(ERedisSchema.ProductAuthorityLogo).del(pcode);
+		return true;
+	}
 
 }
 

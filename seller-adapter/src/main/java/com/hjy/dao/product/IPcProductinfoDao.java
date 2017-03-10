@@ -130,6 +130,13 @@ public interface IPcProductinfoDao extends BaseDao<PcProductinfo, Integer> {
 	 * @version 1.0.0.1
 	 */
 	public Integer updateProductTaxRate(PcProductinfo entity); 
+	
+	public List<PcProductinfo> findKjProductList();
+	
+	public List<PcProductinfo> findLdProductList(List<String> list);
+	
+	public List<PcProductinfo> findZyProductList(List<String> list);
+	
 }
 
 

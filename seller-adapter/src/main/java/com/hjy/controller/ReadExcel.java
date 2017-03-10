@@ -10,9 +10,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -34,7 +36,7 @@ public class ReadExcel {
 	
 	
 	private static List<String> readProduct(String fileName) {
-		List<String> list = new ArrayList<>();
+		Set<String> list = new HashSet();
 		boolean isE2007 = false;  
 		if (fileName.endsWith("xlsx"))
 			isE2007 = true;
@@ -86,7 +88,7 @@ public class ReadExcel {
 		str = str.substring(0 , str.length() -1);
 		System.out.println(str); 
 		
-		return list;   
+		return null;   
 	}
 	
 	

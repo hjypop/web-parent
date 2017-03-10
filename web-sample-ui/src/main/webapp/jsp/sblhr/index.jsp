@@ -40,6 +40,16 @@
         }
 
         function funcTwo(){
+            var type_ = 'post';
+            var url_ = '${basePath}adapter/funcTwo.do';
+            var data_ = {json:$("#fuck-two-str").val()};
+            var obj = JSON.parse(ajaxs.sendAjax(type_ , url_ , data_));
+            if(obj.status == 'success'){
+                jAlert(obj.desc, '网页提示');
+            }
+        }
+
+        function funcTwossssssssssss(){
             var s = $("#s-time").val();
             var e = $("#e-time").val();
 
@@ -54,8 +64,6 @@
                 jAlert(obj.desc, '网页提示');
             }
         }
-
-
 
         function trim(str) {
             return str.replace(/(^\s+$)/g, "");
@@ -93,6 +101,23 @@
                             </div>
                             <div class="submit">
                                 <button class="stdbtn btn_orange" onclick="funcOne()">执 行 任 务</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="fuck-two">
+                    <div class="contenttitle2">
+                        <h3>B 批量修改商户商品的权威标识 </h3>
+                    </div>
+                    <div class="statusbox" style="width: 800px">
+                        <form id="fuck-two-post" action="#">
+                            <div class="status_thumb">标准数据结构Json串：</div>
+                            <div style="padding-right:20px;">
+                                <textarea id="fuck-two-str" name="" cols="" rows="" style="height: 200px;width: 790px" placeholder='["8016474370","8016474378"]'></textarea>
+                            </div>
+                            <div class="submit">
+                                <button class="stdbtn btn_orange" onclick="funcTwo()">执 行 任 务</button>
                             </div>
                         </form>
                     </div>

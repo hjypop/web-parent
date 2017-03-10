@@ -19,6 +19,14 @@
 			zid = #{zid,jdbcType=INTEGER}
 	</select>
 	
+	<select id="getAllInformation" resultMap="BaseResultMap" >
+		select
+			*
+		from 
+			productcenter.pc_product_authority_logo 
+	</select>
+	
+	
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		delete from productcenter.pc_product_authority_logo where zid = #{zid,jdbcType=INTEGER}
 	</delete>

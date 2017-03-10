@@ -55,6 +55,12 @@ public class SellerOperationsManagerController {
 		return service.funcOne(json , session);
 	}
 	
+	@RequestMapping(value = "funcTwo", produces = { "application/json;charset=utf-8" })
+	@ResponseBody
+	public JSONObject funcTwo(String json, HttpSession session){
+		return service.funcTwo(json , session);
+	}
+	
 }
 
 
