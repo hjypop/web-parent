@@ -96,7 +96,7 @@ public class SellerOperationServiceImpl implements ISellerOperationService {
 				PcProductAuthorityLogo e = new PcProductAuthorityLogo();
 				e.setUid(UUID.randomUUID().toString().replace("-", ""));
 				e.setProductCode(s);
-				e.setAuthorityLogoUid("abcdefghijklmn0002");   // 不支持7天退换货
+				e.setAuthorityLogoUid("abcdefghijklmn0001");   // 不支持7天退换货
 				e.setCreateTime(sdf.format(new Date()));
 				palDao.insertSelective(e);
 			}

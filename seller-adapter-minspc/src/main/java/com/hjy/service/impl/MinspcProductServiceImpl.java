@@ -356,8 +356,12 @@ public class MinspcProductServiceImpl extends BaseClass implements IMinspcProduc
 						PcSkuinfo i = slist.get(0);
 						ScStoreSkunum sss = new ScStoreSkunum();
 						sss.setSkuCode(i.getSkuCode());
-						// 博略德传来的是总数，减去pc_skuinfo中的数量 再加上原有的数量 才是正确的库存
-						sss.setStockNum(Long.valueOf(sku.getStockNum() - i.getStockNum())); 
+						// 博略德传来的是总数，减去pc_skuinfo中的数量 再加上原有的数量 才是正确的库存|此逻辑废弃
+						/**
+						 * 民生品粹 - 番茄(130000623)  2017-03-20 17:55:22
+						 *					传的永远是当前库存
+						 */
+						sss.setStockNum(Long.valueOf(sku.getStockNum()));  //  - i.getStockNum() 
 						scStoreSkunumDao.updateSelectiveBySkuCode(sss);
 					}
 					
