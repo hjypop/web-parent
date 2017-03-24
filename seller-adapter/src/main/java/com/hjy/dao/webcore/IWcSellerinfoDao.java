@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.hjy.dao.BaseDao;
 import com.hjy.entity.webcore.WcSellerinfo;
+import com.hjy.model.SellerInfoModel;
 
 /**
  * 
@@ -63,7 +64,16 @@ public interface IWcSellerinfoDao extends BaseDao<WcSellerinfo, Integer> {
 	public List<WcSellerinfo> getCustomsDeclarationSellerList();
 	
 	
-	
+	/**
+	 * @description: 根据beginTime和endTime来获取有变动的商户信息 
+	 * 
+	 * @param map
+	 * @return
+	 * @author Yangcl 
+	 * @date 2017年3月24日 下午3:31:47 
+	 * @version 1.0.0.1
+	 */
+	public List<SellerInfoModel> selectUcSellerInfo(Map<String , String> map);
 }
 
 

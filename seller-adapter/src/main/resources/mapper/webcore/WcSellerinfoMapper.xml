@@ -21,6 +21,8 @@
 		<result column="flag" property="flag" jdbcType="INTEGER" />
 	    <result column="seller_custom_number" property="sellerCustomNumber" jdbcType="VARCHAR" />
 	    <result column="seller_custom_location" property="sellerCustomLocation" jdbcType="VARCHAR" />
+	    <result column="settlement" property="settlement" jdbcType="VARCHAR" />
+	    <result column="purchase" property="purchase" jdbcType="VARCHAR" />
 	</resultMap>
 	
  
@@ -127,6 +129,12 @@
 	      <if test="commission != null" >
 	        commission,
 	      </if>
+	      <if test="settlement != null" >
+	        settlement,
+	      </if>
+	      <if test="purchase != null" >
+	        purchase,
+	      </if>
 	    </trim>
 	    <trim prefix="values (" suffix=")" suffixOverrides="," >
 	      <if test="zid != null" >
@@ -186,6 +194,12 @@
 	      <if test="commission != null" >
 	        #{commission,jdbcType=LONGVARCHAR},
 	      </if>
+	      <if test="settlement != null" >
+	        #{settlement , jdbcType=VARCHAR},
+	      </if>
+	      <if test="purchase != null" >
+	        #{purchase , jdbcType=VARCHAR},
+	      </if>
 	    </trim>
 	  </insert>
 
@@ -231,6 +245,12 @@
 	      <if test="sellerCustomLocation != null" >
 	        seller_custom_location = #{sellerCustomLocation,jdbcType=VARCHAR},
 	      </if>
+	      <if test="settlement != null" >
+	        settlement = #{settlement , jdbcType=VARCHAR},
+	      </if>
+	      <if test="purchase != null" >
+	        purchase = #{purchase , jdbcType=VARCHAR},
+	      </if>
 	    </set>
 	    where seller_code = #{sellerCode,jdbcType=VARCHAR}
 	  </update>
@@ -248,6 +268,31 @@
 		and 
 			flag = 1 
 	</select>
+	
+	<!-- 根据beginTime和endTime来获取有变动的商户信息 - Yangcl -->
+	<resultMap id="JobForRsyncSellerInfoMap" type="com.hjy.model.SellerInfoModel">
+		<result column="small_seller_code" property="smallSellerCode" jdbcType="VARCHAR" />
+		<result column="seller_name" property="sellerName" jdbcType="VARCHAR" />
+		<result column="company_phone" property="companyPhone" jdbcType="VARCHAR" />
+		<result column="uc_seller_type" property="ucSellerType" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectUcSellerInfo" resultMap="JobForRsyncSellerInfoMap" parameterType="java.util.Map">
+		select 
+		  * 
+		from
+		  usercenter.uc_sellerinfo i left join usercenter.uc_seller_info_extend e on i.small_seller_code = e.small_seller_code 
+		and 
+			i.seller_code = 'SI2003'
+		and 
+			i.seller_status = '4497172300040004'
+		and 
+			i.flow_status = '4497172300140005'
+		and 
+			e.update_time between #{startTime , jdbcType=VARCHAR} and  #{endTime , jdbcType=VARCHAR}
+	</select>
+	
+	
+	
 </mapper>
 
 

@@ -79,7 +79,27 @@ public class WcSellerinfo extends BaseModel {
 
     private String sellerCustomLocation;   // 商户报关地点|支付网关柄春做了2次封装后的对应码
 	
+    private String settlement; 	// 结算方式  常规结算4497471600110001| 特殊结算4497471600110002|服务费结算 4497471600110003
+    
+    private String purchase;  // 采购类型 代销 4497471600160001|经销4497471600160002|代收代付4497471600160003
 	
+    
+	public String getSettlement() {
+		return settlement;
+	}
+
+	public void setSettlement(String settlement) {
+		this.settlement = settlement;
+	}
+
+	public String getPurchase() {
+		return purchase;
+	}
+
+	public void setPurchase(String purchase) {
+		this.purchase = purchase;
+	}
+
 	public String getUid() {
 		return uid;
 	}
