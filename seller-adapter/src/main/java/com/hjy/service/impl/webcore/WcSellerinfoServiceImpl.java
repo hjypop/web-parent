@@ -150,7 +150,7 @@ public class WcSellerinfoServiceImpl extends BaseServiceImpl<WcSellerinfo, Integ
 			UserInfo user = (UserInfo) session.getAttribute("userInfo");
 			entity.setUpdator(user.getUserName());
 			entity.setUpdateTime(DateUtil.getSysDateTimeString());
-			entity.setType(1); // 不会更新此字段，仅用来兼容验证
+			entity.setSellerType(null); // 不更新此字段
 			JSONObject validate = this.validateEntity(entity);
 			if( !validate.getBoolean("status") ){
 				return validate;
@@ -292,33 +292,33 @@ public class WcSellerinfoServiceImpl extends BaseServiceImpl<WcSellerinfo, Integ
 		if(StringUtils.isAnyBlank(
 				e.getSellerName(),
 				e.getSellerCode(),
-				e.getSellerDescrption(),
 				e.getSellerTelephone(),
-				e.getSellerEmail(),
 				e.getType().toString()
 				)){
 			o.put("status", false);
 			o.put("msg", "关键字段不得为空!");
 			return o;
 		}
-		if(e.getFlag() == 1 && StringUtils.isAnyBlank(e.getSellerCustomNumber() , e.getSellerCustomLocation())){
+		if(e.getType() == 1 && e.getFlag() == 1 && StringUtils.isAnyBlank(e.getSellerCustomNumber() , e.getSellerCustomLocation())){
 			o.put("status", false);
 			o.put("msg", "报关商户需要填写【商户海关备案编号】和【商户报关地点】信息");
 			return o;
 		}
 		
-		JSONArray c = JSONObject.parseArray(e.getCommission());   // 开始验证 佣金设置
-		for(int i = 0 ; i < c.size() ; i ++){
-			JSONObject c_ = c.getJSONObject(i);
-			if(StringUtils.isBlank(c_.getString("commission"))){
-				o.put("status", false);
-				o.put("msg", "【佣金设置】不得为空!");
-				return o;
-			}
-			if( !this.isNumeric(c_.getString("commission")) ){
-				o.put("status", false);
-				o.put("msg", "【佣金设置】必须为正整数!");
-				return o;
+		if(e.getType() == 2){  // 如果是分销平台，则开始验证佣金比例
+			JSONArray c = JSONObject.parseArray(e.getCommission());   // 开始验证 佣金设置
+			for(int i = 0 ; i < c.size() ; i ++){
+				JSONObject c_ = c.getJSONObject(i);
+				if(StringUtils.isBlank(c_.getString("commission"))){
+					o.put("status", false);
+					o.put("msg", "【佣金设置】不得为空!");
+					return o;
+				}
+				if( !this.isNumeric(c_.getString("commission")) ){
+					o.put("status", false);
+					o.put("msg", "【佣金设置】必须为正整数!");
+					return o;
+				}
 			}
 		}
 		return o;

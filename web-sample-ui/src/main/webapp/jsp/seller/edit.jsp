@@ -19,6 +19,13 @@
 
 	<script type="text/javascript">
 		function saveSellerInfo(){
+			var type_ = $("#type").val();
+			if(type_ == '1'){
+				$("#about-platform").remove();
+			}else{
+				$("#about-seller").remove();  
+			}
+			
 			var url_ = '${basePath}seller/edit.do';
 			var data_ = $("#edit-seller").serializeArray();
 			var arr = new Array();
@@ -48,20 +55,35 @@
 				jAlert(obj.msg, '警告');
 			}
 		}
+		
+		function changeSellerType(){
+			var type_ = $("#type").val();
+			if(type_ == '1'){
+				$("#about-seller").show();
+				$("#about-platform").hide();
+			}else{
+				$("#about-seller").hide(); 
+				$("#about-platform").show();
+			}
+		}
 
 
 		$(function(){
 			$("input[name='status'][value='${e.status}']").attr("checked","checked"); // 商户状态 0 未开通 1 已开通 2 已禁用
-			$("#type").prop("disabled", true).find("option[value='${e.type}']").attr("selected",true);   // 商家类型
+			$("#type").prop("disabled", false).find("option[value='${e.type}']").attr("selected",true);    // 商家类型
 			$("#sellerType").prop("disabled", true).find("option[value='${e.sellerType}']").attr("selected",true);   // 入驻商户分类
 			$("input[name='flag'][value='${e.flag}']").attr("checked","checked"); // 是否需要惠家有为其报关 1是 2否
 			$("input[name='sellerCustomLocation'][value='${e.sellerCustomLocation}']").attr("checked","checked");  // 商户报关地点
 			$("#priceType").find("option[value='${e.priceType}']").attr("selected",true);  // 价格类型 0 成本价 1 销售价
-
-			var commission = ${c};    // 佣金比例 json存储
-			for(var i in commission){
-				var o = commission[i];
-				$("input[name='" + o.type + "']").val(o.commission);
+			if('${e.type}' == '1'){
+				$("#about-seller").show();
+			}else{
+				$("#about-platform").show();
+				var commission = ${c};    // 佣金比例 json存储
+				for(var i in commission){
+					var o = commission[i];
+					$("input[name='" + o.type + "']").val(o.commission);
+				}
 			}
 		});
 	</script>
@@ -91,21 +113,9 @@
 					</span>
 			</p>
 			<p>
-				<label>商家描述</label>
-					<span class="field">
-						<textarea cols="80" rows="5" name="sellerDescrption" class="smallinput" id="sellerDescrption">${e.sellerDescrption}</textarea>
-					</span>
-			</p>
-			<p>
 				<label>联系电话</label>
 					<span class="field">
 						<input maxlength="20" type="text" name="sellerTelephone" id="sellerTelephone" class="smallinput" value="${e.sellerTelephone}"/>
-					</span>
-			</p>
-			<p>
-				<label>商家信箱</label>
-					<span class="field">
-						<input type="text" name="sellerEmail" id="sellerEmail" class="smallinput"  value="${e.sellerEmail}"/>
 					</span>
 			</p>
 			<p>
@@ -119,88 +129,94 @@
 			<p>
 				<label>商家类型</label>
 					<span class="field">
-						<select id="type" name="type">
-							<option value="">请选择</option>
+						<select id="type" name="type" onchange="changeSellerType()">
 							<option value="1">惠家有的商户</option>
 							<option value="2">分销平台</option>
 						</select>
 					</span>
 			</p>
-			<p>
-				<label>入驻商户分类</label>
-				<span class="field">
-					<select id="sellerType" name="sellerType">
-						<option value="">请选择</option>
-						<option value="4497478100050001">普通商户</option>
-						<option value="4497478100050002">跨境商户</option>
-						<option value="4497478100050003">跨境直邮</option>
-						<option value="4497478100050004">平台入驻</option>
-					</select>
-				</span>
-			</p>
-			<p>
-				<label>跨境商户报关</label>
+			<div id="about-seller" style="display:none">
+				<!-- 展示商户相关的内容 -->
+				<p>
+					<label>入驻商户分类</label>
 					<span class="field">
-						<input type="radio" id="flag-y" name="flag" value="1"/>需要报关 | <input type="radio" id="flag-n" name="flag" value="2" checked="checked"/>无需报关
-					</span>
-			</p>
-			<p class="seller-custom">
-				<label>商户海关备案编号</label>
-					<span class="field">
-						<input type="text" id="sellerCustomNumber" name="sellerCustomNumber" class="smallinput" value="${e.sellerCustomNumber}"/>
-					</span>
-			</p>
-			<p class="seller-custom">
-				<label>商户报关地点</label>
-					<span class="field">
-						<input type="radio" id="HANGZHOU" name="sellerCustomLocation" value="HANGZHOU"/>杭州海关 |
-						<input type="radio" id="ZHENGZHOU" name="sellerCustomLocation" value="ZHENGZHOU"/>郑州海关 |
-						<input type="radio" id="GUANGZHOU" name="sellerCustomLocation" value="GUANGZHOU"/>广州海关 |
-						<input type="radio" id="CHONGQING" name="sellerCustomLocation" value="CHONGQING"/>重庆海关
-						<br />
-						<input type="radio" id="NINGBO" name="sellerCustomLocation" value="NINGBO"/>宁波海关 |
-						<input type="radio" id="SHENZHEN" name="sellerCustomLocation" value="SHENZHEN"/>深圳海关 |
-						<input type="radio" id="HENAN" name="sellerCustomLocation" value="HENAN"/>河南海关 |
-						<input type="radio" id="SHANGHAI" name="sellerCustomLocation" value="SHANGHAI"/>上海海关
-						<br />
-						<input type="radio" id="XIAN" name="sellerCustomLocation" value="XIAN"/>西安海关 |
-						<input type="radio" id="SUZHOU" name="sellerCustomLocation" value="SUZHOU"/>苏州海关 |
-						<input type="radio" id="TIANJIN" name="sellerCustomLocation" value="TIANJIN"/>天津海关 |
-						<input type="radio" id="NANSHAGJ" name="sellerCustomLocation" value="NANSHAGJ"/>南沙国检 |
-						<input type="radio" id="ZONGSHU" name="sellerCustomLocation" value="ZONGSHU"/>海关总署
-					</span>
-			</p>
-			<p>
-				<label>商户同步价格类型</label>
-					<span class="field">
-						<select id="priceType" name="priceType">
+						<select id="sellerType" name="sellerType">
 							<option value="">请选择</option>
-							<option value="0">成本价</option>
-							<option value="1">销售价</option>
+							<option value="4497478100050001">普通商户</option>
+							<option value="4497478100050002">跨境商户</option>
+							<option value="4497478100050003">跨境直邮</option>
+							<option value="4497478100050004">平台入驻</option>
 						</select>
 					</span>
-			</p>
-
-			<p>
-				<label>佣金设置</label>
-					<span class="field">
-						<table  class="table-show ">
-							<tbody>
-							<c:forEach var="type" items="${ucSellerType}">
-								<tr>
-									<td>
-										${type.defineName}
-									</td>
-									<td>
-										<input id="${type.defineCode }" name="${type.defineCode }" style="" class="define-code smallinput" type="text" value=""/>  %
-									</td>
-								</tr>
-							</c:forEach>
-							</tbody>
-						</table>
-					</span>
-			</p>
-			<br />
+				</p>
+				<p>
+					<label>跨境商户报关</label>
+						<span class="field">
+							<input type="radio" id="flag-y" name="flag" value="1"/>需要报关 | <input type="radio" id="flag-n" name="flag" value="2" checked="checked"/>无需报关
+						</span>
+				</p>
+				<p class="seller-custom">
+					<label>商户海关备案编号</label>
+						<span class="field">
+							<input type="text" id="sellerCustomNumber" name="sellerCustomNumber" class="smallinput" value="${e.sellerCustomNumber}"/>
+						</span>
+				</p>
+				<p class="seller-custom">
+					<label>商户报关地点</label>
+						<span class="field">
+							<input type="radio" id="HANGZHOU" name="sellerCustomLocation" value="HANGZHOU"/>杭州海关 |
+							<input type="radio" id="ZHENGZHOU" name="sellerCustomLocation" value="ZHENGZHOU"/>郑州海关 |
+							<input type="radio" id="GUANGZHOU" name="sellerCustomLocation" value="GUANGZHOU"/>广州海关 |
+							<input type="radio" id="CHONGQING" name="sellerCustomLocation" value="CHONGQING"/>重庆海关
+							<br />
+							<input type="radio" id="NINGBO" name="sellerCustomLocation" value="NINGBO"/>宁波海关 |
+							<input type="radio" id="SHENZHEN" name="sellerCustomLocation" value="SHENZHEN"/>深圳海关 |
+							<input type="radio" id="HENAN" name="sellerCustomLocation" value="HENAN"/>河南海关 |
+							<input type="radio" id="SHANGHAI" name="sellerCustomLocation" value="SHANGHAI"/>上海海关
+							<br />
+							<input type="radio" id="XIAN" name="sellerCustomLocation" value="XIAN"/>西安海关 |
+							<input type="radio" id="SUZHOU" name="sellerCustomLocation" value="SUZHOU"/>苏州海关 |
+							<input type="radio" id="TIANJIN" name="sellerCustomLocation" value="TIANJIN"/>天津海关 |
+							<input type="radio" id="NANSHAGJ" name="sellerCustomLocation" value="NANSHAGJ"/>南沙国检 |
+							<input type="radio" id="ZONGSHU" name="sellerCustomLocation" value="ZONGSHU"/>海关总署
+						</span>
+				</p>
+			</div>
+			
+			
+			<div id="about-platform" style="display:none">
+				<!-- 展示平台相关的内容 -->
+				<p>
+					<label>商户同步价格类型</label>
+						<span class="field">
+							<select id="priceType" name="priceType">
+								<option value="">请选择</option>
+								<option value="0">成本价</option>
+								<option value="1">销售价</option>
+							</select>
+						</span>
+				</p>
+	
+				<p>
+					<label>佣金设置</label>
+						<span class="field">
+							<table  class="table-show ">
+								<tbody>
+								<c:forEach var="type" items="${ucSellerType}">
+									<tr>
+										<td>
+											${type.defineName}
+										</td>
+										<td>
+											<input id="${type.defineCode }" name="${type.defineCode }" style="" class="define-code smallinput" type="text" value=""/>  %
+										</td>
+									</tr>
+								</c:forEach>
+								</tbody>
+							</table>
+						</span>
+				</p>
+			</div> 
 
 			<p class="stdformbutton">
 					<span class="field">

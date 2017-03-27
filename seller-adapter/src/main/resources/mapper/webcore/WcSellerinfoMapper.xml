@@ -227,6 +227,9 @@
 	      <if test="priceType != null" >
 	        price_type = #{priceType,jdbcType=INTEGER},
 	      </if> 
+	      <if test="type != null" >
+	        type = #{type , jdbcType=INTEGER}, 
+	      </if> 
 	      <if test="commission != null" >
 	        commission = #{commission , jdbcType=LONGVARCHAR},
 	      </if>
@@ -281,20 +284,23 @@
 		  * 
 		from
 		  usercenter.uc_sellerinfo i left join usercenter.uc_seller_info_extend e on i.small_seller_code = e.small_seller_code 
-		and 
+		where 
 			i.seller_code = 'SI2003'
 		and 
 			i.seller_status = '4497172300040004'
 		and 
 			i.flow_status = '4497172300140005'
 		and 
-			e.update_time between #{startTime , jdbcType=VARCHAR} and  #{endTime , jdbcType=VARCHAR}
+			(e.create_time != null or e.create_time !='') 
+		and 
+			(e.uc_seller_type != null or e.uc_seller_type !='')
+		and 
+			e.create_time between #{startTime , jdbcType=VARCHAR} and  #{endTime , jdbcType=VARCHAR}
 	</select>
 	
 	
 	
 </mapper>
-
 
 
 

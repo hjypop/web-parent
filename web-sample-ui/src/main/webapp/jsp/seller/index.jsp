@@ -63,7 +63,16 @@
 					}else{
 						html_ += '未开通';
 					}
+					html_ += '</td>';
+					
+					html_ += '<td class="head0" style="text-align: center;">' 
+					if(list[i].type == 1){
+						html_ += '商户接口';
+					}else if(list[i].type == 2){
+						html_ += '分销平台';
+					}
 					html_ += '</td>'
+					
 					+'<td class="head0" style="text-align: center;">' + list[i].createTime + ' </td>'
 					+'<td class="head0" style="text-align:center;">'
 					+'<a href="#" >查看</a>|<a href="#" onclick="openDialog(\''+list[i].sellerCode+'\' , true)" >管理</a>'
@@ -295,6 +304,7 @@
 								<th class="head1">商户名称</th>
 								<th class="head1">联系电话</th>
 								<th class="head1">合作状态</th>
+								<th class="head1">接口平台</th>
 								<th class="head1">创建时间</th>
 								<th class="head1">接口管理</th>
 								<th class="head1">操作</th>
