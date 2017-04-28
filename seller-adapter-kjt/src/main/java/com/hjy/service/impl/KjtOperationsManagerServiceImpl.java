@@ -1,6 +1,7 @@
 package com.hjy.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -329,7 +330,11 @@ public class KjtOperationsManagerServiceImpl extends BaseClass implements IKjtOp
 			list = pcProductinfoDao.getItemUpshelfProductList("SF03KJT");
 		}else{
 			try { // 准备批量上下架商品
-				pcodeList = JSON.parseArray(json, String.class);
+				if(StringUtils.startsWith(json, "{")){
+					pcodeList = JSON.parseArray(json, String.class);
+				}else{
+					pcodeList = new ArrayList<String>(Arrays.asList(json.split(","))); 
+				}
 				ProductStatusDto dto = new ProductStatusDto();
 				dto.setList(pcodeList);
 				list = pcProductinfoDao.getListByProductCodeList(dto);
