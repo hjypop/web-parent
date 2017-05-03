@@ -332,6 +332,7 @@
                                 <option value="">---请选择---</option>
                                 <option value="4497153900060002">商品批量上架</option>
                                 <option value="4497153900060003">商品批量下架</option>
+                                <option value="4497153900060004">商品强制下架</option>
                             </select>
 
                             <div class="status_thumb_list" style="width: 308px"> product_code Json串：</div>

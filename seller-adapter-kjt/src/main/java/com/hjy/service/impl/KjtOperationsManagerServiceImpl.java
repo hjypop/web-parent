@@ -322,37 +322,36 @@ public class KjtOperationsManagerServiceImpl extends BaseClass implements IKjtOp
 
 		List<PcProductinfo> list = null;
 		List<String> pcodeList = null;
-		if(productStatus.equals("4497153900060002") && StringUtils.isBlank(json)){
-			// 准备将强制下架的商品 全部上架
-			list = pcProductinfoDao.getSoldOutProductList("SF03KJT");
-		}else if(productStatus.equals("4497153900060003") && StringUtils.isBlank(json)){
-			 // 准备将现在所有上架的商品 全部下架
-			list = pcProductinfoDao.getItemUpshelfProductList("SF03KJT");
-		}else{
-			try { // 准备批量上下架商品
-				if(StringUtils.startsWith(json, "{")){
-					pcodeList = JSON.parseArray(json, String.class);
-				}else{
-					pcodeList = new ArrayList<String>(Arrays.asList(json.split(","))); 
-				}
-				ProductStatusDto dto = new ProductStatusDto();
-				dto.setList(pcodeList);
-				list = pcProductinfoDao.getListByProductCodeList(dto);
-			} catch (Exception e) {
-				result.put("status", "success");
-				result.put("desc", "非法的Json数据");
-				return result;
+		if(StringUtils.isBlank(json)){
+			result.put("status", "success");
+			result.put("desc", "数据不可为空");
+			return result;
+		}
+		
+		try { // 准备批量上下架商品
+			if(StringUtils.startsWith(json, "{")){
+				pcodeList = JSON.parseArray(json, String.class);
+			}else{
+				pcodeList = new ArrayList<String>(Arrays.asList(json.split(","))); 
 			}
+			ProductStatusDto dto = new ProductStatusDto();
+			dto.setList(pcodeList);
+			list = pcProductinfoDao.getListByProductCodeList(dto);
+		} catch (Exception e) {
+			result.put("status", "success");
+			result.put("desc", "非法的Json数据");
+			return result;
 		}
 
 		List<String> elist = new ArrayList<String>();
 
 		String lockcode = WebHelper.getInstance().addLock(300 , "seller-adapter-kjt@OperationsManagerServiceImpl.funcSeven");      // 分布式锁5分钟
 		if(StringUtils.isNotEmpty(lockcode)) {
+//			productStatus = "4497153900060004";
 			try {
 				int count = 1;
 				for(PcProductinfo i : list){
-					String uid=i.getUid();
+					String uid = i.getUid();
 					String flowType = "449715390006";
 					String userCode = "kjt - manually - initiated";
 					pcProductinfoDao.updateProductStatus(new PcProductinfo(i.getUid() , productStatus));
@@ -407,7 +406,6 @@ public class KjtOperationsManagerServiceImpl extends BaseClass implements IKjtOp
 		System.out.println("elist = " +JSONObject.toJSONString(elist)); 
 		return result;
 	}
-
 
 
 
